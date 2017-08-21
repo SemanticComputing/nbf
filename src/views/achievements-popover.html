@@ -1,0 +1,6 @@
+<img class="loading-img" src="images/loading-lg.gif" ng-show="!person.achievements"></img>
+<div class="achievement-list">
+  <ul class="list-unstyled">
+    <li ng-repeat="achievement in person.achievements"><a ng-href="{{ achievement.wikipedia }}">{{ achievement.label | castArray | first }}</a></li>
+  </ul>
+</div>

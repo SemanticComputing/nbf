@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1 col-sm-2 col-xs-2 vcenter push-xs-2">
+      <img src="http://www.norssit.fi/images/norssi_logo.jpg" class="norssi-logo center-block img img-responsive" />
+    </div><!-- DO NOT REMOVE THIS COMMENT, IT IS A HACK
+  --><div class="col-xs-9 col-md-8 col-lg-9 vcenter push-xs-9">
+      <h1>Vanhat Norssit semanttisessa webissä</h1>
+      <p>
+      Norssimatrikkelihaku. Voit rajata tulosta tekemällä valintoja suodattimista ja selata henkilöihin liittyvää tietoa linkkien kautta.
+      Lähde: <a href="http://www.norssit.fi/matrikkeli_1867-1992.html">Helsingin Norssin matrikkeli 1867-1992</a>
+      </p>
+    </div>
+    <div class="col-md-3 pull-md-3 col-lg-2">
+      <a href="" ng-click="vm.removeFacetSelections()">Poista kaikki valinnat</a>
+      <div class="facets">
+        <seco-text-facet data-options="vm.facets.entryText"></seco-text-facet>
+        <div class="show-facets row">
+          <div class="col-xs-12">
+            <button class="btn btn-default pull-right visible-xs-block visible-sm-block"
+              ng-click="show = !show">{{ show ? 'Piilota fasetit' : 'Näytä fasetit' }}</button>
+          </div>
+        </div>
+        <div class="hideable-facets" ng-class="{ 'hidden-sm hidden-xs': !show }">
+          <seco-checkbox-facet data-options="vm.facets.link"></seco-checkbox-facet>
+          <seco-basic-facet data-options="vm.facets.familyName"></seco-basic-facet>
+          <seco-basic-facet data-options="vm.facets.birthPlace"></seco-basic-facet>
+          <seco-basic-facet data-options="vm.facets.enrollmentYear"></seco-basic-facet>
+          <seco-basic-facet data-options="vm.facets.matriculationYear"></seco-basic-facet>
+          <seco-basic-facet data-options="vm.facets.occupation"></seco-basic-facet>
+          <!-- <seco-basic-facet data-options="vm.facets.occupation"></seco-basic-facet> -->
+          <seco-basic-facet data-options="vm.facets.hobby"></seco-basic-facet>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9 col-lg-10">
+      <div ng-include="'views/norssit.persons.html'"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<table class="table table-striped norssi-table ng-table-responsive" ng-table="vm.tableParams">
+  <thead>
+    <tr>
+      <th class="col-xs-4">Nimi</th>
+      <th class="col-xs-1">Norssi</th>
+      <th class="col-xs-1">Linkit</th>
+      <th class="col-xs-3"><span class="hidden-xs hidden-sm">Muuta</span></th>
+      <th class="col-xs-3 hidden-xs hidden-sm">Matrikkeliteksti</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr ng-show="!vm.isLoadingResults" ng-repeat="person in $data">
+    <td class="person-image-container" data-title="'Nimi'">
+      <div ng-class="::{ 'name-col col-md-12 col-lg-7': person.images }">
+        <b><a ui-sref="detail({ personId: person.id })">{{ ::person.registerNumber }}. {{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
+        &#8727;&nbsp;{{ ::person.birthPlace }}
+        <span ng-if="::(person.birthDate || person.deathDate)">
+          {{ ::person.birthDate || '?' | date:'dd.MM.yyyy' }}
+          <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathDate | date:'dd.MM.yyyy' }}</span>
+          <br />
+        </span>
+        <span class="icon-menu">
+          <a title="Avaa matrikkelisivu" href="" ng-click="::vm.openPage(person)"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+          <a title="Data" class="" ng-href="{{ ::person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
+        </span>
+      </div>
+      <div ng-if="::person.hasImage" class="name-col col-md-12 col-lg-5">
+        <div ng-repeat="img in ::person.images"
+          ng-class="{ 'col-md-12': ($first && $last), 'col-sm-6': !($first && $last) }" class="person-img-col vcenter">
+          <img uib-popover-template="'views/profile-image-popover.html'"
+            popover-trigger="'mouseenter'"
+            popover-placement="auto right"
+            popover-append-to-body="true"
+            class="person-image img img-responsive"
+            ng-src="{{ img  }}" />
+        </div>
+      </div>
+    </td>
+    <td data-title="'Norssi'">
+      {{ ::person.enrollmentYear || '?' }} &ndash; {{ ::person.matriculationYear || '?' }}
+    </td>
+    <td class="links" data-title="'Linkit'">
+      <div ng-if="::person.achievement">
+        <a href=""
+          uib-popover-template="'views/achievements-popover.html'"
+          popover-trigger="'outsideClick'"
+          popover-append-to-body="true"
+          popover-placement="auto top">Saavutukset</a>
+      </div>
+      <a class="link" ng-if="::person.wikipedia" ng-href="{{ ::person.wikipedia }}">Wikipedia</a>
+      <a class="link" ng-if="::person.kansallisbiografia" ng-href="{{ ::person.kansallisbiografia }}">Kansallisbiografia</a>
+      <a class="link" ng-if="::person.warsa" ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ ::person.warsa }}">Sotasampo</a>
+      <a class="link" ng-if="::person.kirjasampo" ng-href="{{ ::person.kirjasampo }}">Kirjasampo</a>
+      <a class="link" ng-if="::person.kulttuurisampo" ng-href="{{ ::person.kulttuurisampo }}">Kulttuurisampo</a>
+      <a class="link" ng-if="::person.blf" ng-href="{{ ::person.blf }}">BLF</a>
+      <a class="link" ng-if="::person.ulan" ng-href="{{ ::person.ulan }}">ULAN</a>
+      <a class="link" ng-if="::person.viaf" ng-href="{{ ::person.viaf }}">VIAF</a>
+      <a class="link" ng-if="::person.genicom" ng-href="{{ ::person.genicom }}">Kotisivu (Geni.com)</a>
+      <a class="link" ng-if="::person.genitree" ng-href="{{ ::person.genitree }}">Sukupuu (Geni.com)</a>
+    </td>
+    <td data-title="'Muuta'">
+      <div ng-if="::person.relative">
+      	<span>Sukulaiset: </span><br>
+      	<span ng-repeat="relative in person.relative | castArray">
+          {{ ::relative.type }} <a ui-sref="detail({ personId: relative.id })">{{ ::relative.name }}</a>
+      	</span>
+      </div>
+      <button class="page-btn visible-xs-block visible-sm-block btn btn-default" ng-click="::vm.openPage(person)">Matrikkelisivu</button>
+      <div ng-if="::person.hobby"><span>Harrastukset: </span><br>{{ ::person.hobby | join:', ' }}</div>
+      <button class="page-btn visible-xs-block visible-sm-block btn btn-default" ng-click="::vm.openPage(person)">Matrikkelisivu</button>
+    </td>
+    <td data-title="'Matrikkeliteksti'"
+      class="hidden-xs hidden-sm"
+      uib-popover-template="'views/register-text-popover.html'"
+      popover-trigger="'mouseenter'"
+      popover-append-to-body="true"
+      popover-placement="auto left">{{ ::person.entryText | truncate: 500 : '...' : true }}</td>
+  </tr>
+  </tbody>
+</table>
+<img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>

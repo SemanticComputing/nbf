@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="facetApp">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1">
+  <title>Vanhat Norssit</title>
+
+  <!-- build:css(.) styles/vendor.css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/sparql-faceter/dist/semantic-faceted-search.css">
+  <!-- endbuild -->
+  <!-- build:css({.,src}) styles/facetedsearch.css -->
+  <link rel="stylesheet" href="styles/facetedsearch.css">
+  <!-- endbuild -->
+
+</head>
+
+<body>
+
+  <ws-navbar></ws-navbar>
+
+  <div ui-view></div>
+
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/ng-table-bundle/ng-table.js"></script>
+  <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/angular-paging-sparql-service/dist/sparql-service.js"></script>
+  <script src="bower_components/spin.js/spin.js"></script>
+  <script src="bower_components/angular-spinner/angular-spinner.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/checklist-model/checklist-model.js"></script>
+  <script src="bower_components/sparql-faceter/dist/semantic-faceted-search.js"></script>
+  <script src="bower_components/angular-filter/dist/angular-filter.js"></script>
+  <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <script type="text/javascript" src="//www.gstatic.com/charts/loader.js"></script>
+  <!-- build:js({.,src}) scripts/scripts.js -->
+  <script src="scripts/facet-app.module.js"></script>
+  <script src="scripts/filters.js"></script>
+  <script src="scripts/norssit.mapper.js"></script>
+  <script src="scripts/norssit.service.js"></script>
+  <script src="scripts/norssit.visu.service.js"></script>
+  <script src="scripts/navbar.directive.js"></script>
+  <script src="scripts/register-page-modal.component.js"></script>
+  <script src="scripts/norssit.detail.controller.js"></script>
+  <script src="scripts/norssit.table.controller.js"></script>
+  <script src="scripts/norssit.cards.controller.js"></script>
+  <script src="scripts/norssit.visu.controller.js"></script>
+  <script src="scripts/norssit.visu2.controller.js"></script>
+
+  <!-- endbuild -->
+
+</body>
+</html>
