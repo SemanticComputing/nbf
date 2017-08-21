@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th class="col-xs-4">Nimi</th>
-      <th class="col-xs-1">Norssi</th>
+      <th class="col-xs-1">Henkilö</th>
       <th class="col-xs-1">Linkit</th>
       <th class="col-xs-3"><span class="hidden-xs hidden-sm">Muuta</span></th>
       <th class="col-xs-3 hidden-xs hidden-sm">Matrikkeliteksti</th>
@@ -12,11 +12,11 @@
   <tr ng-show="!vm.isLoadingResults" ng-repeat="person in $data">
     <td class="person-image-container" data-title="'Nimi'">
       <div ng-class="::{ 'name-col col-md-12 col-lg-7': person.images }">
-        <b><a ui-sref="detail({ personId: person.id })">{{ ::person.registerNumber }}. {{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
+        <b><a ui-sref="detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
         &#8727;&nbsp;{{ ::person.birthPlace }}
         <span ng-if="::(person.birthDate || person.deathDate)">
-          {{ ::person.birthDate || '?' | date:'dd.MM.yyyy' }}
-          <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathDate | date:'dd.MM.yyyy' }}</span>
+          {{ ::person.birthDate }}
+          <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
           <br />
         </span>
         <span class="icon-menu">
@@ -35,9 +35,6 @@
             ng-src="{{ img  }}" />
         </div>
       </div>
-    </td>
-    <td data-title="'Norssi'">
-      {{ ::person.enrollmentYear || '?' }} &ndash; {{ ::person.matriculationYear || '?' }}
     </td>
     <td class="links" data-title="'Linkit'">
       <div ng-if="::person.achievement">
