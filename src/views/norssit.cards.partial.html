@@ -74,7 +74,7 @@
                 </div>
               </div>
               <div ng-if="::person.relative" class="row">
-                <div class="col-xs-12">Sukulaisnorssit:</div>
+                <div class="col-xs-12">Sukulaiset:</div>
                 <div class="col-sm-6 col-md-12" ng-repeat="relative in person.relative | castArray">
                   {{ ::relative.type }} <a ui-sref="detail({ personId: relative.id })">{{ ::relative.name }}</a>
                 </div>
@@ -86,7 +86,7 @@
               </div>
               <div uib-collapse="!showText">
                 <hr />
-                <p>{{ ::person.entryText }}</p>
+                <p>{{ ::person.lead_paragraph }}</p>
               </div>
             </div>
           </div>

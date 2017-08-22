@@ -71,7 +71,7 @@
       uib-popover-template="'views/register-text-popover.html'"
       popover-trigger="'mouseenter'"
       popover-append-to-body="true"
-      popover-placement="auto left">{{ ::person.entryText | truncate: 500 : '...' : true }}</td>
+      popover-placement="auto left">{{ ::person.lead_paragraph | truncate: 500 : '...' : true }}</td>
   </tr>
   </tbody>
 </table>

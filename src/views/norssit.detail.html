@@ -7,7 +7,7 @@
       {{ vm.error }}
     </div>
     <div class="col-sm-12 col-md-8 text-center" ng-show="vm.person">
-      <h1>{{ vm.person.registerNumber }}. {{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
+      <h1>{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
       <div class="thumbnail">
         <div class="person-profile-img">
           <div class="row">
@@ -22,12 +22,10 @@
               <div class="col-xs-12">
                 <p ng-if="(vm.person.birthPlace || vm.person.birthDate || vm.person.deathDate)">
                 &#8727;&nbsp;<span ng-if="vm.person.birthPlace">{{ vm.person.birthPlace }}</span>
-                {{ vm.person.birthDate | date:'dd.MM.yyyy' }}
-                <span ng-if=vm.person.deathDate>&dagger;&nbsp;{{ vm.person.deathDate | date:'dd.MM.yyyy' }}</span>
+                {{ vm.person.birthDate }}
+                &dagger;&nbsp;<span ng-if="vm.person.deathPlace">{{ vm.person.deathPlace }}</span>
+                <span ng-if=vm.person.deathDate>{{ vm.person.deathDate }}</span>
                 </p>
-              </div>
-              <div class="col-xs-12">
-                <p>Norssi {{ vm.person.enrollmentYear || '?' }} &ndash; {{ vm.person.matriculationYear || '?' }}</p>
               </div>
               <div ng-if="vm.person.occupation" class="col-xs-12">
                 <p>{{ vm.person.occupation | castArray | join:', ' }}</p>
@@ -70,7 +68,7 @@
               </div>
             </div>
             <div ng-if="vm.person.relative" class="row padded-row">
-              <div class="col-xs-12"><h4>Sukulaisnorssit:</h4></div>
+              <div class="col-xs-12"><h4>Sukulaiset:</h4></div>
               <div class="col-sm-6 col-md-12" ng-repeat="relative in vm.person.relative | castArray">
                 {{ relative.type }}<a ui-sref="detail({ personId: relative.id })"> {{ relative.name }}</a>
               </div>
@@ -82,7 +80,19 @@
             </div>
             <div class="entry-text text-left">
               <hr />
-              <p>{{ vm.person.entryText }}</p>
+              <p>{{ vm.person.lead_paragraph }}</p>
+            </div>
+            <div class="entry-text text-left">
+              <hr />
+              <p>{{ vm.person.description }}</p>
+            </div>
+            <div class="entry-text text-left">
+              <hr />
+              <p>{{ vm.person.family_paragraph }}</p>
+            </div>
+            <div class="entry-text text-left">
+              <hr />
+              <p>{{ vm.person.source_paragraph }}</p>
             </div>
           </div>
         </div>

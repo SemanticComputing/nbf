@@ -37,7 +37,7 @@
             // Text search facet for name
             entryText: {
                 facetId: 'entryText',
-                predicate: '<http://ldf.fi/nbf/biography>/<http://schema.org/description>',
+                predicate: '<http://ldf.fi/nbf/has_biography>/<http://schema.org/description>',
                 name: 'Haku',
                 enabled: true
             },
@@ -95,8 +95,13 @@
             },
             familyName: {
                 facetId: 'familyName',
-                predicate: '<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                predicate: '<http://schema.org/familyName>',
                 name: 'Sukunimi'
+            },
+            dataset: {
+                facetId: 'dataset',
+                predicate: '^<http://xmlns.com/foaf/0.1/focus>/<http://purl.org/dc/terms/source>',
+                name: 'Tietokanta'
             },
             birthYear: {
                 facetId: 'birthYear',
@@ -142,7 +147,7 @@
             },
             gender: {
                 facetId: 'gender',
-                predicate: '<http://schema.org/gender>',
+                predicate: '<http://ldf.fi/nbf/sukupuoli>',
                 name: 'Sukupuoli',
                 enabled: true
             }
@@ -178,7 +183,7 @@
         '    <RESULT_SET> ' +
         '  } ' +
         '  OPTIONAL { ?id schema:givenName ?givenName . }' +
-        '  OPTIONAL { ?id skos:prefLabel ?familyName . }' +
+        '  OPTIONAL { ?id schema:familyName ?familyName . }' +
         '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
         '  OPTIONAL { ?id norssit:ordinal ?ordinal . } ' +
         '  OPTIONAL { ?id norssit:register_id ?registerNumber . } ' +
@@ -188,12 +193,10 @@
         '  OPTIONAL { ?id schema:gender ?gender . }' +
         '  OPTIONAL { ?id schema:hobby/skos:prefLabel ?hobby . }' +
         '  OPTIONAL { ?id schema:image ?images . }' +
-        '  OPTIONAL { ?id dct:description ?description . }' +
-        '  OPTIONAL { ?id person_registry:pageNumber ?pageNumber . }' +
-        '  OPTIONAL { ?id person_registry:pageImageURL ?pageImageURL . }' +
-        '  OPTIONAL { ?id person_registry:enrollmentYear ?enrollmentYear . }' +
-        '  OPTIONAL { ?id person_registry:matriculationYear ?matriculationYear . }' +
-        '  OPTIONAL { ?id person_registry:entryText ?entryText . }' +
+        '  OPTIONAL { ?id nbf:has_biography/schema:description ?description . }' +
+        '  OPTIONAL { ?id nbf:has_biography/nbf:lead_paragraph ?lead_paragraph . }' +
+        '  OPTIONAL { ?id nbf:has_biography/nbf:source_paragraph ?source_paragraph . }' +
+        '  OPTIONAL { ?id nbf:has_biography/nbf:family_paragraph ?family_paragraph . }' +
         '  OPTIONAL { ?id norssit:wikipedia ?wikipedia . }' +
         '  OPTIONAL { ?id norssit:viaf ?viaf . }' +
         '  OPTIONAL { ?id norssit:wikidata ?wikidata . }' +
