@@ -20,7 +20,7 @@
           <br />
         </span>
         <span class="icon-menu">
-          <a title="Avaa matrikkelisivu" href="" ng-click="::vm.openPage(person)"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+          <a title="Kansallisbiografia" class="" ng-href="{{ ::person.kansallisbiografia }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
           <a title="Data" class="" ng-href="{{ ::person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
         </span>
       </div>
@@ -36,6 +36,11 @@
         </div>
       </div>
     </td>
+    <td class="links" data-title="'Henkilö'">
+    <div ng-if="::person.occupation" class="hidden-xs hidden-sm">
+                <p>{{ ::person.occupation | castArray | join:', ' }}</p>
+             </div>
+    </td>
     <td class="links" data-title="'Linkit'">
       <div ng-if="::person.achievement">
         <a href=""
@@ -45,7 +50,6 @@
           popover-placement="auto top">Saavutukset</a>
       </div>
       <a class="link" ng-if="::person.wikipedia" ng-href="{{ ::person.wikipedia }}">Wikipedia</a>
-      <a class="link" ng-if="::person.kansallisbiografia" ng-href="{{ ::person.kansallisbiografia }}">Kansallisbiografia</a>
       <a class="link" ng-if="::person.warsa" ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ ::person.warsa }}">Sotasampo</a>
       <a class="link" ng-if="::person.kirjasampo" ng-href="{{ ::person.kirjasampo }}">Kirjasampo</a>
       <a class="link" ng-if="::person.kulttuurisampo" ng-href="{{ ::person.kulttuurisampo }}">Kulttuurisampo</a>
@@ -67,11 +71,7 @@
       <button class="page-btn visible-xs-block visible-sm-block btn btn-default" ng-click="::vm.openPage(person)">Matrikkelisivu</button>
     </td>
     <td data-title="'Matrikkeliteksti'"
-      class="hidden-xs hidden-sm"
-      uib-popover-template="'views/register-text-popover.html'"
-      popover-trigger="'mouseenter'"
-      popover-append-to-body="true"
-      popover-placement="auto left">{{ ::person.lead_paragraph | truncate: 500 : '...' : true }}</td>
+      class="hidden-xs hidden-sm">{{ ::person.lead_paragraph | truncate: 500 : '...' : true }}</td>
   </tr>
   </tbody>
 </table>

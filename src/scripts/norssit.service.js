@@ -154,17 +154,17 @@
         };
 
         var prefixes =
-        ' PREFIX hobbies: <http://ldf.fi/hobbies/> ' +
-        ' PREFIX norssit: <http://ldf.fi/norssit/> ' +
+        //' PREFIX hobbies: <http://ldf.fi/hobbies/> ' +
+        //' PREFIX norssit: <http://ldf.fi/norssit/> ' +
         ' PREFIX nach: <http://ldf.fi/norssit/achievements/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
-        ' PREFIX person_registry: <http://ldf.fi/schema/person_registry/> ' +
-        ' PREFIX places: <http://ldf.fi/places/> ' +
+        //' PREFIX person_registry: <http://ldf.fi/schema/person_registry/> ' +
+        //' PREFIX places: <http://ldf.fi/places/> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-        ' PREFIX relatives: <http://ldf.fi/relatives/> ' +
+        //' PREFIX relatives: <http://ldf.fi/relatives/> ' +
         ' PREFIX schema: <http://schema.org/> ' +
-        ' PREFIX schemax: <http://topbraid.org/schemax/> ' +
+        //' PREFIX schemax: <http://topbraid.org/schemax/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
@@ -173,8 +173,9 @@
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
         ' PREFIX occupations: <http://ldf.fi/nbf/occupations/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
+        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
-
+        
         // The query for the results.
         // ?id is bound to the norssit URI.
         var query =
@@ -185,23 +186,27 @@
         '  OPTIONAL { ?id schema:givenName ?givenName . }' +
         '  OPTIONAL { ?id schema:familyName ?familyName . }' +
         '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
-        '  OPTIONAL { ?id norssit:ordinal ?ordinal . } ' +
-        '  OPTIONAL { ?id norssit:register_id ?registerNumber . } ' +
         '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
         '  OPTIONAL { ?id ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
         '  OPTIONAL { ?id ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
         '  OPTIONAL { ?id schema:gender ?gender . }' +
-        '  OPTIONAL { ?id schema:hobby/skos:prefLabel ?hobby . }' +
         '  OPTIONAL { ?id schema:image ?images . }' +
-        '  OPTIONAL { ?id nbf:has_biography/schema:description ?description . }' +
-        '  OPTIONAL { ?id nbf:has_biography/nbf:lead_paragraph ?lead_paragraph . }' +
-        '  OPTIONAL { ?id nbf:has_biography/nbf:source_paragraph ?source_paragraph . }' +
-        '  OPTIONAL { ?id nbf:has_biography/nbf:family_paragraph ?family_paragraph . }' +
-        '  OPTIONAL { ?id norssit:wikipedia ?wikipedia . }' +
-        '  OPTIONAL { ?id norssit:viaf ?viaf . }' +
-        '  OPTIONAL { ?id norssit:wikidata ?wikidata . }' +
+        '  OPTIONAL { ?id nbf:has_biography ?bio . ' +
+        '  		OPTIONAL { ?bio schema:description ?description . }' +
+        '  		OPTIONAL { ?bio nbf:lead_paragraph ?lead_paragraph . }' +
+        '  		OPTIONAL { ?bio nbf:source_paragraph ?source_paragraph . }' +
+        '  		OPTIONAL { ?bio nbf:family_paragraph ?family_paragraph . }' +
+        '  		OPTIONAL { ?bio nbf:spouse_paragraph ?spouse_paragraph . }' +
+        '  		OPTIONAL { ?bio nbf:child_paragraph ?child_paragraph . }' +
+        '  		OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
+        '  		OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
+        '  }' +
+        //'  OPTIONAL { ?id norssit:wikipedia ?wikipedia . }' +
+        //'  OPTIONAL { ?id norssit:viaf ?viaf . }' +
+        //'  OPTIONAL { ?id norssit:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
-        '  OPTIONAL { ?id nbf:has_category ?category . }' +
+        '  OPTIONAL { ?id (^foaf:focus)/schema:relatedLink ?kansallisbiografia . }' +
+        '  OPTIONAL { ?id nbf:has_category ?category . }'  +
         ' }';
 
         var achievementQuery = prefixes +
