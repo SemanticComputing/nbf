@@ -66,7 +66,7 @@
                     },
                     {
                         id: 'blf',
-                        pattern: '?id <http://ldf.fi/nbf/sls_biografi> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/blf> [] .',
                         label: 'BLF'
                     },
                     {
@@ -171,7 +171,7 @@
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
         
         // The query for the results.
-        // ?id is bound to the norssit URI.
+        // ?id is bound to the person URI.
         var query =
         ' SELECT DISTINCT * WHERE {' +
         '  { ' +
@@ -196,8 +196,7 @@
         '  		OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
         '  }' +
         '  OPTIONAL { ?id ^foaf:focus/nbf:wikipedia ?wikipedia . }' +
-        //'  OPTIONAL { ?id norssit:viaf ?viaf . }' +
-        //'  OPTIONAL { ?id norssit:wikidata ?wikidata . }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:blf ?blf . }' +
         '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
         '  OPTIONAL { ?id (^foaf:focus)/schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id nbf:has_category ?category . }'  +
