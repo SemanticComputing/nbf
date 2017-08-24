@@ -46,47 +46,47 @@
                 choices: [
                     {
                         id: 'wikipedia',
-                        pattern: '?id <http://ldf.fi/norssit/wikipedia> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/wikipedia> [] .',
                         label: 'Wikipedia'
                     },
                     {
                         id: 'kirjasampo',
-                        pattern: '?id <http://ldf.fi/norssit/kirjasampo> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] .',
                         label: 'Kirjasampo'
                     },
                     {
                         id: 'kulttuurisampo',
-                        pattern: '?id <http://ldf.fi/norssit/kulttuurisampo> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/kulttuurisampo> [] .',
                         label: 'Kulttuurisampo'
                     },
                     {
                         id: 'sotasampo',
-                        pattern: '?id <http://ldf.fi/norssit/warsa> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/warsa> [] .',
                         label: 'Sotasampo'
                     },
                     {
                         id: 'blf',
-                        pattern: '?id <http://ldf.fi/norssit/sls_biografi> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/sls_biografi> [] .',
                         label: 'BLF'
                     },
                     {
                         id: 'wikidata',
-                        pattern: '?id <http://ldf.fi/norssit/wikidata> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/wikidata> [] .',
                         label: 'Wikidata'
                     },
                     {
                         id: 'ulan',
-                        pattern: '?id <http://ldf.fi/norssit/ulan> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/ulan> [] .',
                         label: 'ULAN'
                     },
                     {
                         id: 'viaf',
-                        pattern: '?id <http://ldf.fi/norssit/viaf> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/viaf> [] .',
                         label: 'VIAF'
                     },
                     {
                         id: 'genicom',
-                        pattern: '?id <http://ldf.fi/norssit/genicom> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/genicom> [] .',
                         label: 'Geni.com'
                     }
                 ],
@@ -154,17 +154,11 @@
         };
 
         var prefixes =
-        //' PREFIX hobbies: <http://ldf.fi/hobbies/> ' +
-        //' PREFIX norssit: <http://ldf.fi/norssit/> ' +
         ' PREFIX nach: <http://ldf.fi/norssit/achievements/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
-        //' PREFIX person_registry: <http://ldf.fi/schema/person_registry/> ' +
-        //' PREFIX places: <http://ldf.fi/places/> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-        //' PREFIX relatives: <http://ldf.fi/relatives/> ' +
         ' PREFIX schema: <http://schema.org/> ' +
-        //' PREFIX schemax: <http://topbraid.org/schemax/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
@@ -184,7 +178,7 @@
         '    <RESULT_SET> ' +
         '  } ' +
         '  OPTIONAL { ?id schema:givenName ?givenName . }' +
-        '  OPTIONAL { ?id schema:familyName ?familyName . }' +
+        '  OPTIONAL { ?id schema:familyName ?familyName . }' + 
         '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
         '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
         '  OPTIONAL { ?id ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
@@ -201,7 +195,7 @@
         '  		OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
         '  		OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
         '  }' +
-        //'  OPTIONAL { ?id norssit:wikipedia ?wikipedia . }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:wikipedia ?wikipedia . }' +
         //'  OPTIONAL { ?id norssit:viaf ?viaf . }' +
         //'  OPTIONAL { ?id norssit:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
@@ -227,6 +221,7 @@
         var facetOptions = {
             endpointUrl: endpointConfig.endpointUrl,
             rdfClass: '<http://ldf.fi/nbf/Person>',
+            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/ordinal> ?ordinal . ',
             preferredLang : 'fi'
         };
 

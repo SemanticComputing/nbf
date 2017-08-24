@@ -13,12 +13,10 @@
     <td class="person-image-container" data-title="'Nimi'">
       <div ng-class="::{ 'name-col col-md-12 col-lg-7': person.images }">
         <b><a ui-sref="detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
-        &#8727;&nbsp;{{ ::person.birthPlace }}
-        <span ng-if="::(person.birthDate || person.deathDate)">
-          {{ ::person.birthDate }}
-          <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
+        <span ng-if="::(person.birthDate)">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
+        <span ng-if="::person.deathDate">&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
           <br />
-        </span>
+        
         <span class="icon-menu">
           <a title="Kansallisbiografia" class="" ng-href="{{ ::person.kansallisbiografia }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
           <a title="Data" class="" ng-href="{{ ::person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
@@ -71,7 +69,7 @@
       <button class="page-btn visible-xs-block visible-sm-block btn btn-default" ng-click="::vm.openPage(person)">Matrikkelisivu</button>
     </td>
     <td data-title="'Matrikkeliteksti'"
-      class="hidden-xs hidden-sm">{{ ::person.lead_paragraph | truncate: 500 : '...' : true }}</td>
+      class="hidden-xs hidden-sm"><p ng-bind-html="::person.lead_paragraph"></p></td>
   </tr>
   </tbody>
 </table>
