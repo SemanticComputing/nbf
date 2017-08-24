@@ -36,19 +36,19 @@
         $stateProvider
         .state('detail', {
             url: '/tiedot/:personId',
-            templateUrl: 'views/norssit.detail.html',
+            templateUrl: 'views/detail.html',
             controller: 'DetailController',
             controllerAs: 'vm'
         })
         .state('table', {
             url: '/lista',
-            templateUrl: 'views/norssit.table.html',
+            templateUrl: 'views/table.html',
             controller: 'TableController',
             controllerAs: 'vm'
         })
         .state('cards', {
             url: '/ruudukko',
-            templateUrl: 'views/norssit.cards.html',
+            templateUrl: 'views/cards.html',
             controller: 'CardsController',
             controllerAs: 'vm'
         })
@@ -57,13 +57,13 @@
         })
         .state('visualizations.visu', {
             url: '/visualisointi',
-            templateUrl: 'views/norssit.visu.html',
+            templateUrl: 'views/visu.html',
             controller: 'VisuController',
             controllerAs: 'vm'
         })
         .state('visualizations.visu2', {
             url: '/visualisointi2',
-            templateUrl: 'views/norssit.visu2.html',
+            templateUrl: 'views/visu2.html',
             controller: 'VisuController2',
             controllerAs: 'vm'
         });
