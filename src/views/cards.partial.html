@@ -45,6 +45,9 @@
                 <div ng-if="::person.wikipedia" class="col-xs-6">
                   <a ng-href="{{ ::person.wikipedia }}">Wikipedia</a>
                 </div>
+                <div ng-if="::person.wikidata" class="col-xs-6">
+                  <a ng-href="{{ ::person.wikidata }}">Wikidata</a>
+                </div>
                 <div ng-if="::person.warsa" class="col-xs-6">
                   <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ ::person.warsa }}">Sotasampo</a>
                 </div>
@@ -62,6 +65,9 @@
                 </div>
                 <div ng-if="::person.viaf" class="col-xs-6">
                   <a ng-href="{{ ::person.viaf }}">VIAF</a>
+                </div>
+                <div ng-if="::person.norssit" class="col-xs-6">
+                  <a ng-href="{{ ::person.norssit }}">Norssit</a>
                 </div>
                 <div ng-if="::person.genicom" class="col-xs-6">
                   <a ng-href="{{ ::person.genicom }}">Kotisivu (Geni.com)</a>

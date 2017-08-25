@@ -50,19 +50,29 @@
                         label: 'Wikipedia'
                     },
                     {
+                        id: 'wikidata',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/wikidata> [] .',
+                        label: 'Wikidata'
+                    },
+                    {
                         id: 'kirjasampo',
-                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/kirjasampo> [] .',
                         label: 'Kirjasampo'
                     },
                     {
                         id: 'kulttuurisampo',
-                        pattern: '?id <http://ldf.fi/nbf/kulttuurisampo> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/kulttuurisampo> [] .',
                         label: 'Kulttuurisampo'
                     },
                     {
                         id: 'sotasampo',
-                        pattern: '?id <http://ldf.fi/nbf/warsa> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/warsa> [] .',
                         label: 'Sotasampo'
+                    },
+                    {
+                        id: 'norssit',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/norssit> [] .',
+                        label: 'Norssit'
                     },
                     {
                         id: 'blf',
@@ -70,23 +80,18 @@
                         label: 'BLF'
                     },
                     {
-                        id: 'wikidata',
-                        pattern: '?id <http://ldf.fi/nbf/wikidata> [] .',
-                        label: 'Wikidata'
-                    },
-                    {
                         id: 'ulan',
-                        pattern: '?id <http://ldf.fi/nbf/ulan> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/ulan> [] .',
                         label: 'ULAN'
                     },
                     {
                         id: 'viaf',
-                        pattern: '?id <http://ldf.fi/nbf/viaf> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/viaf> [] .',
                         label: 'VIAF'
                     },
                     {
                         id: 'genicom',
-                        pattern: '?id <http://ldf.fi/nbf/genicom> [] .',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/genicom> [] .',
                         label: 'Geni.com'
                     }
                 ],
@@ -195,6 +200,9 @@
         '  		OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
         '  		OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
         '  }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:viaf ?viaf . }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:ulan ?ulan . }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id ^foaf:focus/nbf:wikipedia ?wikipedia . }' +
         '  OPTIONAL { ?id ^foaf:focus/nbf:blf ?blf . }' +
         '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
