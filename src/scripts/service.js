@@ -93,6 +93,16 @@
                         id: 'genicom',
                         pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/genicom> [] .',
                         label: 'Geni.com'
+                    },
+                    {
+                        id: 'website',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/website> [] .',
+                        label: 'Kotisivu'
+                    },
+                    {
+                        id: 'eduskunta',
+                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/eduskunta> [] .',
+                        label: 'Eduskunta'
                     }
                 ],
                 enabled: true,
@@ -205,6 +215,8 @@
         '  OPTIONAL { ?id ^foaf:focus/nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id ^foaf:focus/nbf:wikipedia ?wikipedia . }' +
         '  OPTIONAL { ?id ^foaf:focus/nbf:blf ?blf . }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:website ?website . }' +
+        '  OPTIONAL { ?id ^foaf:focus/nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
         '  OPTIONAL { ?id (^foaf:focus)/schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id nbf:has_category ?category . }'  +
