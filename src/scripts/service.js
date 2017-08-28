@@ -165,6 +165,18 @@
                 predicate: '<http://ldf.fi/nbf/sukupuoli>',
                 name: 'Sukupuoli',
                 enabled: true
+            },
+            company: {
+                facetId: 'company',
+                predicate: '<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/related_company>',
+                name: 'Yritys tai yhteisö',
+                enabled: true
+            },
+            title: {
+                facetId: 'title',
+                predicate: '<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/has_cccupation>',
+                name: 'Titteli',
+                enabled: true
             }
         };
 
@@ -218,6 +230,7 @@
         '  OPTIONAL { ?id ^foaf:focus/nbf:website ?website . }' +
         '  OPTIONAL { ?id ^foaf:focus/nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
+        '  OPTIONAL { ?id bioc:has_profession/nbf:relatedCompany ?company . }' +
         '  OPTIONAL { ?id (^foaf:focus)/schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id nbf:has_category ?category . }'  +
         ' }';
