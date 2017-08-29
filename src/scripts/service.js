@@ -46,62 +46,62 @@
                 choices: [
                     {
                         id: 'wikipedia',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/wikipedia> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/wikipedia> [] .',
                         label: 'Wikipedia'
                     },
                     {
                         id: 'wikidata',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/wikidata> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/wikidata> [] .',
                         label: 'Wikidata'
                     },
                     {
                         id: 'kirjasampo',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/kirjasampo> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] .',
                         label: 'Kirjasampo'
                     },
                     {
                         id: 'kulttuurisampo',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/kulttuurisampo> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/kulttuurisampo> [] .',
                         label: 'Kulttuurisampo'
                     },
                     {
                         id: 'sotasampo',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/warsa> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/warsa> [] .',
                         label: 'Sotasampo'
                     },
                     {
                         id: 'norssit',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/norssit> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/norssit> [] .',
                         label: 'Norssit'
                     },
                     {
                         id: 'blf',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/blf> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/blf> [] .',
                         label: 'BLF'
                     },
                     {
                         id: 'ulan',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/ulan> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/ulan> [] .',
                         label: 'ULAN'
                     },
                     {
                         id: 'viaf',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/viaf> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/viaf> [] .',
                         label: 'VIAF'
                     },
                     {
                         id: 'genicom',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/genicom> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/genicom> [] .',
                         label: 'Geni.com'
                     },
                     {
                         id: 'website',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/website> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/website> [] .',
                         label: 'Kotisivu'
                     },
                     {
                         id: 'eduskunta',
-                        pattern: '?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/eduskunta> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/eduskunta> [] .',
                         label: 'Eduskunta'
                     }
                 ],
@@ -115,67 +115,68 @@
             },
             dataset: {
                 facetId: 'dataset',
-                predicate: '^<http://xmlns.com/foaf/0.1/focus>/<http://purl.org/dc/terms/source>',
+                predicate: '<http://purl.org/dc/terms/source>',
                 name: 'Tietokanta'
             },
             birthYear: {
                 facetId: 'birthYear',
-                predicate: '^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
                 name: 'Synnyinvuosi',
                 enabled: true
             },
             birthPlace: {
                 facetId: 'birthPlace',
-                predicate: '^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/place>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/place>',
                 name: 'Syntymäpaikka',
                 enabled: true
             },
             deathYear: {
                 facetId: 'birthYear',
-                predicate: '^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
                 name: 'Kuolinvuosi',
                 enabled: true
             },
             deathPlace: {
                 facetId: 'deathPlace',
-                predicate: '^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/place>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/place>',
                 name: 'Kuolinpaikka',
                 enabled: true
             },
+            title: {
+                facetId: 'title',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/has_occupation>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                name: 'Arvo tai ammatti',
+                enabled: true
+            },
+            company: {
+                facetId: 'company',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/related_company>',
+                name: 'Yritys tai yhteisö',
+                enabled: true
+            },
+            /**
             occupation: {
                 facetId: 'occupation',
                 predicate: '<http://ldf.fi/schema/bioc/has_profession>',
                 name: 'Arvo tai ammatti',
                 enabled: true
-            },
+            },*/
             period: {
             	facetId: 'period',
-                predicate: '<http://ldf.fi/nbf/has_period>', 
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>', 
                 name: 'Aikakausi',
                 enabled: true
             },
             category: {
                 facetId: 'category',
-                predicate: '<http://ldf.fi/nbf/has_category>', 
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>', 
                 name: 'Kategoria',
                 enabled: true
             },
             gender: {
                 facetId: 'gender',
-                predicate: '<http://ldf.fi/nbf/sukupuoli>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
                 name: 'Sukupuoli',
-                enabled: true
-            },
-            company: {
-                facetId: 'company',
-                predicate: '<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/related_company>',
-                name: 'Yritys tai yhteisö',
-                enabled: true
-            },
-            title: {
-                facetId: 'title',
-                predicate: '<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/has_cccupation>',
-                name: 'Titteli',
                 enabled: true
             }
         };
@@ -192,7 +193,6 @@
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
-        ' PREFIX occupations: <http://ldf.fi/nbf/occupations/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
@@ -205,34 +205,36 @@
         '    <RESULT_SET> ' +
         '  } ' +
         '  OPTIONAL { ?id schema:givenName ?givenName . }' +
-        '  OPTIONAL { ?id schema:familyName ?familyName . }' + 
-        '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
-        '  OPTIONAL { ?id ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
-        '  OPTIONAL { ?id ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
-        '  OPTIONAL { ?id ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
-        '  OPTIONAL { ?id schema:gender ?gender . }' +
-        '  OPTIONAL { ?id schema:image ?images . }' +
-        '  OPTIONAL { ?id nbf:has_biography ?bio . ' +
-        '  		OPTIONAL { ?bio schema:description ?description . }' +
-        '  		OPTIONAL { ?bio nbf:lead_paragraph ?lead_paragraph . }' +
-        '  		OPTIONAL { ?bio nbf:source_paragraph ?source_paragraph . }' +
-        '  		OPTIONAL { ?bio nbf:family_paragraph ?family_paragraph . }' +
-        '  		OPTIONAL { ?bio nbf:spouse_paragraph ?spouse_paragraph . }' +
-        '  		OPTIONAL { ?bio nbf:child_paragraph ?child_paragraph . }' +
-        '  		OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
-        '  		OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
+        '  OPTIONAL { ?id schema:familyName ?familyName . }' +
+        '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
+        '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+        '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
+        '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+        '  OPTIONAL { ?id nbf:blf ?blf . }' +
+        '  OPTIONAL { ?id nbf:website ?website . }' +
+        '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
+        '  OPTIONAL { ?id schema:related_link ?kansallisbiografia . }' +
+        '  OPTIONAL { ?id foaf:focus ?prs . ' +
+        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
+        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
+        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
+        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
+        '  		OPTIONAL { ?prs schema:gender ?gender . }' +
+        '  		OPTIONAL { ?prs schema:image ?images . }' +
+        '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
+        '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
+        '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
+        '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
+        '  			OPTIONAL { ?bio schema:description ?description . }' +
+        '  			OPTIONAL { ?bio nbf:lead_paragraph ?lead_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:source_paragraph ?source_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:family_paragraph ?family_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:spouse_paragraph ?spouse_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:child_paragraph ?child_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
+        '  		}' +
         '  }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:viaf ?viaf . }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:ulan ?ulan . }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:wikidata ?wikidata . }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:wikipedia ?wikipedia . }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:blf ?blf . }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:website ?website . }' +
-        '  OPTIONAL { ?id ^foaf:focus/nbf:eduskunta ?eduskunta . }' +
-        '  OPTIONAL { ?id bioc:has_profession/skos:prefLabel ?occupation . }' +
-        '  OPTIONAL { ?id bioc:has_profession/nbf:relatedCompany ?company . }' +
-        '  OPTIONAL { ?id (^foaf:focus)/schema:relatedLink ?kansallisbiografia . }' +
-        '  OPTIONAL { ?id nbf:has_category ?category . }'  +
         ' }';
 
         var achievementQuery = prefixes +
@@ -252,8 +254,8 @@
 
         var facetOptions = {
             endpointUrl: endpointConfig.endpointUrl,
-            rdfClass: '<http://ldf.fi/nbf/Person>',
-            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id ^<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/ordinal> ?ordinal . ',
+            rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
+            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
             preferredLang : 'fi'
         };
 
