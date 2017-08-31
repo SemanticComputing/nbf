@@ -189,6 +189,7 @@
         ' PREFIX schema: <http://schema.org/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
@@ -204,8 +205,10 @@
         '  { ' +
         '    <RESULT_SET> ' +
         '  } ' +
-        '  OPTIONAL { ?id schema:givenName ?givenName . }' +
-        '  OPTIONAL { ?id schema:familyName ?familyName . }' +
+        '  OPTIONAL { ?id skosxl:prefLabel ?plabel . ' +
+        '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
+        '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
+        '	} ' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
