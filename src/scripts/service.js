@@ -224,15 +224,29 @@
         '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
         '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
+        '  		OPTIONAL { ?prs bioc:has_family_relation [ ' +
+        '  			bioc:inheres_in/^foaf:focus ?relative__id ; ' +
+        '  			a/skos:prefLabel ?relative__type ] . ' +
+        '  			FILTER (LANG(?relative__type)="fi") ' +
+        '  			?relative__id schema:familyName ?relative__familyName ; schema:givenName ?relative__givenName .' +
+        '  			BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\s*","") AS ?relative__name)  ' +
+        '		} ' +
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
-        '  			OPTIONAL { ?bio schema:description ?description . }' +
-        '  			OPTIONAL { ?bio nbf:lead_paragraph ?lead_paragraph . }' +
-        '  			OPTIONAL { ?bio nbf:source_paragraph ?source_paragraph . }' +
-        '  			OPTIONAL { ?bio nbf:family_paragraph ?family_paragraph . }' +
-        '  			OPTIONAL { ?bio nbf:spouse_paragraph ?spouse_paragraph . }' +
-        '  			OPTIONAL { ?bio nbf:child_paragraph ?child_paragraph . }' +
-        '  			OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
-        '  			OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?description ; nbf:id "1"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?family_paragraph ; nbf:id "2"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?parent_paragraph ; nbf:id "3"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?spouse_paragraph ; nbf:id "4"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?child_paragraph ; nbf:id "5"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?medal_paragraph ; nbf:id "6"^^xsd:integer  ] }' +
+        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?source_paragraph ; nbf:id "7"^^xsd:integer  ] }' +
+        //'  			OPTIONAL { ?bio schema:description ?description . }' +
+        //'  			OPTIONAL { ?bio nbf:source_paragraph ?source_paragraph . }' +
+        //'  			OPTIONAL { ?bio nbf:family_paragraph ?family_paragraph . }' +
+        //'  			OPTIONAL { ?bio nbf:spouse_paragraph ?spouse_paragraph . }' +
+        //'  			OPTIONAL { ?bio nbf:child_paragraph ?child_paragraph . }' +
+        //'  			OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
+        //'  			OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
         '  		}' +
         '  }' +
         ' }';
