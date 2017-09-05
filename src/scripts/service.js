@@ -30,7 +30,7 @@
         this.getPerson = getPerson;
         // Get the achievements of a person.
         this.getAchievements = getAchievements;
-
+        
         /* Implementation */
 
         var facets = {
@@ -110,7 +110,7 @@
             },
             familyName: {
                 facetId: 'familyName',
-                predicate: '<http://schema.org/familyName>',
+                predicate: '<skosxl:prefLabel>/<http://schema.org/familyName>',
                 name: 'Sukunimi'
             },
             dataset: {
@@ -227,33 +227,62 @@
         '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
         '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-        '  		OPTIONAL { ?prs bioc:has_family_relation [ ' +
-        '  			bioc:inheres_in/^foaf:focus ?relative__id ; ' +
-        '  			a/skos:prefLabel ?relative__type ] . ' +
-        '  			FILTER (LANG(?relative__type)="fi") ' +
-        '  			?relative__id schema:familyName ?relative__familyName ; schema:givenName ?relative__givenName .' +
-        '  			BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\s*","") AS ?relative__name)  ' +
-        '		} ' +
+        
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
         '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?description ; nbf:id "1"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?family_paragraph ; nbf:id "2"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?parent_paragraph ; nbf:id "3"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?spouse_paragraph ; nbf:id "4"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?child_paragraph ; nbf:id "5"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?medal_paragraph ; nbf:id "6"^^xsd:integer  ] }' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?source_paragraph ; nbf:id "7"^^xsd:integer  ] }' +
-        //'  			OPTIONAL { ?bio schema:description ?description . }' +
-        //'  			OPTIONAL { ?bio nbf:source_paragraph ?source_paragraph . }' +
-        //'  			OPTIONAL { ?bio nbf:family_paragraph ?family_paragraph . }' +
-        //'  			OPTIONAL { ?bio nbf:spouse_paragraph ?spouse_paragraph . }' +
-        //'  			OPTIONAL { ?bio nbf:child_paragraph ?child_paragraph . }' +
-        //'  			OPTIONAL { ?bio nbf:parent_paragraph ?parent_paragraph . }' +
-        //'  			OPTIONAL { ?bio nbf:medal_paragraph ?medal_paragraph . }' +
-        '  		}' +
+        '  		}' +  
         '  }' +
         ' }';
 
+        var detailQuery =
+            ' SELECT DISTINCT * WHERE {' +
+            '  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+            '  OPTIONAL { ?id skosxl:prefLabel ?plabel . ' +
+            '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
+            '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
+            '	} ' +
+            '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
+            '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+            '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
+            '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+            '  OPTIONAL { ?id nbf:blf ?blf . }' +
+            '  OPTIONAL { ?id nbf:website ?website . }' +
+            '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
+            '  OPTIONAL { ?id schema:related_link ?kansallisbiografia . }' +
+            '  OPTIONAL { ?id bioc:has_family_relation [ ' +
+            '  		bioc:inheres_in ?relative__id ; ' +
+            '  		a/skos:prefLabel ?relative__type ] . ' +
+            '  		FILTER (LANG(?relative__type)="fi") ' +
+            '  		?relative__id skosxl:prefLabel/schema:familyName ?relative__familyName ; ' + 
+            '			skosxl:prefLabel/schema:givenName ?relative__givenName .' +
+            '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\s*","") AS ?relative__name)  ' +
+            '  } ' +
+            '  OPTIONAL { ?id foaf:focus ?prs . ' +
+            '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
+            '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
+            '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
+            '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
+            '  		OPTIONAL { ?prs schema:gender ?gender . }' +
+            '  		OPTIONAL { ?prs schema:image ?images . }' +
+            '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
+            '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
+            '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
+            
+            '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?description ; nbf:id "1"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?family_paragraph ; nbf:id "2"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?parent_paragraph ; nbf:id "3"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?spouse_paragraph ; nbf:id "4"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?child_paragraph ; nbf:id "5"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?medal_paragraph ; nbf:id "6"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?source_paragraph ; nbf:id "7"^^xsd:integer  ] }' +
+            '  		}' +  
+            '  }' +
+            ' }';
+        
         var achievementQuery = prefixes +
         ' SELECT DISTINCT ?id ?label ?wikipedia { ' +
         '  VALUES ?person { <ID> } ' +
@@ -296,8 +325,9 @@
         }
 
         function getPerson(id) {
-            var qry = prefixes + query;
+            var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?id { <' + id + '> } ';
+            //	console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
                 if (person.length) {
@@ -308,14 +338,16 @@
         }
 
         function getAchievements(person) {
+        	return person;
+        	
             if (!person.hasAchievements || person.achievements) {
                 return person;
-            }
+            } 
             var qry = achievementQuery.replace('<ID>', '<' + person.id + '>');
             return endpoint.getObjects(qry).then(function(achievements) {
                 person.achievements = achievements;
                 return person;
-            });
+            }); 
         }
 
         function getFacets() {
