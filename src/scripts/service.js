@@ -110,7 +110,7 @@
             },
             familyName: {
                 facetId: 'familyName',
-                predicate: '<skosxl:prefLabel>/<http://schema.org/familyName>',
+                predicate: '<http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://schema.org/familyName>',
                 name: 'Sukunimi'
             },
             dataset: {
@@ -216,11 +216,11 @@
         '  OPTIONAL { ?id nbf:blf ?blf . }' +
         '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
-        '  OPTIONAL { ?id schema:related_link ?kansallisbiografia . }' +
+        '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +
         '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
-        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
-        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
+        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
+        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
         '  		OPTIONAL { ?prs schema:image ?images . }' +
@@ -250,7 +250,7 @@
             '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
-            '  OPTIONAL { ?id schema:related_link ?kansallisbiografia . }' +
+            '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?id bioc:has_family_relation [ ' +
             '  		bioc:inheres_in ?relative__id ; ' +
             '  		a/skos:prefLabel ?relative__type ] . ' +
@@ -260,11 +260,15 @@
             '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\s*","") AS ?relative__name)  ' +
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
-            '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
-            '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time ?birthDate . }' +
-            '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time ?deathDate . }' +
-            '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
-            '  		OPTIONAL { ?prs schema:gender ?gender . }' +
+            '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
+            '  			OPTIONAL { ?bir nbf:place ?birthPlace . } ' +
+            '  			OPTIONAL { ?bir nbf:time/skos:prefLabel ?birthDate . }' +
+            '		} ' +
+            '  		OPTIONAL { ?prs ^crm:P100_was_death_of ?dea . ' +
+            '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate . }' +
+            '  			OPTIONAL { ?dea nbf:place ?deathPlace . }' +
+            '		} ' +	
+            // '  		OPTIONAL { ?prs schema:gender ?gender . }' +
             '  		OPTIONAL { ?prs schema:image ?images . }' +
             '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
             '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
@@ -326,12 +330,12 @@
 
         function getPerson(id) {
             var qry = prefixes + detailQuery;
-            var constraint = 'VALUES ?id { <' + id + '> } ';
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
             //	console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
                 if (person.length) {
-                    return person[0];
+                    return person[person.length-1];
                 }
                 return $q.reject('Not found');
             });

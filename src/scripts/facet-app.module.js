@@ -19,7 +19,7 @@
     .constant('RESULTS_PER_PAGE', 25)
     .constant('PAGES_PER_QUERY', 1)
 
-    .value('SPARQL_ENDPOINT_URL', 'https://ldf.fi/nbf/sparql')
+    .value('SPARQL_ENDPOINT_URL', 'http://ldf.fi/nbf/sparql')
 
     .config(function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.strictMode(false);

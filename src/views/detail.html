@@ -30,7 +30,7 @@
                 <p>{{ vm.person.occupation | castArray | join:', ' }}</p>
               </div>
               <div class="col-xs-12 icon-menu">
-                <a title="Kansallisbiografia" class="" ng-href="{{ vm.person.kansallisbiografia }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+                <a ng-if="vm.person.kansallisbiografia" title="Kansallisbiografia" class="" ng-href="{{ vm.person.kansallisbiografia }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
                 <a title="Data" class="" ng-href="{{ vm.person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
               </div>
             </div>
