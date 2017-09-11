@@ -182,7 +182,7 @@
         };
 
         var prefixes =
-        ' PREFIX nach: <http://ldf.fi/norssit/achievements/> ' +
+        // ' PREFIX nach: <http://ldf.fi/norssit/achievements/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
@@ -205,10 +205,10 @@
         '  { ' +
         '    <RESULT_SET> ' +
         '  } ' +
-        '  OPTIONAL { ?id skosxl:prefLabel ?plabel . ' +
+        '  ?id skosxl:prefLabel ?plabel . ' +
         '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
         '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
-        '	} ' +
+        ' ' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
@@ -218,10 +218,10 @@
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +
-        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . } ' +
+        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . filter (isliteral(?birthPlace)) } ' +
         '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
-        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . }' +
+        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
         '  		OPTIONAL { ?prs schema:image ?images . }' +
         '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
@@ -239,10 +239,10 @@
             '  { ' +
             '    <RESULT_SET> ' +
             '  } ' +
-            '  OPTIONAL { ?id skosxl:prefLabel ?plabel . ' +
+            '  ?id skosxl:prefLabel ?plabel . ' +
             '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
             '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
-            '	} ' +
+            ' ' +
             '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
             '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
             '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
@@ -261,12 +261,12 @@
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
-            '  			OPTIONAL { ?bir nbf:place ?birthPlace . } ' +
+            '  			OPTIONAL { ?bir nbf:place ?birthPlace . filter (isliteral(?birthPlace)) } ' +
             '  			OPTIONAL { ?bir nbf:time/skos:prefLabel ?birthDate . }' +
             '		} ' +
             '  		OPTIONAL { ?prs ^crm:P100_was_death_of ?dea . ' +
             '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate . }' +
-            '  			OPTIONAL { ?dea nbf:place ?deathPlace . }' +
+            '  			OPTIONAL { ?dea nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
             '		} ' +	
             // '  		OPTIONAL { ?prs schema:gender ?gender . }' +
             '  		OPTIONAL { ?prs schema:image ?images . }' +
