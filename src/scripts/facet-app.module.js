@@ -5,6 +5,7 @@
 
     'use strict';
 
+    
     angular.module('facetApp', [
         'ui.router',
         'seco.facetedSearch',
@@ -12,9 +13,10 @@
         'angular.filter',
         'ngAnimate',
         'ui.bootstrap',
-        'infinite-scroll'
+        'infinite-scroll',
+        'uiGmapgoogle-maps'
     ])
-
+    
     .constant('_', _) // eslint-disable-line no-undef
     .constant('RESULTS_PER_PAGE', 25)
     .constant('PAGES_PER_QUERY', 1)
@@ -38,6 +40,12 @@
             url: '/tiedot/:personId',
             templateUrl: 'views/detail.html',
             controller: 'DetailController',
+            controllerAs: 'vm'
+        })
+        .state('map', {
+            url: '/kartta/:personId',
+            templateUrl: 'views/map.html',
+            controller: 'MapController',
             controllerAs: 'vm'
         })
         .state('table', {

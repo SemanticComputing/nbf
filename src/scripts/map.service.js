@@ -1,0 +1,200 @@
+(function() {
+
+    'use strict';
+
+    /* eslint-disable angular/no-service-method */
+    angular.module('facetApp')
+
+    .service('mapService', mapService);
+
+    /* @ngInject */
+    function mapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
+            AdvancedSparqlService, personMapperService) {
+
+        /* Public API */
+
+        // Get the results based on facet selections.
+        // Return a promise.
+        this.getResults = getResults;
+        // Get the facets.
+        // Return a promise (because of translation).
+        this.getFacets = getFacets;
+        // Get the facet options.
+        // Return an object.
+        this.getFacetOptions = getFacetOptions;
+        // Update sorting URL params.
+        this.updateSortBy = updateSortBy;
+        // Get the CSS class for the sort icon.
+        this.getSortClass = getSortClass;
+        // Get the details of a single person.
+        this.getPerson = getPerson;
+        // Get the achievements of a person.
+        this.getAchievements_OLD = getAchievements;
+        // Get the details of a single person.
+        this.getEvents = getEvents;
+        
+        /* Implementation */
+
+
+        var prefixes =
+        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
+        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+        ' PREFIX schema: <http://schema.org/> ' +
+        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
+        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
+        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
+        ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
+        ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
+        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+        ' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
+        
+        // The query for the results.
+        // ?id is bound to the person URI.
+        var query = 
+        ' SELECT DISTINCT * WHERE {' +
+        '  { ' +
+        '    <RESULT_SET> ' +
+        '  } ' +
+    	'  ?id foaf:focus ?prs ; ' +
+    	'  		skosxl:prefLabel ?label . ' +
+    	'  OPTIONAL { ?label schema:givenName ?givenName } ' +
+    	'  OPTIONAL { ?label schema:familyName ?familyName } ' +
+    	'       ' +
+    	'  ?event crm:P100_was_death_of|crm:P98_brought_into_life ?prs . ' +
+    	'  OPTIONAL { ?event a/skos:prefLabel ?event_label } ' +
+    	'  OPTIONAL { ?event nbf:time ?time . ' +
+    	'	OPTIONAL { ?time gvp:estStart ?start_time. } ' +
+    	'  	OPTIONAl { ?time gvp:estEnd ?end_time. } ' +
+    	'  	OPTIONAL { ?time skos:prefLabel ?time_label. } ' +
+    	'  	} ' +
+    	'  OPTIONAL { ?event nbf:place ?place . ' +
+    	'    filter (isUri(?place)) ' +
+    	'    OPTiONAL { ?place  geo:lat ?lat ; geo:long ?lon }  ' +
+    	'    OPTIoNAL { ?place  skos:prefLabel ?place_name }  ' +
+    	'  	} ' +
+    	'  } ';
+
+        var achievementQuery_OLD = prefixes +
+        ' SELECT DISTINCT ?id ?label ?wikipedia { ' +
+        '  VALUES ?person { <ID> } ' +
+        '  ?ach rdfs:subPropertyOf* nach:involved_in .' +
+        '  ?person ?ach ?id . ' +
+        '  ?id skos:prefLabel ?label .' +
+        '  ?id norssit:wikipedia|norssit:www ?wikipedia .' +
+        ' } ';
+
+        // The SPARQL endpoint URL
+        var endpointConfig = {
+            'endpointUrl': SPARQL_ENDPOINT_URL,
+            'usePost': true
+        };
+
+        var facetOptions = {
+            endpointUrl: endpointConfig.endpointUrl,
+            rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
+            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
+            preferredLang : 'fi'
+        };
+
+        var resultOptions = {
+            mapper: personMapperService,
+            queryTemplate: query,
+            prefixes: prefixes,
+            paging: true,
+            pagesPerQuery: 2 // get two pages of results per query
+        };
+
+        // The FacetResultHandler handles forming the final queries for results,
+        // querying the endpoint, and mapping the results to objects.
+        var resultHandler = new FacetResultHandler(endpointConfig, resultOptions);
+
+        // This handler is for the additional queries.
+        var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
+
+        function getResults(facetSelections) {
+            return resultHandler.getResults(facetSelections, getSortBy());
+        }
+
+        function getEvents(id) {
+            var qry = prefixes + query;
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
+            //	console.log(qry.replace('<RESULT_SET>', constraint));
+            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
+            .then(function(person) {
+            	console.log('Events');
+            	console.log(person);
+                if (person.length) {
+                    return person[person.length-1];
+                }
+                return $q.reject('Not found');
+            });
+        }
+        
+        function getPerson(id) {
+            var qry = prefixes + query;
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
+            //	console.log(qry.replace('<RESULT_SET>', constraint));
+            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
+            .then(function(person) {
+            	console.log(person);
+                if (person.length) {
+                    return person[person.length-1];
+                }
+                return $q.reject('Not found');
+            });
+        }
+
+        function getAchievements(person) {
+        	return person;
+        }
+
+        function getFacets() {
+            var facetsCopy = angular.copy(facets);
+            return $q.when(facetsCopy);
+        }
+
+        function getFacetOptions() {
+            return facetOptions;
+        }
+
+        function updateSortBy(sortBy) {
+            var sort = $location.search().sortBy || '?ordinal';
+            if (sort === sortBy) {
+                $location.search('desc', $location.search().desc ? null : true);
+            }
+            $location.search('sortBy', sortBy);
+        }
+
+        function getSortBy() {
+            var sortBy = $location.search().sortBy;
+            if (!_.isString(sortBy)) {
+                sortBy = '?ordinal';
+            }
+            var sort;
+            if ($location.search().desc) {
+                sort = 'DESC(' + sortBy + ')';
+            } else {
+                sort = sortBy;
+            }
+            return sortBy === '?ordinal' ? sort : sort + ' ?ordinal';
+        }
+
+        function getSortClass(sortBy, numeric) {
+            var sort = $location.search().sortBy || '?ordinal';
+            var cls = numeric ? 'glyphicon-sort-by-order' : 'glyphicon-sort-by-alphabet';
+
+            if (sort === sortBy) {
+                if ($location.search().desc) {
+                    return cls + '-alt';
+                }
+                return cls;
+            }
+        }
+    }
+})();

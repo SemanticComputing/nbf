@@ -16,7 +16,7 @@
     .controller('CardsController', CardsController);
 
     /* @ngInject */
-    function CardsController($scope, $location, $state, $uibModal, _, norssitService,
+    function CardsController($scope, $location, $state, $uibModal, _, nbfService,
             FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
@@ -29,8 +29,8 @@
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.sortBy = sortBy;
-        vm.getSortClass = norssitService.getSortClass;
-        vm.getAchievements = getAchievements;
+        vm.getSortClass = nbfService.getSortClass;
+        // vm.getAchievements = getAchievements;
 
         vm.people = [];
 
@@ -40,7 +40,7 @@
         });
         $scope.$on('sf-facet-constraints', updateResults);
 
-        norssitService.getFacets().then(function(facets) {
+        nbfService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -61,12 +61,12 @@
             });
         }
 
-        function getAchievements(person) {
-            return norssitService.getAchievements(person);
+        function getAchievements_OLD(person) {
+            return nbfService.getAchievements(person);
         }
 
         function getFacetOptions() {
-            var options = norssitService.getFacetOptions();
+            var options = nbfService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
         }
@@ -96,7 +96,7 @@
         }
 
         function sortBy(sortBy) {
-            norssitService.updateSortBy(sortBy);
+        	nbfService.updateSortBy(sortBy);
             return fetchResults({ constraint: vm.previousSelections });
         }
 
@@ -120,7 +120,7 @@
             latestUpdate = updateId;
 
             nextPageNo = 0;
-            norssitService.getResults(facetSelections)
+            nbfService.getResults(facetSelections)
             .then(function(pager) {
                 return pager.getMaxPageNo().then(function(no) {
                     return [pager, no];

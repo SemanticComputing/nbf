@@ -17,14 +17,14 @@
 
     /* @ngInject */
     function TableController($scope, $state, $uibModal, _, RESULTS_PER_PAGE,
-                norssitService, NgTableParams, FacetHandler, facetUrlStateHandlerService) {
+    		nbfService, NgTableParams, FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
 
         vm.openPage = openPage;
         vm.removeFacetSelections = removeFacetSelections;
         vm.sortBy = sortBy;
-        vm.getSortClass = norssitService.getSortClass;
+        vm.getSortClass = nbfService.getSortClass;
 
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
@@ -32,7 +32,7 @@
         });
         $scope.$on('sf-facet-constraints', updateResults);
 
-        norssitService.getFacets().then(function(facets) {
+        nbfService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -65,7 +65,7 @@
         }
 
         function getFacetOptions() {
-            var options = norssitService.getFacetOptions();
+            var options = nbfService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
         }
@@ -95,7 +95,7 @@
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
 
-            norssitService.getResults(facetSelections)
+            nbfService.getResults(facetSelections)
             .then(function(pager) {
                 vm.pager = pager;
                 if (vm.tableParams) {
@@ -108,7 +108,7 @@
         }
 
         function sortBy(sortBy) {
-            norssitService.updateSortBy(sortBy);
+        	nbfService.updateSortBy(sortBy);
             return fetchResults({ constraint: vm.previousSelections });
         }
     }

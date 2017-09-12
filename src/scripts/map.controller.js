@@ -1,29 +1,27 @@
 (function() {
 
     'use strict';
-
-    angular.module('facetApp')
+     angular.module('facetApp')
 
     /*
-    * Controller for the person detail view.
+    * Controller for the person's timeline & map view.
     */
-    .controller('DetailController', DetailController);
+    .controller('MapController', MapController);
 
     /* @ngInject */
-    function DetailController($stateParams, $uibModal, _, nbfService) {
+    function MapController($stateParams, $uibModal, _, mapService) {
 
         var vm = this;
 
         vm.openPage = openPage;
-
+        vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
+        
         init();
 
         function init() {
-        	nbfService.getPerson($stateParams.personId).then(function(person) {
+        	mapService.getEvents($stateParams.personId).then(function(person) {
                 vm.person = person;
                 return person;
-            }).then(function(person) {
-                return nbfService.getAchievements(person);
             }).catch(handleError);
         }
 

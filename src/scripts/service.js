@@ -5,10 +5,10 @@
     /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
 
-    .service('norssitService', norssitService);
+    .service('nbfService', nbfService);
 
     /* @ngInject */
-    function norssitService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
+    function nbfService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
             AdvancedSparqlService, personMapperService) {
 
         /* Public API */
@@ -108,6 +108,12 @@
                 enabled: true,
                 name: 'Linkit'
             },
+            period: {
+            	facetId: 'period',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>', 
+                name: 'Ajanjakso',
+                enabled: true
+            },
             familyName: {
                 facetId: 'familyName',
                 predicate: '<http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://schema.org/familyName>',
@@ -121,24 +127,24 @@
             birthYear: {
                 facetId: 'birthYear',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
-                name: 'Synnyinvuosi',
+                name: 'Synnyinaika',
                 enabled: true
             },
             birthPlace: {
                 facetId: 'birthPlace',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/place>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Syntymäpaikka',
                 enabled: true
             },
             deathYear: {
                 facetId: 'birthYear',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
-                name: 'Kuolinvuosi',
+                name: 'Kuolinaika',
                 enabled: true
             },
             deathPlace: {
                 facetId: 'deathPlace',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/place>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Kuolinpaikka',
                 enabled: true
             },
@@ -161,12 +167,6 @@
                 name: 'Arvo tai ammatti',
                 enabled: true
             },*/
-            period: {
-            	facetId: 'period',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>', 
-                name: 'Aikakausi',
-                enabled: true
-            },
             category: {
                 facetId: 'category',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>', 
@@ -343,15 +343,6 @@
 
         function getAchievements(person) {
         	return person;
-        	
-            if (!person.hasAchievements || person.achievements) {
-                return person;
-            } 
-            var qry = achievementQuery.replace('<ID>', '<' + person.id + '>');
-            return endpoint.getObjects(qry).then(function(achievements) {
-                person.achievements = achievements;
-                return person;
-            }); 
         }
 
         function getFacets() {
