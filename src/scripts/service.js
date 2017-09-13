@@ -28,8 +28,6 @@
         this.getSortClass = getSortClass;
         // Get the details of a single person.
         this.getPerson = getPerson;
-        // Get the achievements of a person.
-        this.getAchievements = getAchievements;
         
         /* Implementation */
 

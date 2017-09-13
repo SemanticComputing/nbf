@@ -62,40 +62,33 @@
         '    <RESULT_SET> ' +
         '  } ' +
     	'  ?id foaf:focus ?prs ; ' +
-    	'  		skosxl:prefLabel ?label . ' +
-    	'  OPTIONAL { ?label schema:givenName ?givenName } ' +
-    	'  OPTIONAL { ?label schema:familyName ?familyName } ' +
+    	'  		skosxl:prefLabel ?plabel . ' +
+    	'  OPTIONAL { ?plabel schema:givenName ?givenName } ' +
+    	'  OPTIONAL { ?plabel schema:familyName ?familyName } ' +
     	'       ' +
-    	'  ?event crm:P100_was_death_of|crm:P98_brought_into_life ?prs . ' +
-    	'  OPTIONAL { ?event a/skos:prefLabel ?event_label } ' +
+    	'  ?event crm:P100_was_death_of|crm:P98_brought_into_life ?prs ; ' +
+    	'  OPTIONAL { ?event a/skos:prefLabel ?label } ' +
+    	'  OPTIONAL { ?event skos:prefLabel ?elabel } ' +
     	'  OPTIONAL { ?event nbf:time ?time . ' +
-    	'	OPTIONAL { ?time gvp:estStart ?start_time. } ' +
-    	'  	OPTIONAl { ?time gvp:estEnd ?end_time. } ' +
-    	'  	OPTIONAL { ?time skos:prefLabel ?time_label. } ' +
-    	'  	} ' +
+    	'		OPTIONAL { ?time gvp:estStart ?start_time. } ' +
+    	'  		OPTIONAl { ?time gvp:estEnd ?end_time. } ' +
+    	'  		OPTIONAL { ?time skos:prefLabel ?time_label. } ' +
+    	'  		} ' +
     	'  OPTIONAL { ?event nbf:place ?place . ' +
-    	'    filter (isUri(?place)) ' +
-    	'    OPTiONAL { ?place  geo:lat ?lat ; geo:long ?lon }  ' +
-    	'    OPTIoNAL { ?place  skos:prefLabel ?place_name }  ' +
-    	'  	} ' +
-    	'  } ';
+    	'  		filter (isUri(?place)) ' +
+    	'    	OPTiONAL { ?place  geo:lat ?lat ; geo:long ?lon }  ' +
+    	'    	OPTIoNAL { ?place  skos:prefLabel ?place_name }  ' +
+    	'  		} ' +
+    	'  } ORDER BY ?start_time ';
 
-        var achievementQuery_OLD = prefixes +
-        ' SELECT DISTINCT ?id ?label ?wikipedia { ' +
-        '  VALUES ?person { <ID> } ' +
-        '  ?ach rdfs:subPropertyOf* nach:involved_in .' +
-        '  ?person ?ach ?id . ' +
-        '  ?id skos:prefLabel ?label .' +
-        '  ?id norssit:wikipedia|norssit:www ?wikipedia .' +
-        ' } ';
-
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
             'usePost': true
         };
 
-        var facetOptions = {
+        var facetOptions_OLD = {
             endpointUrl: endpointConfig.endpointUrl,
             rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
             constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
@@ -121,18 +114,23 @@
             return resultHandler.getResults(facetSelections, getSortBy());
         }
 
+
+        function getResults1(facetSelections) {
+        	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+        	return endpoint.getObjectsNoGrouping(q);
+        }
+        
         function getEvents(id) {
             var qry = prefixes + query;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
             //	console.log(qry.replace('<RESULT_SET>', constraint));
-            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
-            .then(function(person) {
-            	console.log('Events');
-            	console.log(person);
-                if (person.length) {
-                    return person[person.length-1];
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(events) {
+            	
+                if (events.length) {
+                    return events;
                 }
-                return $q.reject('Not found');
+                return $q.reject('No events found');
             });
         }
         
