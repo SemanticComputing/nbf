@@ -19,7 +19,7 @@
         init();
 
         function init() {
-        	nbfService.getPerson($stateParams.personId).then(function(person) {
+            nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
                 return person;
             }).catch(handleError);

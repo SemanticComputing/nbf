@@ -5,7 +5,6 @@
 
     'use strict';
 
-    
     angular.module('facetApp', [
         'ui.router',
         'seco.facetedSearch',
@@ -16,7 +15,7 @@
         'infinite-scroll',
         'uiGmapgoogle-maps'
     ])
-    
+
     .constant('_', _) // eslint-disable-line no-undef
     .constant('RESULTS_PER_PAGE', 25)
     .constant('PAGES_PER_QUERY', 1)
@@ -27,15 +26,31 @@
         $urlMatcherFactoryProvider.strictMode(false);
     })
 
-    .config(function($urlRouterProvider, $windowProvider){
+    .config(function($urlRouterProvider){
         $urlRouterProvider.when('', '/ruudukko');
-        $urlRouterProvider.otherwise(function() {
-            $windowProvider.$get().location = 'http://www.norssit.fi';
-        });
+    })
+
+    .service('authInterceptor', function ($q, $state) {
+        this.responseError = function(response) {
+            if (response.status == 401) {
+                $state.go('login');
+            }
+            return $q.reject(response);
+        };
+    })
+
+    .config(function($httpProvider) {
+        $httpProvider.interceptors.push('authInterceptor');
     })
 
     .config(function($stateProvider) {
         $stateProvider
+        .state('login', {
+            url: '/login',
+            templateUrl: 'views/login.html',
+            controller: 'LoginController',
+            controllerAs: 'vm'
+        })
         .state('detail', {
             url: '/tiedot/:personId',
             templateUrl: 'views/detail.html',
@@ -58,7 +73,7 @@
             url: '/ruudukko',
             templateUrl: 'views/cards.html',
             controller: 'CardsController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
         })
         .state('visualizations', {
             abstract: true
