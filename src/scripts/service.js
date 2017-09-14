@@ -249,9 +249,12 @@
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
             '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
-            '  OPTIONAL { ?id bioc:has_family_relation [ ' +
+            '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
             '  		bioc:inheres_in ?relative__id ; ' +
-            '  		a/skos:prefLabel ?relative__type ] . ' +
+            '  		a/skos:prefLabel ?relative__type ] . } ' +
+            '		UNION { ?relative__id bioc:has_family_relation [ ' +
+            '  		bioc:inheres_in ?id ; ' +
+            '  		bioc:inverse_role/skos:prefLabel ?relative__type ] . } ' +
             '  		FILTER (LANG(?relative__type)="fi") ' +
             '  		?relative__id skosxl:prefLabel/schema:familyName ?relative__familyName ; ' + 
             '			skosxl:prefLabel/schema:givenName ?relative__givenName .' +
@@ -339,9 +342,7 @@
             });
         }
 
-        function getAchievements(person) {
-        	return person;
-        }
+        
 
         function getFacets() {
             var facetsCopy = angular.copy(facets);

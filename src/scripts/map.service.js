@@ -28,8 +28,6 @@
         this.getSortClass = getSortClass;
         // Get the details of a single person.
         this.getPerson = getPerson;
-        // Get the achievements of a person.
-        this.getAchievements_OLD = getAchievements;
         // Get the details of a single person.
         this.getEvents = getEvents;
         
@@ -61,25 +59,31 @@
         '  { ' +
         '    <RESULT_SET> ' +
         '  } ' +
-    	'  ?id foaf:focus ?prs ; ' +
-    	'  		skosxl:prefLabel ?plabel . ' +
-    	'  OPTIONAL { ?plabel schema:givenName ?givenName } ' +
-    	'  OPTIONAL { ?plabel schema:familyName ?familyName } ' +
-    	'       ' +
-    	'  ?event crm:P100_was_death_of|crm:P98_brought_into_life ?prs ; ' +
-    	'  OPTIONAL { ?event a/skos:prefLabel ?label } ' +
-    	'  OPTIONAL { ?event skos:prefLabel ?elabel } ' +
+    	'  ?id a nbf:PersonConcept ; ' +
+    	'      foaf:focus ?prs ; ' +
+    	'  		skosxl:prefLabel ?ilabel . ' +
+    	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
+    	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
+    	'   ' +
+    	'  { ?id bioc:has_family_relation ?event } ' +
+    	'  UNION ' +
+    	'  { ?event crm:P100_was_death_of ?prs } ' +
+    	'  UNION ' +
+    	'  { ?event crm:P98_brought_into_life ?prs } ' +
+    	'   ' +
+    	'  OPTIONAL { ?event a/skos:prefLabel ?class . FILTER (lang(?class)="en") } ' +
+    	'   OPTIONAL { ?event skos:prefLabel ?label } ' +
     	'  OPTIONAL { ?event nbf:time ?time . ' +
-    	'		OPTIONAL { ?time gvp:estStart ?start_time. } ' +
-    	'  		OPTIONAl { ?time gvp:estEnd ?end_time. } ' +
-    	'  		OPTIONAL { ?time skos:prefLabel ?time_label. } ' +
-    	'  		} ' +
+    	'	OPTIONAL { ?time gvp:estStart ?time__start. } ' +
+    	'  	OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
+    	'  	OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
+    	'  	} ' +
     	'  OPTIONAL { ?event nbf:place ?place . ' +
-    	'  		filter (isUri(?place)) ' +
-    	'    	OPTiONAL { ?place  geo:lat ?lat ; geo:long ?lon }  ' +
-    	'    	OPTIoNAL { ?place  skos:prefLabel ?place_name }  ' +
-    	'  		} ' +
-    	'  } ORDER BY ?start_time ';
+    	'    filter (isUri(?place)) ' +
+    	'    OPTIoNAL { ?place  geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
+    	'    OPTIoNAL { ?place  skos:prefLabel ?place__name }  ' +
+    	'  	} ' +
+    	'  } ORDER BY DESC(?time__end) ';
 
         
         // The SPARQL endpoint URL

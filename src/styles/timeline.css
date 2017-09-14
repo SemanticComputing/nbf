@@ -16,6 +16,10 @@ svg#timelinecontainer {
 	transition: fill .2s, stroke .2s;
 }
 
+#timelinecontainer path:hover {
+	stroke-width:8;
+}
+
 #timelinecontainer line {
 	stroke-width:7;
 	stroke-linecap:none;
@@ -24,9 +28,11 @@ svg#timelinecontainer {
 #timelinecontainer line:nth-child(even) {
 	stroke:#999;
 }
+
 #timelinecontainer line:nth-child(odd) {
 	stroke:#555;
 }
+
 #timelinecontainer .event:hover {
 	fill:#DDD;
 	stroke:#777;
@@ -48,6 +54,24 @@ svg#timelinecontainer {
 #timelinecontainer .death:hover {
 	fill:#ff7171;
 	stroke:#ff4141;
+}
+
+#timelinecontainer .spouse {
+	fill:#f0f0e0;
+}
+
+#timelinecontainer .spouse:hover {
+	fill:#f8f8e8;
+	stroke:#f0f0e0;
+}
+
+#timelinecontainer .child {
+	fill:#e0e0f0;
+}
+
+#timelinecontainer .child:hover {
+	fill:#d8d8f8;
+	stroke:#e0e0f0;
 }
 
 svg text {

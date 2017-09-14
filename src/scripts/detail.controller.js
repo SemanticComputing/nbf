@@ -22,8 +22,6 @@
         	nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
                 return person;
-            }).then(function(person) {
-                return nbfService.getAchievements(person);
             }).catch(handleError);
         }
 

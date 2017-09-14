@@ -13,15 +13,18 @@
         <ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom'>
         	<ui-gmap-marker ng-repeat="event in ::vm.events" 
         		coords="event.coords" 
-        		idkey="event.marker_id" 
+        		idkey="event.marker_id"
         		options="event.options"
         	></ui-gmap-marker>
         </ui-gmap-google-map>
         
-        <svg id="timelinecontainer" viewBox="-50,-50,850,150" version="1.0" x="0" y="0" width="900" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg id="timelinecontainer" viewBox="-50,-40,850,80" version="1.0" x="0" y="0" width="900" height="80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 			  	<line ng-repeat="line in ::vm.mainline" x1="{{ line.start }}" x2="{{ line.end }}" y1="0" y2="0"/>
 			  
-			  	<a ng-repeat="event in ::vm.events" id="mylink" xlink:href="" target="_top">
+			  	<a ng-repeat="event in ::vm.events" id="mylink" target="_top" 
+			  		ng-mouseover="vm.focusEvent(event)"
+			  		ng-mouseleave="vm.currentEvent='.'"
+			  		>
 			  		<path class="{{ event.class }}" 
 			  d="M{{ event.x0 }},-15 a 15 15 0 0 0 0 30 H {{ event.x1 }} a 15 15 0 0 0 0 -30 Z">
 			  			<title>{{ event.elabel }}</title> 
@@ -29,10 +32,9 @@
 			  	</a>
 		  		<text x="0" y="35">{{ vm.events.min_year }}</text>
 			  	<text x="750" y="35">{{ vm.events.max_year }}</text>
-  
-
-		</svg>
-		</div>
+	  	</svg>
+			       <p><span>{{ vm.currentEvent }}</span></p>
+        </div>
     </div>
   </div>
 </div>

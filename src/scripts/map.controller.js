@@ -16,20 +16,26 @@
         vm.openPage = openPage;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         
+        //	evoked when timeline is hovered
+        vm.focusEvent = function(event) {
+        	vm.currentEvent = event.label;
+        	if (event.place && event.place.latitude) {
+        		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
+        	}
+        };
+        
         init();
 
         function init() {
         	mapService.getEvents($stateParams.personId).then(function(events) {
-        		
+        		vm.currentEvent = ".";
         		vm.events = events;
         		if (events.length) {
-        			vm.person = { 'id': events[0]['id'], 
-        					'givenName': events[0]['givenName'], 
-        					'familyName': events[0]['familyName'] };
+        			vm.person = events[0];
         			}
         			vm.events = processEvents(events);
         			formMainline(vm);
-        			// vm.mainline = [{'start': 0, 'end': 305}, {'start': 375, 'end': 750}];
+        			
         			console.log(vm);
         		
         		return events;
@@ -37,51 +43,73 @@
         }
 
         function processEvents(events) {
-        	var min_time=2020, max_time=0;
-        	var eventClassTypes = {}; 
+        	console.log(events);
+        	var current_year = (new Date()).getFullYear(),
+        		min_time=current_year, max_time=0,
+        		has_death = false;
+        	
         	events.forEach( function(event) {
-        		['start_time', 'end_time'].forEach( function(p) {
-        			//	convert "1928-06-19" to 1928.0 
-        			var year=parseInt(event[p].match(/^\d\d\d\d/g)[0]);
-	        		if (max_time<year) max_time=year;
-	        		if (year<min_time) min_time=year;
-	        		event[p] = year;
-	        		if (p=='start_time') {
-	        			event['x0'] = year;
-	        		} else {
-	        			event['x1'] = year;
-	        		}
-	        		
-	        		event['class'] = 'event';
-	        		var icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ABCDEF"
-	        			
-	        		if (event['label'] == "Kuolema") {
-	        			event['class'] = 'death';
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4141";
-	        		} else if (event['label'] == "Syntymä") {
-	        			event['class'] = 'birth';
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
-	        		} 
-	        		
-	        		event['options'] = {'icon':icon};
-	        		
-        		});
+        		
+        		if (event.time) {
+	        		['start', 'end'].forEach( function(p) {
+	        			if (event.time[p]) {
+	        				
+		        			//	convert "1928-06-19" to 1928.0 
+		        			var year=parseInt(event.time[p].match(/^\d\d\d\d/g)[0]);
+		        			
+			        		if (max_time<year) max_time=year;
+			        		if (year<min_time) min_time=year;
+			        		
+			        		event.time[p] = year;
+			        		// console.log(event.time[p],year);
+			        		
+			        		event[(p=='start' ? 'x0' : 'x1')] = year;
+			        		
+	        			}
+	        		});
+        		}
+        		
+        		if (!event.class) event.class = "event";
+        		event.class = event.class.toLowerCase();
+        		var icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ABCDEF"
+        			
+        		if (event.class == "death") {
+        			has_death = true;
+        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4141";
+        			event.label = 'Kuollut '+event.time.label;
+        		} else if (event.class == "birth") {
+        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+        			event.label = 'Syntynyt '+event.time.label;
+        		} else if (event.class == "spouse") {
+        			event.label = event.label+', '+event.time.label;
+        			// icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+        		} else if (event.class == "child") {
+        			event.label = event.label+', '+event.time.label;
+        			// icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+        		}
+        		event['options'] = {'icon':icon};
         	});
         	
-        	if (max_time<=min_time) max_time=min_time+75;
+        	
+        	if (!has_death) max_time += 15;
+        	if (max_time<=min_time) max_time = min_time+75;
+        	if (max_time>current_year) max_time = current_year;
         	
         	events.min_year = min_time;
         	events.max_year = max_time;
         	
         	// normalize the year to get a coordinate on the timeline:
+        	var i=0;
         	events.forEach( function(event) {
         		event['x0'] = 750.0*(event['x0']-min_time)/(max_time-min_time);
         		event['x1'] = 750.0*(event['x1']-min_time)/(max_time-min_time);
         		
-        		event.coords = {'latitude': event.lat, 'longitude': event.lon} ;
-        		event.marker_id = Date.now();
+        		if (event.place && event.place.latitude) {
+        		event.coords = {'latitude': event.place.latitude, 'longitude': event.place.longitude} ;
+        		}
+        		event.marker_id = i++;
         	});
-        	
+        	console.log(events);
         	return events;
         }
         
