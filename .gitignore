@@ -5,3 +5,4 @@ dist/
 pageimages/
 *.swp
 .sass-cache/
+*.*~
