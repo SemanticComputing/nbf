@@ -28,7 +28,7 @@
         this.getSortClass = getSortClass;
         // Get the details of a single person.
         this.getPerson = getPerson;
-        
+
         /* Implementation */
 
         var facets = {
@@ -107,8 +107,8 @@
                 name: 'Linkit'
             },
             period: {
-            	facetId: 'period',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>', 
+                facetId: 'period',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Ajanjakso',
                 enabled: true
             },
@@ -167,7 +167,7 @@
             },*/
             category: {
                 facetId: 'category',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>', 
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
                 name: 'Kategoria',
                 enabled: true
             },
@@ -180,7 +180,6 @@
         };
 
         var prefixes =
-        // ' PREFIX nach: <http://ldf.fi/norssit/achievements/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
@@ -195,7 +194,7 @@
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
-        
+
         // The query for the results.
         // ?id is bound to the person URI.
         var query =
@@ -225,10 +224,10 @@
         '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
         '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-        
+
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
         '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
-        '  		}' +  
+        '  		}' +
         '  }' +
         ' }';
 
@@ -256,9 +255,9 @@
             '  		bioc:inheres_in ?id ; ' +
             '  		bioc:inverse_role/skos:prefLabel ?relative__type ] . } ' +
             '  		FILTER (LANG(?relative__type)="fi") ' +
-            '  		?relative__id skosxl:prefLabel/schema:familyName ?relative__familyName ; ' + 
+            '  		?relative__id skosxl:prefLabel/schema:familyName ?relative__familyName ; ' +
             '			skosxl:prefLabel/schema:givenName ?relative__givenName .' +
-            '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\s*","") AS ?relative__name)  ' +
+            '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\\s*","") AS ?relative__name)  ' +
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
@@ -268,13 +267,13 @@
             '  		OPTIONAL { ?prs ^crm:P100_was_death_of ?dea . ' +
             '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate . }' +
             '  			OPTIONAL { ?dea nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
-            '		} ' +	
+            '		} ' +
             // '  		OPTIONAL { ?prs schema:gender ?gender . }' +
             '  		OPTIONAL { ?prs schema:image ?images . }' +
             '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
             '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-            
+
             '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?description ; nbf:id "1"^^xsd:integer  ] }' +
@@ -284,18 +283,9 @@
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?child_paragraph ; nbf:id "5"^^xsd:integer  ] }' +
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?medal_paragraph ; nbf:id "6"^^xsd:integer  ] }' +
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?source_paragraph ; nbf:id "7"^^xsd:integer  ] }' +
-            '  		}' +  
+            '  		}' +
             '  }' +
             ' }';
-        
-        var achievementQuery = prefixes +
-        ' SELECT DISTINCT ?id ?label ?wikipedia { ' +
-        '  VALUES ?person { <ID> } ' +
-        '  ?ach rdfs:subPropertyOf* nach:involved_in .' +
-        '  ?person ?ach ?id . ' +
-        '  ?id skos:prefLabel ?label .' +
-        '  ?id norssit:wikipedia|norssit:www ?wikipedia .' +
-        ' } ';
 
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -332,7 +322,6 @@
         function getPerson(id) {
             var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
-            //	console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
                 if (person.length) {
@@ -341,8 +330,6 @@
                 return $q.reject('Not found');
             });
         }
-
-        
 
         function getFacets() {
             var facetsCopy = angular.copy(facets);

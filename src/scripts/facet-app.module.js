@@ -22,6 +22,10 @@
 
     .value('SPARQL_ENDPOINT_URL', 'http://ldf.fi/nbf/sparql')
 
+    .run(function(authStorage) {
+        authStorage.init();
+    })
+
     .config(function($urlMatcherFactoryProvider) {
         $urlMatcherFactoryProvider.strictMode(false);
     })
