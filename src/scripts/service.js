@@ -257,7 +257,7 @@
             '  		FILTER (LANG(?relative__type)="fi") ' +
             '  		?relative__id skosxl:prefLabel/schema:familyName ?relative__familyName ; ' +
             '			skosxl:prefLabel/schema:givenName ?relative__givenName .' +
-            '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\\s*","") AS ?relative__name)  ' +
+            '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\\\\s*","") AS ?relative__name)  ' +
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
