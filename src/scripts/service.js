@@ -32,10 +32,9 @@
         /* Implementation */
 
         var facets = {
-            // Text search facet for name
             entryText: {
                 facetId: 'entryText',
-                predicate: '<http://ldf.fi/nbf/has_biography>/<http://schema.org/description>',
+                graph: '<http://ldf.fi/nbf/people>',
                 name: 'Haku',
                 enabled: true
             },
@@ -297,7 +296,8 @@
             endpointUrl: endpointConfig.endpointUrl,
             rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
             constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
-            preferredLang : 'fi'
+            preferredLang : 'fi',
+            noSelectionString: '-- Ei valintaa --'
         };
 
         var resultOptions = {

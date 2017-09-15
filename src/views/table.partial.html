@@ -16,7 +16,7 @@
         <span ng-if="::(person.birthDate)">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
         <span ng-if="::person.deathDate">&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
           <br />
-        
+
         <span class="icon-menu">
           <a title="Kansallisbiografia" class="" ng-href="{{ ::person.kansallisbiografia }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
           <a title="Data" class="" ng-href="{{ ::person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
@@ -66,9 +66,7 @@
           {{ ::relative.type }} <a ui-sref="detail({ personId: relative.id })">{{ ::relative.name }}</a>
       	</span>
       </div>
-      <button class="page-btn visible-xs-block visible-sm-block btn btn-default" ng-click="::vm.openPage(person)">Matrikkelisivu</button>
       <div ng-if="::person.hobby"><span>Harrastukset: </span><br>{{ ::person.hobby | join:', ' }}</div>
-      <button class="page-btn visible-xs-block visible-sm-block btn btn-default" ng-click="::vm.openPage(person)">Matrikkelisivu</button>
     </td>
     <td data-title="'Matrikkeliteksti'"
       class="hidden-xs hidden-sm"><p ng-bind-html="::person.lead_paragraph"></p></td>
