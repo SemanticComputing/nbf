@@ -14,12 +14,7 @@
         };
 
         function link(scope, elem) {
-            var templateUrl;
-            if ($location.host() === 'www.norssit.fi') {
-                templateUrl = '/navbar-fi.html';
-            } else {
-                templateUrl = 'navbar-fi.html';
-            }
+            var templateUrl = 'navbar-fi.html';
             return $templateRequest(templateUrl)
             .then(function(template) {
                 elem.html(template);
