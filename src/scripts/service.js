@@ -32,10 +32,9 @@
         /* Implementation */
 
         var facets = {
-            // Text search facet for name
             entryText: {
                 facetId: 'entryText',
-                predicate: '<http://ldf.fi/nbf/has_biography>/<http://schema.org/description>',
+                graph: '<http://ldf.fi/nbf/people>',
                 name: 'Haku',
                 enabled: true
             },
