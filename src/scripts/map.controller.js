@@ -1,10 +1,11 @@
 (function() {
 
-    'use strict';
+    'use strict'; 
      angular.module('facetApp')
 
     /*
     * Controller for the person's timeline & map view.
+    * api key: AIzaSyCS7M4hXwmBzV1FwE1p9lIDh1QSPhGqhUU
     */
     .controller('MapController', MapController);
 
@@ -27,6 +28,7 @@
         init();
 
         function init() {
+        	// vm.mainline = [];
         	mapService.getEvents($stateParams.personId).then(function(events) {
         		vm.currentEvent = ".";
         		vm.events = events;
@@ -50,6 +52,11 @@
         	
         	events.forEach( function(event) {
         		
+        		if (!event.class) event.class = "event";
+        		event.class = event.class.toLowerCase();
+        		event.y = 0;
+        		event.r = 10;
+        		
         		['start', 'end'].forEach( function(p) {
 	        			if (event.time[p]) {
 	        				
@@ -68,30 +75,48 @@
 	        		});
         		
         		
-        		if (!event.class) event.class = "event";
-        		event.class = event.class.toLowerCase();
+        		
         		var icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ABCDEF"
         		
-        		if (event.class == "death") {
-        			has_death = true;
-        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4141";
-        			event.label = 'Kuollut '+event.label;
-        			
-        		} else if (event.class == "birth") {
-        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
-        			event.label = 'Syntynyt '+event.label;
-        			if (event.place && event.place.latitude) {
-                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
-                	}
-        			
-        		} else if (event.class == "spouse") {
-        			event.label = event.label+', '+event.time.label;
-        			// icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
-        			
-        		} else if (event.class == "child") {
-        			event.label = event.label+', '+event.time.label;
-        			// icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+        		switch(event.class) {
+	        		case "death":
+	        			has_death = true;
+	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4141";
+	        			event.label = 'Kuollut '+event.label;
+	        			event.r = 15;
+	        			break;
+	        			
+	        		case "birth":
+	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+	        			event.label = 'Syntynyt '+event.label;
+	        			if (event.place && event.place.latitude) {
+	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
+	                	}
+	        			event.r = 15;
+	        			break;
+	        		case "spouse":
+	        			event.label = event.label+', '+event.time.label;
+	        			
+	        			break;
+	        		case "child":
+	        			event.label = event.label+', '+event.time.label;
+	        			break;
+	        		case 'career':
+	        			event.y = 30;
+	        			break;
+	        		case 'product':
+	        			event.y = 60;
+	        			break;
+	        		case 'honour':
+	        			event.y = 90;
+	        			break;
+	        			
+	        		default:
+	        			console.log(event.class);
+	        			
+	        			break;
         		}
+        		
         		event['options'] = {'icon':icon};
         	});
         	
@@ -106,9 +131,12 @@
         	// normalize the year to get a coordinate on the timeline:
         	var i=0;
         	events.forEach( function(event) {
-        		event['x0'] = 750.0*(event['x0']-min_time)/(max_time-min_time);
-        		event['x1'] = 750.0*(event['x1']-min_time)/(max_time-min_time);
         		
+        		event.x0 = 750.0*(event.x0-min_time)/(max_time-min_time);
+        		event.x1 = 750.0*(event.x1-min_time)/(max_time-min_time);
+        		
+        		event.path = "M"+event.x0+","+(event.y-event.r)+"a "+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+" H "+event.x1+" a "+event.r+" "+event.r+" 0 0 0 0 -"+(2*event.r)+" Z"
+        		console.log(event.path);
         		if (event.place && event.place.latitude) {
         		event.coords = {'latitude': event.place.latitude, 'longitude': event.place.longitude} ;
         		}

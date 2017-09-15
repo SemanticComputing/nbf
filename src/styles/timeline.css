@@ -74,6 +74,24 @@ svg#timelinecontainer {
 	stroke:#e0e0f0;
 }
 
+#timelinecontainer .honour {
+	fill:#ce5c00;
+}
+
+#timelinecontainer .honour:hover {
+	fill:#ee7c20;
+	stroke:#ce5c00;
+}
+
+#timelinecontainer .product {
+	fill:#73d216;
+}
+
+#timelinecontainer .product:hover {
+	fill:#93f236;
+	stroke:#73d216;
+}
+
 svg text {
 	font-family:"Arial";
 	font-size:15px; 

@@ -65,6 +65,8 @@
     	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
     	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
     	'  ' +
+    	'  { ?event bioc:inheres_in ?id } ' +
+    	'  UNION ' +
     	'  { ?id bioc:has_family_relation ?event } ' +
     	'  UNION ' +
     	'  { ?event crm:P100_was_death_of ?prs } ' +
