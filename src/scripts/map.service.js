@@ -64,26 +64,26 @@
     	'  		skosxl:prefLabel ?ilabel . ' +
     	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
     	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
-    	'   ' +
+    	'  ' +
     	'  { ?id bioc:has_family_relation ?event } ' +
     	'  UNION ' +
     	'  { ?event crm:P100_was_death_of ?prs } ' +
     	'  UNION ' +
     	'  { ?event crm:P98_brought_into_life ?prs } ' +
-    	'   ' +
+    	'  ' +
+    	'  ?event nbf:time ?time . ' +
+    	'		OPTIONAL { ?time gvp:estStart ?time__start. } ' +
+    	'  		OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
+    	'  		OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
+    	'  ' +
     	'  OPTIONAL { ?event a/skos:prefLabel ?class . FILTER (lang(?class)="en") } ' +
-    	'   OPTIONAL { ?event skos:prefLabel ?label } ' +
-    	'  OPTIONAL { ?event nbf:time ?time . ' +
-    	'	OPTIONAL { ?time gvp:estStart ?time__start. } ' +
-    	'  	OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
-    	'  	OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
-    	'  	} ' +
+    	'   	OPTIONAL { ?event skos:prefLabel ?label } ' +
     	'  OPTIONAL { ?event nbf:place ?place . ' +
-    	'    filter (isUri(?place)) ' +
-    	'    OPTIoNAL { ?place  geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
-    	'    OPTIoNAL { ?place  skos:prefLabel ?place__name }  ' +
-    	'  	} ' +
-    	'  } ORDER BY DESC(?time__end) ';
+    	'    	filter (isUri(?place)) ' +
+    	'    	OPTIoNAL { ?place  geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
+    	'    	OPTIoNAL { ?place  skos:prefLabel ?place__name }  ' +
+    	'  } ' +
+    	' } ORDER BY DESC(?time__end) ';
 
         
         // The SPARQL endpoint URL

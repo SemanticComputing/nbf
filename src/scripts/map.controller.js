@@ -43,15 +43,14 @@
         }
 
         function processEvents(events) {
-        	console.log(events);
+        	
         	var current_year = (new Date()).getFullYear(),
         		min_time=current_year, max_time=0,
         		has_death = false;
         	
         	events.forEach( function(event) {
         		
-        		if (event.time) {
-	        		['start', 'end'].forEach( function(p) {
+        		['start', 'end'].forEach( function(p) {
 	        			if (event.time[p]) {
 	        				
 		        			//	convert "1928-06-19" to 1928.0 
@@ -67,22 +66,28 @@
 			        		
 	        			}
 	        		});
-        		}
+        		
         		
         		if (!event.class) event.class = "event";
         		event.class = event.class.toLowerCase();
         		var icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ABCDEF"
-        			
+        		
         		if (event.class == "death") {
         			has_death = true;
         			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4141";
-        			event.label = 'Kuollut '+event.time.label;
+        			event.label = 'Kuollut '+event.label;
+        			
         		} else if (event.class == "birth") {
         			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
-        			event.label = 'Syntynyt '+event.time.label;
+        			event.label = 'Syntynyt '+event.label;
+        			if (event.place && event.place.latitude) {
+                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
+                	}
+        			
         		} else if (event.class == "spouse") {
         			event.label = event.label+', '+event.time.label;
         			// icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+        			
         		} else if (event.class == "child") {
         			event.label = event.label+', '+event.time.label;
         			// icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
