@@ -28,7 +28,11 @@
 	        </ui-gmap-google-map>
 	        
 	        <svg id="timelinecontainer" viewBox="-50,-70,850,180" version="1.0" x="0" y="0" width="900" height="180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-				  	<line ng-repeat="line in ::vm.mainline" ng-attr-x1="{{ line.x1 }}" ng-attr-x2="{{ line.x2 }}" ng-attr-y1="{{ line.y1 }}" ng-attr-y2="{{ line.y2 }}"/>
+				  	<line ng-repeat="line in ::vm.mainline" ng-attr-x1="{{ line.x1 }}" ng-attr-x2="{{ line.x2 }}" ng-attr-y1="{{ line.y1 }}" ng-attr-y2="{{ line.y2 }}">
+				  	</line>
+				  	
+				  	<text x="0" y="-30">{{ vm.events.min_year }}</text>
+				  	<text x="750" y="-30">{{ vm.events.max_year }}</text>
 				  	
 				  	<path ng-repeat="event in ::vm.events" 
 				  		ng-mouseenter="vm.focusEvent(event)"
@@ -37,8 +41,7 @@
 				  		ng-attr-d="{{ event.path }}">
 				  	</path>
 				  	
-			  		<text x="0" y="-30">{{ vm.events.min_year }}</text>
-				  	<text x="750" y="-30">{{ vm.events.max_year }}</text>
+			  		
 		  	</svg>
 				       <p><span>{{ vm.currentEvent }}</span></p>
 	      </div>
