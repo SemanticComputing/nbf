@@ -37,7 +37,7 @@
         init();
 
         function init() {
-        	// vm.mainline = [];
+        	
         	mapService.getEvents($stateParams.personId).then(function(events) {
         		vm.currentEvent = ".";
         		vm.events = events;
@@ -94,7 +94,7 @@
 	        			break;
 	        			
 	        		case "birth":
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|3b46ff";
+	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|777fff";
 	        			event.label = 'Syntynyt '+event.label;
 	        			if (event.place && event.place.latitude) {
 	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
@@ -158,7 +158,7 @@
         		event.marker_id = i++;
         	});
         	
-        	var map = document.getElementById('ui-gmap-google-map');
+        	var map =document.getElementById('ui-gmap-google-map');
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	return events;
         }
