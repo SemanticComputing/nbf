@@ -7,30 +7,24 @@ svg#timelinecontainer {
 	background-color: white;
 }
 
-#timelinecontainer circle, #timelinecontainer path {
+#timelinecontainer path {
 	stroke:#555;
-	stroke-width:5;
+	stroke-width:2;
 	stroke-linecap:round;
 	stroke-linejoin:round;
 	fill:#BBB;
-	transition: fill .2s, stroke .2s;
+	fill-opacity: 0.36;
+	transition: fill .3s, stroke .2s;
 }
 
 #timelinecontainer path:hover {
-	stroke-width:8;
+	stroke-width:5;
 }
 
 #timelinecontainer line {
-	stroke-width:7;
+	stroke:#88F;
 	stroke-linecap:none;
-}
-
-#timelinecontainer line:nth-child(even) {
-	stroke:#999;
-}
-
-#timelinecontainer line:nth-child(odd) {
-	stroke:#555;
+	stroke-width:1;
 }
 
 #timelinecontainer .event:hover {
@@ -39,57 +33,45 @@ svg#timelinecontainer {
 }
 
 #timelinecontainer .birth {
-	fill:#3b46ff
-}
-
-#timelinecontainer .birth:hover {
-	fill:#7b86ff;
-	stroke:#3b46ff;
+	fill:#315bff;
+	stroke:#315bff;
+	stroke-width:3;
 }
 
 #timelinecontainer .death {
-	fill:#ff4141
-}
-
-#timelinecontainer .death:hover {
-	fill:#ff7171;
+	fill:#ff4141;
 	stroke:#ff4141;
-}
-
-#timelinecontainer .spouse {
-	fill:#f0f0e0;
-}
-
-#timelinecontainer .spouse:hover {
-	fill:#f8f8e8;
-	stroke:#f0f0e0;
+	stroke-width:3;
 }
 
 #timelinecontainer .child {
-	fill:#e0e0f0;
+	fill:#7f6780;
+	stroke:#7f6780;
 }
 
-#timelinecontainer .child:hover {
-	fill:#d8d8f8;
-	stroke:#e0e0f0;
+#timelinecontainer .spouse {
+	fill:#c3b981;
+	stroke:#c3b981;
+}
+
+#timelinecontainer .career {
+	fill:#999;
+	stroke:#999;
 }
 
 #timelinecontainer .honour {
 	fill:#ce5c00;
-}
-
-#timelinecontainer .honour:hover {
-	fill:#ee7c20;
 	stroke:#ce5c00;
 }
 
 #timelinecontainer .product {
-	fill:#73d216;
+	fill:#5fbb57;
+	stroke:#5fbb57;
 }
 
-#timelinecontainer .product:hover {
-	fill:#93f236;
-	stroke:#73d216;
+#timelinecontainer path:hover {
+	fill-opacity:0.6;
+	stroke-opacity:0.9;
 }
 
 svg text {
@@ -98,4 +80,3 @@ svg text {
 	text-anchor: middle;
 	fill:#555;
 }
-

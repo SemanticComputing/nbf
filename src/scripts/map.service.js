@@ -65,7 +65,7 @@
     	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
     	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
     	'  ' +
-    	'  { ?event bioc:inheres_in ?id } ' +
+    	'  { ?event bioc:inheres_in ?prs } ' +
     	'  UNION ' +
     	'  { ?id bioc:has_family_relation ?event } ' +
     	'  UNION ' +
@@ -85,7 +85,7 @@
     	'    	OPTIoNAL { ?place  geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
     	'    	OPTIoNAL { ?place  skos:prefLabel ?place__name }  ' +
     	'  } ' +
-    	' } ORDER BY DESC(?time__end) ';
+    	' } ORDER BY ?time__start DESC(?time__end) ';
 
         
         // The SPARQL endpoint URL
