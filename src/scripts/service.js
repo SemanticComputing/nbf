@@ -240,6 +240,7 @@
             '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
+            '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +

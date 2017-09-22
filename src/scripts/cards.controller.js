@@ -61,10 +61,6 @@
             });
         }
 
-        function getAchievements_OLD(person) {
-            return nbfService.getAchievements(person);
-        }
-
         function getFacetOptions() {
             var options = nbfService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();

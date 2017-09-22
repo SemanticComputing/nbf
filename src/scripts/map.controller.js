@@ -84,7 +84,6 @@
 	        			}
 	        		});
         		
-        		
         		var ICONCOLORS = {
         				"death":	"#ff4141",
         				"birth":	"#777fff",

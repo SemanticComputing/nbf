@@ -25,8 +25,7 @@
         vm.topTitles = [];
         vm.topOrgs = [];
 		vm.removeFacetSelections = removeFacetSelections;
-		// vm.colors = [ '#B2AFAC', '#2A2820', '#E9E6D9', '#2D8815', '#CFB1A3', '#B36C4A', '#D79060', '#A65F35', '#577889', '#D3D4CE', '#333946', '#B3C8C5', '#92908D', '#C86D37', '#C8724C', '#3B654F', '#3B88A0', '#543024', '#AF9136', '#5E5924', '#D7CBB4', '#9C8E6E', '#5E635C', '#688B42', '#728E91', '#DFE1DB', '#028307', '#1F6A13', '#A69F97', '#8F7C83', '#946F61', '#EDEEEA' ];
-        
+		
 		google.charts.load('current', {packages: ['corechart', 'line', 'sankey']});
 
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
