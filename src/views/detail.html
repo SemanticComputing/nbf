@@ -6,6 +6,11 @@
     <div uib-alert ng-if="vm.error">
       {{ vm.error }}
     </div>
+    <uib-tabset active="ctrl.activeTab">
+        <uib-tab select="ctrl.selectTab(1)" index="1" classes="person-timeline-tab">
+          <uib-tab-heading>
+            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Henkilöntiedot
+          </uib-tab-heading>
     <div class="col-sm-12 col-md-8 text-center" ng-show="vm.person">
       <h1>{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
       <div class="thumbnail">
@@ -131,5 +136,12 @@
       <img ng-if="!vm.person.achievements" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="achievement in vm.person.achievements"><a ng-href="{{ achievement.wikipedia }}">{{ achievement.label | castArray | first }}</a></div>
     </div>
+    </uib-tab>
+    <uib-tab select="ctrl.selectTab(2)" index="1" classes="person-timeline-tab">
+          <uib-tab-heading>
+            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Aikajana
+          </uib-tab-heading>
+          <!-- <div ng-include="'views/map.html'"></div>  -->
+    </uib-tabset>
   </div>
 </div>

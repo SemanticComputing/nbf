@@ -15,7 +15,7 @@
 				<p ng-repeat="event in ::vm.events" 
 					class="{{event.class}}"
 					ng-mouseenter="vm.focusEvent(event)"
-					ng-mouseleave="vm.unfocusEvent(event)">{{ event.label }}</p>
+					ng-mouseleave="vm.unfocusEvent(event)">{{ event.marker_id }}: {{ event.label }}</p>
 			</div>
 		</div>
 		<div class="col-sm-12 col-md-10 text-center ">

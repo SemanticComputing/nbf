@@ -52,24 +52,19 @@
                         label: 'Wikidata'
                     },
                     {
-                        id: 'kirjasampo',
-                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] .',
-                        label: 'Kirjasampo'
-                    },
-                    {
-                        id: 'kulttuurisampo',
-                        pattern: '?id <http://ldf.fi/nbf/kulttuurisampo> [] .',
-                        label: 'Kulttuurisampo'
-                    },
-                    {
                         id: 'sotasampo',
-                        pattern: '?id <http://ldf.fi/nbf/warsa> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/warsampo> [] .',
                         label: 'Sotasampo'
                     },
                     {
                         id: 'norssit',
-                        pattern: '?id <http://ldf.fi/nbf/norssit> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/norssi> [] .',
                         label: 'Norssit'
+                    },
+                    {
+                        id: 'kirjasampo',
+                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] . ',
+                        label: 'Kirjasampo'
                     },
                     {
                         id: 'blf',
@@ -127,22 +122,16 @@
                 name: 'Synnyinaika',
                 enabled: true
             },
-            birthPlace: {
-                facetId: 'birthPlace',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
-                name: 'Syntymäpaikka',
+            place: {
+                facetId: 'place',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                name: 'Paikkakunta',
                 enabled: true
             },
             deathYear: {
                 facetId: 'birthYear',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
                 name: 'Kuolinaika',
-                enabled: true
-            },
-            deathPlace: {
-                facetId: 'deathPlace',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
-                name: 'Kuolinpaikka',
                 enabled: true
             },
             title: {
@@ -209,9 +198,14 @@
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+        '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
+        '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
         '  OPTIONAL { ?id nbf:blf ?blf . }' +
         '  OPTIONAL { ?id nbf:website ?website . }' +
+        '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
+        '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
+        '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
         '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +
         '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . filter (isliteral(?birthPlace)) } ' +
@@ -246,6 +240,10 @@
             '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
+            '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
+            '  OPTIONAL { ?id nbf:website ?website . }' +
+            '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
+            '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
             '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
             '  		bioc:inheres_in ?relative__id ; ' +

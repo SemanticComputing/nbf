@@ -13,25 +13,28 @@
     function MapController($stateParams, $uibModal, _, mapService) {
 
         var vm = this;
-
+        
         vm.openPage = openPage;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         
-        //	evoked when timeline is hovered
+        //	evoked when timeline item is hovered
         vm.focusEvent = function(event) {
         	vm.currentEvent = event.label;
         	// if (event.place && event.place.latitude) vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
-        	 
-        	event.options.animation = google.maps.Animation.BOUNCE;
+        	event.options.icon.strokeWeight = 4;
+        	event.options.zIndex += 100;
+        	// event.options.animation = google.maps.Animation.BOUNCE;
         	setTimeout(function () {
         		event.options.animation=null;
             }, 1200);
         };
         
-        
+//    	evoked when timeline item is left
         vm.unfocusEvent = function(event) {
         	vm.currentEvent='.'
-        	event.options.animation = null;
+            event.options.zIndex -= 100;
+        	// event.options.animation = null;
+        	event.options.icon.strokeWeight = 1;
         };
         
         init();
@@ -55,7 +58,8 @@
         	
         	var current_year = (new Date()).getFullYear(),
         		min_time=current_year, max_time=0,
-        		has_death = false;
+        		has_death = false,
+        		i=0;
         	
         	events.forEach( function(event) {
         		
@@ -81,20 +85,28 @@
 	        		});
         		
         		
+        		var ICONCOLORS = {
+        				"death":	"#ff4141",
+        				"birth":	"#777fff",
+        				"spouse":	"#c3b981",
+        				"child":	"#7f6780",
+        				"career":	"#999999",
+        				"product":	"#83d236",
+        				"honour":	"#ce5c00",
+        				"event":	"#ABCDEF"
+        		};
         		
-        		var icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ABCDEF"
+        		if (!event.label) event.label="";
         		
         		switch(event.class) {
 	        		case "death":
 	        			has_death = true;
 	        			// TODO: targetoi ensimmäiseen tapahtumaan, jos ei deathia ole
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4141";
 	        			event.label = 'Kuollut '+event.label;
 	        			event.r = 15;
 	        			break;
 	        			
 	        		case "birth":
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|777fff";
 	        			event.label = 'Syntynyt '+event.label;
 	        			if (event.place && event.place.latitude) {
 	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
@@ -102,35 +114,52 @@
 	        			event.r = 15;
 	        			break;
 	        		case "spouse":
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|c3b981";
 	        			event.label = event.label+', '+event.time.label;
 	        			break;
 	        		case "child":
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|7f6780";
 	        			event.label = event.label+', '+event.time.label;
 	        			break;
 	        		case 'career':
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|999999";
 	        			event.y = 30;
 	        			break;
 	        		case 'product':
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|83d236";
 	        			event.y = 60;
 	        			break;
 	        		case 'honour':
-	        			icon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ce5c00";
 	        			event.y = 90;
 	        			break;
 	        			
 	        		default:
 	        			console.log(event.class);
-	        			
+	        			event.class="event";
 	        			break;
         		}
+        		event.marker_id = ++i;
+        		//	google.maps.SymbolPath.CIRCLE
+        		event['options'] = {
+        				icon:{
+        					path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z", // google.maps.SymbolPath.CIRCLE, 
+        					scale:1.25, 
+        					anchor: new google.maps.Point(0,0),
+        					fillColor:ICONCOLORS[event.class],
+        					fillOpacity:0.8,
+        					strokeOpacity:1,
+        					strokeWeight:1,
+        					labelOrigin: new google.maps.Point(0, -20)
+        					}, 
+        				zIndex: event.marker_id,
+        				optimized: false,
+        				label: {
+        			        text: ''+event.marker_id,
+        			        fontSize: '14px',
+        			        fontFamily: '"Courier New", Courier,Monospace',
+        			        color: 'black'
+        			      }
+        				};
         		
-        		event['options'] = {'icon':icon};
         	});
         	
+            
         	
         	if (!has_death) max_time += 15;
         	if (max_time<=min_time) max_time = min_time+75;
@@ -141,7 +170,7 @@
         	
         	var bounds = new google.maps.LatLngBounds();
         	
-        	// normalize the year to get a coordinate on the timeline:
+        	// scale the years to get a coordinate on the timeline:
         	var i=0;
         	events.forEach( function(event) {
         		
@@ -155,10 +184,13 @@
         			event.coords = {'latitude': event.place.latitude, 'longitude': event.place.longitude} ;
         			bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
         		}
-        		event.marker_id = i++;
+        		
         	});
         	
-        	var map =document.getElementById('ui-gmap-google-map');
+        	var map = document.getElementById('ui-gmap-google-map');
+        	console.log(map);
+        	console.log(bounds);
+        	console.log(bounds.getCenter());
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	return events;
         }

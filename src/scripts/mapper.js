@@ -23,12 +23,15 @@
 
         function postProcess(objects) {
             objects.forEach(function(person) {
-                // person.hasAchievements = person.hasAchievements === 'true' ? true : false;
                 person.hasImage = !!person.images;
                 person.images = person.images ? _.castArray(person.images) : ['images/person_placeholder.svg'];
                 person.description = $sce.trustAsHtml(person.description);
                 person.source_paragraph = $sce.trustAsHtml(person.source_paragraph);
                 person.lead_paragraph = $sce.trustAsHtml(person.lead_paragraph);
+                
+                if (person.norssi) {
+                	person.norssi = person.norssi.replace('http://ldf.fi/norssit/','')
+                }
             });
             return objects;
         }
