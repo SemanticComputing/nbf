@@ -20,10 +20,10 @@
         //	evoked when timeline item is hovered
         vm.focusEvent = function(event) {
         	vm.currentEvent = event.label;
-        	// if (event.place && event.place.latitude) vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
+        	
         	event.options.icon.strokeWeight = 4;
         	event.options.zIndex += 100;
-        	// event.options.animation = google.maps.Animation.BOUNCE;
+        	
         	setTimeout(function () {
         		event.options.animation=null;
             }, 1200);
@@ -187,9 +187,9 @@
         	});
         	
         	var map = document.getElementById('ui-gmap-google-map');
-        	console.log(map);
-        	console.log(bounds);
-        	console.log(bounds.getCenter());
+        	// console.log(map);
+        	// console.log(bounds);
+        	// console.log(bounds.getCenter());
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	return events;
         }

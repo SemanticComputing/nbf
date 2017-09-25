@@ -121,7 +121,7 @@
         }
 
 
-        function getResults1(facetSelections) {
+        function getResults1_OLD(facetSelections) {
         	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
         	return endpoint.getObjectsNoGrouping(q);
         }
@@ -134,6 +134,7 @@
             .then(function(events) {
             	
                 if (events.length) {
+                	// console.log(events);
                     return events;
                 }
                 return $q.reject('No events found');

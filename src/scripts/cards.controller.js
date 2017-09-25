@@ -30,7 +30,6 @@
         vm.removeFacetSelections = removeFacetSelections;
         vm.sortBy = sortBy;
         vm.getSortClass = nbfService.getSortClass;
-        // vm.getAchievements = getAchievements;
 
         vm.people = [];
 
