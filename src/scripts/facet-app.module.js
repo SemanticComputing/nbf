@@ -55,13 +55,17 @@
             controller: 'LoginController',
             controllerAs: 'vm'
         })
-        .state('detail', {
+        .state('person', {
+        	abstract: true,
+        	templateUrl: 'views/person.html'
+        })
+        .state('person.detail', {
             url: '/tiedot/:personId',
             templateUrl: 'views/detail.html',
             controller: 'DetailController',
             controllerAs: 'vm'
         })
-        .state('map', {
+        .state('person.map', {
             url: '/kartta/:personId',
             templateUrl: 'views/map.html',
             controller: 'MapController',
