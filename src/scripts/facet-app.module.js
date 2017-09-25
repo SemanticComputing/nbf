@@ -56,17 +56,18 @@
             controllerAs: 'vm'
         })
         .state('person', {
-        	abstract: true,
-        	templateUrl: 'views/person.html'
+            abstract: true,
+            url: '/:personId',
+            templateUrl: 'views/person.html'
         })
         .state('person.detail', {
-            url: '/tiedot/:personId',
+            url: '',
             templateUrl: 'views/detail.html',
             controller: 'DetailController',
             controllerAs: 'vm'
         })
         .state('person.map', {
-            url: '/kartta/:personId',
+            url: '/kartta',
             templateUrl: 'views/map.html',
             controller: 'MapController',
             controllerAs: 'vm'

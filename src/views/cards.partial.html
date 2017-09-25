@@ -6,7 +6,7 @@
     <div ng-repeat="person in vm.people" class="person-container">
       <div class="col-xs-12 col-sm-12 person-panel col-md-4 col-lg-3">
         <div class="thumbnail">
-          <a ui-sref="detail({ personId: person.id })">
+          <a ui-sref="person.detail({ personId: person.id })">
             <div class="person-profile-img vertical-center">
               <img class="img img-responsive center-block media-middle" ng-src="{{ ::person.images | first }}" />
             </div>
@@ -15,7 +15,7 @@
             <div class="visible-caption">
               <div class="row">
                 <div class="col-xs-12 col-sm-3 col-md-12">
-                  <b><a ui-sref="detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b>
+                  <b><a ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b>
                 </div>
                 <div class="col-xs-12 col-sm-9 col-md-12">
                   <p ng-if="::(person.birthPlace || person.birthDate || person.deathDate)">
@@ -85,7 +85,7 @@
               <div ng-if="::person.relative" class="row">
                 <div class="col-xs-12">Sukulaiset:</div>
                 <div class="col-sm-6 col-md-12" ng-repeat="relative in person.relative | castArray">
-                  {{ ::relative.type }} <a ui-sref="detail({ personId: relative.id })">{{ ::relative.name }}</a>
+                  {{ ::relative.type }} <a ui-sref="person.detail({ personId: relative.id })">{{ ::relative.name }}</a>
                 </div>
               </div>
               <div ng-if="::person.hobby" class="row">

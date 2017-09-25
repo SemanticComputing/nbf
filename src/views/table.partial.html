@@ -12,7 +12,7 @@
   <tr ng-show="!vm.isLoadingResults" ng-repeat="person in $data">
     <td class="person-image-container" data-title="'Nimi'">
       <div ng-class="::{ 'name-col col-md-12 col-lg-7': person.images }">
-        <b><a ui-sref="detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
+        <b><a ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
         <span ng-if="::(person.birthDate)">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
         <span ng-if="::person.deathDate">&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
           <br />
@@ -64,7 +64,7 @@
       <div ng-if="::person.relative">
       	<span>Sukulaiset: </span><br>
       	<span ng-repeat="relative in person.relative | castArray">
-          {{ ::relative.type }} <a ui-sref="detail({ personId: relative.id })">{{ ::relative.name }}</a>
+          {{ ::relative.type }} <a ui-sref="person.detail({ personId: relative.id })">{{ ::relative.name }}</a>
       	</span>
       </div>
       <div ng-if="::person.hobby"><span>Harrastukset: </span><br>{{ ::person.hobby | join:', ' }}</div>

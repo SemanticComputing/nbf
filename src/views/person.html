@@ -1,25 +1,17 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-12" ng-show="!vm.person && !vm.error">
-      <img class="loading-img" src="images/loading-lg.gif"></img>
-    </div>
-    <div uib-alert ng-if="vm.error">
-      {{ vm.error }}
-    </div>
-    <uib-tabset active="ctrl.activeTab">
-        <uib-tab select="ctrl.selectTab(1)" index="1" classes="person-timeline-tab">
-         	<uib-tab-heading>
-            	<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Henkilöntiedot
-          	</uib-tab-heading>
-          	<div ui-view></div>
-    		<!--  <div ng-include="'views/detail.html'"></div>  -->
-    	</uib-tab>
-    	<uib-tab select="ctrl.selectTab(2)" index="1" classes="person-timeline-tab">
-          	<uib-tab-heading>
-            	<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Aikajana
-          	</uib-tab-heading>
-          	<div ui-view></div>
-            <!-- <div ng-include="'views/detail.html'"></div>  -->
-    </uib-tabset>
+    <div class="col-sm-12">
+    <ul class="nav nav-tabs">
+      <li ui-sref="person.detail" ui-sref-active="active">
+        <a href=""><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Henkilön tiedot</a>
+      </li>
+      <li ui-sref="person.map" ui-sref-active="active">
+        <a href=""><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Aikajana</a>
+      </li>
+    </ul>
+  </div>
+  </div>
+  <div class="row">
+    <div ui-view></div>
   </div>
 </div>
