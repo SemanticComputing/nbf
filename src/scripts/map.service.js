@@ -27,7 +27,7 @@
         // Get the CSS class for the sort icon.
         this.getSortClass = getSortClass;
         // Get the details of a single person.
-        this.getPerson = getPerson;
+        //this.getPerson = getPerson;
         // Get the details of a single person.
         this.getEvents = getEvents;
         
@@ -59,28 +59,28 @@
         '  { ' +
         '    <RESULT_SET> ' +
         '  } ' +
-    	'  ?id a nbf:PersonConcept ; ' +
+    	'  ?pc a nbf:PersonConcept ; ' +
     	'      foaf:focus ?prs ; ' +
     	'  		skosxl:prefLabel ?ilabel . ' +
     	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
     	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
     	'  ' +
-    	'  { ?event bioc:inheres_in ?prs } ' +
+    	'  { ?id bioc:inheres_in ?prs } ' +
     	'  UNION ' +
-    	'  { ?id bioc:has_family_relation ?event } ' +
+    	'  { ?pc bioc:has_family_relation ?id } ' +
     	'  UNION ' +
-    	'  { ?event crm:P100_was_death_of ?prs } ' +
+    	'  { ?id crm:P100_was_death_of ?prs } ' +
     	'  UNION ' +
-    	'  { ?event crm:P98_brought_into_life ?prs } ' +
+    	'  { ?id crm:P98_brought_into_life ?prs } ' +
     	'  ' +
-    	'  ?event nbf:time ?time . ' +
+    	'  ?id nbf:time ?time . ' +
     	'		OPTIONAL { ?time gvp:estStart ?time__start. } ' +
     	'  		OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
     	'  		OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
     	'  ' +
-    	'  OPTIONAL { ?event a/skos:prefLabel ?class . FILTER (lang(?class)="en") } ' +
-    	'   	OPTIONAL { ?event skos:prefLabel ?label } ' +
-    	'  OPTIONAL { ?event nbf:place ?place . ' +
+    	'  OPTIONAL { ?id a/skos:prefLabel ?class . FILTER (lang(?class)="en") } ' +
+    	'   	OPTIONAL { ?id skos:prefLabel ?label } ' +
+    	'  OPTIONAL { ?id nbf:place ?place . ' +
     	'    	filter (isUri(?place)) ' +
     	'    	OPTIoNAL { ?place  geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
     	'    	OPTIoNAL { ?place  skos:prefLabel ?place__name }  ' +
@@ -119,45 +119,45 @@
         function getResults(facetSelections) {
             return resultHandler.getResults(facetSelections, getSortBy());
         }
-
-
+        /**
         function getResults1_OLD(facetSelections) {
         	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
         	return endpoint.getObjectsNoGrouping(q);
         }
-        
+        */
         function getEvents(id) {
             var qry = prefixes + query;
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
             //	console.log(qry.replace('<RESULT_SET>', constraint));
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(events) {
             	
                 if (events.length) {
-                	// console.log(events);
+                	console.log(events);
                     return events;
                 }
                 return $q.reject('No events found');
             });
         }
         
+        /**
         function getPerson(id) {
             var qry = prefixes + query;
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
             //	console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
-            	console.log(person);
+            	// console.log(person);
                 if (person.length) {
                     return person[person.length-1];
                 }
                 return $q.reject('Not found');
             });
         }
-
         function getAchievements(person) {
         	return person;
         }
+         */
 
         function getFacets() {
             var facetsCopy = angular.copy(facets);

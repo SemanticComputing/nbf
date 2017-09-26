@@ -16,25 +16,29 @@
         
         vm.openPage = openPage;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
+        vm.markers = [];
         
         //	evoked when timeline item is hovered
         vm.focusEvent = function(event) {
         	vm.currentEvent = event.label;
-        	
-        	event.options.icon.strokeWeight = 4;
-        	event.options.zIndex += 100;
-        	
-        	setTimeout(function () {
-        		event.options.animation=null;
-            }, 1200);
+        	event.markers.forEach( function(m) {
+        		m.options.icon.strokeWeight = 4;
+        		m.options.zIndex += 100;
+        		
+	        	setTimeout(function () {
+	        		m.options.animation=null;
+	            }, 1200);
+        	});
         };
         
 //    	evoked when timeline item is left
         vm.unfocusEvent = function(event) {
         	vm.currentEvent='.'
-            event.options.zIndex -= 100;
-        	// event.options.animation = null;
-        	event.options.icon.strokeWeight = 1;
+    		event.markers.forEach( function(m) {
+        		m.options.icon.strokeWeight = 1;
+        		m.options.zIndex -= 100;
+        		
+        	});
         };
         
         init();
@@ -47,14 +51,14 @@
         		if (events.length) {
         			vm.person = events[0];
         			}
-        			vm.events = processEvents(events);
+        			vm.events = processEvents(events, vm);
         			formMainline(vm);
         		
         		return events;
             }).catch(handleError);
         }
 
-        function processEvents(events) {
+        function processEvents(events, vm) {
         	
         	var current_year = (new Date()).getFullYear(),
         		min_time=current_year, max_time=0,
@@ -63,10 +67,9 @@
         	
         	events.forEach( function(event) {
         		
-        		if (!event.class) event.class = "event";
-        		event.class = event.class.toLowerCase();
         		event.y = 0;
         		event.r = 10;
+        		event.markers = [];
         		
         		['start', 'end'].forEach( function(p) {
 	        			if (event.time[p]) {
@@ -84,18 +87,10 @@
 	        			}
 	        		});
         		
-        		var ICONCOLORS = {
-        				"death":	"#ff4141",
-        				"birth":	"#777fff",
-        				"spouse":	"#c3b981",
-        				"child":	"#7f6780",
-        				"career":	"#999999",
-        				"product":	"#83d236",
-        				"honour":	"#ce5c00",
-        				"event":	"#ABCDEF"
-        		};
-        		
         		if (!event.label) event.label="";
+        		
+        		if (!event.class) event.class = "event";
+        		event.class = event.class.toLowerCase();
         		
         		switch(event.class) {
 	        		case "death":
@@ -133,28 +128,26 @@
 	        			event.class="event";
 	        			break;
         		}
-        		event.marker_id = ++i;
-        		//	google.maps.SymbolPath.CIRCLE
-        		event['options'] = {
-        				icon:{
-        					path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z", // google.maps.SymbolPath.CIRCLE, 
-        					scale:1.25, 
-        					anchor: new google.maps.Point(0,0),
-        					fillColor:ICONCOLORS[event.class],
-        					fillOpacity:0.8,
-        					strokeOpacity:1,
-        					strokeWeight:1,
-        					labelOrigin: new google.maps.Point(0, -20)
-        					}, 
-        				zIndex: event.marker_id,
-        				optimized: false,
-        				label: {
-        			        text: ''+event.marker_id,
-        			        fontSize: '14px',
-        			        fontFamily: '"Courier New", Courier,Monospace',
-        			        color: 'black'
-        			      }
-        				};
+        		
+        		event.id = ++i;
+        		
+        		if (event.place && event.place.latitude) {
+        			if (event.place.latitude.constructor === Array) { 
+        				// var arr = [];
+        				for (var j=0; j<event.place.latitude.length; j++) {
+        					var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class);
+        					event.markers.push(m);
+        					vm.markers.push(m);
+        					// bounds.extend(new google.maps.LatLng(event.place.latitude[j], event.place.longitude[j]));
+        				}
+            		} else {
+            			var m = generateMarker(event.place.latitude, event.place.longitude, event.id, event.class);
+            			event.markers = [m] ;
+	        			vm.markers.push(m);
+	        			//bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
+            		}
+        		}
+        		
         		
         	});
         	
@@ -172,17 +165,13 @@
         	// scale the years to get a coordinate on the timeline:
         	var i=0;
         	events.forEach( function(event) {
-        		
+        		 
         		var rn = 5*Math.random();
         		event.x0 = 750.0*(event.x0-min_time)/(max_time-min_time) + rn;
         		event.x1 = 750.0*(event.x1-min_time)/(max_time-min_time) + rn;
         		
         		event.path = "M"+event.x0+","+(event.y-event.r)+"a "+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+" H "+event.x1+" a "+event.r+" "+event.r+" 0 0 0 0 -"+(2*event.r)+" Z"
         		
-        		if (event.place && event.place.latitude) {
-        			event.coords = {'latitude': event.place.latitude, 'longitude': event.place.longitude} ;
-        			bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
-        		}
         		
         	});
         	
@@ -191,20 +180,69 @@
         	// console.log(bounds);
         	// console.log(bounds.getCenter());
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
+        	
+        	console.log(vm.markers);
         	return events;
+        }
+        
+        
+        var MARKERID = 1;
+        function generateMarker(lat, lon, id, type) {
+        	var ICONCOLORS = {
+    				"death":	"#ff4141",
+    				"birth":	"#777fff",
+    				"spouse":	"#c3b981",
+    				"child":	"#7f6780",
+    				"career":	"#999999",
+    				"product":	"#83d236",
+    				"honour":	"#ce5c00",
+    				"event":	"#ABCDEF"
+    		};
+        	
+        	var m = {
+        			latitude: lat,
+        			longitude: lon,
+        			id: MARKERID++,
+        			options: {
+	        			icon:{
+	        				path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z", // google.maps.SymbolPath.CIRCLE, 
+							scale: 1.25, 
+							anchor: new google.maps.Point(0,0),
+							fillColor: ICONCOLORS[type],
+							fillOpacity: 0.8,
+							strokeOpacity: 1,
+							strokeWeight: 1,
+							labelOrigin: new google.maps.Point(0, -20)
+							},
+						zIndex: id,
+						optimized: false,
+						label: {
+					        text: ''+id,
+					        fontSize: '14px',
+					        fontFamily: '"Courier New", Courier,Monospace',
+					        color: 'black'
+					      }
+						}
+        	};
+        	return m;
         }
         
         function formMainline(vm) {
         	var x0 = vm.events.min_year,
         		x1 = vm.events.max_year,
-        		arr=[];
+        		arr = [],
+        		texts = [];
+        	
+        	//	horizontal lines every ten years
         	for (var x=10*Math.ceil(x0/10); x<x1; x+=10) {
-        		arr.push({'x1':750*(x-x0)/(x1-x0) , 'x2':750*(x-x0)/(x1-x0), 'y1':0, 'y2':90 });
+        		arr.push({'x1': 750*(x-x0)/(x1-x0) , 'x2': 750*(x-x0)/(x1-x0), 'y1': 0, 'y2': 90 });
+        		texts.push({'x': 750*(x-x0)/(x1-x0) , 'y':-20, 'year': ''+x});
         	}
+        	//  vertical lines
         	for (var y=0; y<120; y+=30) {
-        		arr.push({'x1':750*(x0-x0)/(x1-x0) , 'x2': 750*(x1-x0)/(x1-x0), 'y1':y, 'y2':y });
+        		arr.push({'x1': 750*(x0-x0)/(x1-x0) , 'x2': 750*(x1-x0)/(x1-x0), 'y1': y, 'y2': y });
         	}
-        	vm.mainline = arr;
+        	vm.mainline = {lines: arr, texts: texts };
         }
         
         function openPage() {
