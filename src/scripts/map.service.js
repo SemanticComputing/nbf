@@ -77,13 +77,18 @@
     	'		OPTIONAL { ?time gvp:estStart ?time__start. } ' +
     	'  		OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
     	'  		OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
+    	'  	    BIND ( CONCAT(' +
+    	'	        IF(bound(?time__start),str(year(?time__start)),"")' +
+    	'	        ,"-", '+
+    	'	        IF(bound(?time__end),str(year(?time__end)),"")' +
+    	'	      ) AS ?time__span) ' +
     	'  ' +
     	'  OPTIONAL { ?id a/skos:prefLabel ?class . FILTER (lang(?class)="en") } ' +
     	'   	OPTIONAL { ?id skos:prefLabel ?label } ' +
     	'  OPTIONAL { ?id nbf:place ?place . ' +
     	'    	filter (isUri(?place)) ' +
-    	'    	OPTIoNAL { ?place  geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
-    	'    	OPTIoNAL { ?place  skos:prefLabel ?place__name }  ' +
+    	'    	OPTIoNAL { ?place geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
+    	'    	OPTIoNAL { ?place skos:prefLabel ?place__name }  ' +
     	'  } ' +
     	' } ORDER BY ?time__start DESC(?time__end) ';
 
@@ -93,14 +98,14 @@
             'endpointUrl': SPARQL_ENDPOINT_URL,
             'usePost': true
         };
-
+/**
         var facetOptions_OLD = {
             endpointUrl: endpointConfig.endpointUrl,
             rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
             constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
             preferredLang : 'fi'
         };
-
+*/
         var resultOptions = {
             mapper: personMapperService,
             queryTemplate: query,
@@ -133,7 +138,7 @@
             .then(function(events) {
             	
                 if (events.length) {
-                	console.log(events);
+                	// console.log(events);
                     return events;
                 }
                 return $q.reject('No events found');

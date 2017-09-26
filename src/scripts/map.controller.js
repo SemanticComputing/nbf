@@ -20,7 +20,7 @@
         
         //	evoked when timeline item is hovered
         vm.focusEvent = function(event) {
-        	vm.currentEvent = event.label;
+        	vm.currentEvent = event.id + ": " + event.label;
         	event.markers.forEach( function(m) {
         		m.options.icon.strokeWeight = 4;
         		m.options.zIndex += 100;
@@ -31,7 +31,7 @@
         	});
         };
         
-//    	evoked when timeline item is left
+        //  evoked when timeline item is left
         vm.unfocusEvent = function(event) {
         	vm.currentEvent='.'
     		event.markers.forEach( function(m) {
@@ -70,22 +70,30 @@
         		event.y = 0;
         		event.r = 10;
         		event.markers = [];
+        		event.blobs = [];
         		
-        		['start', 'end'].forEach( function(p) {
-	        			if (event.time[p]) {
-	        				
-		        			//	convert "1928-06-19" to 1928.0 
-		        			var year=parseInt(event.time[p].match(/^\d\d\d\d/g)[0]);
-		        			
-			        		if (max_time<year) max_time=year;
-			        		if (year<min_time) min_time=year;
-			        		
-			        		event.time[p] = year;
-			        		
-			        		event[(p=='start' ? 'x0' : 'x1')] = year;
-			        		
-	        			}
-	        		});
+        		if (!(event.time.span.constructor === Array)){
+        			event.time.span = [event.time.span];
+        		}
+        		event.time.span.forEach( function(time) {
+        			var years = time.split('-'),
+        				blob = { event:event };
+        			
+        			if (years[0] != "") {
+        				years[0]=parseInt(years[0]);
+        				if (years[0]<min_time) min_time=years[0];
+        				if (max_time<years[0]) max_time=years[0];
+        				blob.estStart = years[0];
+        			}
+        			if (years[1] != "") {
+        				years[1]=parseInt(years[1]);
+        				if (years[1]<min_time) min_time=years[1];
+        				if (max_time<years[1]) max_time=years[1];
+        				blob.estEnd = years[1];
+        			}
+        			event.blobs.push(blob);
+	        	});
+        		
         		
         		if (!event.label) event.label="";
         		
@@ -95,11 +103,11 @@
         		switch(event.class) {
 	        		case "death":
 	        			has_death = true;
-	        			// TODO: targetoi ensimmäiseen tapahtumaan, jos ei deathia ole
 	        			event.label = 'Kuollut '+event.label;
 	        			event.r = 15;
 	        			break;
 	        			
+	        			// TODO: targetoi ensimmäiseen tapahtumaan, jos ei birth ole
 	        		case "birth":
 	        			event.label = 'Syntynyt '+event.label;
 	        			if (event.place && event.place.latitude) {
@@ -148,11 +156,9 @@
             		}
         		}
         		
-        		
         	});
         	
             
-        	
         	if (!has_death) max_time += 15;
         	if (max_time<=min_time) max_time = min_time+75;
         	if (max_time>current_year) max_time = current_year;
@@ -164,24 +170,36 @@
         	
         	// scale the years to get a coordinate on the timeline:
         	var i=0;
+        	vm.blobs = [];
         	events.forEach( function(event) {
-        		 
+        		event.path = "";
         		var rn = 5*Math.random();
-        		event.x0 = 750.0*(event.x0-min_time)/(max_time-min_time) + rn;
-        		event.x1 = 750.0*(event.x1-min_time)/(max_time-min_time) + rn;
-        		
-        		event.path = "M"+event.x0+","+(event.y-event.r)+"a "+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+" H "+event.x1+" a "+event.r+" "+event.r+" 0 0 0 0 -"+(2*event.r)+" Z"
-        		
-        		
+        		event.blobs.forEach( function(blob) {
+	        		//	blobs that shown on timeline
+	        		var x0 = scale2Timeline(blob.estStart,min_time,max_time)+rn,
+	        			x1 = (blob.estEnd ? scale2Timeline(blob.estEnd,min_time,max_time)+rn : 0);
+	        		
+	        		if (!x1) {
+	        			x1 = x0+40;
+	        			event.path += " M"+x1+","+(event.y-event.r)+
+	        						" H"+x0+
+	        						" a"+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+
+	        						" H"+x1;
+	            	} else {
+	            		event.path += " M"+x0+","+(event.y-event.r)+
+	        					" a"+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+
+	        					" H"+x1+
+	        					" a"+event.r+" "+event.r+" 0 0 0 0 -"+(2*event.r)+
+	        					" Z";
+	        		}
+	        		
+	        		vm.blobs.push(blob);
+        		});
         	});
         	
         	var map = document.getElementById('ui-gmap-google-map');
-        	// console.log(map);
-        	// console.log(bounds);
-        	// console.log(bounds.getCenter());
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	
-        	console.log(vm.markers);
         	return events;
         }
         
@@ -205,7 +223,7 @@
         			id: MARKERID++,
         			options: {
 	        			icon:{
-	        				path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z", // google.maps.SymbolPath.CIRCLE, 
+	        				path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z",
 							scale: 1.25, 
 							anchor: new google.maps.Point(0,0),
 							fillColor: ICONCOLORS[type],
@@ -234,15 +252,20 @@
         		texts = [];
         	
         	//	horizontal lines every ten years
-        	for (var x=10*Math.ceil(x0/10); x<x1; x+=10) {
-        		arr.push({'x1': 750*(x-x0)/(x1-x0) , 'x2': 750*(x-x0)/(x1-x0), 'y1': 0, 'y2': 90 });
-        		texts.push({'x': 750*(x-x0)/(x1-x0) , 'y':-20, 'year': ''+x});
+        	for (var x = 10*Math.ceil(x0/10); x<x1; x+=10) {
+        		var xx = scale2Timeline(x,x0,x1)
+        		arr.push({'x1': xx , 'x2': xx, 'y1': 0, 'y2': 90 });
+        		texts.push({'x': xx , 'y':-20, 'year': ''+x});
         	}
         	//  vertical lines
         	for (var y=0; y<120; y+=30) {
-        		arr.push({'x1': 750*(x0-x0)/(x1-x0) , 'x2': 750*(x1-x0)/(x1-x0), 'y1': y, 'y2': y });
+        		arr.push({'x1': scale2Timeline(x0,x0,x1) , 'x2': scale2Timeline(x1,x0,x1), 'y1': y, 'y2': y });
         	}
         	vm.mainline = {lines: arr, texts: texts };
+        }
+        
+        function scale2Timeline(time,x0,x1) {
+        	return 750.0*(time-x0)/(x1-x0);
         }
         
         function openPage() {

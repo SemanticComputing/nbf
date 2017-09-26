@@ -39,7 +39,7 @@
 				  	<!--  <text x="0" y="-30">{{ vm.events.min_year }}</text>
 				  	<text x="750" y="-15">{{ vm.events.max_year }}</text>
 				  	-->
-				  	<path ng-repeat="event in ::vm.events" 
+				  	<path ng-repeat="event in vm.events" 
 				  		ng-mouseenter="vm.focusEvent(event)"
 				  		ng-mouseleave="vm.unfocusEvent(event)" 
 				  		class="{{ event.class }}" 
@@ -48,7 +48,9 @@
 				  	
 			  		
 		  	</svg>
-				       <p><span>{{ vm.currentEvent }}</span></p>
+			<p>
+				<span>{{ vm.currentEvent }}</span>
+			</p>
 	      </div>
       </div>
     </div>
