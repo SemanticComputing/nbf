@@ -13,10 +13,14 @@
     
 	    <div>
 		    <div id="labelcontainer" class="col-sm-4 col-md-2 text-center" ng-show="vm.person">
+		    	
 				<p ng-repeat="event in ::vm.events" 
 					class="{{event.class}}"
 					ng-mouseenter="vm.focusEvent(event)"
-					ng-mouseleave="vm.unfocusEvent(event)">{{ event.id }}: {{ event.label }}</p>
+					ng-mouseleave="vm.unfocusEvent(event)">
+					<a ng-if="::event.relativelink" ng-href="{{event.relativelink}}">{{ event.id }}: {{ event.label }}</a>
+                	<span ng-if="::!event.relativelink">{{ event.id }}: {{ event.label }}</span>
+				</p>
 			</div>
 		</div>
 		

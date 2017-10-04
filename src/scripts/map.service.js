@@ -15,7 +15,7 @@
 
         // Get the results based on facet selections.
         // Return a promise.
-        this.getResults = getResults;
+        //this.getResults = getResults;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = getFacets;
@@ -26,9 +26,7 @@
         this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
         this.getSortClass = getSortClass;
-        // Get the details of a single person.
-        //this.getPerson = getPerson;
-        // Get the details of a single person.
+        // Get the events of a single person.
         this.getEvents = getEvents;
         
         /* Implementation */
@@ -45,7 +43,7 @@
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
-        ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
@@ -53,7 +51,7 @@
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
         
         // The query for the results.
-        // ?id is bound to the person URI.
+        // ?id is bound to the event URI.
         var query = 
         ' SELECT DISTINCT * WHERE {' +
         '  { ' +
@@ -64,33 +62,35 @@
     	'  		skosxl:prefLabel ?ilabel . ' +
     	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
     	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
-    	'  ' +
-    	'  { ?id bioc:inheres_in ?prs } ' +
+    	'' +
+    	'  { ?pc bioc:has_family_relation ?id . ' +
+    	'		OPTIONAL { ?id bioc:inheres_in ?relative } } ' +
     	'  UNION ' +
-    	'  { ?pc bioc:has_family_relation ?id } ' +
+    	'  { ?id crm:P100_was_death_of ?prs . } ' +
     	'  UNION ' +
-    	'  { ?id crm:P100_was_death_of ?prs } ' +
+    	'  { ?id crm:P98_brought_into_life ?prs . } ' +
     	'  UNION ' +
-    	'  { ?id crm:P98_brought_into_life ?prs } ' +
-    	'  ' +
+    	'  { ?id bioc:inheres_in ?prs . } ' +
+    	' ' +
+    	'  ?id a/skos:prefLabel ?class . FILTER (lang(?class)="en") ' +
     	'  ?id nbf:time ?time . ' +
     	'		OPTIONAL { ?time gvp:estStart ?time__start. } ' +
     	'  		OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
     	'  		OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
     	'  	    BIND ( CONCAT(' +
     	'	        IF(bound(?time__start),str(year(?time__start)),"")' +
-    	'	        ,"-", '+
+    	'	        ,"-", ' +
     	'	        IF(bound(?time__end),str(year(?time__end)),"")' +
     	'	      ) AS ?time__span) ' +
-    	'  ' +
-    	'  OPTIONAL { ?id a/skos:prefLabel ?class . FILTER (lang(?class)="en") } ' +
-    	'   	OPTIONAL { ?id skos:prefLabel ?label } ' +
+    	'' +
+    	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
     	'  OPTIONAL { ?id nbf:place ?place . ' +
     	'    	filter (isUri(?place)) ' +
-    	'    	OPTIoNAL { ?place geo:lat ?place__latitude ; geo:long ?place__longitude }  ' +
-    	'    	OPTIoNAL { ?place skos:prefLabel ?place__name }  ' +
+    	'    	?place geo:lat ?place__latitude ; ' +
+    	'            geo:long ?place__longitude  ;' +
+    	'    		skos:prefLabel ?place__name .' +
     	'  } ' +
-    	' } ORDER BY ?time__start DESC(?time__end) ';
+    	' } ORDER BY ?time__start DESC(?time__end)';
 
         
         // The SPARQL endpoint URL

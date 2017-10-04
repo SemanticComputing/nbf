@@ -109,24 +109,30 @@
 	        			
 	        			// TODO: targetoi ensimmäiseen tapahtumaan, jos ei birth ole
 	        		case "birth":
+	        			console.log(event);
 	        			event.label = 'Syntynyt '+event.label;
 	        			if (event.place && event.place.latitude) {
 	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
 	                	}
 	        			event.r = 15;
 	        			break;
+	        			
 	        		case "spouse":
-	        			event.label = event.label+', '+event.time.label;
-	        			break;
 	        		case "child":
+	        			if (event.relative) {
+	        				event.relativelink = "http://localhost:9000/#!/"+event.relative.replace(/[/]/g, '~2F');
+	        			}
 	        			event.label = event.label+', '+event.time.label;
 	        			break;
+	        			
 	        		case 'career':
 	        			event.y = 30;
 	        			break;
+	        			
 	        		case 'product':
 	        			event.y = 60;
 	        			break;
+	        			
 	        		case 'honour':
 	        			event.y = 90;
 	        			break;
@@ -138,7 +144,7 @@
         		}
         		
         		event.id = ++i;
-        		
+        		console.log(event);
         		if (event.place && event.place.latitude) {
         			if (event.place.latitude.constructor === Array) { 
         				// var arr = [];
@@ -155,14 +161,13 @@
 	        			//bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
             		}
         		}
-        		
         	});
         	
             
         	if (!has_death) max_time += 15;
         	if (max_time<=min_time) max_time = min_time+75;
+        	if (max_time>min_time+150) max_time = min_time+150;
         	if (max_time>current_year) max_time = current_year;
-        	
         	events.min_year = min_time;
         	events.max_year = max_time;
         	
@@ -176,27 +181,37 @@
         		var rn = 5*Math.random();
         		event.blobs.forEach( function(blob) {
 	        		//	blobs that shown on timeline
-	        		var x0 = scale2Timeline(blob.estStart,min_time,max_time)+rn,
-	        			x1 = (blob.estEnd ? scale2Timeline(blob.estEnd,min_time,max_time)+rn : 0);
+	        		var x0 = blob.estStart ? scale2Timeline(blob.estStart,min_time,max_time)+rn : 0,
+	        			x1 = blob.estEnd ? scale2Timeline(blob.estEnd,min_time,max_time)+rn : 0;
 	        		
-	        		if (!x1) {
-	        			x1 = x0+40;
+	        		if (!x0) {
+	        			//	missing start year
+	        			x0 = x1-20;
+	        			event.path += " M"+x0+","+(event.y+event.r)+
+	        						" H"+x1+
+	        						" a"+event.r+","+event.r+",0,0,0,0,-"+(2*event.r)+
+	        						" H"+x0;
+	            	} else if (!x1) {
+	        			//	missing end year
+	        			x1 = x0+20;
 	        			event.path += " M"+x1+","+(event.y-event.r)+
 	        						" H"+x0+
-	        						" a"+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+
+	        						" a"+event.r+","+event.r+",0,0,0,0,"+(2*event.r)+
 	        						" H"+x1;
 	            	} else {
+	        			//	both known
 	            		event.path += " M"+x0+","+(event.y-event.r)+
-	        					" a"+event.r+" "+event.r+" 0 0 0 0 "+(2*event.r)+
+	        					" a"+event.r+","+event.r+",0,0,0,0,"+(2*event.r)+
 	        					" H"+x1+
-	        					" a"+event.r+" "+event.r+" 0 0 0 0 -"+(2*event.r)+
+	        					" a"+event.r+","+event.r+",0,0,0,0,-"+(2*event.r)+
 	        					" Z";
 	        		}
 	        		
 	        		vm.blobs.push(blob);
         		});
+        		event.blobs = [];
         	});
-        	
+        	console.log(vm.markers);
         	var map = document.getElementById('ui-gmap-google-map');
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	
@@ -218,10 +233,10 @@
     		};
         	
         	var m = {
-        			latitude: lat,
-        			longitude: lon,
-        			id: MARKERID++,
-        			options: {
+        			"latitude": lat,
+        			"longitude": lon,
+        			"id": MARKERID++,
+        			"options": {
 	        			icon:{
 	        				path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z",
 							scale: 1.25, 

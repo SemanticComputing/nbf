@@ -1,5 +1,8 @@
 <div class="col-sm-12 col-md-8 text-center" ng-show="vm.person">
-      <h1>{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
+  <div class="col-sm-12" ng-show="!vm.person && !vm.error">
+      <img class="loading-img" src="images/loading-lg.gif"></img>
+    </div>
+	 <h1>{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
       <div class="thumbnail">
         <div class="person-profile-img">
           <div class="row">
