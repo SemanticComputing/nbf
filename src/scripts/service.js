@@ -136,13 +136,15 @@
             },
             title: {
                 facetId: 'title',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/has_occupation>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
                 name: 'Arvo tai ammatti',
+                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
+                depth: 3,
                 enabled: true
             },
             company: {
                 facetId: 'company',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/schema/bioc/has_profession>/<http://ldf.fi/nbf/related_company>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>',
                 name: 'Yritys tai yhteisö',
                 enabled: true
             },
@@ -214,10 +216,11 @@
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
         '  		OPTIONAL { ?prs schema:image ?images . }' +
-        '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
-        '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
+        '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
+        '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation ' +
+        '  			OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
+        '		}' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
         '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
         '  		}' +
@@ -268,10 +271,10 @@
             '		} ' +
             // '  		OPTIONAL { ?prs schema:gender ?gender . }' +
             '  		OPTIONAL { ?prs schema:image ?images . }' +
-            '  		OPTIONAL { ?prs bioc:has_profession/skos:prefLabel ?occupation . }' +
-            '  		OPTIONAL { ?prs bioc:has_profession/nbf:related_company ?company . }' +
+            '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
+            '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
+            // '  		OPTIONAL { ?prs ^bioc:inheres_in/nbf:related_company ?company . }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-
             '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
             '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?description ; nbf:id "1"^^xsd:integer  ] }' +
