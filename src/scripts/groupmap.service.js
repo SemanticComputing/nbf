@@ -5,10 +5,10 @@
     /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
 
-    .service('mapService', mapService);
+    .service('groupmapService', groupmapService);
 
     /* @ngInject */
-    function mapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
+    function groupmapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
             AdvancedSparqlService, personMapperService) {
 
         /* Public API */
@@ -53,44 +53,28 @@
         // The query for the results.
         // ?id is bound to the event URI.
         var query = 
-        ' SELECT DISTINCT * WHERE {' +
-        '  { ' +
-        '    <RESULT_SET> ' +
-        '  } ' +
-    	'  ?pc a nbf:PersonConcept ; ' +
-    	'      foaf:focus ?prs ; ' +
-    	'  		skosxl:prefLabel ?ilabel . ' +
-    	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
-    	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
-    	'' +
-    	'  { ?pc bioc:has_family_relation ?id . ' +
-    	'		?id bioc:inheres_in ?relative } ' +
-    	'  UNION ' +
-    	'  { ?id crm:P100_was_death_of ?prs . } ' +
-    	'  UNION ' +
-    	'  { ?id crm:P98_brought_into_life ?prs . } ' +
-    	'  UNION ' +
-    	'  { ?id bioc:inheres_in ?prs . } ' +
-    	' ' +
-    	'  ?id a/skos:prefLabel ?class . FILTER (lang(?class)="en") ' +
-    	'  ?id nbf:time ?time . ' +
-    	'		OPTIONAL { ?time gvp:estStart ?time__start. } ' +
-    	'  		OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
-    	'  		OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
-    	'  	    BIND ( CONCAT(' +
-    	'	        IF(bound(?time__start),str(year(?time__start)),"")' +
-    	'	        ,"-", ' +
-    	'	        IF(bound(?time__end),str(year(?time__end)),"")' +
-    	'	      ) AS ?time__span) ' +
-    	'' +
-    	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
-    	'  OPTIONAL { ?id nbf:place ?place . ' +
-    	'    	filter (isUri(?place)) ' +
-    	'    	?place geo:lat ?place__latitude ; ' +
-    	'            geo:long ?place__longitude  ;' +
-    	'    		skos:prefLabel ?place__name .' +
-    	'  } ' +
-    	' } ORDER BY ?time__start DESC(?time__end)';
+            'SELECT DISTINCT ?id ?prs ?time__start ?time__end ?class ?place__uri ?place__latitude ?place__longitude WHERE {' +
+            '  { VALUES ?eraStart { "1870-01-01"^^xsd:date }' +
+            '    VALUES ?eraEnd { "1880-01-01"^^xsd:date } }' +
+            //'  { ?prs bioc:has_family_relation ?id }' +
+            //'  UNION ' +
+            '  { ?id crm:P100_was_death_of ?prs . }' +
+            '  UNION   { ?id crm:P98_brought_into_life ?prs . }' +
+            //'  UNION   { ?id bioc:inheres_in ?prs . }' +
+            '  ' +
+            '  ?id nbf:time ?time ;' +
+            '  	   nbf:place ?place__uri . ' +
+            '  OPTIONAL { ?time gvp:estStart ?time__start. FILTER (?eraStart<?time__start && ?time__start<?eraEnd) } ' +
+            '  OPTIONAL { ?time gvp:estEnd ?time__end. FILTER (?eraStart<?time__end && ?time__end<?eraEnd) } ' +
+            '  FILTER (BOUND(?time__start) || BOUND(?time__end))' +
+            '  BIND ( CONCAT( IF(bound(?time__start),str(year(?time__start)),"") ,"-", IF(bound(?time__end),str(year(?time__end)),"") ) AS ?time__span)   ' +
+            '  ' +
+            '  ?id a/skos:prefLabel ?class .' +
+            '  FILTER (lang(?class)="en")' +
+            '  ' +
+            '    ?place__uri geo:lat ?place__latitude ; ' +
+            '           geo:long ?place__longitude . ' +
+            '} ORDER BY ?time__start DESC(?time__end) LIMIT 500';
 
         
         // The SPARQL endpoint URL
@@ -98,14 +82,7 @@
             'endpointUrl': SPARQL_ENDPOINT_URL,
             'usePost': true
         };
-/**
-        var facetOptions_OLD = {
-            endpointUrl: endpointConfig.endpointUrl,
-            rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
-            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
-            preferredLang : 'fi'
-        };
-*/
+        
         var resultOptions = {
             mapper: personMapperService,
             queryTemplate: query,
@@ -124,12 +101,7 @@
         function getResults(facetSelections) {
             return resultHandler.getResults(facetSelections, getSortBy());
         }
-        /**
-        function getResults1_OLD(facetSelections) {
-        	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
-        	return endpoint.getObjectsNoGrouping(q);
-        }
-        */
+        
         function getEvents(id) {
             var qry = prefixes + query;
             // console.log(qry);
@@ -137,33 +109,15 @@
             // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(events) {
-            	
                 if (events.length) {
+                	console.log(events);
                     return events;
                 }
                 return $q.reject('No events found');
             });
         }
         
-        /**
-        function getPerson(id) {
-            var qry = prefixes + query;
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            //	console.log(qry.replace('<RESULT_SET>', constraint));
-            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
-            .then(function(person) {
-            	// console.log(person);
-                if (person.length) {
-                    return person[person.length-1];
-                }
-                return $q.reject('Not found');
-            });
-        }
-        function getAchievements(person) {
-        	return person;
-        }
-         */
-
+        
         function getFacets() {
             var facetsCopy = angular.copy(facets);
             return $q.when(facetsCopy);

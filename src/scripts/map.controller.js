@@ -51,8 +51,8 @@
         		if (events.length) {
         			vm.person = events[0];
         			}
-        			vm.events = processEvents(events, vm);
-        			formMainline(vm);
+        		vm.events = processEvents(events, vm);
+        		formMainline(vm);
         		
         		return events;
             }).catch(handleError);
@@ -144,7 +144,6 @@
         		}
         		
         		event.id = ++i;
-        		console.log(event);
         		if (event.place && event.place.latitude) {
         			if (event.place.latitude.constructor === Array) { 
         				// var arr = [];
@@ -211,7 +210,7 @@
         		});
         		event.blobs = [];
         	});
-        	console.log(vm.markers);
+        	
         	var map = document.getElementById('ui-gmap-google-map');
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	

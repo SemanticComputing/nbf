@@ -1,5 +1,5 @@
-# Norssit
-The application provides a faceted search of Norssi student register data.
+# Semantic National Biography of Finland
+The application provides a faceted search of Semantic National Biography of Finland.
 
 Installation
 ------------

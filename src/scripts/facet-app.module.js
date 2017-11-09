@@ -78,6 +78,12 @@
             controller: 'TableController',
             controllerAs: 'vm'
         })
+        .state('groupmap', {
+            url: '/joukkokartta',
+            templateUrl: 'views/groupmap.html',
+            controller: 'GroupmapController',
+            controllerAs: 'vm',
+        })
         .state('cards', {
             url: '/ruudukko',
             templateUrl: 'views/cards.html',

@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12" ng-show="!vm.markers && !vm.error">
+      <img class="loading-img" src="images/loading-lg.gif"></img>
+    </div>
+    <div uib-alert ng-if="vm.error">
+      {{ vm.error }}
+    </div>
+    <div class="container-fluid text-center" ng-show="vm.markers">
+    
+    <div class="container-fluid thumbnail">
+    
+	    <div>
+		</div>
+		
+		<div class="col-sm-12 col-md-10 text-center ">
+		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
+	        	<ui-gmap-marker ng-repeat="marker in vm.markers" 
+	        		coords="marker" 
+	        		idkey="marker.id" 
+	        		options="marker.options" 
+	        	></ui-gmap-marker>
+	        </ui-gmap-google-map>
+	        
+	      </div>
+      </div>
+    </div>
+  </div>
+</div>
