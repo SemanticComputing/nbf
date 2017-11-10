@@ -15,7 +15,7 @@
 
         // Get the results based on facet selections.
         // Return a promise.
-        //this.getResults = getResults;
+        this.getResults = getResults;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = getFacets;
@@ -26,11 +26,136 @@
         this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
         this.getSortClass = getSortClass;
-        // Get the events of a single person.
-        this.getEvents = getEvents;
-        
+        // Get the details of a single person.
+        // this.getPerson = getPerson;
+
         /* Implementation */
 
+        var facets = {
+            entryText: {
+                facetId: 'entryText',
+                graph: '<http://ldf.fi/nbf/people>',
+                name: 'Haku',
+                enabled: true
+            },
+            link: {
+                facetId: 'link',
+                choices: [
+                    {
+                        id: 'wikipedia',
+                        pattern: '?id <http://ldf.fi/nbf/wikipedia> [] .',
+                        label: 'Wikipedia'
+                    },
+                    {
+                        id: 'wikidata',
+                        pattern: '?id <http://ldf.fi/nbf/wikidata> [] .',
+                        label: 'Wikidata'
+                    },
+                    {
+                        id: 'sotasampo',
+                        pattern: '?id <http://ldf.fi/nbf/warsampo> [] .',
+                        label: 'Sotasampo'
+                    },
+                    {
+                        id: 'norssit',
+                        pattern: '?id <http://ldf.fi/nbf/norssi> [] .',
+                        label: 'Norssit'
+                    },
+                    {
+                        id: 'kirjasampo',
+                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] . ',
+                        label: 'Kirjasampo'
+                    },
+                    {
+                        id: 'blf',
+                        pattern: '?id <http://ldf.fi/nbf/blf> [] .',
+                        label: 'BLF'
+                    },
+                    {
+                        id: 'ulan',
+                        pattern: '?id <http://ldf.fi/nbf/ulan> [] .',
+                        label: 'ULAN'
+                    },
+                    {
+                        id: 'viaf',
+                        pattern: '?id <http://ldf.fi/nbf/viaf> [] .',
+                        label: 'VIAF'
+                    },
+                    {
+                        id: 'genicom',
+                        pattern: '?id <http://ldf.fi/nbf/genicom> [] .',
+                        label: 'Geni.com'
+                    },
+                    {
+                        id: 'website',
+                        pattern: '?id <http://ldf.fi/nbf/website> [] .',
+                        label: 'Kotisivu'
+                    },
+                    {
+                        id: 'eduskunta',
+                        pattern: '?id <http://ldf.fi/nbf/eduskunta> [] .',
+                        label: 'Eduskunta'
+                    }
+                ],
+                enabled: true,
+                name: 'Linkit'
+            },
+            period: {
+                facetId: 'period',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                name: 'Ajanjakso',
+                enabled: true
+            },
+            dataset: {
+                facetId: 'dataset',
+                predicate: '<http://purl.org/dc/terms/source>',
+                name: 'Tietokanta'
+            },
+            birthYear: {
+                facetId: 'birthYear',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
+                name: 'Synnyinaika',
+                enabled: true
+            },
+            place: {
+                facetId: 'place',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                name: 'Paikkakunta',
+                enabled: true
+            },
+            deathYear: {
+                facetId: 'birthYear',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
+                name: 'Kuolinaika',
+                enabled: true
+            },
+            title: {
+                facetId: 'title',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
+                name: 'Arvo tai ammatti',
+                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
+                depth: 3,
+                enabled: true
+            },
+            company: {
+                facetId: 'company',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>',
+                name: 'Yritys tai yhteisö',
+                enabled: true
+            },
+            category: {
+                facetId: 'category',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
+                name: 'Kategoria',
+                enabled: true
+            },
+            gender: {
+                facetId: 'gender',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
+                name: 'Sukupuoli',
+                enabled: true
+            }
+        };
 
         var prefixes =
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
@@ -43,52 +168,65 @@
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
-        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
-        
-        // The query for the results.
-        // ?id is bound to the event URI.
-        var query = 
-            'SELECT DISTINCT ?id ?prs ?time__start ?time__end ?class ?place__uri ?place__latitude ?place__longitude WHERE {' +
-            '  { VALUES ?eraStart { "1870-01-01"^^xsd:date }' +
-            '    VALUES ?eraEnd { "1880-01-01"^^xsd:date } }' +
-            //'  { ?prs bioc:has_family_relation ?id }' +
-            //'  UNION ' +
-            '  { ?id crm:P100_was_death_of ?prs . }' +
-            '  UNION   { ?id crm:P98_brought_into_life ?prs . }' +
-            //'  UNION   { ?id bioc:inheres_in ?prs . }' +
-            '  ' +
-            '  ?id nbf:time ?time ;' +
-            '  	   nbf:place ?place__uri . ' +
-            '  OPTIONAL { ?time gvp:estStart ?time__start. FILTER (?eraStart<?time__start && ?time__start<?eraEnd) } ' +
-            '  OPTIONAL { ?time gvp:estEnd ?time__end. FILTER (?eraStart<?time__end && ?time__end<?eraEnd) } ' +
-            '  FILTER (BOUND(?time__start) || BOUND(?time__end))' +
-            '  BIND ( CONCAT( IF(bound(?time__start),str(year(?time__start)),"") ,"-", IF(bound(?time__end),str(year(?time__end)),"") ) AS ?time__span)   ' +
-            '  ' +
-            '  ?id a/skos:prefLabel ?class .' +
-            '  FILTER (lang(?class)="en")' +
-            '  ' +
-            '    ?place__uri geo:lat ?place__latitude ; ' +
-            '           geo:long ?place__longitude . ' +
-            '} ORDER BY ?time__start DESC(?time__end) LIMIT 500';
 
-        
+        // The query for the results.
+        // ?id is bound to the person URI.
+        var query = 
+        	'SELECT DISTINCT ?id ?evt ?time__start ?time__end ?class ?place__uri ?place__latitude ?place__longitude WHERE { ' +
+        	'  { SELECT DISTINCT ?id WHERE { ' +
+        	'  	VALUES ?eraStart { "1900-01-01"^^xsd:date } ' +
+        	'  { <RESULT_SET> } ' +
+        	'	?id foaf:focus ?prs . ' +
+        	'  	?prs ^crm:P98_brought_into_life/nbf:time/gvp:estStart ?time__birth . ' +
+        	'  	?prs ^crm:P100_was_death_of/nbf:time/gvp:estStart ?time__death . ' +
+        	'  	FILTER (?time__birth<=?eraStart && ?eraStart<=?time__death) ' +
+        	'	} LIMIT 500 } ' +
+        	'  ' +
+        	// '  { ?prs bioc:has_family_relation ?id } UNION ' +
+        	'	?id foaf:focus ?prs . ' +
+        	'  { ?evt crm:P100_was_death_of ?prs . } ' +
+        	'  UNION   { ?evt crm:P98_brought_into_life ?prs . } ' +
+        	// '  UNION   { ?id bioc:inheres_in ?prs . } ' +
+        	'  ' +
+        	'  ?evt nbf:time ?time . ' +
+        	'  OPTIONAL { ?time gvp:estStart ?time__start. } ' +
+        	'  OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
+        	'  FILTER (BOUND(?time__start) || BOUND(?time__end)) ' +
+        	'   ' +
+        	'  ?evt a/skos:prefLabel ?class . ' +
+        	'  FILTER (lang(?class)="en") ' +
+        	'  ' +
+        	'  ?evt nbf:place ?place__uri .  ' +
+        	'    ?place__uri geo:lat ?place__latitude ;  ' +
+        	'           geo:long ?place__longitude .  ' +
+        	'} LIMIT 1000 ';
+
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
             'usePost': true
         };
-        
+
+        var facetOptions = {
+            endpointUrl: endpointConfig.endpointUrl,
+            rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
+            constraint: '?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
+            preferredLang : 'fi',
+            noSelectionString: '-- Ei valintaa --'
+        };
+
         var resultOptions = {
             mapper: personMapperService,
             queryTemplate: query,
             prefixes: prefixes,
-            paging: true,
-            pagesPerQuery: 2 // get two pages of results per query
+            paging: false,
+            pagesPerQuery: 1
         };
 
         // The FacetResultHandler handles forming the final queries for results,
@@ -99,25 +237,24 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
         function getResults(facetSelections) {
-            return resultHandler.getResults(facetSelections, getSortBy());
+        	console.log(facetSelections.constraint.join(' '));
+        	var q = prefixes+query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+            return endpoint.getObjectsNoGrouping(q);
+        	// return resultHandler.getResults(facetSelections, getSortBy());
         }
-        
-        function getEvents(id) {
+
+        function getPerson_OLD(id) {
             var qry = prefixes + query;
-            // console.log(qry);
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            // console.log(qry.replace('<RESULT_SET>', constraint));
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
-            .then(function(events) {
-                if (events.length) {
-                	console.log(events);
-                    return events;
+            .then(function(person) {
+                if (person.length) {
+                    return person[person.length-1];
                 }
-                return $q.reject('No events found');
+                return $q.reject('Not found');
             });
         }
-        
-        
+
         function getFacets() {
             var facetsCopy = angular.copy(facets);
             return $q.when(facetsCopy);

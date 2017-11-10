@@ -1,38 +1,118 @@
+/*
+ * Semantic faceted search
+ *
+ */
+
 (function() {
 
-    'use strict'; 
-     angular.module('facetApp')
+    'use strict';
+
+    /* eslint-disable angular/no-service-method */
+    angular.module('facetApp')
 
     /*
-    * Controller for the person's timeline & map view.
-    * api key: AIzaSyCS7M4hXwmBzV1FwE1p9lIDh1QSPhGqhUU
+    * Controller for the results view.
     */
     .controller('GroupmapController', GroupmapController);
 
     /* @ngInject */
-    function GroupmapController($stateParams, $uibModal, _, groupmapService) {
+    function GroupmapController($scope, $location, $state, $uibModal, _, groupmapService,
+            FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
-        
-        vm.openPage = openPage;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
+        //var nextPageNo;
+        //var maxPage;
+
+        //vm.openPage = openPage;
+        //vm.nextPage = nextPage;
+        vm.isScrollDisabled = isScrollDisabled;
+        vm.removeFacetSelections = removeFacetSelections;
+        // vm.sortBy = sortBy;
+        vm.getSortClass = groupmapService.getSortClass;
+
+        vm.people = [];
         
-        init();
-        
-        function init() {
-        	
-        	groupmapService.getEvents($stateParams.personId).then(function(events) {
-        		vm.events = processEvents(events, vm);
-        		return events;
+        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
+            updateResults(event, config);
+            initListener();
+        });
+        $scope.$on('sf-facet-constraints', updateResults);
+
+        groupmapService.getFacets().then(function(facets) {
+            vm.facets = facets;
+            vm.facetOptions = getFacetOptions();
+            vm.facetOptions.scope = $scope;
+            vm.handler = new FacetHandler(vm.facetOptions);
+        });
+
+        function removeFacetSelections() {
+            $state.reload();
+        }
+
+        function openPage(person) {
+            $uibModal.open({
+                component: 'registerPageModal',
+                size: 'lg',
+                resolve: {
+                    person: function() { return person; }
+                }
+            });
+        }
+
+        function getFacetOptions() {
+            var options = groupmapService.getFacetOptions();
+            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            return options;
+        }
+
+        var latestPageUpdate;
+        function nextPage() {
+            
+        }
+
+        function isScrollDisabled() {
+            return vm.isLoadingResults || nextPageNo > maxPage;
+        }
+
+        function sortBy(sortBy) {
+        	groupmapService.updateSortBy(sortBy);
+            return fetchResults({ constraint: vm.previousSelections });
+        }
+
+        function updateResults(event, facetSelections) {
+            if (vm.previousSelections && _.isEqual(facetSelections.constraint,
+                    vm.previousSelections)) {
+                return;
+            }
+            vm.previousSelections = _.clone(facetSelections.constraint);
+            facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            return fetchResults(facetSelections);
+        }
+
+        var latestUpdate;
+        function fetchResults(facetSelections) {
+            vm.isLoadingResults = true;
+            vm.people = [];
+            vm.error = undefined;
+
+            var updateId = _.uniqueId();
+            latestUpdate = updateId;
+
+            return groupmapService.getResults(facetSelections)
+            .then(function(res) {
+            	console.log(res);
+            	vm.events = processEvents(res, vm);
             }).catch(handleError);
         }
 
+        function handleError(error) {
+            vm.isLoadingResults = false;
+            vm.error = error;
+        }
+        
         function processEvents(events, vm) {
-        	
-        	var current_year = (new Date()).getFullYear(),
-        		min_time=current_year, max_time=0,
-        		i=0;
         	
         	var places = {};
         	
@@ -41,30 +121,14 @@
         		if (!event.class) event.class = "event";
         		event.class = event.class.toLowerCase();
         		
-        		//	group by place uris
+        		//	count by place uris
         		var key=event.class+event.place.uri;
         		if (!places.hasOwnProperty(key)) {
         			places[key]={count:0, latitude:event.place.latitude, longitude:event.place.longitude, type:event.class}
         		}
         		places[key]['count']+=1;
-        		/*
-        		event.id = ++i;
-        		if (event.place && event.place.latitude) {
-        			if (event.place.latitude.constructor === Array) { 
-        				// var arr = [];
-        				for (var j=0; j<event.place.latitude.length; j++) {
-        					var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class);
-        					vm.markers.push(m);
-        					// bounds.extend(new google.maps.LatLng(event.place.latitude[j], event.place.longitude[j]));
-        				}
-            		} else {
-            			var m = generateMarker(event.place.latitude, event.place.longitude, event.id, event.class);
-            			vm.markers.push(m);
-	        			//bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
-            		}
-        		}
-        		*/
         	});
+        	
         	vm.markers = [];
         	var i = 0;
         	for (var x in places) {
@@ -112,26 +176,10 @@
 							labelOrigin: new google.maps.Point(0, 0)
 							},
 						optimized: false,
-						
 						}
         	};
         	return m;
         }
         
-        
-        function openPage() {
-            $uibModal.open({
-                component: 'registerPageModal',
-                size: 'lg',
-                resolve: {
-                    person: function() { return vm.person; }
-                }
-            });
-        }
-
-        function handleError(error) {
-            vm.isLoadingResults = false;
-            vm.error = error;
-        }
     }
 })();

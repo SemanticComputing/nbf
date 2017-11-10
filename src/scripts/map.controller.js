@@ -1,6 +1,6 @@
 (function() {
 
-    'use strict'; 
+    'use strict';
      angular.module('facetApp')
 
     /*
@@ -64,11 +64,26 @@
         		min_time=current_year, max_time=0,
         		has_death = false,
         		i=0;
+        	var places = {};
+        	
+        	events.forEach( function(event) {
+        		if (event.place && event.place.uri) {
+        			var keys = event.place.uri;
+        			if (!(keys.constructor === Array)) keys = [keys];
+        			
+        			keys.forEach( function(key) {
+	        			if (!places.hasOwnProperty(key)) {
+	        				places[key]={count:0, latitude:event.place.latitude, longitude:event.place.longitude, type:event.class}
+	            		}
+	            		places[key]['count']+=1;
+        			});
+        		}
+        	});
         	
         	events.forEach( function(event) {
         		
         		event.y = 0;
-        		event.r = 10;
+        		event.r = 7;
         		event.markers = [];
         		event.blobs = [];
         		
@@ -104,19 +119,18 @@
 	        		case "death":
 	        			has_death = true;
 	        			event.label = 'Kuollut '+event.label;
-	        			event.r = 15;
+	        			event.r = 10;
 	        			break;
-	        			
+	        		
 	        			// TODO: targetoi ensimmäiseen tapahtumaan, jos ei birth ole
 	        		case "birth":
-	        			console.log(event);
 	        			event.label = 'Syntynyt '+event.label;
 	        			if (event.place && event.place.latitude) {
 	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
 	                	}
-	        			event.r = 15;
+	        			event.r = 10;
 	        			break;
-	        			
+	        		
 	        		case "spouse":
 	        		case "child":
 	        			if (event.relative) {
@@ -124,37 +138,41 @@
 	        			}
 	        			event.label = event.label+', '+event.time.label;
 	        			break;
-	        			
+	        		
 	        		case 'career':
 	        			event.y = 30;
 	        			break;
-	        			
+	        		
 	        		case 'product':
 	        			event.y = 60;
 	        			break;
-	        			
+	        		
 	        		case 'honour':
 	        			event.y = 90;
 	        			break;
-	        			
+	        		
 	        		default:
 	        			console.log(event.class);
+	        			event.y = 90;
 	        			event.class="event";
 	        			break;
         		}
         		
+        		
         		event.id = ++i;
+        		
         		if (event.place && event.place.latitude) {
         			if (event.place.latitude.constructor === Array) { 
-        				// var arr = [];
         				for (var j=0; j<event.place.latitude.length; j++) {
-        					var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class);
+        					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 15.*Math.sqrt(places[event.place.uri[j]]['count']): 15.0 ;
+                			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r);
         					event.markers.push(m);
         					vm.markers.push(m);
         					// bounds.extend(new google.maps.LatLng(event.place.latitude[j], event.place.longitude[j]));
         				}
             		} else {
-            			var m = generateMarker(event.place.latitude, event.place.longitude, event.id, event.class);
+            			var r = places[event.place.uri] && places[event.place.uri]['count'] ? 15.*Math.sqrt(places[event.place.uri]['count']): 15.0 ;
+            			var m = generateMarker(event.place.latitude, event.place.longitude, event.id, event.class, r);
             			event.markers = [m] ;
 	        			vm.markers.push(m);
 	        			//bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
@@ -186,20 +204,20 @@
 	        		if (!x0) {
 	        			//	missing start year
 	        			x0 = x1-20;
-	        			event.path += " M"+x0+","+(event.y+event.r)+
+	        			event.path += "M"+x0+","+(event.y+event.r)+
 	        						" H"+x1+
 	        						" a"+event.r+","+event.r+",0,0,0,0,-"+(2*event.r)+
 	        						" H"+x0;
 	            	} else if (!x1) {
 	        			//	missing end year
 	        			x1 = x0+20;
-	        			event.path += " M"+x1+","+(event.y-event.r)+
+	        			event.path += "M"+x1+","+(event.y-event.r)+
 	        						" H"+x0+
 	        						" a"+event.r+","+event.r+",0,0,0,0,"+(2*event.r)+
 	        						" H"+x1;
 	            	} else {
 	        			//	both known
-	            		event.path += " M"+x0+","+(event.y-event.r)+
+	            		event.path += "M"+x0+","+(event.y-event.r)+
 	        					" a"+event.r+","+event.r+",0,0,0,0,"+(2*event.r)+
 	        					" H"+x1+
 	        					" a"+event.r+","+event.r+",0,0,0,0,-"+(2*event.r)+
@@ -210,7 +228,7 @@
         		});
         		event.blobs = [];
         	});
-        	
+        	console.log(vm.blobs);
         	var map = document.getElementById('ui-gmap-google-map');
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	
@@ -219,7 +237,8 @@
         
         
         var MARKERID = 1;
-        function generateMarker(lat, lon, id, type) {
+        function generateMarker(lat, lon, id, type, r) {
+        	if (!r) r=15.0;
         	var ICONCOLORS = {
     				"death":	"#ff4141",
     				"birth":	"#777fff",
@@ -236,15 +255,15 @@
         			"longitude": lon,
         			"id": MARKERID++,
         			"options": {
-	        			icon:{
-	        				path:"M0 0 L -10,-10 A 14.142, 14.142, 315 ,1, 1, 10,-10 Z",
-							scale: 1.25, 
+        				icon:{
+	        				path:"M-"+r+" 0 A "+r+","+r+", 0 ,1, 1,"+r+",0 A"+r+","+r+",0,1,1,-"+r+",0 Z",
+							scale: 1.0,
 							anchor: new google.maps.Point(0,0),
 							fillColor: ICONCOLORS[type],
-							fillOpacity: 0.8,
-							strokeOpacity: 1,
+							fillOpacity: 0.6,
+							strokeOpacity: 0.5,
 							strokeWeight: 1,
-							labelOrigin: new google.maps.Point(0, -20)
+							labelOrigin: new google.maps.Point(0, 0)
 							},
 						zIndex: id,
 						optimized: false,

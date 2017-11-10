@@ -84,9 +84,9 @@
     	'	      ) AS ?time__span) ' +
     	'' +
     	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
-    	'  OPTIONAL { ?id nbf:place ?place . ' +
-    	'    	filter (isUri(?place)) ' +
-    	'    	?place geo:lat ?place__latitude ; ' +
+    	'  OPTIONAL { ?id nbf:place ?place__uri . ' +
+    	// '    	filter (isUri(?place__uri)) ' +
+    	'    	?place__uri geo:lat ?place__latitude ; ' +
     	'            geo:long ?place__longitude  ;' +
     	'    		skos:prefLabel ?place__name .' +
     	'  } ' +
@@ -132,7 +132,6 @@
         */
         function getEvents(id) {
             var qry = prefixes + query;
-            // console.log(qry);
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
             // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
