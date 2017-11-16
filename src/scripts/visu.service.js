@@ -18,12 +18,10 @@
         this.getAge = getAge;
         this.getMarriageAge = getMarriageAge;
         this.getFirstChildAge = getFirstChildAge;
+        this.getNumberOfChildren = getNumberOfChildren;
+        this.getNumberOfSpouses = getNumberOfSpouses;
         
         this.getResults = getResults;
-        //this.getResults1 = getResults1;
-        //this.getResults2 = getResults2;
-        //this.getResultsTopOrgs = getResultsTopOrgs;
-        //this.getResultsTopSchools = getResultsTopSchools;
         
         // Get the facets.
         // Return a promise (because of translation).
@@ -203,27 +201,55 @@
         	'}';
             
        var queryAge = prefixes +
-       'SELECT ?age (count(?age) AS ?count) WHERE { ' +
+       'SELECT ?value (count(?value) AS ?count) WHERE { ' +
        ' { <RESULT_SET> } ' +
 	   	' ' +
-	   	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?time ; ' +
-	   	'   	foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
-	   	'  BIND (year(?time)-year(?birth) AS ?age) ' +
-	   	'  FILTER (1<?age && ?age<120) ' +
-	   	'} GROUP BY ?age  ORDER BY ?age ';
+	   	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
+	   	'  	foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] ' +
+	   	'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
+	   	'  FILTER (-1<?value && ?value<120) ' +
+	   	'} GROUP BY ?value  ORDER BY ?value ';
        
        var queryMarriageAge = prefixes +
-       'SELECT ?age (count(?age) AS ?count) WHERE { ' +
+       'SELECT ?value (count(?value) AS ?count) ' +
+	   	'WHERE { ' +
+	   	'  { ' +
+	   	'    SELECT distinct ?id (min(?age) AS ?value) WHERE { ' +
+	   	'    { <RESULT_SET> } ' +
+	   	'    VALUES ?rel { relations:Spouse } ' +
+	   	'    ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; 	 ' +
+	   	'        foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+	   	'    BIND (year(?time)-year(?birth) AS ?age) ' +
+	   	'    FILTER (13<?age && ?age<120) ' +
+	   	'    } GROUP BY ?id  } ' +
+	   	'} GROUP BY ?value ORDER BY ?value ';
+       
+       var queryMarriageAgeAverage = prefixes +
+       'SELECT ?value (count(?value) AS ?count) WHERE { ' +
        ' { <RESULT_SET> } ' +
 	   	' ' +
 	   	'  VALUES ?rel { relations:Spouse } ' +
 	   	'  ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; ' +
 	   	'   	foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
-	   	'  BIND (year(?time)-year(?birth) AS ?age) ' +
-	   	'  FILTER (13<?age && ?age<120) ' +
-	   	'} GROUP BY ?age ORDER BY ?age ';
+	   	'  BIND (year(?time)-year(?birth) AS ?value) ' +
+	   	'  FILTER (13<?value && ?value<120) ' +
+	   	'} GROUP BY ?value ORDER BY ?value ';
 		    
        var queryFirstChildAge = prefixes +
+       'SELECT ?value (count(?value) AS ?count) ' +
+	   	'WHERE { ' +
+	   	'  { ' +
+	   	'    SELECT distinct ?id (min(?age) AS ?value) WHERE { ' +
+	   	'    { <RESULT_SET> } ' +
+	   	'    VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
+	   	'    ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; 	 ' +
+	   	'        foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+	   	'    BIND (year(?time)-year(?birth) AS ?age) ' +
+	   	'    FILTER (13<?age && ?age<120) ' +
+	   	'    } GROUP BY ?id  } ' +
+	   	'} GROUP BY ?value ORDER BY ?value ';
+       
+       var queryAverageChildAge = prefixes +
        'SELECT ?age (count(?age) AS ?count) WHERE { ' +
        ' { <RESULT_SET> } ' +
 	   	' ' +
@@ -234,6 +260,25 @@
 	   	'  FILTER (13<?age && ?age<120) ' +
 	   	'} GROUP BY ?age ORDER BY ?age ';
        
+       var queryNumberOfChildren = prefixes +
+       'SELECT ?value (count(?id) AS ?count) WHERE { ' +
+		'  SELECT ?id (count(?rel) AS ?value) WHERE { ' +
+		'    { <RESULT_SET> } ' +
+		'    VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
+		'    ?id bioc:has_family_relation/a ?rel . ' +
+		'  } GROUP BY ?id ' +
+		'} GROUP BY ?value ORDER BY ?value ';
+		   
+       var queryNumberOfSpouses = prefixes +
+       'SELECT ?value (count(?id) AS ?count) WHERE { ' +
+		'  SELECT ?id (count(?rel) AS ?value) WHERE { ' +
+		'    { <RESULT_SET> } ' +
+		'    VALUES ?rel { relations:Spouse } ' +
+		'    ?id bioc:has_family_relation/a ?rel . ' +
+		'  } GROUP BY ?id ' +
+		'} GROUP BY ?value ORDER BY ?value ';
+       
+      /**
         var queryTopTitles = prefixes + 
 	    	' SELECT ?label ?year (count (distinct ?id) AS ?count) ' +
 	    	' WHERE { ' +
@@ -294,7 +339,8 @@
 	    	' 	 BIND (floor(year(?date)/10)*10 AS ?year)' +
 	    	' } GROUP BY ?label ?year ORDER by ?year ';
     
-        
+        */
+       
         // The SPARQL endpoint URL
         var endpointUrl = SPARQL_ENDPOINT_URL;
 
@@ -316,7 +362,7 @@
         function getFirstChildAge(facetSelections) {
         	var cons = facetSelections.constraint.join(' '),
     			q = queryFirstChildAge.replace("<RESULT_SET>", cons);
-	    	return endpoint.getObjectsNoGrouping(q) ;
+        	return endpoint.getObjectsNoGrouping(q) ;
 	    }
         
         function getAge(facetSelections) {
@@ -325,46 +371,30 @@
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         
-        /**
-        function getResults1(facetSelections) {
-        	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
-        	return endpoint.getObjectsNoGrouping(q);
+        function getNumberOfChildren(facetSelections) {
+        	var cons = facetSelections.constraint.join(' '),
+    			q = queryNumberOfChildren.replace("<RESULT_SET>", cons);
+        	return endpoint.getObjectsNoGrouping(q) ;
         }
         
-        
-        function getResultsTopTitles(facetSelections) {
-        	var q = queryTopTitles.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-        	return endpoint.getObjectsNoGrouping(q);
-        }
-
-        function getResultsTopOrgs(facetSelections) {
-        	return endpoint.getObjectsNoGrouping(queryTopOrgs.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' ')));
+        function getNumberOfSpouses(facetSelections) {
+        	var cons = facetSelections.constraint.join(' '),
+    			q = queryNumberOfSpouses.replace("<RESULT_SET>", cons);
+        	return endpoint.getObjectsNoGrouping(q) ;
         }
         
-        function getResultsTopSchools(facetSelections) {
-        	// console.log(queryTopSchools.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' ')));
-        	return endpoint.getObjectsNoGrouping(queryTopSchools.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' ')));
-        }
-        */
         
         function getResults(facetSelections) {
         	var promises = [
             	this.getAge(facetSelections),
             	this.getMarriageAge(facetSelections),
             	this.getFirstChildAge(facetSelections),
-            	//this.getResultsTopTitles(facetSelections),
-            	//this.getResultsTopOrgs(facetSelections),
-            	//this.getResultsTopSchools(facetSelections)
+            	this.getNumberOfChildren(facetSelections),
+            	this.getNumberOfSpouses(facetSelections)
             ];
         	return $q.all(promises);
         }
         
-        function getResults2(facetSelections) {
-        	var promises = [
-            	this.getResults1(facetSelections)
-            ];
-        	return $q.all(promises);
-        }
         
         function getFacets() {
             var facetsCopy = angular.copy(facets);
