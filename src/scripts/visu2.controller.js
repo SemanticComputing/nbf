@@ -15,15 +15,15 @@
     .controller('VisuController2', VisuController2);
 
     /* @ngInject */
-    function VisuController2($scope, $location, $q, $state, _, norssitVisuService,
+    function VisuController2($scope, $location, $q, $state, _, visuService,
             FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
    
         vm.people = []; 
         vm.startYear = [];
-        vm.topTitles = [];
-        vm.topOrgs = [];
+        //vm.topTitles = [];
+        //vm.topOrgs = [];
 		vm.removeFacetSelections = removeFacetSelections;
 		
 		google.charts.load('current', {packages: ['corechart', 'line']});
@@ -34,7 +34,7 @@
         });
         $scope.$on('sf-facet-constraints', updateResults);
 
-        norssitVisuService.getFacets().then(function(facets) {
+        visuService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -46,7 +46,7 @@
         }
 
         function getFacetOptions() {
-            var options = norssitVisuService.getFacetOptions();
+            var options = visuService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
         }
@@ -60,12 +60,14 @@
             vm.previousSelections = _.clone(facetSelections.constraint);
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
             return fetchResults(facetSelections).then(function (people) {
-            	google.charts.setOnLoadCallback(function () { drawYearChart("0", 'Aloitusvuosi Norssissa', 'chart_enrollmentYear')});
-            	google.charts.setOnLoadCallback(function () { drawYearChart("1", 'Valmistumisvuosi Norssista', 'chart_matriculationYear') });
+            	google.charts.setOnLoadCallback(function () { drawYearChart(vm.ages, 'Elinikä', 'chart_age')});
+            	google.charts.setOnLoadCallback(function () { drawYearChart(vm.marriageAges, 'Naimisiinmenoikä', 'chart_marriageAge')});
+            	google.charts.setOnLoadCallback(function () { drawYearChart(vm.firstChildAges,'Lapsensaanti-ikä', 'chart_firstChildAge')});
+            	//google.charts.setOnLoadCallback(function () { drawYearChart("1", 'Valmistumisvuosi Norssista', 'chart_matriculationYear') });
             	
-            	google.charts.setOnLoadCallback(function () { drawColumnChart(vm.topSchools, 'Yleisimmät oppilaitokset vuosikymmenittäin', 'chart_topschools') });
-            	google.charts.setOnLoadCallback(function () { drawColumnChart(vm.topTitles, 'Yleisimmät virat ja toimet vuosikymmenittäin', 'chart_topeducation') });
-            	google.charts.setOnLoadCallback(function () { drawColumnChart(vm.topOrgs, 'Yleisimmät työnantajat vuosikymmenittäin', 'chart_toporganization') });
+            	//google.charts.setOnLoadCallback(function () { drawColumnChart(vm.topSchools, 'Yleisimmät oppilaitokset vuosikymmenittäin', 'chart_topschools') });
+            	//google.charts.setOnLoadCallback(function () { drawColumnChart(vm.topTitles, 'Yleisimmät virat ja toimet vuosikymmenittäin', 'chart_topeducation') });
+            	//google.charts.setOnLoadCallback(function () { drawColumnChart(vm.topOrgs, 'Yleisimmät työnantajat vuosikymmenittäin', 'chart_toporganization') });
             	
             	return;
 	         });
@@ -134,21 +136,29 @@
             chart.draw(data, options);
           }
         
-       
-		function drawYearChart(prop, label, target) {
-			var data = new google.visualization.DataTable(),
-	 
+        
+		function drawYearChart(res, label, target) {
+			var 
+				arr = $.map( countByYear(res),
+					function( value, key ) {
+						return [[ value[0],value[1] ]];
+					}),
+				stats = getStats(arr),
+				
+				data = new google.visualization.DataTable(),
 				options = {
-				    title: label,
+				    title: label+", keskiarvo: "+stats[0].toFixed(2) +', standardipoikkeama: '+stats[1].toFixed(2) ,
 				    legend: { position: 'none' },
 				    
             		tooltip: {format: 'none'},
-				    colors: ['green'],
+				    colors: ['blue'],
 				    
 				    hAxis: {
 				    	slantedText:false, 
 				    	maxAlternation: 1, 
-				    	format: ''
+				    	format: '',
+				    	ticks: [10,20,30,40,50,60,70,80,90,100]
+				    
 				    	},
 				    vAxis: {
 				    	 maxValue: 4
@@ -162,19 +172,33 @@
 			
 				chart = new google.visualization.ColumnChart(document.getElementById(target));
 			
-	        data.addColumn('string', 'Vuosi');
-	        data.addColumn('number', 'Oppilaita');
+	        data.addColumn('number', 'Ikä');
+	        data.addColumn('number', 'Henkilöä');
 	        
-			var arr = $.map( countByYear(vm.years,prop), 
-					function( value, key ) {
-						return [[ ''+value[0],value[1] ]];
-					});
-			
 			data.addRows(arr);
 			chart.draw(data, options);
 		}
+		
     
 		
+		function getStats(data) {
+			var sum=0.0,
+				sum2=0.0,
+				count=0;
+			
+			$.each(data, function( i, value ) {
+				var x = value[0]*value[1];
+				sum += x;
+				sum2 += value[0]*x;
+				count += value[1];
+			});
+			if (count>0) {
+				//	median, standard deviation
+				var mu=sum/count;
+				return [mu, Math.sqrt(sum2/count-mu*mu)];
+			} 
+			return [0.0, 0.0];
+		}
 		
 		function countByProperty(data, prop) {
 			return countProperties(data, prop)
@@ -182,14 +206,15 @@
     	}
 		
     	
-		function countByYear(data, index) {
+		function countByYear(data) {
 			var res = [];
 			
 			$.each(data, function( i, value ) {
-				if (value.hasOwnProperty('index') && value['index']==index) {
-					res.push([ parseInt(value['year']), parseInt(value['count']) ]);
-				}
+				//if (value.hasOwnProperty('index') && value['index']==index) {
+					res.push([ parseInt(value['age']), parseInt(value['count']) ]);
+				//}
 			});
+			
 			//	fill missing years with zero value
 			res=fillEmptyYears(res);
 			
@@ -207,11 +232,17 @@
 			return res ;
     	}
 		
+		
 		function fillEmptyYears(data) {
 			if (data.length<2) return data;
-			var res=[], 
+			data.push([120, 0]);
+			
+			var res=[],
 				y=parseInt(data[0][0]);
-				
+			if (y>1) {
+				data.unshift([1, 0]);
+				y=1;
+			}
 			for (var i=0; i<data.length; i++) {
 				var y2=parseInt(data[i][0]);
 				//	fill missing years in the sequence with zero values:
@@ -247,27 +278,28 @@
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
-            vm.people = [];
-            vm.years = [];
-            vm.topTitles = [];
-            vm.topOrgs = [];
-            vm.topSchools = [];
+            vm.ages = [];
+            vm.marriageAges = [];
+            vm.firstChildAges = [];
+            //vm.topOrgs = [];
+            //vm.topSchools = [];
             vm.error = undefined;
 
             var updateId = _.uniqueId();
             latestUpdate = updateId;
 
-            return norssitVisuService.getResults(facetSelections).then(function(res) {
+            return visuService.getResults(facetSelections).then(function(res) {
             	if (latestUpdate !== updateId) {
                     return;
                 }
             	
                 vm.isLoadingResults = false;
-                vm.people = res[0];
-                vm.years = res[1];
-                vm.topTitles = res[2];
-                vm.topOrgs = res[3];
-                vm.topSchools = res[4];
+                vm.ages = res[0];
+                vm.marriageAges = res[1];
+                vm.firstChildAges = res[2];
+                //vm.topTitles = res[2];
+                //vm.topOrgs = res[3];
+                //vm.topSchools = res[4];
                 return res;
             }).catch(handleError);
         }

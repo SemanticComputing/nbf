@@ -46,10 +46,6 @@ module.exports = function (grunt) {
                 files: ['test/spec/{,*/}*.js'],
                 tasks: ['newer:jshint:test', 'karma']
             },
-            compass: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass:server', 'autoprefixer:server']
-            },
             gruntfile: {
                 files: ['Gruntfile.js']
             },
@@ -434,7 +430,6 @@ module.exports = function (grunt) {
                 'compass'
             ],
             dist: [
-                'compass:dist',
                 'imagemin',
                 'svgmin'
             ]
@@ -458,7 +453,6 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:server',
             'wiredep',
-            'concurrent:server',
             'autoprefixer:server',
             'connect:livereload',
             'watch'

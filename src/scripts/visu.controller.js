@@ -15,7 +15,7 @@
     .controller('VisuController', VisuController);
 
     /* @ngInject */
-    function VisuController($scope, $location, $q, $state, _, norssitVisuService,
+    function VisuController($scope, $location, $q, $state, _, visuService,
             FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
@@ -34,7 +34,7 @@
         });
         $scope.$on('sf-facet-constraints', updateResults);
 
-        norssitVisuService.getFacets().then(function(facets) {
+        visuService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -46,7 +46,7 @@
         }
 
         function getFacetOptions() {
-            var options = norssitVisuService.getFacetOptions();
+            var options = visuService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
         }
@@ -220,7 +220,7 @@
             var updateId = _.uniqueId();
             latestUpdate = updateId;
 
-            return norssitVisuService.getResults2(facetSelections).then(function(res) {
+            return visuService.getResults2(facetSelections).then(function(res) {
             	if (latestUpdate !== updateId) {
                     return;
                 }

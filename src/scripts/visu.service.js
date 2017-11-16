@@ -5,23 +5,25 @@
     /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
 
-    .service('norssitVisuService', norssitVisuService);
+    .service('visuService', visuService);
 
     /* @ngInject */
-    function norssitVisuService($q, $location, _, AdvancedSparqlService,
+    function visuService($q, $location, _, AdvancedSparqlService,
             objectMapperService, SPARQL_ENDPOINT_URL) {
 
         /* Public API */
 
         // Get the results based on facet selections.
         // Return a promise.
+        this.getAge = getAge;
+        this.getMarriageAge = getMarriageAge;
+        this.getFirstChildAge = getFirstChildAge;
+        
         this.getResults = getResults;
-        this.getResults1 = getResults1;
-        this.getResults2 = getResults2;
-        this.getResultsYears = getResultsYears;
-        this.getResultsTopTitles = getResultsTopTitles;
-        this.getResultsTopOrgs = getResultsTopOrgs;
-        this.getResultsTopSchools = getResultsTopSchools;
+        //this.getResults1 = getResults1;
+        //this.getResults2 = getResults2;
+        //this.getResultsTopOrgs = getResultsTopOrgs;
+        //this.getResultsTopSchools = getResultsTopSchools;
         
         // Get the facets.
         // Return a promise (because of translation).
@@ -32,10 +34,9 @@
         /* Implementation */
 
         var facets = {
-            // Text search facet for name
             entryText: {
                 facetId: 'entryText',
-                predicate: '<http://ldf.fi/schema/person_registry/entryText>',
+                graph: '<http://ldf.fi/nbf/people>',
                 name: 'Haku',
                 enabled: true
             },
@@ -44,142 +45,143 @@
                 choices: [
                     {
                         id: 'wikipedia',
-                        pattern: '?id <http://ldf.fi/norssit/wikipedia> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/wikipedia> [] .',
                         label: 'Wikipedia'
                     },
                     {
-                        id: 'kansallisbiografia',
-                        pattern: '?id <http://ldf.fi/norssit/kansallisbiografia> [] .',
-                        label: 'Kansallisbiografia'
-                    },
-                    {
-                        id: 'kirjasampo',
-                        pattern: '?id <http://ldf.fi/norssit/kirjasampo> [] .',
-                        label: 'Kirjasampo'
-                    },
-                    {
-                        id: 'kulttuurisampo',
-                        pattern: '?id <http://ldf.fi/norssit/kulttuurisampo> [] .',
-                        label: 'Kulttuurisampo'
-                    },
-                    {
-                        id: 'sotasampo',
-                        pattern: '?id <http://ldf.fi/norssit/warsa> [] .',
-                        label: 'Sotasampo'
-                    },
-                    {
-                        id: 'blf',
-                        pattern: '?id <http://ldf.fi/norssit/sls_biografi> [] .',
-                        label: 'BLF'
-                    },
-                    {
                         id: 'wikidata',
-                        pattern: '?id <http://ldf.fi/norssit/wikidata> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/wikidata> [] .',
                         label: 'Wikidata'
                     },
                     {
+                        id: 'sotasampo',
+                        pattern: '?id <http://ldf.fi/nbf/warsampo> [] .',
+                        label: 'Sotasampo'
+                    },
+                    {
+                        id: 'norssit',
+                        pattern: '?id <http://ldf.fi/nbf/norssi> [] .',
+                        label: 'Norssit'
+                    },
+                    {
+                        id: 'kirjasampo',
+                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] . ',
+                        label: 'Kirjasampo'
+                    },
+                    {
+                        id: 'blf',
+                        pattern: '?id <http://ldf.fi/nbf/blf> [] .',
+                        label: 'BLF'
+                    },
+                    {
                         id: 'ulan',
-                        pattern: '?id <http://ldf.fi/norssit/ulan> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/ulan> [] .',
                         label: 'ULAN'
                     },
                     {
                         id: 'viaf',
-                        pattern: '?id <http://ldf.fi/norssit/viaf> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/viaf> [] .',
                         label: 'VIAF'
                     },
                     {
                         id: 'genicom',
-                        pattern: '?id <http://ldf.fi/norssit/genicom> [] .',
+                        pattern: '?id <http://ldf.fi/nbf/genicom> [] .',
                         label: 'Geni.com'
+                    },
+                    {
+                        id: 'website',
+                        pattern: '?id <http://ldf.fi/nbf/website> [] .',
+                        label: 'Kotisivu'
+                    },
+                    {
+                        id: 'eduskunta',
+                        pattern: '?id <http://ldf.fi/nbf/eduskunta> [] .',
+                        label: 'Eduskunta'
                     }
                 ],
                 enabled: true,
                 name: 'Linkit'
             },
+            period: {
+                facetId: 'period',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                name: 'Ajanjakso',
+                enabled: true
+            },
             familyName: {
                 facetId: 'familyName',
-                predicate: '<http://schema.org/familyName>',
+                predicate: '<http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://schema.org/familyName>',
                 name: 'Sukunimi'
             },
-            birthPlace: {
-                facetId: 'birthPlace',
-                predicate: '<http://ldf.fi/schema/person_registry/birthPlace>',
-                name: 'Syntymäpaikka',
+            dataset: {
+                facetId: 'dataset',
+                predicate: '<http://purl.org/dc/terms/source>',
+                name: 'Tietokanta'
+            },
+            birthYear: {
+                facetId: 'birthYear',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
+                name: 'Synnyinaika',
                 enabled: true
             },
-            enrollmentYear: {
-                facetId: 'enrollmentYear',
-                predicate: '<http://ldf.fi/schema/person_registry/enrollmentYear>',
-                name: 'Aloittamisvuosi',
+            place: {
+                facetId: 'place',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                name: 'Paikkakunta',
                 enabled: true
             },
-            matriculationYear: {
-                facetId: 'matriculationYear',
-                predicate: '<http://ldf.fi/schema/person_registry/matriculationYear>',
-                name: 'Valmistumisvuosi',
+            deathYear: {
+                facetId: 'birthYear',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
+                name: 'Kuolinaika',
                 enabled: true
             },
-            occupation: {
-                facetId: 'occupation',
-                predicate: '^<http://ldf.fi/schema/bioc/title_inheres_in>/<http://ldf.fi/schema/bioc/relates_to_title>',
+            title: {
+                facetId: 'title',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
                 name: 'Arvo tai ammatti',
+                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
+                depth: 3,
                 enabled: true
             },
-            education: {
-                facetId: 'education',
-                predicate: '^<http://ldf.fi/schema/bioc/education_inheres_in>/<http://ldf.fi/schema/bioc/relates_to_title>',
-                name: 'Koulutus',
+            company: {
+                facetId: 'company',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>',
+                name: 'Yritys tai yhteisö',
                 enabled: true
             },
-            organization: {
-                facetId: 'organization',
-                predicate: '^(<http://ldf.fi/schema/bioc/title_inheres_in>|<http://ldf.fi/schema/bioc/education_inheres_in>)/<http://ldf.fi/schema/bioc/relates_to>',
-                name: 'Työpaikka tai oppilaitos',
+            category: {
+                facetId: 'category',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
+                name: 'Kategoria',
                 enabled: true
             },
             gender: {
                 facetId: 'gender',
-                predicate: '<http://schema.org/gender>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
                 name: 'Sukupuoli',
-                enabled: true
-            },
-            hobby: {
-                facetId: 'hobby',
-                predicate: '<http://schema.org/hobby>',
-                name: 'Harrastus'
-            },
-            medal: {
-                facetId: 'medal',
-                predicate: '^<http://ldf.fi/schema/bioc/title_inheres_in>/<http://ldf.fi/schema/bioc/relates_to_medal>',
-                name: 'Kunniamerkit ja -mitalit',
-                enabled: true
-            },
-            rank: {
-                facetId: 'rank',
-                predicate: '^<http://ldf.fi/schema/bioc/title_inheres_in>/<http://ldf.fi/schema/bioc/relates_to_rank>',
-                name: 'Sotilasarvo tai -toimi',
                 enabled: true
             }
         };
 
         var prefixes =
-	        ' PREFIX hobbies: <http://ldf.fi/hobbies/> ' +
-	        ' PREFIX norssit: <http://ldf.fi/norssit/> ' +
-	        ' PREFIX nach: <http://ldf.fi/norssit/achievements/> ' +
-	        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
-	        ' PREFIX person_registry: <http://ldf.fi/schema/person_registry/> ' +
-	        ' PREFIX places: <http://ldf.fi/places/> ' +
-	        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
-	        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-	        ' PREFIX relatives: <http://ldf.fi/relatives/> ' +
-	        ' PREFIX schema: <http://schema.org/> ' +
-	        ' PREFIX schemax: <http://topbraid.org/schemax/> ' +
-	        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
-	        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-	        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-	        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
-	        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-	        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
+        	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+        	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+        	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+        	'PREFIX bioc:  <http://ldf.fi/schema/bioc/>  ' +
+        	'PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>  ' +
+        	'PREFIX schema: <http://schema.org/>  ' +
+        	'PREFIX skos:  <http://www.w3.org/2004/02/skos/core#>  ' +
+        	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>  ' +
+        	'PREFIX	nbf:	<http://ldf.fi/nbf/>  ' +
+        	'PREFIX	categories:	<http://ldf.fi/nbf/categories/>  ' +
+        	'PREFIX	gvp:	<http://vocab.getty.edu/ontology#>	 ' +
+        	'PREFIX crm:   <http://www.cidoc-crm.org/cidoc-crm/>  ' +
+        	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  ' +
+        	'PREFIX dcterms: <http://purl.org/dc/terms/>  ' +
+        	'PREFIX foaf: <http://xmlns.com/foaf/0.1/>  ' +
+        	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        	'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ';
 
         // The query for the results.
         // ?id is bound to the norssit URI.
@@ -200,15 +202,37 @@
         	'  }' +
         	'}';
             
-       var queryYears = prefixes +
-		    ' SELECT ?year ?index (count(distinct ?id) AS ?count) ' +
-		   	' WHERE { ' +
-		   	'  { <RESULT_SET> } ' +
-		   	'  VALUES (?prop ?index) {  ' +
-		   	'    (person_registry:enrollmentYear 0)  ' +
-		   	'    (person_registry:matriculationYear 1) } ' +
-		   	'  ?id ?prop ?year .   ' + 
-		   	'} GROUP BY ?year ?index ORDER BY ?year ';
+       var queryAge = prefixes +
+       'SELECT ?age (count(?age) AS ?count) WHERE { ' +
+       ' { <RESULT_SET> } ' +
+	   	' ' +
+	   	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?time ; ' +
+	   	'   	foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+	   	'  BIND (year(?time)-year(?birth) AS ?age) ' +
+	   	'  FILTER (1<?age && ?age<120) ' +
+	   	'} GROUP BY ?age  ORDER BY ?age ';
+       
+       var queryMarriageAge = prefixes +
+       'SELECT ?age (count(?age) AS ?count) WHERE { ' +
+       ' { <RESULT_SET> } ' +
+	   	' ' +
+	   	'  VALUES ?rel { relations:Spouse } ' +
+	   	'  ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; ' +
+	   	'   	foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+	   	'  BIND (year(?time)-year(?birth) AS ?age) ' +
+	   	'  FILTER (13<?age && ?age<120) ' +
+	   	'} GROUP BY ?age ORDER BY ?age ';
+		    
+       var queryFirstChildAge = prefixes +
+       'SELECT ?age (count(?age) AS ?count) WHERE { ' +
+       ' { <RESULT_SET> } ' +
+	   	' ' +
+	   	'  VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
+	   	'  ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; ' +
+	   	'   	foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+	   	'  BIND (year(?time)-year(?birth) AS ?age) ' +
+	   	'  FILTER (13<?age && ?age<120) ' +
+	   	'} GROUP BY ?age ORDER BY ?age ';
        
         var queryTopTitles = prefixes + 
 	    	' SELECT ?label ?year (count (distinct ?id) AS ?count) ' +
@@ -276,22 +300,37 @@
 
         var facetOptions = {
             endpointUrl: endpointUrl,
-            rdfClass: '<http://xmlns.com/foaf/0.1/Person>',
+            rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
             preferredLang : 'fi'
         };
 
         var endpoint = new AdvancedSparqlService(endpointUrl, objectMapperService);
         
+        
+        function getMarriageAge(facetSelections) {
+        	var cons = facetSelections.constraint.join(' '),
+        		q = queryMarriageAge.replace("<RESULT_SET>", cons);
+        	return endpoint.getObjectsNoGrouping(q) ;
+        }
+        
+        function getFirstChildAge(facetSelections) {
+        	var cons = facetSelections.constraint.join(' '),
+    			q = queryFirstChildAge.replace("<RESULT_SET>", cons);
+	    	return endpoint.getObjectsNoGrouping(q) ;
+	    }
+        
+        function getAge(facetSelections) {
+        	var cons = facetSelections.constraint.join(' '),
+        		q = queryAge.replace("<RESULT_SET>", cons);
+        	return endpoint.getObjectsNoGrouping(q) ;
+        }
+        
+        /**
         function getResults1(facetSelections) {
         	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getResultsYears(facetSelections) {
-        	var cons = facetSelections.constraint.join(' '),
-        		q = queryYears.replace("<RESULT_SET>", cons);
-        	return endpoint.getObjectsNoGrouping(q);
-        }
         
         function getResultsTopTitles(facetSelections) {
         	var q = queryTopTitles.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
@@ -306,15 +345,16 @@
         	// console.log(queryTopSchools.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' ')));
         	return endpoint.getObjectsNoGrouping(queryTopSchools.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' ')));
         }
-        
+        */
         
         function getResults(facetSelections) {
         	var promises = [
-            	this.getResults1(facetSelections),
-            	this.getResultsYears(facetSelections),
-            	this.getResultsTopTitles(facetSelections),
-            	this.getResultsTopOrgs(facetSelections),
-            	this.getResultsTopSchools(facetSelections)
+            	this.getAge(facetSelections),
+            	this.getMarriageAge(facetSelections),
+            	this.getFirstChildAge(facetSelections),
+            	//this.getResultsTopTitles(facetSelections),
+            	//this.getResultsTopOrgs(facetSelections),
+            	//this.getResultsTopSchools(facetSelections)
             ];
         	return $q.all(promises);
         }

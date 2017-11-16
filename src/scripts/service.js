@@ -148,13 +148,6 @@
                 name: 'Yritys tai yhteisö',
                 enabled: true
             },
-            /**
-            occupation: {
-                facetId: 'occupation',
-                predicate: '<http://ldf.fi/schema/bioc/has_profession>',
-                name: 'Arvo tai ammatti',
-                enabled: true
-            },*/
             category: {
                 facetId: 'category',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
