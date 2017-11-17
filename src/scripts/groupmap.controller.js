@@ -9,7 +9,7 @@
 
     /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
-
+    
     /*
     * Controller for the results view.
     */
@@ -19,17 +19,28 @@
     function GroupmapController($scope, $location, $state, $uibModal, _, groupmapService,
             FacetHandler, facetUrlStateHandlerService) {
 
+    	// Range slider config
+        $scope.minRangeSlider = {
+            minValue: (new Date()).getFullYear()-100,
+            maxValue: (new Date()).getFullYear(),
+            options: {
+                floor: 1000,
+                ceil: (new Date()).getFullYear(),
+                step: 10,
+                draggableRange: true,
+                onEnd: function () {
+                    fetchResults({ constraint: vm.previousSelections });
+                }
+            }
+        };
+        
+        
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
-        //var nextPageNo;
-        //var maxPage;
 
-        //vm.openPage = openPage;
-        //vm.nextPage = nextPage;
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
-        // vm.sortBy = sortBy;
         vm.getSortClass = groupmapService.getSortClass;
 
         vm.people = [];
@@ -96,13 +107,14 @@
             vm.isLoadingResults = true;
             vm.people = [];
             vm.error = undefined;
-
+            facetSelections.minYear = $scope.minRangeSlider.minValue;
+            facetSelections.maxYear = $scope.minRangeSlider.maxValue;
+            
             var updateId = _.uniqueId();
             latestUpdate = updateId;
 
             return groupmapService.getResults(facetSelections)
             .then(function(res) {
-            	console.log(res);
             	vm.events = processEvents(res, vm);
             }).catch(handleError);
         }

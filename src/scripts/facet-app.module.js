@@ -13,7 +13,8 @@
         'ngAnimate',
         'ui.bootstrap',
         'infinite-scroll',
-        'uiGmapgoogle-maps'
+        'uiGmapgoogle-maps',
+        'rzModule'
     ])
 
     .constant('_', _) // eslint-disable-line no-undef

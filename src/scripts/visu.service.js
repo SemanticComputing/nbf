@@ -179,7 +179,8 @@
         	'PREFIX dcterms: <http://purl.org/dc/terms/>  ' +
         	'PREFIX foaf: <http://xmlns.com/foaf/0.1/>  ' +
         	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
-        	'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ';
+        	'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ' +
+        	'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
 
         // The query for the results.
         // ?id is bound to the norssit URI.
@@ -261,13 +262,24 @@
 	   	'} GROUP BY ?age ORDER BY ?age ';
        
        var queryNumberOfChildren = prefixes +
-       'SELECT ?value (count(?id) AS ?count) WHERE { ' +
-		'  SELECT ?id (count(?rel) AS ?value) WHERE { ' +
-		'    { <RESULT_SET> } ' +
-		'    VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
-		'    ?id bioc:has_family_relation/a ?rel . ' +
-		'  } GROUP BY ?id ' +
-		'} GROUP BY ?value ORDER BY ?value ';
+   	' SELECT ?value (count(?id) AS ?count) ' +
+	'WHERE { ' +
+	'  { ' +
+	'  SELECT ?id (count(?rel) AS ?value) ' +
+	'  WHERE { ' +
+	'    { <RESULT_SET> } ' +
+	'    VALUES ?rel { relations:Child relations:Son relations:Daughter }  ' +
+	'    ?id bioc:has_family_relation/a ?rel . ' +
+	'    } GROUP BY ?id } ' +
+	'  UNION ' +
+	'  { ' +
+	'    { <RESULT_SET> } ' +
+	'  ?id dcterms:source sources:source1 ; ' +
+	'    foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
+	'  FILTER not exists { ?id bioc:has_family_relation [ a relations:Child ]} ' +
+	'  BIND (0 AS ?value) ' +
+	'  } ' +
+	'} GROUP BY ?value ORDER BY ?value ';
 		   
        var queryNumberOfSpouses = prefixes +
        'SELECT ?value (count(?id) AS ?count) WHERE { ' +
@@ -368,12 +380,13 @@
         function getAge(facetSelections) {
         	var cons = facetSelections.constraint.join(' '),
         		q = queryAge.replace("<RESULT_SET>", cons);
+        	// console.log(q);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         
         function getNumberOfChildren(facetSelections) {
         	var cons = facetSelections.constraint.join(' '),
-    			q = queryNumberOfChildren.replace("<RESULT_SET>", cons);
+    			q = queryNumberOfChildren.replace(/<RESULT_SET>/g, cons);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         

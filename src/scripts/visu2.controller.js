@@ -61,13 +61,13 @@
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
             
             return fetchResults(facetSelections).then(function (people) {
-            	google.charts.setOnLoadCallback(function () { 
+            	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.ages, [1,120], 'Elinikä', 'chart_age')
             		});
-            	google.charts.setOnLoadCallback(function () { 
+            	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.marriageAges, [1,120], 'Naimisiinmenoikä', 'chart_marriageAge')
             		});
-            	google.charts.setOnLoadCallback(function () { 
+            	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.firstChildAges, [1,120], 'Lapsensaanti-ikä', 'chart_firstChildAge')
             		});
             	google.charts.setOnLoadCallback(function () { 

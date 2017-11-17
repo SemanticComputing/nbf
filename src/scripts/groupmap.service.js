@@ -180,19 +180,19 @@
         var query = 
         	'SELECT DISTINCT ?id ?evt ?time__start ?time__end ?class ?place__uri ?place__latitude ?place__longitude WHERE { ' +
         	'  { SELECT DISTINCT ?id WHERE { ' +
-        	//'  	VALUES ?eraStart { "1900-01-01"^^xsd:date } ' +
         	'  { <RESULT_SET> } ' +
         	'	?id foaf:focus ?prs . ' +
         	'  	?prs ^crm:P98_brought_into_life/nbf:time/gvp:estStart ?time__birth . ' +
         	'  	?prs ^crm:P100_was_death_of/nbf:time/gvp:estStart ?time__death . ' +
-        	//'  	FILTER (?time__birth<=?eraStart && ?eraStart<=?time__death) ' +
+        	'  	FILTER (<STARTYEAR><=year(?time__birth) && year(?time__birth)<=<ENDYEAR>) ' +
         	'	} LIMIT 2500 } ' +
         	'  ' +
-        	// '  { ?prs bioc:has_family_relation ?id } UNION ' +
         	'	?id foaf:focus ?prs . ' +
         	'  { ?evt crm:P100_was_death_of ?prs . } ' +
-        	'  UNION   { ?evt crm:P98_brought_into_life ?prs . } ' +
-        	// '  UNION   { ?id bioc:inheres_in ?prs . } ' +
+        	'  UNION ' +  
+        	'  { ?evt crm:P98_brought_into_life ?prs . } ' +
+        	// '  UNION ' + 
+        	// '  { ?evt bioc:inheres_in ?prs . } ' +
         	'  ' +
         	'  ?evt nbf:time ?time . ' +
         	'  OPTIONAL { ?time gvp:estStart ?time__start. } ' +
@@ -205,7 +205,7 @@
         	'  ?evt nbf:place ?place__uri .  ' +
         	'    ?place__uri geo:lat ?place__latitude ;  ' +
         	'           geo:long ?place__longitude .  ' +
-        	'} LIMIT 1000 ';
+        	'} LIMIT 1500 ';
 
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -237,22 +237,11 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
         function getResults(facetSelections) {
-        	console.log(facetSelections.constraint.join(' '));
-        	var q = prefixes+query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
-            return endpoint.getObjectsNoGrouping(q);
-        	// return resultHandler.getResults(facetSelections, getSortBy());
-        }
-
-        function getPerson_OLD(id) {
-            var qry = prefixes + query;
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
-            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
-            .then(function(person) {
-                if (person.length) {
-                    return person[person.length-1];
-                }
-                return $q.reject('Not found');
-            });
+        	var q = prefixes+query.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
+        		.replace("<STARTYEAR>",facetSelections.minYear)
+        		.replace("<ENDYEAR>",facetSelections.maxYear);
+        	
+        	return endpoint.getObjectsNoGrouping(q);
         }
 
         function getFacets() {
