@@ -180,13 +180,13 @@
         var query = 
         	'SELECT DISTINCT ?id ?evt ?time__start ?time__end ?class ?place__uri ?place__latitude ?place__longitude WHERE { ' +
         	'  { SELECT DISTINCT ?id WHERE { ' +
-        	'  	VALUES ?eraStart { "1900-01-01"^^xsd:date } ' +
+        	//'  	VALUES ?eraStart { "1900-01-01"^^xsd:date } ' +
         	'  { <RESULT_SET> } ' +
         	'	?id foaf:focus ?prs . ' +
         	'  	?prs ^crm:P98_brought_into_life/nbf:time/gvp:estStart ?time__birth . ' +
         	'  	?prs ^crm:P100_was_death_of/nbf:time/gvp:estStart ?time__death . ' +
-        	'  	FILTER (?time__birth<=?eraStart && ?eraStart<=?time__death) ' +
-        	'	} LIMIT 500 } ' +
+        	//'  	FILTER (?time__birth<=?eraStart && ?eraStart<=?time__death) ' +
+        	'	} LIMIT 2500 } ' +
         	'  ' +
         	// '  { ?prs bioc:has_family_relation ?id } UNION ' +
         	'	?id foaf:focus ?prs . ' +
