@@ -27,13 +27,13 @@
 		<div class="col-sm-12 col-md-10 text-center ">
 		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
 	        	<ui-gmap-marker ng-repeat="marker in vm.markers" 
-	        		coords="marker" 
-	        		idkey="marker.id" 
-	        		options="marker.options" 
+	        		coords="marker"
+	        		idkey="marker.id"
+	        		options="marker.options"
 	        	></ui-gmap-marker>
 	        </ui-gmap-google-map>
 	        
-	        <svg id="timelinecontainer" viewBox="-50,-70,850,180" version="1.0" x="0" y="0" width="900" height="180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	        <svg id="timelinecontainer" viewBox="-15,-7,120,27" preserveAspectRatio="none" version="1.0" x="0" y="0" width="900" height="180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				  	<line ng-repeat="line in ::vm.mainline.lines" ng-attr-x1="{{ line.x1 }}" ng-attr-x2="{{ line.x2 }}" ng-attr-y1="{{ line.y1 }}" ng-attr-y2="{{ line.y2 }}">
 				  	</line>
 				  	

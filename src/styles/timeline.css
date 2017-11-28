@@ -11,7 +11,7 @@ svg#timelinecontainer {
 
 #timelinecontainer path {
 	stroke:#555;
-	stroke-width:2;
+	stroke-width:0.2;
 	stroke-linecap:round;
 	stroke-linejoin:round;
 	fill:#BBB;
@@ -20,13 +20,13 @@ svg#timelinecontainer {
 }
 
 #timelinecontainer path:hover {
-	stroke-width:5;
+	stroke-width:0.3;
 }
 
 #timelinecontainer line {
 	stroke:#88F;
 	stroke-linecap:none;
-	stroke-width:1;
+	stroke-width:0.2;
 }
 
 #timelinecontainer .event:hover {
@@ -37,7 +37,7 @@ svg#timelinecontainer {
 #timelinecontainer .birth {
 	fill:#777fff;
 	stroke:#777fff;
-	stroke-width:3;
+	stroke-width:0.3;
 }
 
 #labelcontainer p:hover {
@@ -51,7 +51,7 @@ svg#timelinecontainer {
 #timelinecontainer .death {
 	fill:#ff4141;
 	stroke:#ff4141;
-	stroke-width:3;
+	stroke-width:0.3;
 }
 #labelcontainer p.death:hover {
 	background-color:#ff4141;
@@ -77,6 +77,7 @@ svg#timelinecontainer {
 	fill:#999;
 	stroke:#999;
 }
+
 #labelcontainer p.career:hover {
 	background-color:#999;
 }
@@ -85,6 +86,7 @@ svg#timelinecontainer {
 	fill:#ce5c00;
 	stroke:#ce5c00;
 }
+
 #labelcontainer p.honour:hover {
 	background-color:#ce5c00;
 }
@@ -105,7 +107,7 @@ svg#timelinecontainer {
 
 svg text {
 	font-family:"Arial";
-	font-size:12px; 
+	font-size:2px; 
 	text-anchor: middle;
 	fill:#555;
 }

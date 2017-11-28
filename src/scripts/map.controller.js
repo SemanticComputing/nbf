@@ -52,6 +52,7 @@
         			vm.person = events[0];
         			}
         		vm.events = processEvents(events, vm);
+        		vm.viewBox = "1930,-10,120,27";
         		formMainline(vm);
         		
         		return events;
@@ -73,7 +74,7 @@
         	events.forEach( function(event) {
         		if (event.place && event.place.uri) {
         			
-        			//	set there properties to arrays
+        			//	convert these properties to arrays
         			['uri', 'latitude', 'longitude'].forEach( function(prop) { 
         				if (event.place[prop] && (event.place[prop].constructor !== Array)) {
             				event.place[prop] = [event.place[prop]];
@@ -104,10 +105,13 @@
         		}
         	});
         	
+        	var categories=[[],[],[],[]];
+        	
+        	// splits timespans to start and end years, collects the minimum and maximum values
         	events.forEach( function(event) {
         		
         		event.y = 0;
-        		event.r = 7;
+        		event.r = 1;
         		event.markers = [];
         		event.blobs = [];
         		
@@ -136,25 +140,27 @@
         		
         		
         		if (!event.label) event.label="";
-        		
         		if (!event.class) event.class = "event";
         		event.class = event.class.toLowerCase();
+        		
+        		var category=0;
         		
         		switch(event.class) {
 	        		case "death":
 	        			has_death = true;
 	        			event.label = 'Kuollut '+event.label;
-	        			event.r = 10;
+	        			event.r = 1.50;
 	        			break;
 	        		
 	        			// TODO: targetoi ensimmäiseen tapahtumaan, jos ei birth ole
 	        		case "birth":
 	        			event.label = 'Syntynyt '+event.label;
 	        			if (event.place && event.place.latitude) {
-	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
+	                		vm.map.center = {'latitude': event.place.latitude[0], 'longitude': event.place.longitude[0] };
 	                	}
-	        			event.r = 10;
-	        			//	remove (mostly erroneous) events before birth
+	        			event.r = 1.50;
+	        			
+	        			//	remove (in most cases erroneous) events before birth
 	        			if (vm.min_time<event.blobs[0].estStart) {
 	        				vm.min_time=event.blobs[0].estStart;
 	        			}
@@ -169,30 +175,36 @@
 	        			break;
 	        		
 	        		case 'career':
-	        			event.y = 30;
+	        			event.y = 5;
+	        			category = 1;
 	        			break;
 	        		
 	        		case 'product':
-	        			event.y = 60;
+	        			event.y = 10;
+	        			category = 2;
 	        			break;
 	        		
 	        		case 'honour':
-	        			event.y = 90;
+	        			event.y = 15;
+	        			category = 3;
 	        			break;
 	        		
 	        		default:
 	        			console.log(event.class);
-	        			event.y = 90;
+	        			event.y = 15;
 	        			event.class="event";
+	        			category = 3;
 	        			break;
         		}
-        		
+        		categories[category].push(event);
         		
         		event.id = ++i;
         		
         		if (event.place && event.place.latitude) {
         			for (var j=0; j<event.place.latitude.length; j++) {
-    					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 15.*Math.sqrt(places[event.place.uri[j]]['count']): 15.0 ;
+    					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 
+    							15.*Math.sqrt(places[event.place.uri[j]]['count']): 
+    							15.0 ;
             			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r);
     					event.markers.push(m);
     					vm.markers.push(m);
@@ -200,35 +212,40 @@
         		}
         	});
         	
-            
+        	//	relocate the events that otherwise would get covered by other events
+        	categories.forEach( function (category) {
+        		analyzeCategory(category).forEach( function(i) {
+        			category[i].y += 2.5;
+        		});
+        	});
+        	
         	if (!has_death) vm.max_time += 15;
         	if (vm.max_time<=vm.min_time) vm.max_time = vm.min_time+75;
         	if (vm.max_time>vm.min_time+150) vm.max_time = vm.min_time+150;
         	if (vm.max_time>current_year) vm.max_time = current_year;
         	
-        	var bounds = new google.maps.LatLngBounds();
+        	//var bounds = new google.maps.LatLngBounds();
         	
         	// scale the years to get a coordinate on the timeline:
         	// var i=0;
-        	// vm.blobs = [];
         	events.forEach( function(event) {
         		event.path = "";
-        		var rn = 5*Math.random();
+        		var rn = 0.1*Math.random();
         		event.blobs.forEach( function(blob) {
-	        		//	blobs that shown on timeline
-	        		var x0 = blob.estStart ? scale2Timeline(blob.estStart,vm.min_time,vm.max_time)+rn : 0,
-	        			x1 = blob.estEnd ? scale2Timeline(blob.estEnd,vm.min_time,vm.max_time)+rn : 0;
+	        		//	blobs that are shown on timeline
+	        		var x0 = blob.estStart ? scale2Timeline(blob.estStart,vm.min_time,vm.max_time)+rn : undefined,
+	        			x1 = blob.estEnd ? scale2Timeline(blob.estEnd,vm.min_time,vm.max_time)+rn : undefined;
 	        		
 	        		if (!x0) {
 	        			//	missing start year
-	        			x0 = x1-20;
+	        			x0 = x1-3;
 	        			event.path += "M"+x0+","+(event.y+event.r)+
 	        						" H"+x1+
 	        						" a"+event.r+","+event.r+",0,0,0,0,-"+(2*event.r)+
 	        						" H"+x0;
 	            	} else if (!x1) {
 	        			//	missing end year
-	        			x1 = x0+20;
+	        			x1 = x0+3;
 	        			event.path += "M"+x1+","+(event.y-event.r)+
 	        						" H"+x0+
 	        						" a"+event.r+","+event.r+",0,0,0,0,"+(2*event.r)+
@@ -242,13 +259,13 @@
 	        					" Z";
 	        		}
 	        		
-	        		// vm.blobs.push(blob);
         		});
         		event.blobs = [];
         	});
         	// console.log(vm.blobs);
-        	var map = document.getElementById('ui-gmap-google-map');
-        	if (map && map.fitBounds) { map.fitBounds(bounds); }
+        	
+        	//var map = document.getElementById('ui-gmap-google-map');
+        	//if (map && map.fitBounds) { map.fitBounds(bounds); }
         	
         	return events;
         }
@@ -302,22 +319,23 @@
         		arr = [],
         		texts = [];
 
-        	//	horizontal lines every ten years
+        	//	vertical lines every ten years
         	for (var x = 10*Math.ceil(x0/10); x<x1; x+=10) {
         		var xx = scale2Timeline(x,x0,x1)
-        		arr.push({'x1': xx , 'x2': xx, 'y1': 0, 'y2': 90 });
-        		texts.push({'x': xx , 'y':-20, 'year': ''+x});
+        		arr.push({'x1': xx , 'x2': xx, 'y1': 0, 'y2': 15 });
+        		texts.push({'x': xx , 'y':-3, 'year': ''+x});
         	}
-        	//  vertical lines
-        	for (var y=0; y<120; y+=30) {
+        	//  horizontal lines
+        	for (var y=0; y<20; y+=5) {
         		arr.push({'x1': scale2Timeline(x0,x0,x1) , 'x2': scale2Timeline(x1,x0,x1), 'y1': y, 'y2': y });
         	}
         	vm.mainline = {lines: arr, texts: texts };
         }
         
         function scale2Timeline(time,x0,x1) {
-        	return 750.0*(time-x0)/(x1-x0);
-        }
+        	return time-x0;
+        	// return 750.0*(time-x0)/(x1-x0);
+        } 
         
         function openPage() {
             $uibModal.open({
@@ -333,5 +351,33 @@
             vm.isLoadingResults = false;
             vm.error = error;
         }
+        
+        /**	find the events that get covered by another event */
+        function analyzeCategory(category) {
+        	var checktable = {},
+        		N = category.length;
+        	for (var i=0; i<N; i++) {
+        		category[i].blobs.forEach( function(blob) {
+        			var x0 = blob.estStart ? blob.estStart : blob.estEnd-3,
+        				x1 = blob.estEnd ? blob.estEnd : x0+3;
+        			
+        			for (var j=x0; j<=x1; j++) {
+        				checktable[j]=i;
+        			}
+        		});
+        	}
+        	//	mark all false
+        	var arr = Array(N).fill(false);
+        	//	set visible ones to true
+        	for(var year in checktable){
+        	    arr[checktable[year]]=true;
+        	}
+        	//	find the hidden ones with value remaining false
+        	var arr2=[];
+        	for (var i=0; i<N; i++) if (!arr[i]) arr2.push(i);
+        	
+        	return arr2;
+        }
+        
     }
 })();
