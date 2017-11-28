@@ -61,17 +61,41 @@
         function processEvents(events, vm) {
         	
         	var current_year = (new Date()).getFullYear(),
-        		min_time=current_year, max_time=0,
         		has_death = false,
         		i=0;
+        	
+        	vm.min_time = current_year;
+        	vm.max_time = 0;
+        	
+        	//	for counting all distinct place instances
         	var places = {};
         	
         	events.forEach( function(event) {
         		if (event.place && event.place.uri) {
-        			var keys = event.place.uri;
-        			if (!(keys.constructor === Array)) keys = [keys];
         			
-        			keys.forEach( function(key) {
+        			//	set there properties to arrays
+        			['uri', 'latitude', 'longitude'].forEach( function(prop) { 
+        				if (event.place[prop] && (event.place[prop].constructor !== Array)) {
+            				event.place[prop] = [event.place[prop]];
+            			}
+        			} );
+        			
+        			/**
+        			if (event.place.latitude.constructor !== Array) {
+        				event.place.latitude = [event.place.latitude];
+        			}
+        			if (event.place.longitude.constructor !== Array) {
+        				event.place.longitude = [event.place.longitude];
+        			}
+        			if (event.place.uri.constructor !== Array) {
+        				event.place.uri = [event.place.uri];
+        			}
+        			**/
+        			
+        			//var keys = event.place.uri;
+        			// if (!(keys.constructor === Array)) keys = [keys];
+        			
+        			event.place.uri.forEach( function(key) {
 	        			if (!places.hasOwnProperty(key)) {
 	        				places[key]={count:0, latitude:event.place.latitude, longitude:event.place.longitude, type:event.class}
 	            		}
@@ -91,19 +115,20 @@
         			event.time.span = [event.time.span];
         		}
         		event.time.span.forEach( function(time) {
+        			
         			var years = time.split('-'),
-        				blob = { event:event };
+        				blob = { };
         			
         			if (years[0] != "") {
         				years[0]=parseInt(years[0]);
-        				if (years[0]<min_time) min_time=years[0];
-        				if (max_time<years[0]) max_time=years[0];
+        				if (years[0]<vm.min_time) vm.min_time=years[0];
+        				if (vm.max_time<years[0]) vm.max_time=years[0];
         				blob.estStart = years[0];
         			}
         			if (years[1] != "") {
         				years[1]=parseInt(years[1]);
-        				if (years[1]<min_time) min_time=years[1];
-        				if (max_time<years[1]) max_time=years[1];
+        				if (years[1]<vm.min_time) vm.min_time=years[1];
+        				if (vm.max_time<years[1]) vm.max_time=years[1];
         				blob.estEnd = years[1];
         			}
         			event.blobs.push(blob);
@@ -129,6 +154,10 @@
 	                		vm.map.center = {'latitude': event.place.latitude, 'longitude': event.place.longitude };
 	                	}
 	        			event.r = 10;
+	        			//	remove (mostly erroneous) events before birth
+	        			if (vm.min_time<event.blobs[0].estStart) {
+	        				vm.min_time=event.blobs[0].estStart;
+	        			}
 	        			break;
 	        		
 	        		case "spouse":
@@ -162,44 +191,33 @@
         		event.id = ++i;
         		
         		if (event.place && event.place.latitude) {
-        			if (event.place.latitude.constructor === Array) { 
-        				for (var j=0; j<event.place.latitude.length; j++) {
-        					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 15.*Math.sqrt(places[event.place.uri[j]]['count']): 15.0 ;
-                			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r);
-        					event.markers.push(m);
-        					vm.markers.push(m);
-        					// bounds.extend(new google.maps.LatLng(event.place.latitude[j], event.place.longitude[j]));
-        				}
-            		} else {
-            			var r = places[event.place.uri] && places[event.place.uri]['count'] ? 15.*Math.sqrt(places[event.place.uri]['count']): 15.0 ;
-            			var m = generateMarker(event.place.latitude, event.place.longitude, event.id, event.class, r);
-            			event.markers = [m] ;
-	        			vm.markers.push(m);
-	        			//bounds.extend(new google.maps.LatLng(event.place.latitude, event.place.longitude));
-            		}
+        			for (var j=0; j<event.place.latitude.length; j++) {
+    					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 15.*Math.sqrt(places[event.place.uri[j]]['count']): 15.0 ;
+            			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r);
+    					event.markers.push(m);
+    					vm.markers.push(m);
+    				}
         		}
         	});
         	
             
-        	if (!has_death) max_time += 15;
-        	if (max_time<=min_time) max_time = min_time+75;
-        	if (max_time>min_time+150) max_time = min_time+150;
-        	if (max_time>current_year) max_time = current_year;
-        	events.min_year = min_time;
-        	events.max_year = max_time;
+        	if (!has_death) vm.max_time += 15;
+        	if (vm.max_time<=vm.min_time) vm.max_time = vm.min_time+75;
+        	if (vm.max_time>vm.min_time+150) vm.max_time = vm.min_time+150;
+        	if (vm.max_time>current_year) vm.max_time = current_year;
         	
         	var bounds = new google.maps.LatLngBounds();
         	
         	// scale the years to get a coordinate on the timeline:
-        	var i=0;
-        	vm.blobs = [];
+        	// var i=0;
+        	// vm.blobs = [];
         	events.forEach( function(event) {
         		event.path = "";
         		var rn = 5*Math.random();
         		event.blobs.forEach( function(blob) {
 	        		//	blobs that shown on timeline
-	        		var x0 = blob.estStart ? scale2Timeline(blob.estStart,min_time,max_time)+rn : 0,
-	        			x1 = blob.estEnd ? scale2Timeline(blob.estEnd,min_time,max_time)+rn : 0;
+	        		var x0 = blob.estStart ? scale2Timeline(blob.estStart,vm.min_time,vm.max_time)+rn : 0,
+	        			x1 = blob.estEnd ? scale2Timeline(blob.estEnd,vm.min_time,vm.max_time)+rn : 0;
 	        		
 	        		if (!x0) {
 	        			//	missing start year
@@ -224,11 +242,11 @@
 	        					" Z";
 	        		}
 	        		
-	        		vm.blobs.push(blob);
+	        		// vm.blobs.push(blob);
         		});
         		event.blobs = [];
         	});
-        	console.log(vm.blobs);
+        	// console.log(vm.blobs);
         	var map = document.getElementById('ui-gmap-google-map');
         	if (map && map.fitBounds) { map.fitBounds(bounds); }
         	
@@ -279,11 +297,11 @@
         }
         
         function formMainline(vm) {
-        	var x0 = vm.events.min_year,
-        		x1 = vm.events.max_year,
+        	var x0 = vm.min_time,
+        		x1 = vm.max_time,
         		arr = [],
         		texts = [];
-        	
+
         	//	horizontal lines every ten years
         	for (var x = 10*Math.ceil(x0/10); x<x1; x+=10) {
         		var xx = scale2Timeline(x,x0,x1)

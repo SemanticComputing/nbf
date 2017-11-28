@@ -13,9 +13,6 @@
 
         /* Public API */
 
-        // Get the results based on facet selections.
-        // Return a promise.
-        //this.getResults = getResults;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = getFacets;
@@ -133,7 +130,7 @@
         function getEvents(id) {
             var qry = prefixes + query;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            console.log(qry.replace('<RESULT_SET>', constraint));
+            // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(events) {
             	
