@@ -32,6 +32,11 @@
                 if (person.norssi) {
                 	person.norssi = person.norssi.replace('http://ldf.fi/norssit/','')
                 }
+                
+                //	join the names of couples ["Heikki", "Kaija"] -> "Heikki ja Kaija"
+                if (person.givenName.constructor === Array && person.givenName.length==2) {
+                	person.givenName = person.givenName[0] +' ja '+person.givenName[1];
+                }
             });
             return objects;
         }
