@@ -11,20 +11,26 @@
 
     /* @ngInject */
     function DetailController($stateParams, $uibModal, _, nbfService) {
-
+    	
         var vm = this;
-
+        
         vm.openPage = openPage;
-
+        
         init();
-
+        
         function init() {
             nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
+                nbfService.getSimilar(vm.person.id).then(function(data) {
+                	if (data.length) {
+                		vm.person.similar = data;
+                		// console.log("vm.person.similar", vm.person.similar);
+                	}
+                });
                 return person;
             }).catch(handleError);
         }
-
+        
         function openPage() {
             $uibModal.open({
                 component: 'registerPageModal',

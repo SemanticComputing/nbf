@@ -28,6 +28,7 @@
         this.getSortClass = getSortClass;
         // Get the details of a single person.
         this.getPerson = getPerson;
+        this.getSimilar = getSimilar;
 
         /* Implementation */
 
@@ -262,25 +263,45 @@
             '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate . }' +
             '  			OPTIONAL { ?dea nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
             '		} ' +
-            // '  		OPTIONAL { ?prs schema:gender ?gender . }' +
             '  		OPTIONAL { ?prs schema:image ?images . }' +
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
-            // '  		OPTIONAL { ?prs ^bioc:inheres_in/nbf:related_company ?company . }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
             '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?description ; nbf:id "1"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?family_paragraph ; nbf:id "2"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?parent_paragraph ; nbf:id "3"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?spouse_paragraph ; nbf:id "4"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?child_paragraph ; nbf:id "5"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?medal_paragraph ; nbf:id "6"^^xsd:integer  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?source_paragraph ; nbf:id "7"^^xsd:integer  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "0"^^xsd:integer ; nbf:content ?lead_paragraph ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "1"^^xsd:integer ; nbf:content ?description    ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "2"^^xsd:integer ; nbf:content ?family_paragraph ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "3"^^xsd:integer ; nbf:content ?parent_paragraph ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "4"^^xsd:integer ; nbf:content ?spouse_paragraph ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
+            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
             '  		}' +
             '  }' +
             ' }';
-
+        
+        var querySimilar = 
+        	'SELECT DISTINCT ?prs ?label WHERE { ' +
+        	'  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+            '  {' +
+            '  ?dst bioc:relates_to ?id ;' +
+            '       bioc:relates_to ?prs ;' +
+            '       bioc:value ?val .' +
+            '  } UNION {' +
+            '  ?dst bioc:relates_to ?id ;' +
+            '       bioc:relates_to ?idX ;' +
+            '       bioc:value ?valX .' +
+            '  ?dst2 bioc:relates_to ?idX ;' +
+            '       bioc:relates_to ?prs ;' +
+            '       bioc:value ?val2 .' +
+            '    BIND (?valX+?val2 AS ?val) ' +
+            '  } ' +
+            '  FILTER (?id != ?prs)' +
+            '  ?prs skos:prefLabel ?label  .' +
+            '} ORDER by ?val LIMIT 10';
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -315,7 +336,7 @@
         }
 
         function getPerson(id) {
-            var qry = prefixes + detailQuery;
+        	var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
@@ -323,6 +344,17 @@
                     return person[person.length-1];
                 }
                 return $q.reject('Not found');
+            });
+        }
+        
+        function getSimilar(id) {
+        	// console.log("getSimilar", id);
+            var qry = prefixes + querySimilar;
+            var constraint = 'VALUES ?id { <' + id + '> } . ';
+            // console.log(qry.replace('<RESULT_SET>', constraint));
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(result) {
+            	return result;
             });
         }
 

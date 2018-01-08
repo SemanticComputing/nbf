@@ -124,10 +124,12 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4 text-left" ng-if="vm.person.hasAchievements">
-      <h3>Saavutuksia</h3>
-      <img ng-if="!vm.person.achievements" class="loading-img" src="images/loading-lg.gif"></img>
-      <div class="col-sm-6" ng-repeat="achievement in vm.person.achievements"><a ng-href="{{ achievement.wikipedia }}">{{ achievement.label | castArray | first }}</a></div>
+    <div class="col-md-4 text-left" ng-if="vm.person.similar">
+      <h3>Samankaltaisia henkilöitä</h3>
+      <img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
+      <div class="col-sm-6" ng-repeat="person in vm.person.similar">
+      	<a ui-sref="person.detail({ personId: person.prs })">{{ person.label }}</a>
+      </div>
     </div>
   </div>
 </div>
