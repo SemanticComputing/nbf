@@ -40,5 +40,8 @@
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "dependencies": {
+    "angularjs-slider": "^6.4.0"
   }
 }

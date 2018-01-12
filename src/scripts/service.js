@@ -280,27 +280,26 @@
             '  }' +
             ' }';
         
+        //	http://yasgui.org/short/rkLRgLmNM
         var querySimilar = 
         	'SELECT DISTINCT ?prs ?label WHERE { ' +
-        	'  { ' +
-            '    <RESULT_SET> ' +
-            '  } ' +
-            '  {' +
-            '  ?dst bioc:relates_to ?id ;' +
-            '       bioc:relates_to ?prs ;' +
-            '       bioc:value ?val .' +
-            '  } UNION {' +
-            '  ?dst bioc:relates_to ?id ;' +
-            '       bioc:relates_to ?idX ;' +
-            '       bioc:value ?valX .' +
-            '  ?dst2 bioc:relates_to ?idX ;' +
-            '       bioc:relates_to ?prs ;' +
-            '       bioc:value ?val2 .' +
-            '    BIND (?valX+?val2 AS ?val) ' +
-            '  } ' +
-            '  FILTER (?id != ?prs)' +
-            '  ?prs skos:prefLabel ?label  .' +
-            '} ORDER by ?val LIMIT 10';
+    		'  { <RESULT_SET> }' +
+    		'  { ' +
+    		'    ?dst bioc:relates_to ?id ; bioc:relates_to ?prs ; bioc:value ?val .   ' +
+    		'  } UNION {   ' +
+    		'    ?dst bioc:relates_to ?id ; bioc:relates_to ?idX ; bioc:value ?valX .   ' +
+    		'    ?dst2 bioc:relates_to ?idX ; bioc:relates_to ?prs ; bioc:value ?val2 .     ' +
+    		'    BIND (?valX+?val2 AS ?val) ' +
+    		'  } UNION {  ' +
+    		'    ?dst bioc:relates_to ?id ; bioc:relates_to ?idX ; bioc:value ?valX . ' +
+    		'    ?dst2 bioc:relates_to ?idX ; bioc:relates_to ?idY ; bioc:value ?valY .     ' +
+    		'    ?dst3 bioc:relates_to ?idY ; bioc:relates_to ?prs ; bioc:value ?val2 .     ' +
+    		'    BIND (?valX+?valY+?val2 AS ?val) ' +
+    		'  } ' +
+    		'  FILTER (?id != ?prs) ' +
+    		'  ?prs skos:prefLabel ?plabel . ' +
+    		'  BIND (replace(?plabel, "\s*[(][^)]+[)]", "") AS ?label)' +
+    		'} ORDER by ?val LIMIT 16 ';
         
         // The SPARQL endpoint URL
         var endpointConfig = {
