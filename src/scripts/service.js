@@ -237,6 +237,7 @@
             '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
+            '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
@@ -280,7 +281,7 @@
             '  }' +
             ' }';
         
-        //	http://yasgui.org/short/rkLRgLmNM
+        //	http://yasgui.org/short/rywI3KnBz
         var querySimilar = 
         	'SELECT DISTINCT ?prs ?label WHERE { ' +
     		'  { <RESULT_SET> }' +
@@ -297,8 +298,9 @@
     		'    BIND (?valX+?valY+?val2 AS ?val) ' +
     		'  } ' +
     		'  FILTER (?id != ?prs) ' +
-    		'  ?prs skos:prefLabel ?plabel . ' +
-    		'  BIND (replace(?plabel, "\s*[(][^)]+[)]", "") AS ?label)' +
+    		'  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
+    		'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . } ' +
+    		'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)' +
     		'} ORDER by ?val LIMIT 16 ';
         
         // The SPARQL endpoint URL

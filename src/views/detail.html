@@ -36,8 +36,8 @@
               <div ng-if="vm.person.wikidata" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.wikidata }}">Wikidata</a>
               </div>
-              <div ng-if="vm.person.warsa" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsa }}">Sotasampo</a>
+              <div ng-if="vm.person.warsampo" class="col-xs-6 col-xs-offset-3">
+                <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}">Sotasampo</a>
               </div>
               <div ng-if="vm.person.kirjasampo" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.kirjasampo }}">Kirjasampo</a>
@@ -58,8 +58,8 @@
                 <a ng-href="{{ vm.person.eduskunta }}">Eduskunta</a>
               </div>
               <div ng-if="vm.person.norssi" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.norssi }}">Norssi</a>
-              </div>
+                  <a ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}">Norssi</a>
+                </div>
               <div ng-if="vm.person.website" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.website }}">Kotisivu</a>
               </div>
