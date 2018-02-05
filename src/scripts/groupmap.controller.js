@@ -38,12 +38,12 @@
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
+        // vm.people = [];
 
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.getSortClass = groupmapService.getSortClass;
-
-        vm.people = [];
+        
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
@@ -105,7 +105,7 @@
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
-            vm.people = [];
+            //vm.people = [];
             vm.error = undefined;
             facetSelections.minYear = $scope.minRangeSlider.minValue;
             facetSelections.maxYear = $scope.minRangeSlider.maxValue;
@@ -125,7 +125,7 @@
         }
         
         function processEvents(events, vm) {
-        	
+        	// console.log(events);
         	var places = {};
         	
         	events.forEach( function(event) {
@@ -136,16 +136,29 @@
         		//	count by place uris
         		var key=event.class+event.place.uri;
         		if (!places.hasOwnProperty(key)) {
-        			places[key]={count:0, latitude:event.place.latitude, longitude:event.place.longitude, type:event.class}
+        			places[key]={count:0, 
+        					latitude:event.place.latitude, 
+        					longitude:event.place.longitude, 
+        					label:	event.place.label,
+        					type:	event.class,
+        					people: {}}
         		}
         		places[key]['count']+=1;
+        		places[key]['people'][event.id]= event.person.name;
         	});
+        	
         	
         	vm.markers = [];
         	var i = 0;
         	for (var x in places) {
         		var place=places[x];
-        		var m = generateMarker(place.latitude, place.longitude, ++i, place.type, 5.0*Math.sqrt(place.count));
+        		var m = generateMarker(vm, place.latitude, 
+        				place.longitude, 
+        				++i,
+        				place.type, 
+        				5.0*Math.sqrt(place.count),
+        				place.label,
+        				place.people);
         		vm.markers.push(m);
         	}
         	
@@ -160,7 +173,7 @@
         }
         
         
-        function generateMarker(lat, lon, id, type, r) {
+        function generateMarker(vm, lat, lon, id, type, r, label, people) {
         	if (!r) r=5.0;
         	var ICONCOLORS = {
     				"death":	"#ff4141",
@@ -177,7 +190,7 @@
         			"longitude": lon,
         			"id": id,
         			"options": {
-	        			icon:{
+        				icon:{
 	        				path:"M-"+r+" 0 A "+r+","+r+", 0 ,1, 1,"+r+",0 A"+r+","+r+",0,1,1,-"+r+",0 Z",
 							scale: 1.0,
 							anchor: new google.maps.Point(0,0),
@@ -187,8 +200,18 @@
 							strokeWeight: 1,
 							labelOrigin: new google.maps.Point(0, 0)
 							},
-						optimized: false,
-						}
+						optimized: true,
+						},
+	        		"onClick": function () {
+	        			vm.place_label = label;
+	        			var people_list = [];
+	        			for (var p in people) {
+	        				people_list.push({uri:p, label:people[p]})
+	        			}
+	        			vm.people = people_list;
+	        			console.log(people_list);
+	        			$scope.$apply();
+        		}
         	};
         	return m;
         }

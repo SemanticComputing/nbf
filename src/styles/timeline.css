@@ -107,7 +107,7 @@ svg#timelinecontainer {
 
 #timelinecontainer text {
 	font-family:"Arial";
-	font-size:2px; 
-	text-anchor: middle;
+	font-size:1.6px; 
+	text-anchor: end;
 	fill:#555;
 }

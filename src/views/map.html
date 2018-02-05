@@ -38,7 +38,7 @@
 				  	</line>
 				  	
 				  	<text ng-repeat="text in ::vm.mainline.texts" ng-attr-x="{{ text.x }}" ng-attr-y="{{ text.y }}">
-				  	{{ text.year }}
+				  	{{ text.content }}
 				  	</text>
 				  	<path ng-repeat="event in vm.events"
 				  		ng-mouseenter="vm.focusEvent(event)"

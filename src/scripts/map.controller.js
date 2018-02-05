@@ -317,13 +317,17 @@
         	var x0 = vm.min_time,
         		x1 = vm.max_time,
         		arr = [],
-        		texts = [];
+        		texts = [{'x': -2.5 , 'y':0, 'content': 'Elinkaari'},
+        			{'x': -2.5 , 'y':5, 'content': 'Ura'},
+        			{'x': -2.5 , 'y':10, 'content': 'Saavutukset'},
+        			{'x': -2.5 , 'y':15, 'content': 'Kunniamaininnat'}];
 
         	//	vertical lines every ten years
         	for (var x = 10*Math.ceil(x0/10); x<x1; x+=10) {
         		var xx = scale2Timeline(x,x0,x1)
+        		
         		arr.push({'x1': xx , 'x2': xx, 'y1': 0, 'y2': 15 });
-        		texts.push({'x': xx , 'y':-3, 'year': ''+x});
+        		texts.push({'x': xx+1 , 'y':-2, 'content': ''+x});
         	}
         	//  horizontal lines
         	for (var y=0; y<20; y+=5) {
@@ -334,7 +338,6 @@
         
         function scale2Timeline(time,x0,x1) {
         	return time-x0;
-        	// return 750.0*(time-x0)/(x1-x0);
         } 
         
         function openPage() {

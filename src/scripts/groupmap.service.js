@@ -178,7 +178,7 @@
         // The query for the results.
         // ?id is bound to the person URI.
         var query = 
-        	'SELECT DISTINCT ?id ?evt ?time__start ?time__end ?class ?place__uri ?place__latitude ?place__longitude WHERE { ' +
+        	'SELECT DISTINCT ?id ?evt ?person__name ?time__start ?time__end ?class ?place__uri ?place__label ?place__latitude ?place__longitude WHERE { ' +
         	'  { SELECT DISTINCT ?id WHERE { ' +
         	'  { <RESULT_SET> } ' +
         	'	?id foaf:focus ?prs . ' +
@@ -188,11 +188,13 @@
         	'	} LIMIT 2500 } ' +
         	'  ' +
         	'	?id foaf:focus ?prs . ' +
+        	'   ?id skosxl:prefLabel ?person__label . ' +
+    		'  OPTIONAL { ?person__label schema:familyName ?person__fname } ' +
+    		'  OPTIONAL { ?person__label schema:givenName ?person__gname } ' +
+    		'  BIND (CONCAT(COALESCE(?person__gname, "")," ",COALESCE(?person__fname, "")) AS ?person__name) ' +
         	'  { ?evt crm:P100_was_death_of ?prs . } ' +
         	'  UNION ' +  
         	'  { ?evt crm:P98_brought_into_life ?prs . } ' +
-        	// '  UNION ' + 
-        	// '  { ?evt bioc:inheres_in ?prs . } ' +
         	'  ' +
         	'  ?evt nbf:time ?time . ' +
         	'  OPTIONAL { ?time gvp:estStart ?time__start. } ' +
@@ -204,9 +206,10 @@
         	'  ' +
         	'  ?evt nbf:place ?place__uri .  ' +
         	'    ?place__uri geo:lat ?place__latitude ;  ' +
-        	'           geo:long ?place__longitude .  ' +
+        	'         geo:long ?place__longitude ; ' +
+    		'         skos:prefLabel ?place__label . ' +
         	'} LIMIT 1500 ';
-
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -240,7 +243,6 @@
         	var q = prefixes+query.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
         		.replace("<STARTYEAR>",facetSelections.minYear)
         		.replace("<ENDYEAR>",facetSelections.maxYear);
-        	
         	return endpoint.getObjectsNoGrouping(q);
         }
 
