@@ -4,7 +4,7 @@
       <th class="col-xs-4">Nimi</th>
       <th class="col-xs-1">Henkilö</th>
       <th class="col-xs-1">Linkit</th>
-      <th class="col-xs-3"><span class="hidden-xs hidden-sm">Muuta</span></th>
+      <!-- <th class="col-xs-3"><span class="hidden-xs hidden-sm">Muuta</span></th>  -->
       <th class="col-xs-3 hidden-xs hidden-sm">Matrikkeliteksti</th>
     </tr>
   </thead>
@@ -60,6 +60,7 @@
       <a class="link" ng-if="::person.genicom" ng-href="{{ ::person.genicom }}">Kotisivu (Geni.com)</a>
       <a class="link" ng-if="::person.genitree" ng-href="{{ ::person.genitree }}">Sukupuu (Geni.com)</a>
     </td>
+    <!-- 
     <td data-title="'Muuta'">
       <div ng-if="::person.relative">
       	<span>Sukulaiset: </span><br>
@@ -69,6 +70,7 @@
       </div>
       <div ng-if="::person.hobby"><span>Harrastukset: </span><br>{{ ::person.hobby | join:', ' }}</div>
     </td>
+     -->
     <td data-title="'Matrikkeliteksti'"
       class="hidden-xs hidden-sm"><p ng-bind-html="::person.lead_paragraph"></p></td>
   </tr>

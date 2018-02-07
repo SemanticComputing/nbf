@@ -23,8 +23,8 @@ Lähde: <a href="http://www.kansallisbiografia.fi">Kansallisbiografia</a>
     	<div>
 	    	<div id="labelcontainer" class="col-sm-4 col-md-2 text-center">
 	    		<h4 ng-show="vm.place_label">{{ vm.place_label }}</h4>
-		    	<p ng-show="vm.people" ng-repeat="person in ::vm.people">
-					<a ng-href="{{person.uri}}">{{ person.label }}</a>
+		    	<p ng-show="vm.people" ng-repeat="person in vm.people">
+					<a ui-sref="person.detail({ personId: person.uri })">{{ person.label }}</a> 
                 </p>
 			</div>
 		</div>
@@ -37,7 +37,7 @@ Lähde: <a href="http://www.kansallisbiografia.fi">Kansallisbiografia</a>
 	        	<ui-gmap-marker ng-repeat="marker in vm.markers" 
 	        		coords="marker" 
 	        		idkey="marker.id" 
-	        		options="marker.options" 
+	        		options="marker.options"
 	        		click="marker.onClick()"
 	        	></ui-gmap-marker>
 	        </ui-gmap-google-map>

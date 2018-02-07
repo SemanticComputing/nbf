@@ -170,6 +170,7 @@
 	        		case "child":
 	        			if (event.relative) {
 	        				event.relativelink = "http://localhost:9000/#!/"+event.relative.replace(/[/]/g, '~2F');
+	        				event.relativelink = event.relative;
 	        			}
 	        			event.label = event.label+', '+event.time.label;
 	        			break;

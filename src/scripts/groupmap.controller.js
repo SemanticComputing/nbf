@@ -204,12 +204,13 @@
 						},
 	        		"onClick": function () {
 	        			vm.place_label = label;
+	        			
 	        			var people_list = [];
 	        			for (var p in people) {
 	        				people_list.push({uri:p, label:people[p]})
 	        			}
 	        			vm.people = people_list;
-	        			console.log(people_list);
+	        			
 	        			$scope.$apply();
         		}
         	};

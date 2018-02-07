@@ -18,8 +18,9 @@
 					class="{{event.class}}"
 					ng-mouseenter="vm.focusEvent(event)"
 					ng-mouseleave="vm.unfocusEvent(event)">
-					<a ng-if="::event.relativelink" ng-href="{{event.relativelink}}">{{ event.id }}: {{ event.label }}</a>
-                	<span ng-if="::!event.relativelink">{{ event.id }}: {{ event.label }}</span>
+					<a ng-if="::event.relative" ui-sref="person.detail({ personId: event.relative })">
+					{{ event.id }}: {{ event.label }}</a>
+                	<span ng-if="::!event.relative">{{ event.id }}: {{ event.label }}</span>
 				</p>
 			</div>
 		</div>
