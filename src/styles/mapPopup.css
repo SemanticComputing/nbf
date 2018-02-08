@@ -1,0 +1,7 @@
+#popupcontainer {
+	width: 300px;
+	max-height: 300px;
+	overflow-y: scroll; 
+	text-align: left;
+	font-size: 14px; 
+}

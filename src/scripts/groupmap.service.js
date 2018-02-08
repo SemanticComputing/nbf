@@ -183,7 +183,6 @@
         	'  { <RESULT_SET> } ' +
         	'	?id foaf:focus ?prs . ' +
         	'  	?prs ^crm:P98_brought_into_life/nbf:time/gvp:estStart ?time__birth . ' +
-        	'  	?prs ^crm:P100_was_death_of/nbf:time/gvp:estStart ?time__death . ' +
         	'  	FILTER (<STARTYEAR><=year(?time__birth) && year(?time__birth)<=<ENDYEAR>) ' +
         	'	} LIMIT 2500 } ' +
         	'  ' +
@@ -208,7 +207,8 @@
         	'    ?place__uri geo:lat ?place__latitude ;  ' +
         	'         geo:long ?place__longitude ; ' +
     		'         skos:prefLabel ?place__label . ' +
-        	'} LIMIT 1500 ';
+    		'	FILTER (lang(?place__label)="fi") ' +
+        	'} ORDER BY ?person__fname';
         
         // The SPARQL endpoint URL
         var endpointConfig = {

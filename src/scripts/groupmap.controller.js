@@ -22,7 +22,7 @@
     	// Range slider config
         $scope.minRangeSlider = {
             minValue: (new Date()).getFullYear()-100,
-            maxValue: (new Date()).getFullYear(),
+            maxValue: (new Date()).getFullYear()-50,
             options: {
                 floor: 1000,
                 ceil: (new Date()).getFullYear(),
@@ -38,8 +38,19 @@
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
-        // vm.people = [];
-
+        vm.window = { show: false, 
+        		position: {
+        			lat: 60.192059,
+        			lng: 24.945831}
+        };
+        
+        vm.showWindow = function() {
+        	vm.window.show = true;
+        }
+        vm.closeWindow = function() {
+        	vm.window.show = false;
+        }
+        
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.getSortClass = groupmapService.getSortClass;
@@ -150,17 +161,20 @@
         	
         	vm.markers = [];
         	var i = 0;
+        	
         	for (var x in places) {
         		var place=places[x];
         		var m = generateMarker(vm, place.latitude, 
         				place.longitude, 
         				++i,
         				place.type, 
-        				5.0*Math.sqrt(place.count),
+        				place.count,
         				place.label,
         				place.people);
         		vm.markers.push(m);
         	}
+        	//	sort the the largest gets drawn first
+        	vm.markers.sort(function(a, b){return b.count - a.count});
         	
         	var bounds = new google.maps.LatLngBounds();
         	
@@ -173,8 +187,9 @@
         }
         
         
-        function generateMarker(vm, lat, lon, id, type, r, label, people) {
-        	if (!r) r=5.0;
+        function generateMarker(vm, lat, lon, id, type, count, label, people) {
+        	var r = 5.0*Math.sqrt(count);
+        	// if (!r) r=5.0;
         	var ICONCOLORS = {
     				"death":	"#ff4141",
     				"birth":	"#777fff",
@@ -186,6 +201,7 @@
     				"event":	"#ABCDEF"
     		};
         	var m = {
+        			"count": count,
         			"latitude": lat,
         			"longitude": lon,
         			"id": id,
@@ -203,13 +219,20 @@
 						optimized: true,
 						},
 	        		"onClick": function () {
-	        			vm.place_label = label;
 	        			
-	        			var people_list = [];
+	        			vm.place_label = label;
+	        			if (type=="death") vm.place_label += ", kuolleet";
+	        			else if (type=="birth") vm.place_label += ", syntyneet";
+	        			
+	        			var arr = [];
 	        			for (var p in people) {
-	        				people_list.push({uri:p, label:people[p]})
+	        				arr.push({uri:p, label:people[p]})
 	        			}
-	        			vm.people = people_list;
+	        			vm.people = arr;
+	        			
+	        			vm.window.position.lat = parseInt(lat);
+	        			vm.window.position.lng = parseInt(lon);
+	        			vm.showWindow();
 	        			
 	        			$scope.$apply();
         		}

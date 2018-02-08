@@ -20,26 +20,27 @@ Lähde: <a href="http://www.kansallisbiografia.fi">Kansallisbiografia</a>
       <div ng-include="'views/mapfacets.partial.html'"></div>
     </div>
     <div class="container-fluid thumbnail">
-    	<div>
-	    	<div id="labelcontainer" class="col-sm-4 col-md-2 text-center">
-	    		<h4 ng-show="vm.place_label">{{ vm.place_label }}</h4>
-		    	<p ng-show="vm.people" ng-repeat="person in vm.people">
-					<a ui-sref="person.detail({ personId: person.uri })">{{ person.label }}</a> 
-                </p>
-			</div>
-		</div>
-		<div class="col-md-6 col-lg-7">
-    	
+    	<div class="col-md-6 col-lg-7">
+    		
 		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
-		   		<ui-gmap-window show="map.window.show" coords="map.window.model" options="map.window.options" closeclick="map.window.closeClick()">
-            		<div ng-non-bindable="">test</div>
+		   		
+		   		<ui-gmap-window 
+		   			id="ui-gmap-window" 
+		   			show="vm.window.show" 
+		   			options="vm.window" 
+		   			templateUrl="'views/popUpContent.html'"
+                    templateParameter="vm"
+            		closeClick="vm.closeWindow">
+            		<span></span>
         		</ui-gmap-window>
+        		
 	        	<ui-gmap-marker ng-repeat="marker in vm.markers" 
 	        		coords="marker" 
 	        		idkey="marker.id" 
 	        		options="marker.options"
 	        		click="marker.onClick()"
 	        	></ui-gmap-marker>
+	        	
 	        </ui-gmap-google-map>
 	        
 	      </div>
