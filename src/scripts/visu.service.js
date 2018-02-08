@@ -203,14 +203,20 @@
         	'}';
             
        var queryAge = prefixes +
-       'SELECT ?value (count(?value) AS ?count) WHERE { ' +
-       ' { <RESULT_SET> } ' +
-	   	' ' +
-	   	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
-	   	'  	foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] ' +
-	   	'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
-	   	'  FILTER (-1<?value && ?value<120) ' +
-	   	'} GROUP BY ?value  ORDER BY ?value ';
+       'SELECT (?id AS ?id__uri) ?id__name ?value ' +
+		'WHERE { ' +
+		' { <RESULT_SET> } ' +
+		'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
+		'      foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] . ' +
+		'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
+		'  FILTER (-1<?value && ?value<120) ' +
+		'   ' +
+		'  ?id skosxl:prefLabel ?id__label . ' +
+		'    OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+		'    OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+		'    BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+		' ' +
+		'} ORDER BY ?value ?id__fname ?id__gname ';
        
        var queryMarriageAge = prefixes +
        'SELECT ?value (count(?value) AS ?count) ' +
@@ -291,69 +297,6 @@
 		'  } GROUP BY ?id ' +
 		'} GROUP BY ?value ORDER BY ?value ';
        
-      /**
-        var queryTopTitles = prefixes + 
-	    	' SELECT ?label ?year (count (distinct ?id) AS ?count) ' +
-	    	' WHERE { ' +
-	    	'    { ' +
-	    	'    SELECT ?class (count (distinct ?id) AS ?no) ' +
-	    	'    WHERE { ' +
-	    	'      ?class rdfs:subClassOf+ bioc:Title . ' +
-	    	'      ?evt bioc:relates_to_title ?class ; ' +
-	    	'           bioc:title_inheres_in ?id . ' +
-	    	'        { <RESULT_SET> } ' +
-	    	'    } GROUP BY ?class ORDER BY desc(?no) LIMIT 5 ' +
-	    	'    } ' +
-	    	'    ?class skos:prefLabel ?label . ' +
-	    	'    ?evt bioc:relates_to_title ?class ; ' +
-	    	'         bioc:title_inheres_in ?id ; ' +
-	    	'         schema:startDate ?date . ' +
-	    	'    { <RESULT_SET> } ' +
-	    	' 	 BIND (floor(year(?date)/10)*10 AS ?year)' +
-	    	'  } GROUP BY ?label ?year ORDER by ?year ';
-        
-        var queryTopOrgs = prefixes + 
-	        'SELECT ?label ?year (count (distinct ?id) AS ?count) ' +
-	    	'  WHERE { ' +
-	    	'    { ' +
-	    	'    SELECT ?org (count (distinct ?id) AS ?no) ' +
-	    	'    WHERE { ' +
-	    	'  	   ?evt bioc:title_inheres_in ?id ; ' +
-            '      		bioc:relates_to ?org . ' +
-            '		?org a foaf:Organization . ' +
-	    	'      { <RESULT_SET> } ' +
-	    	'    } GROUP BY ?org ORDER BY desc(?no) LIMIT 5 ' +
-	    	'    } ' +
-	    	'    ?org skos:prefLabel ?label . ' +
-	    	'    ?evt bioc:title_inheres_in ?id ; ' +
-	    	'    	  bioc:relates_to ?org; ' +
-	    	'         schema:startDate ?date . ' +
-	    	'    { <RESULT_SET> } ' +
-	    	' 	 BIND (floor(year(?date)/10)*10 AS ?year)' +
-	    	'  } GROUP BY ?label ?year ORDER by ?year ';
-	    
-        var queryTopSchools = prefixes + 
-	        ' SELECT ?label ?year (count (distinct ?id) AS ?count) ' +
-	    	' WHERE { ' +
-	    	'    { ' +
-	    	'    SELECT ?org (count (distinct ?id) AS ?no) ' +
-	    	'    WHERE { ' +
-	    	'  	   ?evt bioc:education_inheres_in ?id ; ' +
-	        '      		bioc:relates_to ?org . ' +
-	        ' 	   ?org a schema:EducationalOrganization ' +	
-	    	'      { <RESULT_SET> } ' +
-	    	'    } GROUP BY ?org ORDER BY desc(?no) LIMIT 5 ' +
-	    	'    } ' +
-	    	'    ?org skos:prefLabel ?label .' +
-	    	'    ?evt bioc:education_inheres_in ?id ; ' +
-	    	'    	  bioc:relates_to ?org; ' +
-	    	'         schema:startDate ?date . ' +
-	    	'    { <RESULT_SET> } ' +
-	    	' 	 BIND (floor(year(?date)/10)*10 AS ?year)' +
-	    	' } GROUP BY ?label ?year ORDER by ?year ';
-    
-        */
-       
         // The SPARQL endpoint URL
         var endpointUrl = SPARQL_ENDPOINT_URL;
 
@@ -381,7 +324,7 @@
         function getAge(facetSelections) {
         	var cons = facetSelections.constraint.join(' '),
         		q = queryAge.replace("<RESULT_SET>", cons);
-        	// console.log(q);
+        	console.log(q);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         
@@ -400,11 +343,11 @@
         
         function getResults(facetSelections) {
         	var promises = [
-            	this.getAge(facetSelections),
+            	this.getAge(facetSelections)/**,
             	this.getMarriageAge(facetSelections),
             	this.getFirstChildAge(facetSelections),
             	this.getNumberOfChildren(facetSelections),
-            	this.getNumberOfSpouses(facetSelections)
+            	this.getNumberOfSpouses(facetSelections) **/
             ];
         	return $q.all(promises);
         }

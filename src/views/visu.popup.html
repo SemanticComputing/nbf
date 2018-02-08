@@ -1,0 +1,8 @@
+<div class="modal-header">
+    <h3>Henkil&ouml;t</h3>
+    <div id="popupcontainer2" class="col-sm-4 col-md-2">
+        <p ng-show="vm.people" ng-repeat="person in vm.people">
+			<a ui-sref="person.detail({ personId: person.uri })">{{ person.name }}</a> 
+        </p>
+	</div>
+</div>

@@ -6,7 +6,7 @@
 (function() {
 
     'use strict';
-
+    
     angular.module('facetApp')
 
     /*
@@ -16,14 +16,27 @@
 
     /* @ngInject */
     function VisuController2($scope, $location, $q, $state, _, visuService,
-            FacetHandler, facetUrlStateHandlerService) {
+            FacetHandler, facetUrlStateHandlerService, $uibModal) {
 
         var vm = this;
    
-        vm.people = []; 
+        vm.people = [];
         vm.startYear = [];
-        //vm.topTitles = [];
-        //vm.topOrgs = [];
+        
+        vm.showForm = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'views/visu.popup.html',
+                scope: $scope
+            });
+            /**
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                console.log('Modal dismissed at: ' + new Date());
+            });
+            */
+        };
+        
 		vm.removeFacetSelections = removeFacetSelections;
 		
 		google.charts.load('current', {packages: ['corechart', 'line']});
@@ -64,6 +77,7 @@
             	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.ages, [1,120], 'Elinikä', 'chart_age')
             		});
+            	/**
             	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.marriageAges, [1,120], 'Naimisiinmenoikä', 'chart_marriageAge')
             		});
@@ -76,18 +90,32 @@
             	google.charts.setOnLoadCallback(function () { 
             		drawYearChart(vm.numberOfSpouses, [1,7], 'Puolisoiden lukumäärä', 'chart_numberOfSpouses') 
             		});
-            	
+            	**/
             	return;
 	         });
         }
         
         
-		function drawYearChart(res, range, label, target) {
+		function drawYearChart(res, range, label, target) { 
+			console.log(res);
+			var persons = new Array(range[1]-range[0]+1);
+			for (var i=0; i<persons.length; i++) persons[i] = [];
+			
+			for (var i=0; i<res.length; i++) {
+				var ob = res[i];
+				persons[parseInt(ob.value)].push(ob.id);
+			}
+			
+			var arr=[];
+			for (var i=0; i<persons.length; i++) {
+				arr[i] = [i, persons[i].length];
+			}
+			
 			var 
-				arr = $.map( countByYear(res, range),
+				/**arr = $.map( countByYear(res, range),
 					function( value, key ) {
 						return [[ value[0],value[1] ]];
-					}),
+					}),**/
 				stats = getStats(arr),
 				
 				data = new google.visualization.DataTable(),
@@ -114,14 +142,21 @@
 			    	    },
 			    	height:500
 				  },
-			
+				  
 				chart = new google.visualization.ColumnChart(document.getElementById(target));
 			
-	        data.addColumn('number', 'Ikä');
+			data.addColumn('number', 'Ikä');
 	        data.addColumn('number', 'Henkilöä');
 	        
 			data.addRows(arr);
 			chart.draw(data, options);
+			
+			google.visualization.events.addListener(chart, 'select', function() {
+				  var sel = chart.getSelection();
+				  vm.people = persons[sel[0].row];
+				  vm.showForm();
+				});
+			
 		}
 		
 		function ticksByRange(range) {
@@ -163,9 +198,7 @@
 			var res = [];
 			
 			$.each(data, function( i, value ) {
-				//if (value.hasOwnProperty('index') && value['index']==index) {
-					res.push([ parseInt(value['value']), parseInt(value['count']) ]);
-				//}
+				res.push([ parseInt(value['value']), parseInt(value['count']) ]);
 			});
 			
 			//	fill missing years with zero value
@@ -246,8 +279,7 @@
             	if (latestUpdate !== updateId) {
                     return;
                 }
-            	
-                vm.isLoadingResults = false;
+            	vm.isLoadingResults = false;
                 vm.ages = res[0];
                 vm.marriageAges = res[1];
                 vm.firstChildAges = res[2];
