@@ -335,7 +335,7 @@
         function getResults(facetSelections) {
             return resultHandler.getResults(facetSelections, getSortBy());
         }
-
+        
         function getPerson(id) {
         	var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';

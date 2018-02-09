@@ -190,10 +190,11 @@
 	        			break;
 	        		
 	        		default:
-	        			console.log(event.class);
-	        			event.y = 15;
+	        			//console.log(event);
+	        			//console.log(event.class);
+	        			event.y = 5;
 	        			event.class="event";
-	        			category = 3;
+	        			category = 1;
 	        			break;
         		}
         		categories[category].push(event);
@@ -282,7 +283,7 @@
     				"career":	"#999999",
     				"product":	"#83d236",
     				"honour":	"#ce5c00",
-    				"event":	"#ABCDEF"
+    				"event":	"#999999"
     		};
         	
         	var m = {

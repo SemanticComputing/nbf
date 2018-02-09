@@ -116,16 +116,16 @@
                 predicate: '<http://purl.org/dc/terms/source>',
                 name: 'Tietokanta'
             },
-            birthYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
-                name: 'Synnyinaika',
-                enabled: true
-            },
             place: {
                 facetId: 'place',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Paikkakunta',
+                enabled: true
+            }, /**
+            birthYear: {
+                facetId: 'birthYear',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
+                name: 'Synnyinaika',
                 enabled: true
             },
             deathYear: {
@@ -133,7 +133,7 @@
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
                 name: 'Kuolinaika',
                 enabled: true
-            },
+            }, */
             title: {
                 facetId: 'title',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
@@ -203,7 +203,7 @@
         	'}';
             
        var queryAge = prefixes +
-       'SELECT (?id AS ?id__uri) ?id__name ?value ' +
+       'SELECT DISTINCT (?id AS ?id__uri) ?id__name ?value ' +
 		'WHERE { ' +
 		' { <RESULT_SET> } ' +
 		'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
@@ -219,46 +219,45 @@
 		'} ORDER BY ?value ?id__fname ?id__gname ';
        
        var queryMarriageAge = prefixes +
-       'SELECT ?value (count(?value) AS ?count) ' +
-	   	'WHERE { ' +
-	   	'  { ' +
-	   	'    SELECT distinct ?id (min(?age) AS ?value) WHERE { ' +
-	   	'    { <RESULT_SET> } ' +
-	   	'    VALUES ?rel { relations:Spouse } ' +
-	   	'    ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; 	 ' +
-	   	'        foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
-	   	'    BIND (year(?time)-year(?birth) AS ?age) ' +
-	   	'    FILTER (13<?age && ?age<120) ' +
-	   	'    } GROUP BY ?id  } ' +
-	   	'} GROUP BY ?value ORDER BY ?value ';
+       'SELECT DISTINCT (?id AS ?id__uri) ?id__name ?value ' +
+		' WHERE {    ' +
+		'  {     SELECT DISTINCT ?id (min(?age) AS ?value) ' +
+		'    WHERE { ' +
+		'      { <RESULT_SET> } ' +
+		'      VALUES ?rel { relations:Spouse } ' +
+		'      ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; ' +
+		'                                     foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+		'      BIND (year(?time)-year(?birth) AS ?age) ' +
+		'      FILTER (13<?age && ?age<120)} ' +
+		'    GROUP BY ?id } ' +
+		' ' +
+		' 	?id skosxl:prefLabel ?id__label . ' +
+		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+		'      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+		'} ORDER BY ?value ?id__fname ?id__gname ';
        
-       var queryMarriageAgeAverage = prefixes +
-       'SELECT ?value (count(?value) AS ?count) WHERE { ' +
-       ' { <RESULT_SET> } ' +
-	   	' ' +
-	   	'  VALUES ?rel { relations:Spouse } ' +
-	   	'  ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; ' +
-	   	'   	foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
-	   	'  BIND (year(?time)-year(?birth) AS ?value) ' +
-	   	'  FILTER (13<?value && ?value<120) ' +
-	   	'} GROUP BY ?value ORDER BY ?value ';
-		    
        var queryFirstChildAge = prefixes +
-       'SELECT ?value (count(?value) AS ?count) ' +
-	   	'WHERE { ' +
-	   	'  { ' +
-	   	'    SELECT distinct ?id (min(?age) AS ?value) WHERE { ' +
-	   	'    { <RESULT_SET> } ' +
-	   	'    VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
-	   	'    ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; 	 ' +
-	   	'        foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
-	   	'    BIND (year(?time)-year(?birth) AS ?age) ' +
-	   	'    FILTER (13<?age && ?age<120) ' +
-	   	'    } GROUP BY ?id  } ' +
-	   	'} GROUP BY ?value ORDER BY ?value ';
+       'SELECT DISTINCT (?id AS ?id__uri) ?id__name ?value ' +
+		' WHERE {    ' +
+		'  {     SELECT DISTINCT ?id (min(?age) AS ?value) ' +
+		'    WHERE { ' +
+		'      { <RESULT_SET> } ' +
+		'      VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
+		'      ?id bioc:has_family_relation [ a ?rel ;  nbf:time/gvp:estStart ?time ] ; ' +
+		'                                     foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+		'      BIND (year(?time)-year(?birth) AS ?age) ' +
+		'      FILTER (13<?age && ?age<120)} ' +
+		'    GROUP BY ?id } ' +
+		' ' +
+		' 	?id skosxl:prefLabel ?id__label . ' +
+		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+		'      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+		'} ORDER BY ?value ?id__fname ?id__gname ';
        
        var queryAverageChildAge = prefixes +
-       'SELECT ?age (count(?age) AS ?count) WHERE { ' +
+       'SELECT DISTINCT ?age (count(?age) AS ?count) WHERE { ' +
        ' { <RESULT_SET> } ' +
 	   	' ' +
 	   	'  VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
@@ -269,33 +268,46 @@
 	   	'} GROUP BY ?age ORDER BY ?age ';
        
        var queryNumberOfChildren = prefixes +
-   	' SELECT ?value (count(?id) AS ?count) ' +
-	'WHERE { ' +
-	'  { ' +
-	'  SELECT ?id (count(?rel) AS ?value) ' +
-	'  WHERE { ' +
-	'    { <RESULT_SET> } ' +
-	'    VALUES ?rel { relations:Child relations:Son relations:Daughter }  ' +
-	'    ?id bioc:has_family_relation/a ?rel . ' +
-	'    } GROUP BY ?id } ' +
-	'  UNION ' +
-	'  { ' +
-	'    { <RESULT_SET> } ' +
-	'  ?id dcterms:source sources:source1 ; ' +
-	'    foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
-	'  FILTER not exists { ?id bioc:has_family_relation [ a relations:Child ]} ' +
-	'  BIND (0 AS ?value) ' +
-	'  } ' +
-	'} GROUP BY ?value ORDER BY ?value ';
-		   
+   	    'SELECT DISTINCT (?id as ?id__uri) ?id__name ?value ' +
+		'WHERE { ' +
+		'  { ' +
+		'      SELECT DISTINCT ?id (count(?rel) AS ?value) ' +
+		'      WHERE { { <RESULT_SET> } ' +
+		'        VALUES ?rel { relations:Child relations:Son relations:Daughter } ' +
+		'        ?id bioc:has_family_relation/a ?rel . }  ' +
+		'      GROUP BY ?id } ' +
+		'  UNION { ' +
+		'    	{ <RESULT_SET> } ' +
+		'      ?id dcterms:source sources:source1 ; ' +
+		'          foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
+		'      FILTER not exists { ?id bioc:has_family_relation/a relations:Child } ' +
+		'	   BIND (0 AS ?value) } ' +
+		'  ?id skosxl:prefLabel ?id__label . ' +
+		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+		'      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+		'} ORDER BY ?value ?id__fname ?id__gname ';
+		
        var queryNumberOfSpouses = prefixes +
-       'SELECT ?value (count(?id) AS ?count) WHERE { ' +
-		'  SELECT ?id (count(?rel) AS ?value) WHERE { ' +
-		'    { <RESULT_SET> } ' +
-		'    VALUES ?rel { relations:Spouse } ' +
-		'    ?id bioc:has_family_relation/a ?rel . ' +
-		'  } GROUP BY ?id ' +
-		'} GROUP BY ?value ORDER BY ?value ';
+       'SELECT DISTINCT (?id as ?id__uri) ?id__name ?value ' +
+		'WHERE { ' +
+		'  { ' +
+		'      SELECT DISTINCT ?id (count(?rel) AS ?value) ' +
+		'      WHERE { { <RESULT_SET> } ' +
+		'        VALUES ?rel { relations:Spouse } ' +
+		'        ?id bioc:has_family_relation/a ?rel . }  ' +
+		'      GROUP BY ?id } ' +
+		'  UNION { ' +
+		'    	{ <RESULT_SET> } ' +
+		'      ?id dcterms:source sources:source1 ; ' +
+		'          foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
+		'      FILTER not exists { ?id bioc:has_family_relation/a relations:Spouse } ' +
+		'	   BIND (0 AS ?value) } ' +
+		'  ?id skosxl:prefLabel ?id__label . ' +
+		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+		'      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+		'} ORDER BY ?value ?id__fname ?id__gname ';
        
         // The SPARQL endpoint URL
         var endpointUrl = SPARQL_ENDPOINT_URL;
@@ -324,7 +336,6 @@
         function getAge(facetSelections) {
         	var cons = facetSelections.constraint.join(' '),
         		q = queryAge.replace("<RESULT_SET>", cons);
-        	console.log(q);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         
@@ -336,18 +347,18 @@
         
         function getNumberOfSpouses(facetSelections) {
         	var cons = facetSelections.constraint.join(' '),
-    			q = queryNumberOfSpouses.replace("<RESULT_SET>", cons);
+    			q = queryNumberOfSpouses.replace(/<RESULT_SET>/g, cons);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         
         
         function getResults(facetSelections) {
         	var promises = [
-            	this.getAge(facetSelections)/**,
+            	this.getAge(facetSelections),
             	this.getMarriageAge(facetSelections),
             	this.getFirstChildAge(facetSelections),
             	this.getNumberOfChildren(facetSelections),
-            	this.getNumberOfSpouses(facetSelections) **/
+            	this.getNumberOfSpouses(facetSelections)
             ];
         	return $q.all(promises);
         }

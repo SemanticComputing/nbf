@@ -30,11 +30,6 @@ svg#timelinecontainer {
 	stroke-width:0.2;
 }
 
-#timelinecontainer .event:hover {
-	fill:#DDD;
-	stroke:#777;
-}
-
 #timelinecontainer .birth {
 	fill:#777fff;
 	stroke:#777fff;
@@ -72,6 +67,15 @@ svg#timelinecontainer {
 }
 #labelcontainer p.spouse:hover {
 	background-color:#a2d0cd;
+}
+
+#timelinecontainer .event {
+	fill:#999;
+	stroke:#999;
+}
+
+#labelcontainer p.event:hover {
+	background-color:#999;
 }
 
 #timelinecontainer .career {

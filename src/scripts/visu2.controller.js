@@ -77,7 +77,6 @@
             	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.ages, [1,120], 'Elinikä', 'chart_age')
             		});
-            	/**
             	google.charts.setOnLoadCallback(function () {
             		drawYearChart(vm.marriageAges, [1,120], 'Naimisiinmenoikä', 'chart_marriageAge')
             		});
@@ -90,14 +89,13 @@
             	google.charts.setOnLoadCallback(function () { 
             		drawYearChart(vm.numberOfSpouses, [1,7], 'Puolisoiden lukumäärä', 'chart_numberOfSpouses') 
             		});
-            	**/
             	return;
 	         });
         }
         
         
 		function drawYearChart(res, range, label, target) { 
-			console.log(res);
+			
 			var persons = new Array(range[1]-range[0]+1);
 			for (var i=0; i<persons.length; i++) persons[i] = [];
 			
