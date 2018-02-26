@@ -17,24 +17,8 @@
 
     /* @ngInject */
     function GroupmapController($scope, $location, $state, $uibModal, _, groupmapService,
-            FacetHandler, facetUrlStateHandlerService) {
+            FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
 
-    	// Range slider config
-        $scope.minRangeSlider = {
-            minValue: (new Date()).getFullYear()-100,
-            maxValue: (new Date()).getFullYear()-50,
-            options: {
-                floor: 1000,
-                ceil: (new Date()).getFullYear(),
-                step: 10,
-                draggableRange: true,
-                onEnd: function () {
-                    fetchResults({ constraint: vm.previousSelections });
-                }
-            }
-        };
-        
-        
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
@@ -58,6 +42,7 @@
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
+            initSlider(config);
             initListener();
         });
         $scope.$on('sf-facet-constraints', updateResults);
@@ -71,6 +56,43 @@
 
         function removeFacetSelections() {
             $state.reload();
+        }
+
+        // TODO: extract slider
+
+        function initSlider(config) {
+            var min = parseInt(_.get(config, 'facets.slider.value.min')) || 1000;
+            var max = parseInt(_.get(config, 'facets.slider.value.max')) || (new Date()).getFullYear()-50;
+            // Range slider config
+            $scope.minRangeSlider = {
+                minValue: min,
+                maxValue: max,
+                options: {
+                    floor: 1000,
+                    ceil: (new Date()).getFullYear(),
+                    step: 10,
+                    draggableRange: true,
+                    onEnd: updateSlider
+                }
+            };
+            updateSlider();
+        }
+
+        function updateSlider() {
+            var min = $scope.minRangeSlider.minValue;
+            var max = $scope.minRangeSlider.maxValue;
+            var constraint =
+            '?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/' +
+            '<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?time__birth . ' +
+            'FILTER (<STARTYEAR><=year(?time__birth) && year(?time__birth)<=<ENDYEAR>) '
+                .replace('<STARTYEAR>', min)
+                .replace('<ENDYEAR>', max);
+            var args = {
+                id: 'slider',
+                value: { min: min, max: max },
+                constraint: constraint
+            };
+            $scope.$emit(EVENT_FACET_CHANGED, args);
         }
 
         function openPage(person) {
@@ -87,11 +109,6 @@
             var options = groupmapService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
-        }
-
-        var latestPageUpdate;
-        function nextPage() {
-            
         }
 
         function isScrollDisabled() {
@@ -118,8 +135,6 @@
             vm.isLoadingResults = true;
             //vm.people = [];
             vm.error = undefined;
-            facetSelections.minYear = $scope.minRangeSlider.minValue;
-            facetSelections.maxYear = $scope.minRangeSlider.maxValue;
             
             var updateId = _.uniqueId();
             latestUpdate = updateId;
@@ -136,7 +151,6 @@
         }
         
         function processEvents(events, vm) {
-        	// console.log(events);
         	var places = {};
         	
         	events.forEach( function(event) {

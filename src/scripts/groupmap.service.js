@@ -177,17 +177,13 @@
 
         // The query for the results.
         // ?id is bound to the person URI.
-        var query = 
+        var query =
         	'SELECT DISTINCT ?id ?evt ?person__name ?time__start ?time__end ?class ?place__uri ?place__label ?place__latitude ?place__longitude WHERE { ' +
         	'  { SELECT DISTINCT ?id WHERE { ' +
-        	'  { <RESULT_SET> } ' +
-        	'	?id foaf:focus ?prs . ' +
-        	'  	?prs ^crm:P98_brought_into_life/nbf:time/gvp:estStart ?time__birth . ' +
-        	'  	FILTER (<STARTYEAR><=year(?time__birth) && year(?time__birth)<=<ENDYEAR>) ' +
-        	'	} LIMIT 2500 } ' +
-        	'  ' +
-        	'	?id foaf:focus ?prs . ' +
-        	'   ?id skosxl:prefLabel ?person__label . ' +
+        	'   { <RESULT_SET> } ' +
+        	'  } LIMIT 2500 } ' +
+        	'  ?id foaf:focus ?prs . ' +
+        	'  ?id skosxl:prefLabel ?person__label . ' +
     		'  OPTIONAL { ?person__label schema:familyName ?person__fname } ' +
     		'  OPTIONAL { ?person__label schema:givenName ?person__gname } ' +
     		'  BIND (CONCAT(COALESCE(?person__gname, "")," ",COALESCE(?person__fname, "")) AS ?person__name) ' +
@@ -240,9 +236,7 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
         function getResults(facetSelections) {
-        	var q = prefixes+query.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
-        		.replace("<STARTYEAR>",facetSelections.minYear)
-        		.replace("<ENDYEAR>",facetSelections.maxYear);
+        	var q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
         	return endpoint.getObjectsNoGrouping(q);
         }
 
