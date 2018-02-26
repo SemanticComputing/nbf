@@ -29,6 +29,8 @@
         // Get the facet options.
         // Return an object.
         this.getFacetOptions = getFacetOptions;
+        
+        
         /* Implementation */
 
         var facets = {
@@ -121,19 +123,7 @@
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Paikkakunta',
                 enabled: true
-            }, /**
-            birthYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
-                name: 'Synnyinaika',
-                enabled: true
-            },
-            deathYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
-                name: 'Kuolinaika',
-                enabled: true
-            }, */
+            }, 
             title: {
                 facetId: 'title',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
@@ -184,7 +174,7 @@
         	'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
 
         // The query for the results.
-        // ?id is bound to the norssit URI.
+        // ?id is bound to the person URI.
         var query = prefixes +
         	' SELECT distinct ?occupation ?education ?organization ?eduorganization ?id ' +
             '  WHERE {' +
@@ -229,8 +219,8 @@
 		'                                     foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
 		'      BIND (year(?time)-year(?birth) AS ?age) ' +
 		'      FILTER (13<?age && ?age<120)} ' +
-		'    GROUP BY ?id } ' +
-		' ' +
+		'   GROUP BY ?id } ' +
+		'   FILTER (BOUND(?id)) ' +
 		' 	?id skosxl:prefLabel ?id__label . ' +
 		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
 		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
@@ -249,7 +239,7 @@
 		'      BIND (year(?time)-year(?birth) AS ?age) ' +
 		'      FILTER (13<?age && ?age<120)} ' +
 		'    GROUP BY ?id } ' +
-		' ' +
+		'   FILTER (BOUND(?id)) ' +
 		' 	?id skosxl:prefLabel ?id__label . ' +
 		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
 		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
@@ -282,6 +272,7 @@
 		'          foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
 		'      FILTER not exists { ?id bioc:has_family_relation/a relations:Child } ' +
 		'	   BIND (0 AS ?value) } ' +
+		'  FILTER (BOUND(?id)) ' +
 		'  ?id skosxl:prefLabel ?id__label . ' +
 		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
 		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
@@ -303,6 +294,7 @@
 		'          foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
 		'      FILTER not exists { ?id bioc:has_family_relation/a relations:Spouse } ' +
 		'	   BIND (0 AS ?value) } ' +
+		'  FILTER (BOUND(?id)) ' +
 		'  ?id skosxl:prefLabel ?id__label . ' +
 		'      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
 		'      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
@@ -317,7 +309,7 @@
             rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
             preferredLang : 'fi'
         };
-
+        
         var endpoint = new AdvancedSparqlService(endpointUrl, objectMapperService);
         
         
