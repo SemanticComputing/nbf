@@ -12,10 +12,7 @@
 Lähde: <a href="http://www.kansallisbiografia.fi">Kansallisbiografia</a>
 <div class="container-fluid thumbnail">
     <div class="col-md-4 pull-md-4 col-lg-3">
-		<div>
-			<br/>Rajaa henkilöiden syntymäaika
-            <rzslider rz-slider-model="minRangeSlider.minValue" rz-slider-high="minRangeSlider.maxValue" rz-slider-options="minRangeSlider.options"></rzslider>
-        </div>
+      <seco-slider-facet data-options="vm.facets.slider"></seco-slider-facet>
 
       <div ng-include="'views/mapfacets.partial.html'"></div>
     </div>

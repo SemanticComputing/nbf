@@ -38,6 +38,13 @@
                 name: 'Haku',
                 enabled: true
             },
+            slider: {
+                facetId: 'slider',
+                name: 'Rajaa henkilöiden syntymäaika',
+                predicate: ('<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/' +
+                    '<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart>'),
+                enabled: true
+            },
             link: {
                 facetId: 'link',
                 choices: [
