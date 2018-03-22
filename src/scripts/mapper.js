@@ -20,7 +20,7 @@
         function PersonMapper() {
             this.objectClass = Object;
         }
-
+        
         function postProcess(objects) {
             objects.forEach(function(person) {
                 person.hasImage = !!person.images;
