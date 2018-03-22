@@ -53,6 +53,11 @@
                         label: 'Wikidata'
                     },
                     {
+                        id: 'fennica',
+                        pattern: '?id <http://ldf.fi/nbf/fennica> [] .',
+                        label: 'Fennica - Suomen kansallisbibliografia'
+                    },
+                    {
                         id: 'sotasampo',
                         pattern: '?id <http://ldf.fi/nbf/warsampo> [] .',
                         label: 'Sotasampo'
@@ -194,6 +199,7 @@
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+        '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
         '  OPTIONAL { ?id nbf:blf ?blf . }' +
@@ -234,6 +240,7 @@
             '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
             '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
             '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+            '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
             '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
