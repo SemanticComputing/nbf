@@ -73,6 +73,18 @@
             controller: 'MapController',
             controllerAs: 'vm'
         })
+        .state('place', {
+            url: '/place/:placeId',
+            templateUrl: 'views/place.html',
+            controller: 'PlaceController',
+            controllerAs: 'vm'
+        })
+        .state('title', {
+            url: '/title/:titleId',
+            templateUrl: 'views/title.html',
+            controller: 'TitleController',
+            controllerAs: 'vm'
+        })
         .state('table', {
             url: '/lista',
             templateUrl: 'views/table.html',

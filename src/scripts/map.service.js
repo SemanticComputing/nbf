@@ -95,14 +95,7 @@
             'endpointUrl': SPARQL_ENDPOINT_URL,
             'usePost': true
         };
-/**
-        var facetOptions_OLD = {
-            endpointUrl: endpointConfig.endpointUrl,
-            rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
-            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
-            preferredLang : 'fi'
-        };
-*/
+
         var resultOptions = {
             mapper: personMapperService,
             queryTemplate: query,
@@ -121,12 +114,7 @@
         function getResults(facetSelections) {
             return resultHandler.getResults(facetSelections, getSortBy());
         }
-        /**
-        function getResults1_OLD(facetSelections) {
-        	var q = query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
-        	return endpoint.getObjectsNoGrouping(q);
-        }
-        */
+        
         function getEvents(id) {
             var qry = prefixes + query;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
@@ -141,25 +129,7 @@
             });
         }
         
-        /**
-        function getPerson(id) {
-            var qry = prefixes + query;
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            //	console.log(qry.replace('<RESULT_SET>', constraint));
-            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
-            .then(function(person) {
-            	// console.log(person);
-                if (person.length) {
-                    return person[person.length-1];
-                }
-                return $q.reject('Not found');
-            });
-        }
-        function getAchievements(person) {
-        	return person;
-        }
-         */
-
+        
         function getFacets() {
             var facetsCopy = angular.copy(facets);
             return $q.when(facetsCopy);
