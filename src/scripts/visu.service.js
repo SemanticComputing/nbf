@@ -118,6 +118,11 @@
                 predicate: '<http://purl.org/dc/terms/source>',
                 name: 'Tietokanta'
             },
+            author: {
+                facetId: 'author',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://schema.org/author>',
+                name: 'Kirjoittaja'
+            },
             place: {
                 facetId: 'place',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',

@@ -118,6 +118,11 @@
                 predicate: '<http://purl.org/dc/terms/source>',
                 name: 'Tietokanta'
             },
+            author: {
+                facetId: 'author',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://schema.org/author>',
+                name: 'Kirjoittaja'
+            },
             birthYear: {
                 facetId: 'birthYear',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
@@ -139,7 +144,7 @@
             title: {
                 facetId: 'title',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
-                name: 'Arvo tai ammatti',
+                name: 'Arvo, ammatti tai toiminta',
                 hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                 depth: 3,
                 enabled: true

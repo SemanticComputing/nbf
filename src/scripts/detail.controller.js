@@ -10,7 +10,7 @@
     .controller('DetailController', DetailController);
 
     /* @ngInject */
-    function DetailController($stateParams, $uibModal, _, nbfService) {
+    function DetailController($stateParams, $uibModal, _, nbfService, $sce) {
     	
         var vm = this;
         
@@ -21,12 +21,25 @@
         function init() {
             nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
+                
+                nbfService.getBios(vm.person.id).then(function(data) {
+                	if (data.length) {
+                		
+                		data.forEach(function(bio) {
+                            if (bio.description) bio.description = $sce.trustAsHtml(bio.description);
+                            if (bio.source_paragraph) bio.source_paragraph = $sce.trustAsHtml(bio.source_paragraph);
+                            if (bio.lead_paragraph) bio.lead_paragraph = $sce.trustAsHtml(bio.lead_paragraph);
+                        });
+                		vm.person.bios = data;
+                	}
+                });
+                
                 nbfService.getSimilar(vm.person.id).then(function(data) {
                 	if (data.length) {
                 		vm.person.similar = data;
-                		// console.log("vm.person.similar", vm.person.similar);
                 	}
                 });
+                
                 return person;
             }).catch(handleError);
         }

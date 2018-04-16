@@ -2,10 +2,13 @@
   <div class="row">
     <div class="col-sm-12">
     <h1>{{ vm.place.label }}</h1>
-    Under Construction
   </div>
   </div>
-  <div class="row">
-    <div ui-view></div>
+  <div class="col-md-8">
+	  <div id="linkContent">
+		  <ws-related-links data-title="'Syntyneet'" data-related="vm.place.born"></ws-related-links>
+		  <ws-related-links data-title="'Tapahtumat'" data-related="vm.place.event"></ws-related-links>
+		  <ws-related-links data-title="'Kuolleet'" data-related="vm.place.died"></ws-related-links>
+	  </div>
   </div>
 </div>

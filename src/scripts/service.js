@@ -29,6 +29,7 @@
         // Get the details of a single person.
         this.getPerson = getPerson;
         this.getSimilar = getSimilar;
+        this.getBios = getBios;
 
         /* Implementation */
 
@@ -122,6 +123,11 @@
                 predicate: '<http://purl.org/dc/terms/source>',
                 name: 'Tietokanta'
             },
+            author: {
+                facetId: 'author',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://schema.org/author>',
+                name: 'Kirjoittaja'
+            },
             birthYear: {
                 facetId: 'birthYear',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
@@ -143,7 +149,7 @@
             title: {
                 facetId: 'title',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
-                name: 'Arvo tai ammatti',
+                name: 'Arvo, ammatti tai toiminta',
                 hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                 depth: 3,
                 enabled: true
@@ -191,6 +197,7 @@
         '  { ' +
         '    <RESULT_SET> ' +
         '  } ' +
+        '  FILTER not exists { ?id owl:sameAs [] }' +
         '  ?id skosxl:prefLabel ?plabel . ' +
         '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
         '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
@@ -275,18 +282,29 @@
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-            '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "0"^^xsd:integer ; nbf:content ?lead_paragraph ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "1"^^xsd:integer ; nbf:content ?description    ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "2"^^xsd:integer ; nbf:content ?family_paragraph ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "3"^^xsd:integer ; nbf:content ?parent_paragraph ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "4"^^xsd:integer ; nbf:content ?spouse_paragraph ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
-            '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
-            '  		}' +
             '  }' +
             ' }';
+        
+        var bioQuery = 
+    		'SELECT DISTINCT * WHERE {' +
+    		' { <RESULT_SET> } ' +
+    		' ?id owl:sameAs*|^owl:sameAs ?prs .' +
+    		' ?prs foaf:focus/nbf:has_biography ?bio .' +
+    		'  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
+    		'  OPTIONAL { ?bio nbf:authors ?author_text }' +
+    		'  OPTIONAL { ?bio schema:dateCreated ?created }' +
+    		'  OPTIONAL { ?bio schema:dateModified ?modified }' +
+    		'  OPTIONAL { ?bio schema:relatedLink ?link }'  +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "0"^^xsd:integer ; nbf:content ?lead_paragraph ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "1"^^xsd:integer ; nbf:content ?description    ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "2"^^xsd:integer ; nbf:content ?family_paragraph ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "3"^^xsd:integer ; nbf:content ?parent_paragraph ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "4"^^xsd:integer ; nbf:content ?spouse_paragraph ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
+    		'  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
+    		'} ORDER BY str(?source) ';
+    	
         
         //	http://yasgui.org/short/rywI3KnBz
         var querySimilar = 
@@ -355,11 +373,17 @@
             });
         }
         
+        function getBios(id) {
+        	var qry = prefixes + bioQuery;
+        	var constraint = 'VALUES ?id { <' + id + '> } . ';
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(result) {
+            	return result;
+            });
+        }
         function getSimilar(id) {
-        	// console.log("getSimilar", id);
-            var qry = prefixes + querySimilar;
+        	var qry = prefixes + querySimilar;
             var constraint = 'VALUES ?id { <' + id + '> } . ';
-            // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
             	return result;

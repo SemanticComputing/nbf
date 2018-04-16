@@ -19,10 +19,40 @@
         init();
         
         function init() {
-        	placeService.getPlace($stateParams.placeId).then(function(places) {
-                vm.place = places[0];
+        	placeService.getPlace($stateParams.placeId).then(function(events) {
+        		console.log(events);
+        		handleEvents(events, vm);
+        		console.log(vm.place);
                 return vm.place;
             }).catch(handleError);
+        }
+        
+        function handleEvents(events, vm) {
+        	var born = [],
+        		died = [],
+        		evented = [];
+        	
+        	events.forEach(function(event) {
+        		var prs = event.prs;
+        	    
+        		switch(prs.event) {
+	        	    case "http://ldf.fi/nbf/Birth":
+	        	    	born.push(prs);
+	        	        break;
+	        	    case "http://ldf.fi/nbf/Death":
+	        	    	died.push(prs);
+	        	        break;
+	        	    default:
+	        	    	prs.label = prs.label + ': ' + prs.eventLabel;
+	        	    evented.push(prs);
+        		}
+        	});
+        	
+        	vm.place = { id: events[0].id, label: events[0].label };
+        	vm.place.born = born;
+        	vm.place.died = died;
+        	vm.place.event = evented;
+        	
         }
         
         function openPage() {

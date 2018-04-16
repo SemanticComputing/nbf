@@ -320,7 +320,7 @@
         		arr = [],
         		texts = [{'x': -2.5 , 'y':0, 'content': 'Elinkaari'},
         			{'x': -2.5 , 'y':5, 'content': 'Ura'},
-        			{'x': -2.5 , 'y':10, 'content': 'Saavutukset'},
+        			{'x': -2.5 , 'y':10, 'content': 'Teokset'},
         			{'x': -2.5 , 'y':15, 'content': 'Kunniamaininnat'}];
 
         	//	vertical lines every ten years

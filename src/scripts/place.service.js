@@ -43,15 +43,24 @@
         	'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
 
         // The query for the results.
-        // ?id is bound to the person URI.
+        // ?id is bound to the place URI.
         var query = prefixes +
-        	' SELECT distinct ?id ?label ' +
-            '  WHERE {' +
-            '  	 { <RESULT_SET> } ' +
-        	'   ?id a nbf:Place ; ' +
-        	'   skos:prefLabel ?label .' +
-        	'}';
-            
+        ' SELECT distinct ?id ?label ?prs__event ?prs__eventLabel ?prs__id ?prs__label ' +
+    	' WHERE { ' +
+    	'   { <RESULT_SET> } ' +
+    	'   ?id a nbf:Place ; ' +
+    	'       skos:prefLabel ?label . FILTER (lang(?label)="fi") ' +
+    	'   { OPTIONAL { ?prs__id foaf:focus/^crm:P98_brought_into_life [ nbf:place ?id ; a ?prs__event ] } ' +
+    	'   } UNION { ' +
+    	'   OPTIONAL { ?prs__id foaf:focus/^crm:P100_was_death_of [ nbf:place ?id ; a ?prs__event ] } ' +
+    	'   } UNION { ' +
+    	'    OPTIONAL { ?prs__id foaf:focus/^bioc:inheres_in  [ nbf:place ?id ; a ?prs__event ; skos:prefLabel ?prs__eventLabel ] } ' +
+    	'   } ' +
+    	'   ?prs__id skosxl:prefLabel ?prs__lab . ' +
+    	'     OPTIONAL { ?prs__lab schema:familyName ?prs__fname } ' +
+    	'     OPTIONAL { ?prs__lab schema:givenName ?prs__gname } ' +
+    	'     BIND (CONCAT(COALESCE(?prs__gname, "")," ",COALESCE(?prs__fname, "")) AS ?prs__label ) ' +
+    	' } ';
        
         // The SPARQL endpoint URL
         var endpointUrl = SPARQL_ENDPOINT_URL;
@@ -67,6 +76,7 @@
         function getPlace(id) {
         	var cons = 'VALUES ?id { <' + id + '> } . ',
         		q = query.replace("<RESULT_SET>", cons);
+        	// console.log(q);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         
