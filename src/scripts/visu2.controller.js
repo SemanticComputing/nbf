@@ -118,7 +118,7 @@
 				
 				data = new google.visualization.DataTable(),
 				options = {
-				    title: label+", keskiarvo: "+stats[0].toFixed(2) +', keskihajonta: '+stats[1].toFixed(2) ,
+				    title: label+", otos: "+stats[0]+", keskiarvo: "+stats[1].toFixed(2) +', keskihajonta: '+stats[2].toFixed(2) ,
 				    legend: { position: 'none' },
 				    
             		tooltip: {format: 'none'},
@@ -181,9 +181,9 @@
 			if (count>0) {
 				var mu=sum/count;
 				//	median, standard deviation
-				return [mu, Math.sqrt(sum2/count-mu*mu)];
+				return [count, mu, Math.sqrt(sum2/count-mu*mu)];
 			} 
-			return [0.0, 0.0];
+			return [0.0, 0.0, 0.0];
 		}
 		
 		function countByProperty(data, prop) {
