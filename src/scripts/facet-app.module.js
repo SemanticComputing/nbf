@@ -103,6 +103,12 @@
             controller: 'CardsController',
             controllerAs: 'vm',
         })
+        .state('nlp', {
+            url: '/nlp',
+            templateUrl: 'views/nlp.html',
+            controller: 'NlpController',
+            controllerAs: 'vm',
+        })
         .state('visualizations', {
             abstract: true
         })
