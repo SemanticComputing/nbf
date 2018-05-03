@@ -81,7 +81,7 @@
         };
 
         var nlpEndpointConfig = {
-            'endpointUrl': 'http://ldf.fi/nbf-nlp/sparql',
+            'endpointUrl': 'https://ldf.fi/nbf-nlp/sparql',
             'usePost': true
         };
 
