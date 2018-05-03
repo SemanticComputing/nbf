@@ -337,7 +337,7 @@
         var facetOptions = {
             endpointUrl: endpointConfig.endpointUrl,
             rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
-            constraint: '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
+            constraint: '?id <http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://schema.org/familyName> ?familyName . ?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
             preferredLang : 'fi',
             noSelectionString: '-- Ei valintaa --'
         };

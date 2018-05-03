@@ -48,8 +48,11 @@
                 <div ng-if="::person.wikidata" class="col-xs-6">
                   <a ng-href="{{ ::person.wikidata }}">Wikidata</a>
                 </div>
-                <div ng-if="::person.fennica" class="col-xs-6">
-                  <a ng-href="{{ ::person.fennica }}">Fennica</a>
+                <div ng-if="::person.fennica[0]" class="col-xs-6">
+                  <a ng-href="{{ ::person.fennica[0] }}">Fennica</a>
+                </div>
+                <div ng-if="::person.fennica[1]" class="col-xs-6">
+                  <a ng-href="{{ ::person.fennica[1] }}">Fennica (2)</a>
                 </div>
                 <div ng-if="::person.warsampo" class="col-xs-6">
                   <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ ::person.warsampo }}">Sotasampo</a>

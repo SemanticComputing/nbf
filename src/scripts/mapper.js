@@ -37,15 +37,21 @@
                 		.replace('http://ldf.fi/norssit/','')
                 }
                 
-                /**	convert format 
-                 * http://urn.fi/URN:NBN:fi:au:pn:000103310
-                 * into
-                 * http://data.nationallibrary.fi/au/pn/000103310
-                */
+                
                 if (person.fennica) {
-                	person.fennica = 'http://data.nationallibrary.fi/'+
-                		person.fennica.replace('http://urn.fi/URN:NBN:fi:', '')
-                			.replace(/:/g,'/');
+                	if (person.fennica.constructor !== Array) {
+                		person.fennica = [person.fennica];
+                	}
+                	for (var i=0; i<person.fennica.length; i++) {
+                		/**	convert format 
+                         * http://urn.fi/URN:NBN:fi:au:pn:000103310
+                         * into
+                         * http://data.nationallibrary.fi/au/pn/000103310
+                        */
+                		person.fennica[i] = 'http://data.nationallibrary.fi/'+
+                			person.fennica[i].replace('http://urn.fi/URN:NBN:fi:', '')
+                				.replace(/:/g,'/');
+                	}
                 }
                 //	join the names of couples ["Heikki", "Kaija"] -> "Heikki ja Kaija"
                 if (person.givenName.constructor === Array && person.givenName.length==2) {
