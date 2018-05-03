@@ -16,6 +16,7 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getStatistics = getStatistics;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = facetService.getFacets;
@@ -28,19 +29,20 @@
         /* Implementation */
 
         var prefixes =
-            ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
             ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
             ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-            ' PREFIX schema: <http://schema.org/> ' +
             ' PREFIX dct: <http://purl.org/dc/terms/> ' +
             ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
             ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
             ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
             ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
+            ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
             ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
-            ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+            ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
             ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
             ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+            ' PREFIX conll: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
+            ' PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> ' +
             ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
 
         // The query for the results.
@@ -54,16 +56,24 @@
 
         var lemmaQry = prefixes +
             ' SELECT DISTINCT ?lemma (COUNT(?lemma) AS ?count) { ' +
-            '   VALUES ?doc { <DOC> } ' +
-            '   ?structure 	<http://ldf.fi/nbf/biography/data#bioId> ?doc . ' +
-            '   ?s rdf:type <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Sentence> ; ' +
-            '       <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#structure> ?structure . ' +
-            '   ?word <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#sentence> ?s . ' +
-            '   ?word <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#UPOS> "<UPOS>" . ' +
-            '   ?word <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#LEMMA> ?lemma . ' +
-            '   FILTER(STRLEN(STR(?lemma))>1) ' +
+            '  VALUES ?doc { <DOC> } ' +
+            '  ?s nif:structure/<http://ldf.fi/nbf/biography/data#bioId> ?doc . ' +
+            '  ?s a nif:Sentence . ' +
+            '  ?word nif:sentence ?s . ' +
+            '  ?word conll:UPOS "<UPOS>" . ' +
+            '  ?word conll:LEMMA ?lemma . ' +
+            '  FILTER(STRLEN(STR(?lemma))>1) ' +
             ' } GROUP BY ?lemma ORDER BY DESC(?count) LIMIT 50';
 
+
+        var docCountByDecadeQry = prefixes +
+            ' SELECT DISTINCT ?year (COUNT(distinct ?id) AS ?count) { ' +
+            '  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+            '  ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+            '  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?year) ' +
+            ' } GROUP BY ?year ORDER BY ?year ';
 
         var nbfEndpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -87,10 +97,20 @@
         var endpoint = new AdvancedSparqlService(nlpEndpointConfig, objectMapperService);
         var nbfEndpoint = new AdvancedSparqlService(nbfEndpointConfig, objectMapperService);
 
+        function getStatistics(facetSelections) {
+            var qry = docCountByDecadeQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            return nbfEndpoint.getObjectsNoGrouping(qry);
+        }
+
         function getResults(facetSelections) {
             var self = this;
             var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
+                if (results.length > 10000) {
+                    return $q.reject({
+                        message: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
+                    });
+                }
                 var promises = {};
                 var uposQry = lemmaQry.replace(/<DOC>/g, '<' + _.map(results, 'id').join('> <') + '>');
 

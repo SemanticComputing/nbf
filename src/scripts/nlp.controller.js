@@ -16,7 +16,7 @@
     .controller('NlpController', NlpController);
 
     /* @ngInject */
-    function NlpController($log, $scope, $state, _, nlpService, FacetHandler, facetUrlStateHandlerService) {
+    function NlpController($log, $scope, $state, _, google, nlpService, FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
 
@@ -55,6 +55,45 @@
             return fetchResults(facetSelections);
         }
 
+
+        function drawChart(results) {
+            google.charts.setOnLoadCallback(function () {
+                var data = new google.visualization.DataTable();
+                var ticks = _.map(results, function(res) { return parseInt(res.year); });
+                var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
+                var options = {
+                    title: 'Biografiajakauma vuosikymmenittäin',
+                    legend: { position: 'none' },
+
+                    tooltip: {format: 'none'},
+                    colors: ['blue'],
+
+                    hAxis: {
+                        slantedText: false,
+                        maxAlternation: 1,
+                        format: '',
+                        ticks: ticks
+                    },
+                    vAxis: {
+                        maxValue: 4
+                    },
+                    width: '95%',
+                    bar: {
+                        groupWidth: '88%'
+                    },
+                    height: 500
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('biography-chart'));
+
+                data.addColumn('string', 'Vuosikymmen');
+                data.addColumn('number', 'Biografioita');
+
+                data.addRows(rows);
+                chart.draw(data, options);
+            });
+        }
+
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
@@ -64,12 +103,19 @@
             var updateId = _.uniqueId();
             latestUpdate = updateId;
 
-            return nlpService.getResults(facetSelections).then(function(results) {
+            return nlpService.getStatistics(facetSelections).then(function(results) {
                 if (latestUpdate !== updateId) {
                     return;
                 }
-                vm.results = results;
-                vm.isLoadingResults = false;
+                drawChart(results);
+            }).then(function() {
+                return nlpService.getResults(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.results = results;
+                    vm.isLoadingResults = false;
+                });
             }).catch(handleError);
         }
 

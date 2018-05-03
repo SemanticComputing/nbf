@@ -13,6 +13,10 @@
     <div class="col-md-9 col-lg-10" min-height="500">
       <img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>
 
+      <div id="biography-chart"></div>
+
+      <div ng-show="vm.error" class="alert alert-info" role="alert">{{ vm.error.message }}</div>
+
       <div class="col-md-3" ng-repeat="key in vm.upos">
       <table>
         <th>{{ key }}</th>

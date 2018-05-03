@@ -18,6 +18,7 @@
     ])
 
     .constant('_', _) // eslint-disable-line no-undef
+    .constant('google', google) // eslint-disable-line no-undef
     .constant('RESULTS_PER_PAGE', 25)
     .constant('PAGES_PER_QUERY', 1)
 
@@ -25,6 +26,10 @@
 
     .run(function(authStorage) {
         authStorage.init();
+    })
+
+    .run(function(google) {
+        google.charts.load('current', { packages: ['corechart', 'line'] });
     })
 
     .config(function($urlMatcherFactoryProvider) {
