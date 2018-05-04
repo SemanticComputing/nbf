@@ -82,8 +82,7 @@
     	'' +
     	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
     	'  OPTIONAL { ?id nbf:place ?place__uri . ' +
-    	// '    	filter (isUri(?place__uri)) ' +
-    	'    	?place__uri geo:lat ?place__latitude ; ' +
+    	'    	?place__uri geo:lat ?place__latitude ;' +
     	'            geo:long ?place__longitude  ;' +
     	'    		skos:prefLabel ?place__name .' +
     	'  } ' +

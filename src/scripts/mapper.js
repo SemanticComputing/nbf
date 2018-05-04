@@ -39,6 +39,7 @@
                 
                 
                 if (person.fennica) {
+                	// couples might have several fennica links:
                 	if (person.fennica.constructor !== Array) {
                 		person.fennica = [person.fennica];
                 	}
