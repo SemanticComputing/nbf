@@ -55,7 +55,7 @@
         ' SELECT DISTINCT * WHERE {' +
         '  { ' +
         '    <RESULT_SET> ' +
-        '  } ' +
+        '  }' +
         '  FILTER not exists { ?id owl:sameAs [] }' +
         '  ?id skosxl:prefLabel ?plabel . ' +
         '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
@@ -90,7 +90,7 @@
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
         '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
         '  		}' +
-        '  }' +
+        ' }' +
         ' }';
 
         var detailQuery =
@@ -146,7 +146,7 @@
 
         var bioQuery =
             'SELECT DISTINCT * WHERE {' +
-            ' { <RESULT_SET> } ' +
+            ' { <RESULT_SET> }' +
             ' ?id owl:sameAs*|^owl:sameAs ?prs .' +
             ' ?prs foaf:focus/nbf:has_biography ?bio .' +
             '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
@@ -162,7 +162,7 @@
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
-            '} ORDER BY str(?source) ';
+            '} ORDER BY str(?source)';
 
 
         //	http://yasgui.org/short/rywI3KnBz

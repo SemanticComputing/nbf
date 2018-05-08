@@ -29,6 +29,12 @@
                 name: 'Haku',
                 enabled: true
             },
+            dataset: {
+                facetId: 'dataset',
+                predicate: '<http://purl.org/dc/terms/source>',
+                name: 'Tietokanta',
+                enabled: true
+            },
             link: {
                 facetId: 'link',
                 choices: [
@@ -94,7 +100,7 @@
                     }
                 ],
                 enabled: true,
-                name: 'Linkit'
+                name: 'Linkitetyt tietokannat'
             },
             period: {
                 facetId: 'period',
@@ -106,11 +112,6 @@
                 facetId: 'familyName',
                 predicate: '<http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://schema.org/familyName>',
                 name: 'Sukunimi'
-            },
-            dataset: {
-                facetId: 'dataset',
-                predicate: '<http://purl.org/dc/terms/source>',
-                name: 'Tietokanta'
             },
             author: {
                 facetId: 'author',
@@ -153,7 +154,7 @@
             category: {
                 facetId: 'category',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
-                name: 'Kategoria',
+                name: 'Toimiala',
                 enabled: true
             },
             gender: {

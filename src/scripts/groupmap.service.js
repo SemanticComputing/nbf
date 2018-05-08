@@ -38,6 +38,11 @@
                 name: 'Haku',
                 enabled: true
             },
+            dataset: {
+                facetId: 'dataset',
+                predicate: '<http://purl.org/dc/terms/source>',
+                name: 'Tietokanta'
+            },
             slider: {
                 facetId: 'slider',
                 name: 'Rajaa henkilöiden syntymäaika',
@@ -113,11 +118,6 @@
                 name: 'Ajanjakso',
                 enabled: true
             },
-            dataset: {
-                facetId: 'dataset',
-                predicate: '<http://purl.org/dc/terms/source>',
-                name: 'Tietokanta'
-            },
             author: {
                 facetId: 'author',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://schema.org/author>',
@@ -158,7 +158,7 @@
             category: {
                 facetId: 'category',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
-                name: 'Kategoria',
+                name: 'Toimiala',
                 enabled: true
             },
             gender: {
