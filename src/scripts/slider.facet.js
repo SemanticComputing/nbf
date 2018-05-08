@@ -115,7 +115,7 @@
                 this.disable();
             }
             this.internalId = _.uniqueId();
-            var min = parseInt(this.config.min) || 1000;
+            var min = parseInt(this.config.min) || 200;
             var max = parseInt(this.config.max) || new Date().getFullYear();
             // Range slider config
             this.slider = {

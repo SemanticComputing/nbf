@@ -136,8 +136,9 @@
                 enabled: true
             },
             title: {
-                facetId: 'title',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
+                facetId: 'title', 
+                //	nb do not remove /<http://www.w3.org/2004/02/skos/core#prefLabel> from the end of property path
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Arvo, ammatti tai toiminta',
                 hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                 depth: 3,

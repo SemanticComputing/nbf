@@ -60,7 +60,7 @@
         '  ?id skosxl:prefLabel ?plabel . ' +
         '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
         '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
-        ' ' +
+        '' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
@@ -125,7 +125,7 @@
             '  		bioc:inverse_role/skos:prefLabel ?relative__type ] . } ' +
             '  		FILTER (LANG(?relative__type)="fi") ' +
             '  		?relative__id skosxl:prefLabel/schema:familyName ?relative__familyName ; ' +
-            '			skosxl:prefLabel/schema:givenName ?relative__givenName .' +
+            '		      skosxl:prefLabel/schema:givenName ?relative__givenName .' +
             '  		BIND (replace(concat(?relative__givenName," ",?relative__familyName),"[(][^)]+[)]\\\\s*","") AS ?relative__name)  ' +
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
@@ -217,7 +217,7 @@
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
-                if (person.length) {
+            	if (person.length) {
                     return person[person.length-1];
                 }
                 return $q.reject('Not found');
@@ -255,10 +255,19 @@
                 sortBy = '?ordinal';
             }
             var sort;
-            if ($location.search().desc) {
-                sort = 'DESC(' + sortBy + ')';
+            
+            if (sortBy === '?ordinal') {
+	            if ($location.search().desc) {
+	                sort = sortBy;
+	            } else {
+	                sort = 'DESC(' + sortBy + ')';
+	            }
             } else {
-                sort = sortBy;
+            	if ($location.search().desc) {
+	                sort = 'DESC(' + sortBy + ')';
+	            } else {
+	                sort = sortBy;
+	            }
             }
             return sortBy === '?ordinal' ? sort : sort + ' ?ordinal';
         }
@@ -266,12 +275,21 @@
         function getSortClass(sortBy, numeric) {
             var sort = $location.search().sortBy || '?ordinal';
             var cls = numeric ? 'glyphicon-sort-by-order' : 'glyphicon-sort-by-alphabet';
-
-            if (sort === sortBy) {
-                if ($location.search().desc) {
-                    return cls + '-alt';
-                }
-                return cls;
+            
+            if (sortBy === '?ordinal') {
+	            if (sort === sortBy) {
+	                if ($location.search().desc) {
+	                    return cls;
+	                }
+	                return cls + '-alt';
+	            }
+            } else {
+            	if (sort === sortBy) {
+	                if ($location.search().desc) {
+	                    return cls + '-alt';
+	                }
+	                return cls;
+	            }
             }
         }
     }
