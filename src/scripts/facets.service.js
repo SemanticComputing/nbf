@@ -33,6 +33,7 @@
                 facetId: 'dataset',
                 predicate: '<http://purl.org/dc/terms/source>',
                 name: 'Tietokanta',
+                chart: true,
                 enabled: true
             },
             link: {
@@ -99,6 +100,7 @@
                         label: 'Eduskunta'
                     }
                 ],
+                chart: true,
                 enabled: true,
                 name: 'Linkitetyt tietokannat'
             },
@@ -106,16 +108,19 @@
                 facetId: 'period',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Ajanjakso',
+                chart: true,
                 enabled: true
             },
             familyName: {
                 facetId: 'familyName',
                 predicate: '<http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://schema.org/familyName>',
+                chart: true,
                 name: 'Sukunimi'
             },
             author: {
                 facetId: 'author',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://schema.org/author>',
+                chart: true,
                 name: 'Kirjoittaja'
             },
             birthYear: {
@@ -128,6 +133,7 @@
                 facetId: 'place',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Paikkakunta',
+                chart: true,
                 enabled: true
             },
             deathYear: {
@@ -137,30 +143,34 @@
                 enabled: true
             },
             title: {
-                facetId: 'title', 
+                facetId: 'title',
                 //	nb do not remove /<http://www.w3.org/2004/02/skos/core#prefLabel> from the end of property path
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Arvo, ammatti tai toiminta',
                 hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                 depth: 3,
+                chart: true,
                 enabled: true
             },
             company: {
                 facetId: 'company',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>',
                 name: 'Yritys tai yhteisö',
+                chart: true,
                 enabled: true
             },
             category: {
                 facetId: 'category',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
                 name: 'Toimiala',
+                chart: true,
                 enabled: true
             },
             gender: {
                 facetId: 'gender',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
                 name: 'Sukupuoli',
+                chart: true,
                 enabled: true
             }
         };
