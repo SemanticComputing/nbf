@@ -136,3 +136,8 @@ a.no-style {
   position: relative;
   z-index: 9999;
 }
+
+img.logo {
+  height: 45px;
+  padding: 5px 20px 0 10px;
+ }
