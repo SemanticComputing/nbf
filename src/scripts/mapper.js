@@ -22,12 +22,12 @@
         }
         
         function postProcess(objects) {
+        	
             objects.forEach(function(person) {
                 person.hasImage = !!person.images;
                 person.images = person.images ? _.castArray(person.images) : ['images/person_placeholder.svg'];
                 if (person.description) {
                 	person.description = $sce.trustAsHtml(person.description);
-                	console.log(person.description);
                 }
                 if (person.source_paragraph) person.source_paragraph = $sce.trustAsHtml(person.source_paragraph);
                 if (person.lead_paragraph) person.lead_paragraph = $sce.trustAsHtml(person.lead_paragraph);
@@ -54,11 +54,16 @@
                 				.replace(/:/g,'/');
                 	}
                 }
+                
+                person.givenName = person.givenName || "";
+                person.familyName = person.familyName || "";
+                
                 //	join the names of couples ["Heikki", "Kaija"] -> "Heikki ja Kaija"
                 if (person.givenName.constructor === Array && person.givenName.length==2) {
                 	person.givenName = person.givenName[0] +' ja '+person.givenName[1];
                 }
             });
+            
             return objects;
         }
     }
