@@ -1,9 +1,9 @@
-<div class="col-sm-12 col-md-8 text-center" ng-show="vm.person">
+<div class="col-sm-12 col-md-8 text-center">
   <div class="col-sm-12" ng-show="!vm.person && !vm.error">
       <img class="loading-img" src="images/loading-lg.gif"></img>
     </div>
 	 <h1>{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
-      <div class="thumbnail">
+      <div class="thumbnail" ng-show="vm.person">
         <div class="person-profile-img">
           <div class="row">
             <div class="col-sm-12 text-center">
@@ -11,7 +11,7 @@
             </div>
           </div>
         </div>
-        <div class="caption">
+        <div class="caption" ng-show="vm.person">
           <div class="visible-caption">
             <div class="row">
               <div class="col-xs-12">
@@ -78,7 +78,7 @@
             <div ng-if="vm.person.relative" class="row padded-row">
               <div class="col-xs-12"><h4>Sukulaiset:</h4></div>
               <div class="col-sm-6 col-md-12" ng-repeat="relative in vm.person.relative | castArray">
-                {{ relative.type }}<a ui-sref="person.detail({ personId: relative.id })"> {{ relative.name }}</a>
+                {{ relative.type }} <a ui-sref="person.detail({ personId: relative.id })">{{ relative.name }}</a>
               </div>
             </div>
             <div ng-if="vm.person.hobby" class="row padded-row">

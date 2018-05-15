@@ -33,8 +33,7 @@
                 if (person.lead_paragraph) person.lead_paragraph = $sce.trustAsHtml(person.lead_paragraph);
                 
                 if (person.norssi) {
-                	person.norssi = person.norssi
-                		.replace('http://ldf.fi/norssit/','')
+                	person.norssi = person.norssi.replace('http://ldf.fi/norssit/','')
                 }
                 
                 
@@ -55,10 +54,14 @@
                 	}
                 }
                 
-                person.givenName = person.givenName || "";
-                person.familyName = person.familyName || "";
+                if (!person.givenName) {
+                	person.givenName = ""; 
+                }
+                if (!person.familyName) { 
+                	person.familyName = ""; 
+                }
                 
-                //	join the names of couples ["Heikki", "Kaija"] -> "Heikki ja Kaija"
+                //	join the names of couples ["Heikki", "Kaija"] - > "Heikki ja Kaija"
                 if (person.givenName.constructor === Array && person.givenName.length==2) {
                 	person.givenName = person.givenName[0] +' ja '+person.givenName[1];
                 }

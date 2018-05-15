@@ -124,11 +124,10 @@
             '  		bioc:inheres_in ?id ; ' +
             '  		bioc:inverse_role/skos:prefLabel ?relative__type ] . } ' +
             '  		FILTER (LANG(?relative__type)="fi") ' +
-            
             '  		?relative__id skosxl:prefLabel ?relative__label . ' +
             '  		OPTIONAL { ?relative__label schema:familyName ?relative__familyName } ' +
             '  		OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
-            '  		BIND (REPLACE(CONCAT(COALESCE(?relative__givenName,"")," ",COALESCE(?relative__familyName),""),"[(][^)]+[)]\\\\s*","") AS ?relative__name) ' + 
+            '  		BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?relative__name)  ' + 
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
