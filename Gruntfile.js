@@ -10,6 +10,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-cdnify');
     grunt.loadNpmTasks('grunt-replace');
+    grunt.loadNpmTasks('grunt-contrib-uglify-es');
 
     // Automatically load required Grunt tasks
     require('jit-grunt')(grunt, {
@@ -358,7 +359,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '.tmp/concat/scripts',
-                    src: '*.js',
+                    src: 'scripts.js',
                     dest: '.tmp/concat/scripts'
                 }]
             }
