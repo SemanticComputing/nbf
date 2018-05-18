@@ -7,27 +7,21 @@
 
     'use strict';
 
-    /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
 
     /*
     * Controller for the results view.
     */
-    .controller('NlpController', NlpController);
+    .controller('NlpStatisticsController', NlpStatisticsController);
 
     /* @ngInject */
-    function NlpController($log, $scope, $state, _, google, nlpService, FacetHandler, facetUrlStateHandlerService) {
+    function NlpStatisticsController($log, $scope, $state, _, google, nlpService, FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
 
-        vm.removeFacetSelections = removeFacetSelections;
+        vm.hasResults = hasResults;
         vm.upos = nlpService.upos;
-
-        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-            updateResults(event, config);
-            initListener();
-        });
-        $scope.$on('sf-facet-constraints', updateResults);
+        vm.removeFacetSelections = removeFacetSelections;
 
         nlpService.getFacets().then(function(facets) {
             vm.facets = facets;
@@ -36,8 +30,18 @@
             vm.handler = new FacetHandler(vm.facetOptions);
         });
 
+        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
+            updateResults(event, config);
+            initListener();
+        });
+        $scope.$on('sf-facet-constraints', updateResults);
+
         function removeFacetSelections() {
             $state.reload();
+        }
+
+        function hasResults() {
+            return _.keys(vm.results).length > 0;
         }
 
         function getFacetOptions() {
@@ -116,13 +120,15 @@
                     vm.results = results;
                     vm.isLoadingResults = false;
                 });
-            }).catch(handleError);
+            }).catch(function(error) { return handleError(error, updateId); });
         }
 
-        function handleError(error) {
-            vm.isLoadingResults = false;
-            vm.error = error;
-            $log.error(error);
+        function handleError(error, updateId) {
+            if (updateId === latestUpdate) {
+                vm.isLoadingResults = false;
+                vm.error = error;
+                $log.error(error);
+            }
         }
     }
 })();

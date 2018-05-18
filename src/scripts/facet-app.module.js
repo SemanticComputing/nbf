@@ -110,9 +110,34 @@
         })
         .state('nlp', {
             url: '/nlp',
+            abstract: true,
             templateUrl: 'views/nlp.html',
-            controller: 'NlpController',
+        })
+        .state('nlp.statistics', {
+            url: '',
+            templateUrl: 'views/nlp.statistics.html',
+            controller: 'NlpStatisticsController',
             controllerAs: 'vm',
+        })
+        .state('nlp.comparison', {
+            url: '/vertaa',
+            abstract: true,
+            templateUrl: 'views/nlp.comparison.html',
+        })
+        .state('nlp.comparison.sides', {
+            url: '',
+            views: {
+                'left': {
+                    templateUrl: 'views/nlp.comparison.left.html',
+                    controller: 'NlpComparisonController',
+                    controllerAs: 'vm',
+                },
+                'right': {
+                    templateUrl: 'views/nlp.comparison.right.html',
+                    controller: 'NlpComparisonController',
+                    controllerAs: 'vm',
+                }
+            }
         })
         .state('visualizations', {
             abstract: true
