@@ -114,6 +114,25 @@
             controller: 'NlpController',
             controllerAs: 'vm',
         })
+        .state('comparison', {
+            abstract: true,
+            templateUrl: 'views/nlp.comparison.html',
+        })
+        .state('comparison.sides', {
+            url: '/nlp/vertaa',
+            views: {
+                left: {
+                    templateUrl: 'views/nlp.comparison.left.html',
+                    controller: 'NlpComparisonController',
+                    controllerAs: 'vm',
+                },
+                right: {
+                    templateUrl: 'views/nlp.comparison.right.html',
+                    controller: 'NlpComparisonController',
+                    controllerAs: 'vm',
+                }
+            }
+        })
         .state('visualizations', {
             abstract: true
         })

@@ -116,13 +116,15 @@
                     vm.results = results;
                     vm.isLoadingResults = false;
                 });
-            }).catch(handleError);
+            }).catch(function(error) { return handleError(error, updateId); });
         }
 
-        function handleError(error) {
-            vm.isLoadingResults = false;
-            vm.error = error;
-            $log.error(error);
+        function handleError(error, updateId) {
+            if (updateId === latestUpdate) {
+                vm.isLoadingResults = false;
+                vm.error = error;
+                $log.error(error);
+            }
         }
     }
 })();

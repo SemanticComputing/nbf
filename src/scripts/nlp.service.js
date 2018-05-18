@@ -108,7 +108,7 @@
             return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
                 if (results.length > 10000) {
                     return $q.reject({
-                        message: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
+                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });
                 }
                 var promises = {};

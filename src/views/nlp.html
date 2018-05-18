@@ -15,7 +15,7 @@
 
       <div id="biography-chart"></div>
 
-      <div ng-show="vm.error" class="alert alert-info" role="alert">{{ vm.error.message }}</div>
+      <div ng-show="vm.error" class="alert alert-danger" role="alert">{{ vm.error.statusText }}</div>
 
       <div class="col-md-3" ng-repeat="key in vm.upos">
       <table>
