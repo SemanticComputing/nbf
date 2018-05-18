@@ -78,7 +78,7 @@
             <div ng-if="vm.person.relative" class="row padded-row">
               <div class="col-xs-12"><h4>Sukulaiset:</h4></div>
               <div class="col-sm-6 col-md-12" ng-repeat="relative in vm.person.relative | castArray">
-                {{ relative.type }} <a ui-sref="person.detail({ personId: relative.id })">{{ relative.name }}</a>
+                <a ui-sref="person.detail({ personId: relative.id })">{{ relative.type }} {{ relative.name }}</a>
               </div>
             </div>
             <div ng-if="vm.person.hobby" class="row padded-row">
