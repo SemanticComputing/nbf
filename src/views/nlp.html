@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-2 col-sm-2 col-xs-2 vcenter push-xs-2">
@@ -15,18 +14,7 @@
 
       <div id="biography-chart"></div>
 
-      <div ng-show="vm.error" class="alert alert-danger" role="alert">{{ vm.error.statusText }}</div>
-
-      <div class="col-md-3" ng-repeat="key in vm.upos">
-      <table>
-        <th>{{ key }}</th>
-        <th>Lkm</th>
-        <tr ng-repeat="word in vm.results[key]">
-          <td>{{ word.lemma }}</td>
-          <td>{{ word.count }}</td>
-        </tr>
-      </table>
-      </div>
+      <div ng-include="'views/nlp.comparison.results.partial.html'"></div>
 
     </div>
   </div>

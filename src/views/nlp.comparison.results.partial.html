@@ -1,0 +1,19 @@
+<div ng-show="vm.error" class="comparison-result-error alert alert-danger" role="alert">
+  {{ vm.error.statusText }}
+</div>
+
+<div ng-show="vm.hasResults()" class="col-md-3 col-sm-2" ng-repeat="upos in vm.upos">
+  <table class="comparison-results">
+    <colgroup>
+      <col class="word" />
+      <col class="count" />
+    </colgroup>
+    <th>{{ upos.label }}</th>
+    <th>Lkm</th>
+    <tr ng-repeat="word in vm.results[upos.key]">
+      <td>{{ word.lemma }}</td>
+      <td>{{ word.count }}</td>
+    </tr>
+  </table>
+</div>
+<img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>

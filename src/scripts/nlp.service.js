@@ -24,7 +24,28 @@
         // Return an object.
         this.getFacetOptions = getFacetOptions;
 
-        this.upos = ['VERB', 'NOUN', 'ADJ', 'PROPN'];
+        this.upos = [
+            {
+                key: 'VERB',
+                label: 'Verbi'
+
+            },
+            {
+                key: 'NOUN',
+                label: 'Substantiivi'
+
+            },
+            {
+                key: 'ADJ',
+                label: 'Adjektiivi'
+
+            },
+            {
+                key: 'PROPN',
+                label: 'Erisnimi'
+
+            },
+        ];
 
         /* Implementation */
 
@@ -115,7 +136,7 @@
                 var uposQry = lemmaQry.replace(/<DOC>/g, '<' + _.map(results, 'id').join('> <') + '>');
 
                 self.upos.forEach(function(upos) {
-                    promises[upos] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos));
+                    promises[upos.key] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos.key));
                 });
 
                 return $q.all(promises);

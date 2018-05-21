@@ -1,24 +1,8 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-4">
-      <div ng-include="'views/facets.partial.html'"></div>
-    </div>
-    <div class="col-sm-8" min-height="500">
-
-      <div ng-show="vm.error" class="alert alert-danger" role="alert">{{ vm.error.statusText }}</div>
-
-      <div class="col-md-3" ng-repeat="key in vm.upos">
-        <table>
-          <th>{{ key }}</th>
-          <th>Lkm</th>
-          <tr ng-repeat="word in vm.results[key]">
-            <td>{{ word.lemma }}</td>
-            <td>{{ word.count }}</td>
-          </tr>
-        </table>
-      </div>
-      <img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>
-
-    </div>
+<div class="row">
+  <div class="col-sm-4">
+    <div ng-include="'views/facets.partial.html'"></div>
+  </div>
+  <div class="col-sm-8" min-height="500">
+    <div ng-include="'views/nlp.comparison.results.partial.html'"></div>
   </div>
 </div>

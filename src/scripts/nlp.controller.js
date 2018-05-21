@@ -20,6 +20,7 @@
 
         var vm = this;
 
+        vm.hasResults = hasResults;
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
 
@@ -35,6 +36,10 @@
             vm.facetOptions.scope = $scope;
             vm.handler = new FacetHandler(vm.facetOptions);
         });
+
+        function hasResults() {
+            return _.keys(vm.results).length > 0;
+        }
 
         function removeFacetSelections() {
             $state.reload();
