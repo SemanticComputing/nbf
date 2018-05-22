@@ -24,7 +24,28 @@
         // Return an object.
         this.getFacetOptions = getFacetOptions;
 
-        this.upos = ['VERB', 'NOUN', 'ADJ', 'PROPN'];
+        this.upos = [
+            {
+                key: 'VERB',
+                label: 'Verbi'
+
+            },
+            {
+                key: 'NOUN',
+                label: 'Substantiivi'
+
+            },
+            {
+                key: 'ADJ',
+                label: 'Adjektiivi'
+
+            },
+            {
+                key: 'PROPN',
+                label: 'Erisnimi'
+
+            },
+        ];
 
         /* Implementation */
 
@@ -108,14 +129,14 @@
             return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
                 if (results.length > 10000) {
                     return $q.reject({
-                        message: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
+                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });
                 }
                 var promises = {};
                 var uposQry = lemmaQry.replace(/<DOC>/g, '<' + _.map(results, 'id').join('> <') + '>');
 
                 self.upos.forEach(function(upos) {
-                    promises[upos] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos));
+                    promises[upos.key] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos.key));
                 });
 
                 return $q.all(promises);

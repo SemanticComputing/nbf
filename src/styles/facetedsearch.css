@@ -140,12 +140,54 @@ a.no-style {
 img.logo {
   height: 45px;
   padding: 5px 20px 0 10px;
-  opacity: 0.7; 
+  opacity: 0.7;
   filter: alpha(opacity=70); /* For IE8 and earlier */
  }
- 
+
 img.logo:hover {
     opacity: 1.0;
     filter: alpha(opacity=100); /* For IE8 and earlier */
 }
- 
+
+.comparison-left {
+  border-right-style: solid;
+  border-right-color: black;
+  padding-right: 2px;
+}
+
+.comparison-right {
+  padding-left: 0px;
+}
+
+.comparison-results {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.comparison-results td {
+  word-wrap: break-word;
+}
+
+.comparison-results tr {
+  border-bottom-style: dashed;
+  border-bottom-color: grey;
+  border-bottom-width: 1px;
+}
+
+.comparison-results .word {
+  width: 70%;
+}
+
+.comparison-results .count {
+  width: 30%;
+}
+
+.comparison-result-error {
+  margin: 10px;
+}
+
+a.active {
+  color: black;
+  text-decoration: none;
+  cursor: text;
+}
