@@ -7,28 +7,21 @@
 
     'use strict';
 
-    /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
 
     /*
     * Controller for the results view.
     */
-    .controller('NlpController', NlpController);
+    .controller('NlpStatisticsController', NlpStatisticsController);
 
     /* @ngInject */
-    function NlpController($log, $scope, $state, _, google, nlpService, FacetHandler, facetUrlStateHandlerService) {
+    function NlpStatisticsController($log, $scope, $state, _, google, nlpService, FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
 
         vm.hasResults = hasResults;
-        vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
-
-        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-            updateResults(event, config);
-            initListener();
-        });
-        $scope.$on('sf-facet-constraints', updateResults);
+        vm.removeFacetSelections = removeFacetSelections;
 
         nlpService.getFacets().then(function(facets) {
             vm.facets = facets;
@@ -37,12 +30,18 @@
             vm.handler = new FacetHandler(vm.facetOptions);
         });
 
-        function hasResults() {
-            return _.keys(vm.results).length > 0;
-        }
+        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
+            updateResults(event, config);
+            initListener();
+        });
+        $scope.$on('sf-facet-constraints', updateResults);
 
         function removeFacetSelections() {
             $state.reload();
+        }
+
+        function hasResults() {
+            return _.keys(vm.results).length > 0;
         }
 
         function getFacetOptions() {

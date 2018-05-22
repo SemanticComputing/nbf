@@ -5,17 +5,11 @@
     </div><!-- DO NOT REMOVE THIS COMMENT, IT IS A HACK
  --><div class="col-xs-9 col-md-8 col-lg-9 vcenter push-xs-9">
       <div ng-include="'views/description.statistics.partial.html'"></div>
+      <span><b>Näkymä:</b>
+        <a ui-sref-active="active" ui-sref="nlp.statistics">Tilastoja</a> |
+        <a ui-sref-active="active" ui-sref="nlp.comparison.sides">Vertailu</a>
+      </span>
     </div>
-    <div class="col-md-3 pull-md-3 col-lg-2">
-      <div ng-include="'views/facets.partial.html'"></div>
-    </div>
-    <div class="col-md-9 col-lg-10" min-height="500">
-      <img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>
-
-      <div id="biography-chart"></div>
-
-      <div ng-include="'views/nlp.comparison.results.partial.html'"></div>
-
-    </div>
+    <div ui-view></div>
   </div>
 </div>
