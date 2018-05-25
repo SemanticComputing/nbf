@@ -22,7 +22,7 @@
     "angular-ui-router": "^1.0.0",
     "bootstrap": "^3.3.7",
     "ng-table-bundle": "^4.0.0",
-    "sparql-faceter": "#master",
+    "sparql-faceter": "^1.11.0",
     "lodash": "^4.17.4",
     "angular-filter": "^0.5.14",
     "angular-bootstrap": "^2.4.0",

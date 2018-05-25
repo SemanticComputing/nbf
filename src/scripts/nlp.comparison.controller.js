@@ -15,18 +15,18 @@
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
 
-        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-            updateResults(event, config);
-            initListener();
-        });
-        $scope.$on('sf-facet-constraints', updateResults);
-
         nlpService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = nlpService.getFacetOptions();
             vm.facetOptions.scope = $scope;
             vm.handler = new FacetHandler(vm.facetOptions);
         });
+
+        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
+            updateResults(event, config);
+            initListener();
+        });
+        $scope.$on('sf-facet-constraints', updateResults);
 
         function hasResults() {
             return _.keys(vm.results).length > 0;

@@ -127,12 +127,12 @@
         .state('nlp.comparison.sides', {
             url: '',
             views: {
-                'left': {
+                'left@nlp.comparison': {
                     templateUrl: 'views/nlp.comparison.left.html',
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',
                 },
-                'right': {
+                'right@nlp.comparison': {
                     templateUrl: 'views/nlp.comparison.right.html',
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',

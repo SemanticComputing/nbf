@@ -144,7 +144,7 @@
         }
 
         function getFacetOptions() {
-            return facetOptions;
+            return angular.copy(facetOptions);
         }
 
     }
