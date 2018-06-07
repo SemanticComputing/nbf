@@ -166,6 +166,13 @@
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
                 name: 'Sukupuoli',
                 enabled: true
+            },
+            keywords: {
+                facetId: 'keywords',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://purl.org/dc/elements/1.1/subject>',
+                name: 'Avainsanat',
+                chart: true,
+                enabled: true
             }
         };
 
