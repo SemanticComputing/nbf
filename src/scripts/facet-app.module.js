@@ -139,20 +139,36 @@
                 }
             }
         })
-        .state('visualizations', {
-            abstract: true
-        })
-        .state('visualizations.visu', {
-            url: '/visualisointi',
+        .state('visu', {
+            url: '/visu',
+            abstract: true,
             templateUrl: 'views/visu.html',
-            controller: 'VisuController',
-            controllerAs: 'vm'
         })
-        .state('visualizations.visu2', {
-            url: '/visualisointi2',
-            templateUrl: 'views/visu2.html',
-            controller: 'VisuController2',
-            controllerAs: 'vm'
+        .state('visu.statistics', {
+            url: '',
+            templateUrl: 'views/visu.statistics.html',
+            controller: 'VisuController',
+            controllerAs: 'vm',
+        })
+        .state('visu.comparison', {
+            url: '/vertaa',
+            abstract: true,
+            templateUrl: 'views/visu.comparison.html',
+        })
+        .state('visu.comparison.sides', {
+            url: '',
+            views: {
+                'left@visu.comparison': {
+                    templateUrl: 'views/visu.comparison.left.html',
+                    controller: 'VisuController',
+                    controllerAs: 'vm',
+                },
+                'right@visu.comparison': {
+                    templateUrl: 'views/visu.comparison.right.html',
+                    controller: 'VisuController2',
+                    controllerAs: 'vm',
+                }
+            }
         });
     });
 })();

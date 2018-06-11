@@ -8,8 +8,8 @@
     .service('visuService', visuService);
 
     /* @ngInject */
-    function visuService($q, AdvancedSparqlService, objectMapperService, facetService, SPARQL_ENDPOINT_URL) {
-
+    function visuService($q, _, FacetResultHandler, AdvancedSparqlService, objectMapperService, facetService, SPARQL_ENDPOINT_URL) {
+    	
         /* Public API */
 
         // Get the results based on facet selections.

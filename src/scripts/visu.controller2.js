@@ -15,14 +15,15 @@
     .controller('VisuController2', VisuController2);
 
     /* @ngInject */
-    function VisuController2($scope, $location, $q, $state, _, google, visuService,
-            FacetHandler, facetUrlStateHandlerService, $uibModal) {
+    function VisuController2($log, $scope, $state, _, google, visuService, FacetHandler, facetUrlStateHandlerService, $uibModal) {
 
         var vm = this;
-
+        
         vm.people = [];
         vm.startYear = [];
 
+        vm.chart_ids = ['chart_age2', 'chart_marriageAge2', 'chart_firstChildAge2', 'chart_numberOfChildren2', 'chart_numberOfSpouses2'];
+        
         vm.showForm = function () {
             var modalInstance = $uibModal.open({
                 templateUrl: 'views/visu.popup.html',
@@ -44,7 +45,7 @@
             initListener();
         });
         $scope.$on('sf-facet-constraints', updateResults);
-
+        
         visuService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
@@ -73,19 +74,19 @@
 
             return fetchResults(facetSelections).then(function (people) {
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(vm.ages, [1,120], 'Elinikä', 'chart_age')
+                    drawYearChart(vm.ages, [1,120], 'Elinikä', vm.chart_ids[0])
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(vm.marriageAges, [1,120], 'Naimisiinmenoikä', 'chart_marriageAge')
+                    drawYearChart(vm.marriageAges, [1,120], 'Naimisiinmenoikä', vm.chart_ids[1])
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(vm.firstChildAges, [1,120], 'Lapsensaanti-ikä', 'chart_firstChildAge')
+                    drawYearChart(vm.firstChildAges, [1,120], 'Lapsensaanti-ikä', vm.chart_ids[2])
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(vm.numberOfChildren, [1,25], 'Lasten lukumäärä', 'chart_numberOfChildren')
+                    drawYearChart(vm.numberOfChildren, [1,25], 'Lasten lukumäärä', vm.chart_ids[3])
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(vm.numberOfSpouses, [1,7], 'Puolisoiden lukumäärä', 'chart_numberOfSpouses')
+                    drawYearChart(vm.numberOfSpouses, [1,7], 'Puolisoiden lukumäärä', vm.chart_ids[4])
                 });
                 return;
             });
@@ -99,7 +100,11 @@
 
             for (var i=0; i<res.length; i++) {
                 var ob = res[i];
-                persons[parseInt(ob.value)].push(ob.id);
+                try {
+                	persons[parseInt(ob.value)].push(ob.id);
+                }
+                catch(err) { //
+                }
             }
 
             var arr=[];
