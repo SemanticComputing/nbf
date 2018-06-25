@@ -149,11 +149,31 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4 text-left" ng-if="vm.person.similar">
+    <!--
+    <div class="col-md-4 text-left">
+    	 <ws-related-links data-title="'Samankaltaisia henkil&ouml;it&auml;'" data-related="vm.person.sameAuthor" ></ws-related-links> 
+    	<ws-related-links-paged data-title="'T&auml;nne viittaavat sivut'" data-paginator="vm.person.sameAuthor"></ws-related-links-paged> 
+    </div>
+     -->
+     <div class="col-md-4 text-left" ng-if="vm.person.similar">
       <h3>Samankaltaisia henkilöitä</h3>
       <img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.similar">
       	<a ui-sref="person.detail({ personId: person.prs })">{{ person.label }}</a>
+      </div>
+    </div>
+    <div class="col-md-4 text-left" ng-if="vm.person.referenced">
+      <h3>T&auml;nne viittaavat sivut</h3>
+      <img ng-if="!vm.person.referenced" class="loading-img" src="images/loading-lg.gif"></img>
+      <div class="col-sm-6" ng-repeat="person in vm.person.referenced">
+      	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a>
+      </div>
+    </div>
+    <div class="col-md-4 text-left" ng-if="vm.person.sameAuthor">
+      <h3>Samoilta kirjoittajilta</h3>
+      <img ng-if="!vm.person.sameAuthor" class="loading-img" src="images/loading-lg.gif"></img>
+      <div class="col-sm-6" ng-repeat="person in vm.person.sameAuthor">
+      	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a> ({{ person.author }})
       </div>
     </div>
   </div>

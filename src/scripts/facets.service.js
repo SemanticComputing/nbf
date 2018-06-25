@@ -123,23 +123,13 @@
                 chart: true,
                 name: 'Kirjoittaja'
             },
-            birthYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart>',
-                name: 'Synnyinaika',
-                enabled: true
-            },
             place: {
                 facetId: 'place',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/<http://ldf.fi/nbf/place>',
+                //predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>',
                 name: 'Paikkakunta',
-                chart: true,
-                enabled: true
-            },
-            deathYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
-                name: 'Kuolinaika',
+                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
+                depth: 5, 
                 enabled: true
             },
             title: {
@@ -147,8 +137,6 @@
                 //	nb do not remove /<http://www.w3.org/2004/02/skos/core#prefLabel> from the end of property path
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Arvo, ammatti tai toiminta',
-                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
-                depth: 3,
                 chart: true,
                 enabled: true
             },

@@ -40,6 +40,18 @@
                 	}
                 });
                 
+                nbfService.getByAuthor(vm.person.id).then(function(data) {
+                	if (data.length) {
+                		vm.person.sameAuthor = data;
+                	}
+                });
+                
+                nbfService.getByReferences(vm.person.id).then(function(data) {
+                	if (data.length) {
+                		vm.person.referenced = data;
+                	}
+                });
+                
                 return person;
             }).catch(handleError);
         }

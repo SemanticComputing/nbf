@@ -29,6 +29,8 @@
         // Get the details of a single person.
         this.getPerson = getPerson;
         this.getSimilar = getSimilar;
+        this.getByAuthor = getByAuthor;
+        this.getByReferences = getByReferences;
         this.getBios = getBios;
 
         /* Implementation */
@@ -76,10 +78,10 @@
         '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
         '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +
-        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place ?birthPlace . filter (isliteral(?birthPlace)) } ' +
+        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place/skos:prefLabel ?birthPlace } ' +
         '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
-        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
+        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
         '  		OPTIONAL { ?prs schema:image ?images . }' +
         '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
@@ -131,12 +133,12 @@
             '  } ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
-            '  			OPTIONAL { ?bir nbf:place ?birthPlace . filter (isliteral(?birthPlace)) } ' +
-            '  			OPTIONAL { ?bir nbf:time/skos:prefLabel ?birthDate . }' +
+            '  			OPTIONAL { ?bir nbf:place/skos:prefLabel ?birthPlace } ' +
+            '  			OPTIONAL { ?bir nbf:time/skos:prefLabel ?birthDate }' +
             '		} ' +
             '  		OPTIONAL { ?prs ^crm:P100_was_death_of ?dea . ' +
-            '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate . }' +
-            '  			OPTIONAL { ?dea nbf:place ?deathPlace . filter (isliteral(?deathPlace)) }' +
+            '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate }' +
+            '  			OPTIONAL { ?dea nbf:place/skos:prefLabel ?deathPlace }' +
             '		} ' +
             '  		OPTIONAL { ?prs schema:image ?images . }' +
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
@@ -167,7 +169,7 @@
 
 
         //	http://yasgui.org/short/rywI3KnBz
-        var querySimilar =
+        var querySimilar = 
             'SELECT DISTINCT ?prs ?label WHERE { ' +
             '  { <RESULT_SET> }' +
             '  { ' +
@@ -188,6 +190,44 @@
             '  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)' +
             '} ORDER by ?val LIMIT 16 ';
 
+        //	http://yasgui.org/short/ByvETV0xm
+        var queryByAuthor =
+        	'SELECT DISTINCT (?id as ?id__url) ?id__name ?author WHERE { ' +
+        	'  { ' +
+        	'  SELECT DISTINCT ?author ?id2 ?prs2 ' +
+        	'    WHERE { ' +
+        	'        <RESULT_SET> ' +
+        	'        ?id2 owl:sameAs*|^owl:sameAs ?prs2 . ' +
+        	'        ?prs2 foaf:focus/nbf:has_biography/nbf:authors ?author . ' +
+        	'    } ' +
+        	'  } ' +
+        	'  ?prs foaf:focus/nbf:has_biography/nbf:authors ?author . ' +
+        	'  ?prs owl:sameAs* ?id . ' +
+        	'  FILTER NOT EXISTS {?id owl:sameAs []} ' +
+        	'  FILTER (?id != ?prs2 && ?id != ?id2) ' +
+        	'  ?id skosxl:prefLabel ?id__label . ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+        	'} ORDER BY ?id__fname ?id__gname ';
+        
+        //	http://yasgui.org/short/SkYYOLRxm
+        var queryByReferences =
+        	'SELECT distinct (?id as ?id__url) ?id__name WHERE { ' +
+        	' <RESULT_SET> ' +
+        	' SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
+        	'   ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#bioId> ?id2 ; ' +
+        	'     	<http://purl.org/dc/elements/1.1/source>/<http://ldf.fi/nbf/biography/data#link> ?target_link . ' +
+        	'    BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target)  ' +
+        	' } ' +
+        	'  ' +
+        	'  ?id nbf:formatted_link ?target ;  ' +
+        	'  		skosxl:prefLabel ?id__label . ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+        	'} ORDER BY ?id__fname ?id__gname ';
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -233,6 +273,7 @@
                 return result;
             });
         }
+        
         function getSimilar(id) {
             var qry = prefixes + querySimilar;
             var constraint = 'VALUES ?id { <' + id + '> } . ';
@@ -242,6 +283,21 @@
             });
         }
 
+        function getByAuthor(id) {
+            var qry = prefixes + queryByAuthor;
+            var constraint = 'VALUES ?id2 { <' + id + '> } . ';
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        }
+
+        function getByReferences(id) {
+            var qry = prefixes + queryByReferences;
+            var constraint = 'VALUES ?id2 { <' + id + '> } . ';
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(result) {
+            	return result;
+            });
+        }
+        
         function updateSortBy(sortBy) {
             var sort = $location.search().sortBy || '?ordinal';
             if (sort === sortBy) {
