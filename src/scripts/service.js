@@ -170,25 +170,17 @@
 
         //	http://yasgui.org/short/rywI3KnBz
         var querySimilar = 
-            'SELECT DISTINCT ?prs ?label WHERE { ' +
-            '  { <RESULT_SET> }' +
-            '  { ' +
-            '    ?dst bioc:relates_to ?id ; bioc:relates_to ?prs ; bioc:value ?val .   ' +
-            '  } UNION {   ' +
-            '    ?dst bioc:relates_to ?id ; bioc:relates_to ?idX ; bioc:value ?valX .   ' +
-            '    ?dst2 bioc:relates_to ?idX ; bioc:relates_to ?prs ; bioc:value ?val2 .     ' +
-            '    BIND (?valX+?val2 AS ?val) ' +
-            '  } UNION {  ' +
-            '    ?dst bioc:relates_to ?id ; bioc:relates_to ?idX ; bioc:value ?valX . ' +
-            '    ?dst2 bioc:relates_to ?idX ; bioc:relates_to ?idY ; bioc:value ?valY .     ' +
-            '    ?dst3 bioc:relates_to ?idY ; bioc:relates_to ?prs ; bioc:value ?val2 .     ' +
-            '    BIND (?valX+?valY+?val2 AS ?val) ' +
-            '  } ' +
-            '  FILTER (?id != ?prs) ' +
-            '  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
-            '  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . } ' +
-            '  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)' +
-            '} ORDER by ?val LIMIT 16 ';
+            'SELECT DISTINCT ?prs ?label ' +
+        	'WHERE { ' +
+        	'  { <RESULT_SET> } ' +
+        	'  ?dst a nbf:Distance ; ' +
+        	'        bioc:relates_to ?id, ?prs ; ' +
+        	'        bioc:value ?value . ' +
+        	'  FILTER (?prs!=?id)  ' +
+        	'  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
+        	'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . }  ' +
+        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
+        	'} ORDER BY DESC(?value) LIMIT 16 ';
 
         //	http://yasgui.org/short/ByvETV0xm
         var queryByAuthor =
