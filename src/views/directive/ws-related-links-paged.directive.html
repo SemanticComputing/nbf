@@ -1,0 +1,30 @@
+<img src="images/loading-sm.gif" ng-show="!vm.totalItems && vm.isLoadingPage" />
+<div class="row related" ng-if="vm.totalItems"
+  ng-init="show = true">
+  <div class="col-sm-12" title="{{ additionalText }}">
+    <h3 ng-click="show = !show">
+      <a>{{ title }} ({{ vm.totalItems }})
+        <span ng-class="['glyphicon', {'glyphicon-menu-down': show, 'glyphicon-menu-right': !show}]"></span>
+      </a>
+        <img src="images/loading-sm.gif" ng-show="vm.isLoadingPage" />
+    </h3>
+    <div uib-collapse="!show">
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="thing in vm.related">
+          <span ng-if="!external">
+            <a ws-page-link="thing.id">{{ vm.getLabel(thing) | words:10 }}</a>
+          </span>
+          <span ng-if="external">
+            <a ng-href="{{ thing.id }}">{{ vm.getLabel(thing) | words:10 }}</a>
+          </span->
+        </li>
+        <li class="list-group-item" ng-if="vm.totalItems > vm.pageSize">
+          <ul uib-pagination total-items="vm.totalItems" ng-change="vm.updatePage()"
+            ng-model="vm.currentPage" max-size="5" previous-text="&lsaquo;"
+            next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+            class="pagination-sm no-margin" boundary-links="true"></ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
