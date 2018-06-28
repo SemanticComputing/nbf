@@ -95,7 +95,6 @@
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
-            //vm.people = [];
             vm.error = undefined;
             
             var updateId = _.uniqueId();

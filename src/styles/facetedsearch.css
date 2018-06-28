@@ -191,3 +191,17 @@ a.active {
   text-decoration: none;
   cursor: text;
 }
+
+#networkcontainer {
+	position: relative;
+  width: 100%;
+  height: 700px;
+  max-height: 700px;
+  top: 0px;
+  left: 0px;
+}
+
+#networkcontainer div canvas {
+  top: 0px;
+  left: 0px;
+}

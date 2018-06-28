@@ -102,6 +102,12 @@
             controller: 'GroupmapController',
             controllerAs: 'vm',
         })
+        .state('network', {
+            url: '/verkosto',
+            templateUrl: 'views/network.html',
+            controller: 'NetworkController',
+            controllerAs: 'vm',
+        })
         .state('cards', {
             url: '/ruudukko',
             templateUrl: 'views/cards.html',

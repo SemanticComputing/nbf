@@ -1,0 +1,8 @@
+<h1>Semanttinen Kansallisbiografia</h1>
+<p>
+Aineistosta luotuja verkostoja. 
+Esitykset luodaan vasemmanpuoleisissa suodattimissa tehtyjen valintojen perusteella. 
+Lähde: <a href="http://www.kansallisbiografia.fi">Biografiakeskus</a>
+<br/><span style="color: red">{{ vm.message }}</span>
+<a ui-sref="person.detail({ personId: vm.chosenNode.url })" ng-if="vm.chosenNode">{{ vm.chosenNode.label }}</a>
+</p>

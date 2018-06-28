@@ -168,7 +168,7 @@
             '} ORDER BY str(?source)';
 
 
-        //	http://yasgui.org/short/rywI3KnBz
+        //	http://yasgui.org/short/HyNJegbGQ
         var querySimilar = 
             'SELECT DISTINCT ?prs ?label ' +
         	'WHERE { ' +
