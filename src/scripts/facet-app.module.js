@@ -78,6 +78,12 @@
             controller: 'MapController',
             controllerAs: 'vm'
         })
+        .state('person.network', {
+            url: '/henkiloverkosto',
+            templateUrl: 'views/person.network.html',
+            controller: 'PersonNetworkController',
+            controllerAs: 'vm'
+        })
         .state('place', {
             url: '/place/:placeId',
             templateUrl: 'views/place.html',

@@ -1,9 +1,9 @@
 {
-  "name": "norssit-proto",
+  "name": "nbf-proto",
   "description": "",
   "main": "",
   "authors": [
-    "Erkki Heino <erkki.heino@aalto.fi>"
+    "Petri Leskinen <petri.leskinen@aalto.fi>"
   ],
   "license": "MIT",
   "moduleType": [],
@@ -28,7 +28,9 @@
     "angular-bootstrap": "^2.4.0",
     "ngInfiniteScroll": "^1.3.4",
     "angular-google-maps": "^2.4.1",
-    "angularjs-slider": "^6.4.0"
+    "angularjs-slider": "^6.4.0",
+    "cytoscape": "^3.2.14",
+    "cytoscape-panzoom": "^2.5.2" 
   },
   "resolutions": {
     "angular": "1.7.0"

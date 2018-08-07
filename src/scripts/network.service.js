@@ -56,15 +56,15 @@
     	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
     	'    ?par dcterm:isPartOf/nbfbio:bioId ?id ; ' +
     	'    	dce:source/nbfbio:link ?target_link . ' +
-    	'    BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target)  ' +
+    	'    BIND(STRAFTER(STR(?target_link), "data/") AS ?target) ' +
     	'  } ' +
     	'  ?id2 nbf:formatted_link ?target . ' +
-    	'   ' +
+    	'  ' +
     	'  ?id skosxl:prefLabel ?id__label . ' +
     	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
     	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
     	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id_name) ' +
-    	'   ' +
+    	'  ' +
     	'  ?id2 skosxl:prefLabel ?id2__label . ' +
     	'  OPTIONAL { ?id2__label schema:familyName ?id2__fname } ' +
     	'  OPTIONAL { ?id2__label schema:givenName ?id2__gname } ' +

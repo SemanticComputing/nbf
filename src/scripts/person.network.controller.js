@@ -13,11 +13,11 @@
     /*
     * Controller for the results view.
     */
-    .controller('NetworkController', NetworkController);
+    .controller('PersonNetworkController', PersonNetworkController);
 
     /* @ngInject */
-    function NetworkController($scope, $location, $state, $uibModal, _, networkService,
-            FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
+    function PersonNetworkController($scope, $location, $state, _, $stateParams, personNetworkService,
+            FacetHandler) {
 
         var vm = this;
         vm.cy = null;
@@ -25,72 +25,20 @@
         vm.dict = {};
         vm.chosenNode = null;
         
-        vm.showWindow = function() {
-        	vm.window.show = true;
-        }
-        vm.closeWindow = function() {
-        	vm.window.show = false;
-        }
-        
-        vm.isScrollDisabled = isScrollDisabled;
-        vm.removeFacetSelections = removeFacetSelections;
-        vm.getSortClass = networkService.getSortClass;
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-            updateResults(event, config);
+        	fetchResults(event, config);
             initListener();
         });
-        $scope.$on('sf-facet-constraints', updateResults);
-
-        networkService.getFacets().then(function(facets) {
-            vm.facets = facets;
-            vm.facetOptions = getFacetOptions();
-            vm.facetOptions.scope = $scope;
-            vm.handler = new FacetHandler(vm.facetOptions);
-        });
-
-        function removeFacetSelections() {
-            $state.reload();
-        }
-
-        function openPage(person) {
-            $uibModal.open({
-                component: 'registerPageModal',
-                size: 'lg',
-                resolve: {
-                    person: function() { return person; }
-                }
-            });
-        }
-
-        function getFacetOptions() {
-            var options = networkService.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
-            return options;
-        }
-
-        function isScrollDisabled() {
-            return vm.isLoadingResults || nextPageNo > maxPage;
-        }
-
-        function sortBy(sortBy) {
-        	networkService.updateSortBy(sortBy);
-            return fetchResults({ constraint: vm.previousSelections });
-        }
-
-        function updateResults(event, facetSelections) {
-            if (vm.previousSelections && _.isEqual(facetSelections.constraint,
-                    vm.previousSelections)) {
-                return;
-            }
-            vm.previousSelections = _.clone(facetSelections.constraint);
-            facetUrlStateHandlerService.updateUrlParams(facetSelections);
-            return fetchResults(facetSelections);
-        }
-
+        
+        $scope.$on('sf-facet-constraints', fetchResults);
+        
+        vm.handler = new FacetHandler({scope : $scope});
+        
+        
         var latestUpdate;
-        function fetchResults(facetSelections) {
-            // vm.isLoadingResults = true;
+        function fetchResults() {
+            
             vm.error = undefined;
             
             if (vm.cy) {
@@ -100,11 +48,7 @@
             vm.cy = null;
             vm.message = "";
             
-            
-            var updateId = _.uniqueId();
-            latestUpdate = updateId;
-
-            return networkService.getResults(facetSelections)
+            return personNetworkService.getResults($stateParams.personId)
             .then(function(res) {
             	
             	vm.message = '';
@@ -115,8 +59,9 @@
             	if (res.length<2) {
             		vm.message = "Hakuehdoilla on löydy verkostoa."
             	}
-            	console.log(res);
-            	/* vm.network = */ processData(res, vm);
+            	
+            	processData(res, vm);
+            	
             }).catch(handleError);
         }
 
@@ -133,16 +78,16 @@
         			i=0;
         		data.forEach( function(obj) { 
         			//	add source node
-        			var id = obj['id'];
+        			var id = obj['source'];
         			if (!dct.hasOwnProperty(id)) {
-        				dct[id] = { label:obj['id_name'] };
-        				elems.push({ data: { id: id, label:obj['id_name']} });
+        				dct[id] = { label:obj['source_name'] };
+        				elems.push({ data: { id: id, label:obj['source_name']} });
         			}
         			//	add target node
-        			var id2 = obj['id2'];
+        			var id2 = obj['target'];
         			if (!dct.hasOwnProperty(id2)) {
-        				dct[id2] = { label:obj['id2_name'] };
-        				elems.push({ data: { id: id2, label:obj['id2_name']} });
+        				dct[id2] = { label:obj['target_name'] };
+        				elems.push({ data: { id: id2, label:obj['target_name']} });
         			}
         			//	add edge
         			elems.push({ data: { id: i++, source: id, target: id2, selectable: false } });
@@ -154,7 +99,7 @@
         	vm.dict = elems[1];
         	
             vm.cy = cytoscape({
-                container: document.getElementById('networkcontainer'),
+                container: document.getElementById('personnetworkcontainer'),
                 elements: elems[0],
 	        	layout: {
 	        		name: 'cose',
@@ -210,7 +155,7 @@
             
             var showNodeInfo = function(evt){
             	var id = this.id(),
-    			label = vm.dict[id].label;
+    				label = vm.dict[id].label;
             	
 	          	vm.message = '';
 	          	vm.chosenNode = {url:id, label:label};
@@ -219,11 +164,11 @@
             
             vm.cy.on('click', 'node', showNodeInfo);
             vm.cy.on('drag', 'node', showNodeInfo);
-            // console.log(vm.cy.panzoom);
+            
             vm.cy.panzoom({});
         }
         
-        // function generateMarker(vm, lat, lon, id, type, count, label, people) {}
+        
         
     }
 })();
