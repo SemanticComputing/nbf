@@ -21,7 +21,6 @@
         function init() {
             nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
-                
                 nbfService.getBios(vm.person.id).then(function(data) {
                 	if (data.length) {
                 		
@@ -35,21 +34,23 @@
                 });
                 
                 nbfService.getSimilar(vm.person.id).then(function(data) {
-                	if (data.length) {
-                		vm.person.similar = data;
-                	}
+                	if (data.length) vm.person.similar = data;
+                });
+                
+                nbfService.getAuthors(vm.person.id).then(function(data) {
+                	if (data.length) vm.person.authors = data;
                 });
                 
                 nbfService.getByAuthor(vm.person.id).then(function(data) {
-                	if (data.length) {
-                		vm.person.sameAuthor = data;
-                	}
+                	if (data.length) vm.person.sameAuthor = data;
                 });
                 
                 nbfService.getByReferences(vm.person.id).then(function(data) {
-                	if (data.length) {
-                		vm.person.referenced = data;
-                	}
+                	if (data.length) vm.person.referenced = data;
+                });
+                
+                nbfService.getAuthoredBios(vm.person.id).then(function(data) {
+                	if (data.length) vm.person.authoredBios = data;
                 });
                 
                 return person;

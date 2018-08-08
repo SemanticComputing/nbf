@@ -46,7 +46,6 @@
             }
             
             vm.cy = null;
-            vm.message = "";
             
             return personNetworkService.getResults($stateParams.personId)
             .then(function(res) {
@@ -60,6 +59,7 @@
             		vm.message = "Hakuehdoilla on löydy verkostoa."
             	}
             	
+            	
             	processData(res, vm);
             	
             }).catch(handleError);
@@ -71,6 +71,8 @@
         }
         
         function processData(res, vm) {
+        	
+        	
         	
         	var handleData = function(data) {
         		var dct={},
@@ -92,15 +94,25 @@
         			//	add edge
         			elems.push({ data: { id: i++, source: id, target: id2, selectable: false } });
         		});
+        		
+        		
         		return [elems, dct];
         	};
         	
         	var elems = handleData(res);
         	vm.dict = elems[1];
         	
+        	//	detect person's name and id to show on the page
+        	vm.id = $stateParams.personId;
+    		if (vm.dict.hasOwnProperty(vm.id)) {
+    			var ob = vm.dict[vm.id];
+    			if (ob.hasOwnProperty('label')) vm.label = ob.label;
+    		}
+    		
             vm.cy = cytoscape({
                 container: document.getElementById('personnetworkcontainer'),
                 elements: elems[0],
+                wheelSensitivity: 0.2,
 	        	layout: {
 	        		name: 'cose',
 	        		idealEdgeLength: 100,
@@ -150,7 +162,7 @@
 	                        'target-arrow-shape': 'triangle',
 	                        'curve-style': 'bezier'
 	                    }
-	                }]   
+	                }]
 	              });
             
             var showNodeInfo = function(evt){

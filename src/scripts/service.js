@@ -29,7 +29,9 @@
         // Get the details of a single person.
         this.getPerson = getPerson;
         this.getSimilar = getSimilar;
+        this.getAuthors = getAuthors;
         this.getByAuthor = getByAuthor;
+        this.getAuthoredBios = getAuthoredBios;
         this.getByReferences = getByReferences;
         this.getBios = getBios;
 
@@ -119,6 +121,7 @@
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
             '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
+            '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +
             '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
             '  		bioc:inheres_in ?relative__id ; ' +
             '  		a/skos:prefLabel ?relative__type ] . } ' +
@@ -154,6 +157,7 @@
             ' ?prs foaf:focus/nbf:has_biography ?bio .' +
             '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
             '  OPTIONAL { ?bio nbf:authors ?author_text }' +
+            // '  OPTIONAL { ?bio schema:author ?author__url . ?author__url skos:prefLabel ?author__label }' +
             '  OPTIONAL { ?bio schema:dateCreated ?created }' +
             '  OPTIONAL { ?bio schema:dateModified ?modified }' +
             '  OPTIONAL { ?bio schema:relatedLink ?link }'  +
@@ -182,9 +186,21 @@
         	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
         	'} ORDER BY DESC(?value) LIMIT 16 ';
 
+        //	
+        var queryAuthors = 
+        	'SELECT DISTINCT (?author AS ?author__url) ?author__name WHERE { ' +
+        	'  { <RESULT_SET> } ' +
+        	'  ?id owl:sameAs*|^owl:sameAs ?prs . ' +
+        	'  ?prs foaf:focus/nbf:has_biography/schema:author ?author . ' +
+        	'  ?author skosxl:prefLabel ?author__label . ' +
+        	'  OPTIONAL { ?author__label schema:familyName ?author__fname } ' +
+        	'  OPTIONAL { ?author__label schema:givenName ?author__gname } ' +
+        	'  BIND (CONCAT(COALESCE(?author__gname, "")," ",COALESCE(?author__fname, "")) AS ?author__name) ' +
+        	'} ORDER BY ?author__fname ?author__gname ';
+        
         //	http://yasgui.org/short/ByvETV0xm
         var queryByAuthor =
-        	'SELECT DISTINCT (?id as ?id__url) ?id__name ?author WHERE { ' +
+        	'SELECT DISTINCT (?id as ?id__url) ?id__name WHERE { ' +
         	'  { ' +
         	'  SELECT DISTINCT ?author ?id2 ?prs2 ' +
         	'    WHERE { ' +
@@ -197,6 +213,17 @@
         	'  ?prs owl:sameAs* ?id . ' +
         	'  FILTER NOT EXISTS {?id owl:sameAs []} ' +
         	'  FILTER (?id != ?prs2 && ?id != ?id2) ' +
+        	'  ?id skosxl:prefLabel ?id__label . ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+        	'} ORDER BY ?id__fname ?id__gname ';
+        
+        var queryAuthoredBios =
+        	'SELECT DISTINCT  (?id as ?id__url) ?id__name WHERE { ' +
+        	'  { <RESULT_SET> } ' +
+        	'  ?id foaf:focus/nbf:has_biography/schema:author ?author . ' +
+        	'   ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
@@ -275,12 +302,25 @@
             });
         }
 
+        function getAuthors(id) {
+            var qry = prefixes + queryAuthors;
+            var constraint = 'VALUES ?id { <' + id + '> } . ';
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        }
+        
         function getByAuthor(id) {
             var qry = prefixes + queryByAuthor;
             var constraint = 'VALUES ?id2 { <' + id + '> } . ';
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
         }
 
+        function getAuthoredBios(id) {
+            var qry = prefixes + queryAuthoredBios;
+            //	'VALUES ?prs { <' + id + '> } . ?prs (owl:sameAs*|^owl:sameAs*) ?id . '
+            var constraint = 'VALUES ?prs { <' + id + '> } . ?prs (owl:sameAs*|^owl:sameAs*) ?author . ';
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        }
+        
         function getByReferences(id) {
             var qry = prefixes + queryByReferences;
             var constraint = 'VALUES ?id2 { <' + id + '> } . ';

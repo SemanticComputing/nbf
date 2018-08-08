@@ -24,6 +24,10 @@
               <div ng-if="vm.person.occupation" class="col-xs-12">
                 <p>{{ vm.person.occupation | castArray | join:', ' }}</p>
               </div>
+              <div ng-if="vm.person.source" class="col-xs-12">
+                <p>Lähteet: {{ vm.person.source | castArray | join:', ' }}</p>
+              </div>
+              
               <div class="col-xs-12 icon-menu">
                 <a title="Data" class="" ng-href="{{ vm.person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
               </div>
@@ -73,17 +77,6 @@
               </div>
               <div ng-if="vm.person.genitree" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.genitree }}">Sukupuu (Geni.com)</a>
-              </div>
-            </div>
-            <div ng-if="vm.person.relative" class="row padded-row">
-              <div class="col-xs-12"><h4>Sukulaiset:</h4></div>
-              <div class="col-sm-6 col-md-12" ng-repeat="relative in vm.person.relative | castArray">
-                <a ui-sref="person.detail({ personId: relative.id })">{{ relative.type }} {{ relative.name }}</a>
-              </div>
-            </div>
-            <div ng-if="vm.person.hobby" class="row padded-row">
-              <div class="col-md-12">
-                <p><b>Harrastukset:</b> {{ vm.person.hobby | castArray | join: ', ' }}</p>
               </div>
             </div>
             
@@ -139,7 +132,7 @@
 	            
 	            <div  class="entry-text text-left">
 	            	<hr />
-	            	<span ng-if="bio.author_text">Kirjoittaja(t): {{ bio.author_text }}. </span>
+	            	<span ng-if="bio.author_text">Kirjoittaja(t): {{ bio.author_text }}</span>
 	            	<span ng-if="bio.created">Julkaistu {{ bio.created | date:'dd.MM.yyyy' }}</span>
 	            	<span ng-if="bio.modified">(päivitetty {{ bio.modified | date:'dd.MM.yyyy' }})</span>
 	            </div>
@@ -155,7 +148,16 @@
     	<ws-related-links-paged data-title="'T&auml;nne viittaavat sivut'" data-paginator="vm.person.sameAuthor"></ws-related-links-paged> 
     </div>
      -->
-     <div class="col-md-4 text-left" ng-if="vm.person.similar">
+     
+    <div class="col-md-4 text-left" ng-if="vm.person.relative">
+      <h3>Sukulaiset</h3>
+      <img ng-if="!vm.person.relative" class="loading-img" src="images/loading-lg.gif"></img>
+      <div class="col-sm-6" ng-repeat="relative in vm.person.relative">
+      	<a ui-sref="person.detail({ personId: relative.id })">{{ relative.type }} {{ relative.name }}</a>
+      </div> 
+    </div>
+      
+    <div class="col-md-4 text-left" ng-if="vm.person.similar">
       <h3>Samankaltaisia henkilöitä</h3>
       <img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.similar">
@@ -169,12 +171,30 @@
       	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a>
       </div>
     </div>
+    
+    <div class="col-md-4 text-left" ng-if="vm.person.authors">
+      <h3>Kirjoittajat</h3>
+      <img ng-if="!vm.person.authors" class="loading-img" src="images/loading-lg.gif"></img>
+      <div class="col-sm-6" ng-repeat="person in vm.person.authors">
+      	<a ui-sref="person.detail({ personId: person.author.url })">{{ person.author.name }}</a>
+      </div>
+    </div>
+    
     <div class="col-md-4 text-left" ng-if="vm.person.sameAuthor">
       <h3>Samoilta kirjoittajilta</h3>
       <img ng-if="!vm.person.sameAuthor" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.sameAuthor">
-      	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a> ({{ person.author }})
+      	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a>
       </div>
     </div>
+    
+    <div class="col-md-4 text-left" ng-if="vm.person.authoredBios">
+      <h3>Kirjoitettuja artikkeleja</h3>
+      <img ng-if="!vm.person.authoredBios" class="loading-img" src="images/loading-lg.gif"></img>
+      <div class="col-sm-6" ng-repeat="person in vm.person.authoredBios">
+      	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a>
+      </div>
+    </div>
+    
   </div>
 </div>

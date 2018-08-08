@@ -156,6 +156,7 @@
             vm.cy = cytoscape({
                 container: document.getElementById('networkcontainer'),
                 elements: elems[0],
+                wheelSensitivity: 0.2,
 	        	layout: {
 	        		name: 'cose',
 	        		idealEdgeLength: 100,
