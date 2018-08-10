@@ -26,7 +26,7 @@
             entryText: {
                 facetId: 'entryText',
                 graph: '<http://ldf.fi/nbf/people>',
-                name: 'Haku',
+                name: 'Haku nimen perusteella',
                 enabled: true
             },
             dataset: {
@@ -157,7 +157,7 @@
             gender: {
                 facetId: 'gender',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
-                name: 'Sukupuoli',
+                name: 'Sukupuoli tai ryhmä',
                 chart: true,
                 enabled: true
             },
