@@ -102,6 +102,12 @@
             controller: 'TableController',
             controllerAs: 'vm'
         })
+        .state('cards', {
+            url: '/ruudukko',
+            templateUrl: 'views/cards.html',
+            controller: 'CardsController',
+            controllerAs: 'vm',
+        })
         .state('groupmap', {
             url: '/joukkokartta',
             templateUrl: 'views/groupmap.html',
@@ -112,12 +118,6 @@
             url: '/verkosto',
             templateUrl: 'views/network.html',
             controller: 'NetworkController',
-            controllerAs: 'vm',
-        })
-        .state('cards', {
-            url: '/ruudukko',
-            templateUrl: 'views/cards.html',
-            controller: 'CardsController',
             controllerAs: 'vm',
         })
         .state('nlp', {

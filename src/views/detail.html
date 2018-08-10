@@ -150,22 +150,23 @@
      -->
      
     <div class="col-md-4 text-left" ng-if="vm.person.relative">
-      <h3>Sukulaiset</h3>
+      <h3 uib-tooltip="Henkilön sukulaiset." tooltip-placement="left">Sukulaiset</h3>
       <img ng-if="!vm.person.relative" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="relative in vm.person.relative">
-      	<a ui-sref="person.detail({ personId: relative.id })">{{ relative.type }} {{ relative.name }}</a>
+      	{{ relative.type }} <a uib-tooltip="{{ vm.testing() }}" ui-sref="person.detail({ personId: relative.id })">{{ relative.name }}</a>
       </div> 
     </div>
-      
+    
     <div class="col-md-4 text-left" ng-if="vm.person.similar">
-      <h3>Samankaltaisia henkilöitä</h3>
-      <img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
+    <div>
+      <h3 uib-tooltip="Henkilöt on määritelty tekoälyllä samankaltaisiksi vertaamalla heidän biografiakuvauksien sanastoa." tooltip-placement="left">Samankaltaisia henkilöitä</h3>
+      </div><img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.similar">
-      	<a ui-sref="person.detail({ personId: person.prs })">{{ person.label }}</a>
-      </div>
+      	<a uib-tooltip-template="'views/myTooltipTemplate.html'" ui-sref="person.detail({ personId: person.prs })">{{ person.label }}</a>
+      </div> 
     </div>
     <div class="col-md-4 text-left" ng-if="vm.person.referenced">
-      <h3>T&auml;nne viittaavat sivut</h3>
+      <h3 uib-tooltip="Henkilöitä joiden biografioista viitataan tälle sivulle." tooltip-placement="left">T&auml;nne viittaavat sivut</h3>
       <img ng-if="!vm.person.referenced" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.referenced">
       	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a>
@@ -173,7 +174,7 @@
     </div>
     
     <div class="col-md-4 text-left" ng-if="vm.person.authors">
-      <h3>Kirjoittajat</h3>
+      <h3 uib-tooltip="Tutustu biografiakuvauksen laatijoihin" tooltip-placement="left">Kirjoittajat</h3>
       <img ng-if="!vm.person.authors" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.authors">
       	<a ui-sref="person.detail({ personId: person.author.url })">{{ person.author.name }}</a>
@@ -189,7 +190,7 @@
     </div>
     
     <div class="col-md-4 text-left" ng-if="vm.person.authoredBios">
-      <h3>Kirjoitettuja artikkeleja</h3>
+      <h3 title="Lue tämän henkilön laatimia biografia-artikkeleja" title-direction="left">Kirjoitettuja artikkeleja</h3>
       <img ng-if="!vm.person.authoredBios" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.authoredBios">
       	<a ui-sref="person.detail({ personId: person.id.url })">{{ person.id.name }}</a>

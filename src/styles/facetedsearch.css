@@ -217,3 +217,19 @@ a.active {
   top: 0px;
   left: 0px;
 }
+
+h1 {
+	margin-top: 0px;
+}
+
+.tooltipped {
+	color: black;
+}
+
+.tooltipped:hover {
+	color: #555;
+	text-decoration: none;
+}
+
+
+

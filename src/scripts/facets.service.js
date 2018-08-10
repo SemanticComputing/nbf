@@ -127,7 +127,7 @@
                 facetId: 'place',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/<http://ldf.fi/nbf/place>',
                 //predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>',
-                name: 'Paikkakunta',
+                name: 'Synnyinpaikka',
                 hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                 depth: 5, 
                 enabled: true

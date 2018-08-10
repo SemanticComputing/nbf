@@ -15,6 +15,12 @@
         var vm = this;
         
         vm.openPage = openPage;
+        vm.testing = function (param) { 
+        	if (!param) {
+        		return null;
+        	}
+        	return param.prs;
+        	}
         
         init();
         
