@@ -120,6 +120,12 @@
             controller: 'NetworkController',
             controllerAs: 'vm',
         })
+        .state('testing', {
+            url: '/testing',
+            templateUrl: 'views/testing.html',
+            controller: 'CardsController',
+            controllerAs: 'vm'
+        })
         .state('nlp', {
             url: '/nlp',
             abstract: true,

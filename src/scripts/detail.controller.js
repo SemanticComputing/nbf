@@ -15,13 +15,29 @@
         var vm = this;
         
         vm.openPage = openPage;
-        vm.testing = function (param) { 
+        /*
+        vm.popovers = {};
+        
+        vm.testing = function (param) {
+        	console.log('Testing function still in use');
         	if (!param) {
         		return null;
         	}
-        	return param.prs;
+        	var id = param.prs; 
+        	if (!vm.popovers.hasOwnProperty(id)) {
+        		vm.popovers[id] = {};
+        		nbfService.getPopover(id).then(function(data) {
+                	if (data.length) data = data[0];
+                	console.log(data); 
+                	vm.popovers[id] = data;
+                });
         	}
-        
+        	
+        	if (vm.popovers.hasOwnProperty(id) && vm.popovers[id].label) {
+        		return vm.popovers[id].label;
+        	}
+        }
+        */
         init();
         
         function init() {

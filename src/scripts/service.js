@@ -34,7 +34,7 @@
         this.getAuthoredBios = getAuthoredBios;
         this.getByReferences = getByReferences;
         this.getBios = getBios;
-
+        this.getPopover = getPopover;
         /* Implementation */
 
         var prefixes =
@@ -51,7 +51,8 @@
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ';
+        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
 
         // The query for the results.
         // ?id is bound to the person URI.
@@ -185,7 +186,7 @@
         	'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . }  ' +
         	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
         	'} ORDER BY DESC(?value) LIMIT 16 ';
-
+        
         //	
         var queryAuthors = 
         	'SELECT DISTINCT (?author AS ?author__url) ?author__name WHERE { ' +
@@ -246,6 +247,23 @@
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
         	'} ORDER BY ?id__fname ?id__gname ';
+        
+        //	
+        var queryForPopover =
+        	'SELECT DISTINCT ?id ?label ?image ?lifespan ' +
+        	'WHERE { ' +
+        	' <RESULT_SET> ' +
+        	'  OPTIONAL { ?id owl:sameAs*/foaf:focus/schema:image ?image . } ' +
+        	'   ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
+        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)  ' +
+        	'   ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime } ' +
+        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
+        	'   ' +
+        	'} LIMIT 1 ';
         
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -327,6 +345,16 @@
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
             	return result;
+            });
+        }
+        
+        function getPopover(id) {
+        	var qry = prefixes + queryForPopover;
+            var constraint = 'VALUES ?id { <' + id + '> } . ';
+            // console.log(qry.replace('<RESULT_SET>', constraint));
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(result) {
+            	return result[0];
             });
         }
         
