@@ -3,14 +3,12 @@
 	angular.module('facetApp')
 	.directive('nbfPerson', function() {
 		return {
-			restrict: 'AE',
-			scope: {
-				url: '@'
-			},
+			restrict: 	'AE',
+			scope: 		{ url: '@' },
 			controller: ['$scope', 'nbfService', function($scope, nbfService){
 		        
 		        $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
-		        $scope.image = 'images/person_placeholder.svg';
+		        $scope.image = false;
 		        $scope.lifespan = '';
 		        
 		        nbfService.getPopover($scope.url).then(function(data) {

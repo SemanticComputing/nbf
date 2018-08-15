@@ -182,9 +182,9 @@
         	'        bioc:relates_to ?id, ?prs ; ' +
         	'        bioc:value ?value . ' +
         	'  FILTER (?prs!=?id)  ' +
-        	'  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
-        	'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . }  ' +
-        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
+        	//'  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
+        	//'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . }  ' +
+        	//'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
         	'} ORDER BY DESC(?value) LIMIT 16 ';
         
         //	

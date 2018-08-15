@@ -1,5 +1,5 @@
 <div>
 	<p>{{ label }}<br>{{ lifespan }}</p>
-	<img height="120" src="{{ image }}" />
+	<img ng-if="!image" height="120" class="person-img img" src="images/person_placeholder.svg" />
+	<img ng-if="!!image" height="120" class="person-img img" src="{{ image }}" />
 </div>
-<!-- <a href="{{ vm.testing(person) }}">{{ person.label }}</a>  -->
