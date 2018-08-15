@@ -114,6 +114,12 @@
             controller: 'GroupmapController',
             controllerAs: 'vm',
         })
+        .state('groupmap2', {
+            url: '/joukkokartta2',
+            templateUrl: 'views/groupmap2.html',
+            controller: 'GroupmapController2',
+            controllerAs: 'vm',
+        })
         .state('network', {
             url: '/verkosto',
             templateUrl: 'views/network.html',

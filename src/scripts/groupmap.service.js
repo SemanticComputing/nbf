@@ -16,6 +16,8 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getResults2 = getResults2;
+        
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = getFacets;
@@ -25,9 +27,7 @@
         // Update sorting URL params.
         this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
-        this.getSortClass = getSortClass;
-        // Get the details of a single person.
-        // this.getPerson = getPerson;
+        this.getSortClassOLD = getSortClass;
 
         /* Implementation */
 
@@ -228,6 +228,31 @@
     		'	FILTER (lang(?place__label)="fi") ' +
         	'} ORDER BY ?person__fname';
         
+        // 
+        var query2 = 	
+        	'SELECT * WHERE { ' +
+        	'  { ' +
+        	'  SELECT DISTINCT ?birth__place ?death__place (COUNT(?id) AS ?count) WHERE { ' +
+        	'    <RESULT_SET> ' +
+        	'    ?id foaf:focus ?prs . ' +
+        	' ' +
+        	'    ?death__id crm:P100_was_death_of ?prs ; ' +
+        	'               nbf:place ?death__place . ' +
+        	' ' +
+        	'    ?birth__id crm:P98_brought_into_life ?prs ; ' +
+        	'              nbf:place ?birth__place . ' +
+        	'       ' +
+        	'    FILTER (?birth__place!=?death__place) ' +
+        	'       ' +
+        	'    } GROUP BY ?birth__place ?death__place ORDER BY DESC(?count) LIMIT 500  } ' +
+        	'  FILTER (?count>0) ' +
+        	'  ?birth__place geo:lat ?birth__latitude ; ' +
+        	'              geo:long ?birth__longitude . ' +
+        	'   ' +
+        	'  ?death__place geo:lat ?death__latitude ; ' +
+        	'              geo:long ?death__longitude . ' +
+        	'} ORDER BY ?count ';
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -261,7 +286,12 @@
         	var q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
         	return endpoint.getObjectsNoGrouping(q);
         }
-
+        
+        function getResults2(facetSelections) {
+        	var q = prefixes + query2.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+        	return endpoint.getObjectsNoGrouping(q);
+        }
+        
         function getFacets() {
             var facetsCopy = angular.copy(facets);
             return $q.when(facetsCopy);

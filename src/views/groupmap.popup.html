@@ -3,7 +3,8 @@
         <h3 ng-show="parameter.place_label">{{ parameter.place_label }}</h3>
         <ul class="list-group row list-group-persons ng-scope" id="popupcontainer2">
 	        <li class="list-group-item col-xs-6 ng-scope" ng-show="parameter.people" ng-repeat="person in parameter.people">
-				<a ui-sref="person.detail({ personId: person.uri })">{{ person.label }}</a> 
+				<a ui-sref="person.detail({ personId: person.uri })">{{ person.label }}</a>
+				<!-- <nbf-person url="{{ person.uri }}"></nbf-person>   -->
 	        </li>
 		</ul>
 	</div>

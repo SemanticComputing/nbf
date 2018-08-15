@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12" ng-show="vm.isLoadingResults && !vm.error">
+      <img class="loading-img" src="images/loading-lg.gif"></img>
+    </div>
+    <div uib-alert ng-if="vm.error">
+      {{ vm.error }}
+    </div>
+    <div class="col-md-4 pull-md-4 col-lg-3">
+	    <h1>Tutki elämäkertoja kartoilla</h1><!-- TODO: rewrite -->
+	    Kartalla yhdistetään henkilöiden synnyin- ja kuolinpaikat nuolilla. 
+	    Alapuoleisilla suodattimilla voidaan rajata haluttu henkilöryhmä.
+	    <br/><br/>
+	    <span ng-if="vm.message" style="color:#ff4141">{{ vm.message }}<br/><br/></span>
+	    
+      	<div ng-include="'views/mapfacets.partial.html'"></div>
+    </div>
+    <div class="container-fluid">
+    	<div class="col-md-8 col-lg-9">
+    		
+		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
+		   		
+		   		<ui-gmap-polyline static="true" visible="true" geodesic="true"
+		   			ng-repeat="p in vm.polylines" path="p.path" stroke="p.stroke" icons="p.icons">
+		   		</ui-gmap-polyline>
+	        	
+	        </ui-gmap-google-map>
+	        
+	      </div>
+      </div>
+    </div>
+  </div>
