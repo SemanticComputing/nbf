@@ -1,0 +1,53 @@
+<div class="container-fluid">
+  <div class="row">
+    <div uib-alert ng-if="vm.error">
+      {{ vm.error }}
+    </div>
+    <div class="col-md-4 pull-md-4 col-lg-3">
+	    <h1>Tutki elämäkertoja kartoilla</h1><!-- TODO: rewrite -->
+	    Kartalla yhdistetään henkilöiden synnyin- ja kuolinpaikat nuolilla. 
+	    Alapuoleisilla suodattimilla voidaan rajata haluttu henkilöryhmä.
+	    <br/><br/>
+	    <span ng-if="vm.message" style="color:#ff4141">{{ vm.message }}<br/><br/></span>
+	    
+	    <div class="well well-sm">
+		    <b>Tapahtumatyypit</b>
+		    <form name="eventForm" class="eventForm">
+			  <label title="Henkilöiden syntymäpaikat lämpökarttana">
+			    <input type="checkbox" ng-model="vm.eventBox[0]" ng-change="vm.change()">
+			    Syntymä
+			    </label><br/>
+			  <label title="Henkilöiden kuolinpaikat lämpökarttana">
+			    <input type="checkbox" ng-model="vm.eventBox[1]" ng-change="vm.change()">
+			    Kuolema
+			   </label><br/>
+			   <label title="Henkilöiden opiskelu- ja työpaikat">
+			    <input type="checkbox" ng-model="vm.eventBox[2]" ng-change="vm.change()">
+			    Ura
+			   </label><br/>
+			   <label title="Paikat, joissa on henkilöihin liittyviä teoksia">
+			    <input type="checkbox" ng-model="vm.eventBox[3]" ng-change="vm.change()">
+			    Teokset
+			   </label><br/>
+			   <label>
+			    <input type="checkbox" ng-model="vm.eventBox[4]" ng-change="vm.change()">
+			    Kunniamaininnat
+			   </label><br/>
+			 </form>
+		</div>
+		
+	    <div class="col-sm-12" ng-show="vm.isLoadingResults && !vm.error">
+		      <img class="loading-img" src="images/loading-lg.gif"></img>
+		    </div>
+		    
+      	<div ng-include="'views/mapfacets.partial.html'"></div>
+    </div>
+    <div class="container-fluid">
+    	<div class="col-md-8 col-lg-9">
+    		
+		    <div id="ui-gmap-google-map" style="height:600px"></div>
+		    
+	      </div>
+      </div>
+    </div>
+  </div>

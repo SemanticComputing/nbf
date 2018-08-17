@@ -231,5 +231,8 @@ h1 {
 	text-decoration: none;
 }
 
+.eventForm label {
+	font-weight: 100;
+}
 
 

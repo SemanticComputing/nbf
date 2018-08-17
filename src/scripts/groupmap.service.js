@@ -17,6 +17,7 @@
         // Return a promise.
         this.getResults = getResults;
         this.getResults2 = getResults2;
+        this.getResults3 = getResults3;
         
         // Get the facets.
         // Return a promise (because of translation).
@@ -228,7 +229,7 @@
     		'	FILTER (lang(?place__label)="fi") ' +
         	'} ORDER BY ?person__fname';
         
-        // 
+        // http://yasgui.org/short/ry0yGeVIm
         var query2 = 	
         	'SELECT * WHERE { ' +
         	'  { ' +
@@ -289,6 +290,31 @@
         
         function getResults2(facetSelections) {
         	var q = prefixes + query2.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+        	return endpoint.getObjectsNoGrouping(q);
+        }
+        
+        function getResults3(facetSelections, selections) {
+        	var query = 'SELECT ?evt__lat ?evt__long (COUNT(?prs) AS ?count) ?type WHERE { ' +
+        	'    <RESULT_SET> ' +
+        	'       ' +
+        	'    ?id foaf:focus ?prs . ' +
+        	'  VALUES (?prop ?eclass ?type) { ' +
+        	(selections[0] ? '( crm:P98_brought_into_life nbf:Birth 0) ' : '') +
+        	(selections[1] ? '( crm:P100_was_death_of nbf:Death 1) ' : '') +
+        	(selections[2] ? '( bioc:inheres_in nbf:Career 2 ) ' : '') +
+        	(selections[3] ? '( bioc:inheres_in nbf:Product 3 ) ' : '') +
+        	(selections[4] ? '( bioc:inheres_in nbf:Honour 4 ) ' : '') +
+        	'  } ' +
+        	'  ?evt__id ?prop ?prs ;  ' +
+        	'    a ?eclass ;  ' +
+        	'  	nbf:place [  ' +
+        	'      		geo:lat ?evt__lat ; ' +
+        	'      		geo:long ?evt__long  ' +
+        	'  ] . ' +
+        	'} GROUP BY ?evt__lat ?evt__long ?evt__class ?type HAVING(?count>0) LIMIT 500 ';
+        	
+        	var q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         

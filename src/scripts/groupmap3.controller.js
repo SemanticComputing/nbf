@@ -13,22 +13,29 @@
     /*
     * Controller for the results view.
     */
-    .controller('GroupmapController2', GroupmapController2);
+    .controller('GroupmapController3', GroupmapController3);
 
     /* @ngInject */
-    function GroupmapController2($scope, $location, $state, $uibModal, _, groupmapService,
+    function GroupmapController3($scope, $location, $state, $uibModal, _, groupmapService,
             FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
 
         var vm = this;
-        vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
-        vm.window = { show: false, 
-        		position: {
-        			lat: 60.192059,
-        			lng: 24.945831}
-        };
         
-        vm.message = "";
+        vm.map = null;
+        
         vm.heatmap = null;
+        vm.heatmaps = [null,null,null,null,null];
+        vm.message = "";
+        
+        vm.eventBox = [true, false, false, false, false];
+        
+        vm.change = function() {
+        	if (vm.eventBox.every(function (val) {return !val;})) {
+        		vm.eventBox[0] = true;
+        	}
+        	
+        	fetchResults({ constraint: vm.previousSelections });
+        };
         
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
@@ -94,83 +101,71 @@
             var updateId = _.uniqueId();
             latestUpdate = updateId;
             
-            vm.polylines = [];
-            return groupmapService.getResults2(facetSelections)
+            if (!vm.map) {
+        		vm.map = new google.maps.Map(document.getElementById('ui-gmap-google-map'), {
+                	zoom: 6,
+                	center: {lat: 62, lng: 24}
+              	});
+        	}
+            
+            vm.heatmaps.forEach(
+            		function (ob) { 
+            			if (ob) ob.setData([]); 
+            		});
+            
+            return groupmapService.getResults3(facetSelections, vm.eventBox)
             .then(function(res) {
             	vm.isLoadingResults = false;
             	vm.message = "";
-
+            	
             	if (res.length<1) {
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
             	
             	if (res.length>499) {
-            		vm.message = "Tulosjoukko on hyvin suuri, joten näytetään vain 500 ensimmäistä tulosta."
+            		vm.message = "Tulosjoukko on hyvin suuri, joten näytetään vain 500 ensimmäistä paikkaa."
             	} 
             	
-            	processEvents(res, vm);
+            	var data = [[],[],[],[],[]];
+            	res.forEach(function (ob) {
+            		data[parseInt(ob.type)].push({location: new google.maps.LatLng(ob.evt.lat, ob.evt.long), weight: parseInt(ob.count)})
+            		});
+            	
+            	
+            	for (var i in data){
+            		if (data[i].length>0) initMap(data[i], i);
+            	}
             	
             }).catch(handleError);
+        }
+
+        
+        
+        function initMap(data, index) {
+        	var gradients = [
+        		['rgba(0, 0, 255, 0)', 'rgba(0, 0, 255, 0.5)', 'rgba(0, 0, 255, 1)'],
+        		['rgba(128, 0, 0, 0)', 'rgba(128, 0, 0, 0.5)', 'rgba(128, 0, 0, 1)'],
+        		['rgba(0, 128, 0, 0)', 'rgba(0, 128, 0, 0.5)', 'rgba(0, 128, 0, 1)'],
+        		['rgba(0, 128, 128, 0)', 'rgba(0, 128, 128, 0.5)', 'rgba(0, 128, 128, 1)'],
+        		['rgba(128, 0, 128, 0)', 'rgba(128, 0, 128, 0.5)', 'rgba(128, 0, 128, 1)']
+              ];
+        	
+        	if (!vm.heatmaps[index]) {
+		        vm.heatmaps[index] = new google.maps.visualization.HeatmapLayer({
+		            map: vm.map,
+		            maxIntensity: 10,
+		            gradient: gradients[index],
+		            radius: 20
+		          });
+        	};
+        	vm.heatmaps[index].setData(data);
         }
 
         function handleError(error) {
             vm.isLoadingResults = false;
             vm.error = error;
         }
-        
-        function processEvents(events, vm) {
-        	
-        	//	normalize to counts to range [minweight, maxweight]
-        	var minweight = 1,
-        		maxweight = 8,
-        		a = 1.0,
-        		b = 0,
-        		mincount = events[0].count,
-    			maxcount = events[events.length-1].count;
-        	
-        	if (maxcount>maxweight && maxcount!=mincount) {
-        		a = (maxweight-minweight)/(maxcount-mincount);
-        		b = minweight-a*mincount;
-        	}
-        	
-	        events.forEach( function(evt) {
-	        	evt.weight = a*evt.count+b;
-	        });
-        	
-         	var i=0;
-        	vm.polylines = events.map(function(evt) { return eventToObject(evt, i++); });
-        }
-        
-        function eventToObject(evt, id){
-        	
-        	// var randomColor = ['LightSkyBlue','DeepSkyBlue','DodgerBlue','CornflowerBlue'][(4*Math.random())>>0];
-        	var randomColor = 'hsl('+(100+150*Math.random())+', 100%, 25%)';
-        	
-        	return {
-        		id: id,
-        		path: [
-        			{
-        				latitude: evt.birth.latitude,
-        				longitude: evt.birth.longitude
-        			},
-        			{
-        				latitude: evt.death.latitude,
-        				longitude: evt.death.longitude
-        			}],
-        		stroke: {
-        			color: randomColor ,
-        			weight: evt.weight
-        		},
-        		icons: [{
-                    icon: {
-                        path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
-                        scale: evt.weight
-                    }
-                }]
-        	};
-        }
-        
         
     }
 })();

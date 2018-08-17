@@ -1,8 +1,5 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-12" ng-show="vm.isLoadingResults && !vm.error">
-      <img class="loading-img" src="images/loading-lg.gif"></img>
-    </div>
     <div uib-alert ng-if="vm.error">
       {{ vm.error }}
     </div>
@@ -17,7 +14,9 @@
     </div>
     <div class="container-fluid">
     	<div class="col-md-8 col-lg-9">
-    		
+    		<div class="col-sm-12" ng-show="vm.isLoadingResults && !vm.error">
+		      <img class="loading-img" src="images/loading-lg.gif"></img>
+		    </div>
 		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
 		   		
 		   		<ui-gmap-polyline static="true" visible="true" geodesic="true"
