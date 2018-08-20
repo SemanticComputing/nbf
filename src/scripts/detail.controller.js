@@ -15,29 +15,7 @@
         var vm = this;
         
         vm.openPage = openPage;
-        /*
-        vm.popovers = {};
         
-        vm.testing = function (param) {
-        	console.log('Testing function still in use');
-        	if (!param) {
-        		return null;
-        	}
-        	var id = param.prs; 
-        	if (!vm.popovers.hasOwnProperty(id)) {
-        		vm.popovers[id] = {};
-        		nbfService.getPopover(id).then(function(data) {
-                	if (data.length) data = data[0];
-                	console.log(data); 
-                	vm.popovers[id] = data;
-                });
-        	}
-        	
-        	if (vm.popovers.hasOwnProperty(id) && vm.popovers[id].label) {
-        		return vm.popovers[id].label;
-        	}
-        }
-        */
         init();
         
         function init() {

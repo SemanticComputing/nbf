@@ -7,7 +7,9 @@
         <div class="person-profile-img">
           <div class="row">
             <div class="col-sm-12 text-center">
-              <img ng-repeat="img in vm.person.images" class="person-img img img-responsive" ng-src="{{ img }}" />
+              <img ng-repeat="img in vm.person.images" class="person-img img img-responsive" ng-src="{{ img }}" 
+              		uib-tooltip="Kuvalähde: {{ vm.person.imagesources[$index] }}" tooltip-enable="{{ !!vm.person.imagesources[$index] }}" tooltip-placement="bottom"
+              		/>
             </div>
           </div>
         </div>

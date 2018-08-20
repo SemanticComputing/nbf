@@ -26,6 +26,8 @@
             objects.forEach(function(person) {
                 person.hasImage = !!person.images;
                 person.images = person.images ? _.castArray(person.images) : ['images/person_placeholder.svg'];
+                person.imagesources = person.imagesources ? _.castArray(person.imagesources) : [ false ];
+                
                 if (person.description) {
                 	person.description = $sce.trustAsHtml(person.description);
                 }

@@ -95,6 +95,7 @@
 
         var latestUpdate;
         function fetchResults(facetSelections) {
+        	
             vm.isLoadingResults = true;
             vm.error = undefined;
             
@@ -132,10 +133,9 @@
             		data[parseInt(ob.type)].push({location: new google.maps.LatLng(ob.evt.lat, ob.evt.long), weight: parseInt(ob.count)})
             		});
             	
-            	
-            	for (var i in data){
-            		if (data[i].length>0) initMap(data[i], i);
-            	}
+            	data.forEach(function (arr,i) {
+            		if (arr.length>0) initMap(arr, i);
+            	})
             	
             }).catch(handleError);
         }

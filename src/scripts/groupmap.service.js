@@ -139,6 +139,14 @@
                 depth: 5, 
                 enabled: true
             },
+            deathplace: {
+                facetId: 'deathplace',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>',
+                name: 'Kuolinpaikka',
+                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
+                depth: 5, 
+                enabled: true
+            },
             deathYear: {
                 facetId: 'birthYear',
                 predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
@@ -294,6 +302,7 @@
         }
         
         function getResults3(facetSelections, selections) {
+        	//	http://yasgui.org/short/r1w6rEE8m
         	var query = 'SELECT ?evt__lat ?evt__long (COUNT(?prs) AS ?count) ?type WHERE { ' +
         	'    <RESULT_SET> ' +
         	'       ' +

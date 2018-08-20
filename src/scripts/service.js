@@ -42,6 +42,7 @@
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX schema: <http://schema.org/> ' +
+        ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
@@ -86,7 +87,7 @@
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
-        '  		OPTIONAL { ?prs schema:image ?images . }' +
+        '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ] }' +
         '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
         '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation ' +
         '  			OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
@@ -144,7 +145,7 @@
             '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate }' +
             '  			OPTIONAL { ?dea nbf:place/skos:prefLabel ?deathPlace }' +
             '		} ' +
-            '  		OPTIONAL { ?prs schema:image ?images . }' +
+            '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source/skos:prefLabel ?imagesources ] }' +
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
@@ -248,21 +249,23 @@
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
         	'} ORDER BY ?id__fname ?id__gname ';
         
-        //	
+        //	http://yasgui.org/short/ByjM-gdIm
         var queryForPopover =
-        	'SELECT DISTINCT ?id ?label ?image ?lifespan ' +
-        	'WHERE { ' +
-        	' <RESULT_SET> ' +
-        	'  OPTIONAL { ?id owl:sameAs*/foaf:focus/schema:image ?image . } ' +
+        	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
+        	'WHERE {' +
+        	'  <RESULT_SET> ' +
+        	'  ?id owl:sameAs*/foaf:focus ?prs . ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
+        	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
         	'   ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
-        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)  ' +
-        	'   ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime } ' +
-        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
-        	'   ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }    ' +
+        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)        ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime }    ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime }    ' +
+        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
         	'} LIMIT 1 ';
         
         // The SPARQL endpoint URL
@@ -351,7 +354,6 @@
         function getPopover(id) {
         	var qry = prefixes + queryForPopover;
             var constraint = 'VALUES ?id { <' + id + '> } . ';
-            // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
             	return result[0];
