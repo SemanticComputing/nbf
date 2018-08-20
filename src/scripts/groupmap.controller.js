@@ -102,6 +102,7 @@
 
             return groupmapService.getResults(facetSelections)
             .then(function(res) {
+            	vm.isLoadingResults = false;
             	vm.events = processEvents(res, vm);
             }).catch(handleError);
         }
@@ -192,6 +193,7 @@
 							labelOrigin: new google.maps.Point(0, 0)
 							},
 						optimized: true,
+						title: label
 						},
 	        		"onClick": function () {
 	        			

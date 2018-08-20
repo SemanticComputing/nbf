@@ -155,7 +155,7 @@
 		        vm.heatmaps[index] = new google.maps.visualization.HeatmapLayer({
 		            map: vm.map,
 		            maxIntensity: 10,
-		            gradient: gradients[index],
+		            gradient: gradients[0],
 		            radius: 20
 		          });
         	};

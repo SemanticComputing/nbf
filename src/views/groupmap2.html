@@ -10,18 +10,17 @@
 	    <br/><br/>
 	    <span ng-if="vm.message" style="color:#ff4141">{{ vm.message }}<br/><br/></span>
 	    
-	    <div class="col-sm-12" ng-show="vm.isLoadingResults && !vm.error">
-		      <img class="loading-img" src="images/loading-lg.gif"></img>
-		</div>
-		
       	<div ng-include="'views/mapfacets.partial.html'"></div>
     </div>
     <div class="container-fluid">
     	<div class="col-md-8 col-lg-9">
+    		<div class="col-sm-12 mapspinner" ng-show="vm.isLoadingResults && !vm.error" >
+		      <img class="loading-img" src="images/loading-lg.gif"></img>
+			</div>
 		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
 		   		
-		   		<ui-gmap-polyline static="true" visible="true" geodesic="true"
-		   			ng-repeat="p in vm.polylines" path="p.path" stroke="p.stroke" icons="p.icons">
+		   		<ui-gmap-polyline static="true" visible="true" geodesic="true" mouseover="console.log('mouse over')" 
+		   			ng-repeat="p in vm.polylines" path="p.path" stroke="p.stroke" icons="p.icons" events="p.events">
 		   		</ui-gmap-polyline>
 	        	
 	        </ui-gmap-google-map>

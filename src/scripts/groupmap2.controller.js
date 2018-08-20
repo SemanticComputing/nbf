@@ -138,14 +138,13 @@
 	        	evt.weight = a*evt.count+b;
 	        });
         	
-         	var i=0;
-        	vm.polylines = events.map(function(evt) { return eventToObject(evt, i++); });
+        	vm.polylines = events.map(function(evt, i) { return eventToObject(evt, i); });
         }
         
         function eventToObject(evt, id){
         	
         	// var randomColor = ['LightSkyBlue','DeepSkyBlue','DodgerBlue','CornflowerBlue'][(4*Math.random())>>0];
-        	var randomColor = 'hsl('+(100+150*Math.random())+', 100%, 25%)';
+        	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)';
         	
         	return {
         		id: id,
@@ -158,6 +157,10 @@
         				latitude: evt.death.latitude,
         				longitude: evt.death.longitude
         			}],
+        		events: {
+        			'click': function(obj, eventName, model) { console.log('click', obj);  },
+        			'mouseover': function() { console.log('mouseover'); }
+        		},
         		stroke: {
         			color: randomColor ,
         			weight: evt.weight
