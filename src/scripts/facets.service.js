@@ -72,7 +72,7 @@
                     {
                         id: 'blf',
                         pattern: '?id <http://ldf.fi/nbf/blf> [] .',
-                        label: 'BLF'
+                        label: 'Biografiskt lexikon för Finland'
                     },
                     {
                         id: 'ulan',

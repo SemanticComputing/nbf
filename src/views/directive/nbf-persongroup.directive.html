@@ -1,0 +1,8 @@
+<ul class="list-group row list-group-persons ng-scope" id="popupcontainer2">
+        <li class="list-group-item col-xs-6 ng-scope" ng-repeat="person in people">
+			<a uib-popover-template="'views/persongroupTooltipTemplate.html'" 
+				popover-trigger="'mouseenter'"
+				popover-placement="bottom"
+				ng-href="{{ person.link }}">{{ person.label }}</a>
+		</li>
+</ul>

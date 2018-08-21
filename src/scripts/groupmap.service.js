@@ -82,7 +82,7 @@
                     {
                         id: 'blf',
                         pattern: '?id <http://ldf.fi/nbf/blf> [] .',
-                        label: 'BLF'
+                        label: 'Biografiskt lexikon för Finland'
                     },
                     {
                         id: 'ulan',
@@ -206,36 +206,26 @@
         ' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
 
-        // The query for the results.
-        // ?id is bound to the person URI.
-        var query =
-        	'SELECT DISTINCT ?id ?evt ?person__name ?time__start ?time__end ?class ?place__uri ?place__label ?place__latitude ?place__longitude WHERE { ' +
-        	'  { SELECT DISTINCT ?id WHERE { ' +
-        	'   { <RESULT_SET> } ' +
-        	'  } LIMIT 2500 } ' +
-        	'  ?id foaf:focus ?prs . ' +
-        	'  ?id skosxl:prefLabel ?person__label . ' +
-    		'  OPTIONAL { ?person__label schema:familyName ?person__fname } ' +
-    		'  OPTIONAL { ?person__label schema:givenName ?person__gname } ' +
-    		'  BIND (CONCAT(COALESCE(?person__gname, "")," ",COALESCE(?person__fname, "")) AS ?person__name) ' +
-        	'  { ?evt crm:P100_was_death_of ?prs . } ' +
-        	'  UNION ' +  
-        	'  { ?evt crm:P98_brought_into_life ?prs . } ' +
-        	'  ' +
-        	'  ?evt nbf:time ?time . ' +
-        	'  OPTIONAL { ?time gvp:estStart ?time__start. } ' +
-        	'  OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
-        	'  FILTER (BOUND(?time__start) || BOUND(?time__end)) ' +
-        	'   ' +
-        	'  ?evt a/skos:prefLabel ?class . ' +
-        	'  FILTER (lang(?class)="en") ' +
-        	'  ' +
-        	'  ?evt nbf:place ?place__uri .  ' +
-        	'    ?place__uri geo:lat ?place__latitude ;  ' +
-        	'         geo:long ?place__longitude ; ' +
-    		'         skos:prefLabel ?place__label . ' +
-    		'	FILTER (lang(?place__label)="fi") ' +
-        	'} ORDER BY ?person__fname';
+        
+        var query = 'SELECT * WHERE { ' +
+    	'  { SELECT ?place__uri (COUNT(?prs) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?person__ids) ?type WHERE {  ' +
+    	'    { SELECT ?id WHERE { <RESULT_SET> } LIMIT <LIMIT> } FILTER(BOUND(?id)) ' +
+    	' ' +
+    	'    VALUES (?prop ?eclass ?type) { <VALUES> } ' +
+    	'    ?id foaf:focus ?prs . ' +
+    	'    ?evt__id ?prop ?prs ; ' +
+    	'          a ?eclass ;  ' +
+    	'          nbf:place ?place__uri . ' +
+    	'    } GROUP BY ?place__uri ?type ORDER BY DESC(?count) ' +
+    	'  } ' +
+    	'  FILTER (?count>0) ' +
+    	'  ?place__uri geo:lat ?place__latitude ; ' +
+    	'        	geo:long ?place__longitude ; ' +
+    	'    		skos:prefLabel ?place__label . ' +
+    	'  FILTER (lang(?place__label)="fi") ' +
+    	'}  '
+        	
+        
         
         // http://yasgui.org/short/ry0yGeVIm
         var query2 = 	
@@ -251,9 +241,9 @@
         	'    ?birth__id crm:P98_brought_into_life ?prs ; ' +
         	'              nbf:place ?birth__place . ' +
         	'       ' +
-        	'    FILTER (?birth__place!=?death__place) ' +
+        	// '    FILTER (?birth__place!=?death__place) ' +
         	'       ' +
-        	'    } GROUP BY ?birth__place ?death__place ORDER BY DESC(?count) LIMIT 500  } ' +
+        	'    } GROUP BY ?birth__place ?death__place ORDER BY DESC(?count) LIMIT 2500  } ' +
         	'  FILTER (?count>0) ' +
         	'  ?birth__place geo:lat ?birth__latitude ; ' +
         	'              geo:long ?birth__longitude . ' +
@@ -291,8 +281,18 @@
         // This handler is for the additional queries.
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
-        function getResults(facetSelections) {
-        	var q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+        function getResults(facetSelections, selections, limit) {
+        	var values = 
+        		(selections[0] ? '( crm:P98_brought_into_life nbf:Birth 0) ' : '') +
+	        	(selections[1] ? '( crm:P100_was_death_of nbf:Death 1) ' : '') +
+	        	(selections[2] ? '( bioc:inheres_in nbf:Career 2 ) ' : '') +
+	        	(selections[3] ? '( bioc:inheres_in nbf:Product 3 ) ' : '') +
+	        	(selections[4] ? '( bioc:inheres_in nbf:Honour 4 ) ' : '') ,
+        	
+        		q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
+        		.replace("<VALUES>", values)
+        		.replace("<LIMIT>", limit);
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         

@@ -28,6 +28,24 @@
         			lng: 24.945831}
         };
         
+        vm.limitoptions = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
+        vm.SEARCHLIMIT = vm.limitoptions[2];
+        
+        vm.eventtypes = [
+        	{type:"0", check: true, color:"hsl(222, 90%, 60%)", label: "Syntymä", label2: "syntyneet", tooltip: "Henkilöiden syntymäpaikat lämpökarttana"}, 
+        	{type:"1", check: true, color:"hsl(0, 90%, 60%)", label: "Kuolema", label2: "kuolleet", tooltip: "Henkilöiden kuolinpaikat lämpökarttana"},
+        	{type:"2", check: false, color:"hsl(0, 0%, 45%)", label: "Ura", label2: "ura", tooltip: "Henkilöiden opiskelu- ja työpaikat"},
+        	{type:"3", check: false, color:"hsl(120, 90%, 40%)", label: "Teokset", label2: "teokset", tooltip: "Paikat, joissa on henkilöihin liittyviä teoksia"},
+        	{type:"4", check: false, color:"hsl(180, 90%, 40%)", label: "Kunniamaininnat", label2: "kunniamaininnat", tooltip:"Kunniamaininnat"}
+        	];
+        
+        vm.change = function() {
+        	if (vm.eventtypes.every(function (val) {return !(val.check);})) {
+        		vm.eventtypes[0].check = true;
+        	}
+        	fetchResults({ constraint: vm.previousSelections });
+        };
+        
         vm.showWindow = function() {
         	vm.window.show = true;
         }
@@ -99,10 +117,20 @@
             
             var updateId = _.uniqueId();
             latestUpdate = updateId;
-
-            return groupmapService.getResults(facetSelections)
+            
+            var selections = vm.eventtypes.map(function(ob) { return ob.check; } );
+            
+            return groupmapService.getResults(facetSelections, selections, vm.SEARCHLIMIT.value)
             .then(function(res) {
             	vm.isLoadingResults = false;
+            	
+            	vm.message = "";
+            	
+            	if (res.length<1) {
+            		vm.message = "Haku ei tuottanut tuloksia."
+            		return;
+            	}
+            	
             	vm.events = processEvents(res, vm);
             }).catch(handleError);
         }
@@ -113,44 +141,19 @@
         }
         
         function processEvents(events, vm) {
-        	var places = {};
+        	vm.markers = [];
         	
-        	events.forEach( function(event) {
-        		
-        		if (!event.class) event.class = "event";
-        		event.class = event.class.toLowerCase();
-        		
-        		//	count by place uris
-        		var key=event.class+event.place.uri;
-        		if (!places.hasOwnProperty(key)) {
-        			places[key]={count:0, 
-        					latitude:event.place.latitude, 
-        					longitude:event.place.longitude, 
-        					label:	event.place.label,
-        					type:	event.class,
-        					people: {}}
-        		}
-        		places[key]['count']+=1;
-        		places[key]['people'][event.id]= event.person.name;
+        	events.forEach( function(event, i) {
+        		var m = generateMarker(vm, event.place.latitude, 
+        				event.place.longitude, 
+        				i,
+        				event.type, 
+        				event.count,
+        				event.place.label,
+        				event.person.ids);
+        		vm.markers.push(m);
         	});
         	
-        	
-        	vm.markers = [];
-        	var i = 0;
-        	
-        	for (var x in places) {
-        		var place=places[x];
-        		var m = generateMarker(vm, place.latitude, 
-        				place.longitude, 
-        				++i,
-        				place.type, 
-        				place.count,
-        				place.label,
-        				place.people);
-        		vm.markers.push(m);
-        	}
-        	//	sort the the largest gets drawn first
-        	vm.markers.sort(function(a, b){return b.count - a.count});
         	
         	var bounds = new google.maps.LatLngBounds();
         	
@@ -162,21 +165,12 @@
         	return events;
         }
         
-        
         function generateMarker(vm, lat, lon, id, type, count, label, people) {
-        	var r = 5.0*Math.sqrt(count);
-        	// if (!r) r=5.0;
-        	var ICONCOLORS = {
-    				"death":	"#ff4141",
-    				"birth":	"#777fff",
-    				"spouse":	"#c3b981",
-    				"child":	"#7f6780",
-    				"career":	"#999999",
-    				"product":	"#83d236",
-    				"honour":	"#ce5c00",
-    				"event":	"#ABCDEF"
-    		};
-        	var m = {
+        	
+        	var r = 5.0*Math.sqrt(count),
+        		tooltiplabel = getPlaceLabel(label, type, count);
+        	
+        	return {
         			"count": count,
         			"latitude": lat,
         			"longitude": lon,
@@ -186,26 +180,20 @@
 	        				path:"M-"+r+" 0 A "+r+","+r+", 0 ,1, 1,"+r+",0 A"+r+","+r+",0,1,1,-"+r+",0 Z",
 							scale: 1.0,
 							anchor: new google.maps.Point(0,0),
-							fillColor: ICONCOLORS[type],
+							fillColor: vm.eventtypes[parseInt(type)].color,
 							fillOpacity: 0.6,
 							strokeOpacity: 0.2,
 							strokeWeight: 1,
 							labelOrigin: new google.maps.Point(0, 0)
 							},
 						optimized: true,
-						title: label
+						title: tooltiplabel
 						},
 	        		"onClick": function () {
 	        			
-	        			vm.place_label = label;
-	        			if (type=="death") vm.place_label += ", kuolleet";
-	        			else if (type=="birth") vm.place_label += ", syntyneet";
+	        			vm.place_label = tooltiplabel;
 	        			
-	        			var arr = [];
-	        			for (var p in people) {
-	        				arr.push({uri:p, label:people[p]})
-	        			}
-	        			vm.people = arr;
+	        			vm.people = people;
 	        			
 	        			vm.window.position.lat = parseInt(lat);
 	        			vm.window.position.lng = parseInt(lon);
@@ -214,8 +202,13 @@
 	        			$scope.$apply();
         		}
         	};
-        	return m;
+        	
         }
         
+        function getPlaceLabel(label, type, count) {
+        	var arr = ['syntyneet', 'kuolleet', 'ura', 'teokset' ,'kunniamaininnat'];
+        	return label + ", "+vm.eventtypes[parseInt(type)].label2+" ("+count+")";
+			
+        }
     }
 })();

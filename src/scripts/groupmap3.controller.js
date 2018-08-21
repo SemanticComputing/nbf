@@ -23,7 +23,6 @@
         
         vm.map = null;
         
-        vm.heatmap = null;
         vm.heatmaps = [null,null,null,null,null];
         vm.message = "";
         
@@ -33,7 +32,6 @@
         	if (vm.eventBox.every(function (val) {return !val;})) {
         		vm.eventBox[0] = true;
         	}
-        	
         	fetchResults({ constraint: vm.previousSelections });
         };
         
@@ -104,8 +102,9 @@
             
             if (!vm.map) {
         		vm.map = new google.maps.Map(document.getElementById('ui-gmap-google-map'), {
-                	zoom: 6,
-                	center: {lat: 62, lng: 24}
+                	zoom: 5,
+                	center: {lat: 62, lng: 24},
+                	mapTypeId: 'satellite'
               	});
         	}
             
@@ -130,7 +129,8 @@
             	
             	var data = [[],[],[],[],[]];
             	res.forEach(function (ob) {
-            		data[parseInt(ob.type)].push({location: new google.maps.LatLng(ob.evt.lat, ob.evt.long), weight: parseInt(ob.count)})
+            		// data[parseInt(ob.type)].push({location: new google.maps.LatLng(ob.evt.lat, ob.evt.long), weight: parseInt(ob.count)})
+            		data[0].push({location: new google.maps.LatLng(ob.evt.lat, ob.evt.long), weight: parseInt(ob.count)})
             		});
             	
             	data.forEach(function (arr,i) {
@@ -154,9 +154,9 @@
         	if (!vm.heatmaps[index]) {
 		        vm.heatmaps[index] = new google.maps.visualization.HeatmapLayer({
 		            map: vm.map,
-		            maxIntensity: 10,
-		            gradient: gradients[0],
-		            radius: 20
+		            maxIntensity: 15,
+		            // gradient: gradients[0],
+		            radius: 20 // , opacity: 0.4
 		          });
         	};
         	vm.heatmaps[index].setData(data);

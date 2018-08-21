@@ -148,18 +148,10 @@
         	
         	return {
         		id: id,
-        		path: [
-        			{
-        				latitude: evt.birth.latitude,
-        				longitude: evt.birth.longitude
-        			},
-        			{
-        				latitude: evt.death.latitude,
-        				longitude: evt.death.longitude
-        			}],
+        		path: [ evt.birth, evt.death ],
         		events: {
-        			'click': function(obj, eventName, model) { console.log('click', obj);  },
-        			'mouseover': function() { console.log('mouseover'); }
+        			'click': function(obj, eventName, model) { console.log('click', obj);  }
+        			// 'mouseover': function() { console.log('mouseover'); }
         		},
         		stroke: {
         			color: randomColor ,

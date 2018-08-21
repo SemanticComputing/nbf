@@ -35,6 +35,7 @@
         this.getByReferences = getByReferences;
         this.getBios = getBios;
         this.getPopover = getPopover;
+        this.getPopoverGroup = getPopoverGroup;
         /* Implementation */
 
         var prefixes =
@@ -268,6 +269,26 @@
         	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
         	'} LIMIT 1 ';
         
+        //	http://yasgui.org/short/HJksOSt87
+        var queryForPopoverGroup =
+        	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
+        	'WHERE {   ' +
+        	'  <RESULT_SET> ' +
+        	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
+        	'  ?id foaf:focus ?prs . ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
+        	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
+        	'   ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }    ' +
+        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)        ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime }    ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime }    ' +
+        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
+        	'} ORDER BY ?fname ?gname ';
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -357,6 +378,16 @@
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
             	return result[0];
+            });
+        }
+        
+        function getPopoverGroup(arr) {
+        	var ids = '<'+arr.join('> <')+'>';
+        	var qry = prefixes + queryForPopoverGroup;
+            var constraint = 'VALUES ?id2 { ' + ids + ' } . ';
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(result) {
+            	return result;
             });
         }
         
