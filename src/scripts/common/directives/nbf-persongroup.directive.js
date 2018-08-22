@@ -12,7 +12,7 @@
 		        	data.forEach(function (person, i) {
 		        		person.link = '#!/'+ (person.id).replace(new RegExp('/', 'g'), '~2F');
 		        		if (person.lifespan == '( - )') person.lifespan = '';
-		        		person.placement = i>12 ? "top" : "bottom";
+		        		person.placement = i>7 ? "top" : "bottom";
 		        	});
 		        	$scope.people = data;
 		        	

@@ -19,6 +19,8 @@
     function GroupmapController2($scope, $location, $state, $uibModal, _, groupmapService,
             FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
 
+    	
+        
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.window = { show: false, 
@@ -148,7 +150,7 @@
 	        	evt.weight = a*evt.count+b;
 	        });
         	
-        	var arr = events.map(function(evt, i) { return eventToObject(evt, i); });
+        	var arr = events.map(function(evt) { return eventToObject(evt); });
         	
         	var flatten = function (arr) {
         		  return arr.reduce(function (flat, toFlatten) {
@@ -159,9 +161,86 @@
         	vm.polylines = flatten(arr); 
         }
         
-        function eventToObject(evt, id) {
+        var idcount = 0;
+        function eventToObject(evt) {
         	
-        	// var randomColor = ['LightSkyBlue','DeepSkyBlue','DodgerBlue','CornflowerBlue'][(4*Math.random())>>0];
+        	var midPoint = function (x,y) {
+        		var a = new google.maps.LatLng(x.latitude, x.longitude),
+        			b = new google.maps.LatLng(y.latitude, y.longitude);
+        		return google.maps.geometry.spherical.interpolate(a, b, 0.5);
+        	};
+        	
+        	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
+        		hiliteColor = 'blue', // "hsl(160, 100%, 60%)",
+        		mapaverageColor = 'rgb(203,231,226)',
+        		hoverOpacity = 0.03,
+        		hoverWeight = 6;
+        	
+        	var obj = [];
+
+        	var middle = midPoint(evt.birth, evt.death);
+            
+        	obj.push(
+        			{
+    	        		id: idcount++,
+    	        		path: [ evt.birth, evt.death ],
+    	        		events: {
+    	        			'click': function(obj) { 
+    	        				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
+    		        			vm.people = evt.person.ids ;
+    		        			
+    		        			vm.showWindow();
+    		        			
+    		        			$scope.$apply();
+    		        			},
+    	        			'mouseover': function(obj) { 
+    	        				obj.setOptions({
+    	        					strokeColor: 'blue',
+    	        					strokeOpacity: 1.0}); },
+    	        			'mouseout': function(obj) { 
+    	        				obj.setOptions({
+    	        					strokeColor: mapaverageColor,
+    	        					strokeOpacity: hoverOpacity}); }
+    	        		},
+    	        		stroke: {
+    	        			color: mapaverageColor,
+    	        			weight: hoverWeight,
+    	        			opacity: hoverOpacity
+    	        		},
+		        		icons: [{
+		                    icon: {
+		                        path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
+		                        scale: 4
+		                    }
+		                }]
+            		},
+	        		{
+		        		id: idcount++,
+		        		path: [ evt.birth, middle ],
+		        		stroke: {
+		        			color: 'blue' ,
+		        			weight: evt.weight
+		        		}
+	        		},{
+		        		id: idcount++,
+		        		path: [ middle, evt.death ],
+		        		stroke: {
+		        			color: 'red' ,
+		        			weight: evt.weight
+		        		},
+		        		icons: [{
+		                    icon: {
+		                        path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
+		                        scale: evt.weight
+		                    }
+		                }]
+	        		}
+        		);
+        	return obj;
+        };
+        
+        function eventToObjectSingleColor(evt) {
+        	
         	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
         		hiliteColor = 'blue', // "hsl(160, 100%, 60%)",
         		mapaverageColor = 'rgb(203,231,226)';
@@ -170,7 +249,7 @@
         	
         	if (evt.weight<4) {
         		obj.push({
-            		id: -id,
+            		id: idcount++,
             		path: [ evt.birth, evt.death ],
             		events: {
             			'click': function(obj) { 
@@ -204,7 +283,7 @@
         	}
         	
         	obj.push({
-        		id: id,
+        		id: idcount++,
         		path: [ evt.birth, evt.death ],
         		events: {
         			'click': function(obj) { 
@@ -234,7 +313,7 @@
                 }]
         	});
         	return obj;
-        }
+        };
         
         
     }

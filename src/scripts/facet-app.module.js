@@ -140,6 +140,7 @@
                 }
             }
         })
+        
         .state('groupmap2', {
             url: '/joukkokartta2',
             templateUrl: 'views/groupmap2.html',

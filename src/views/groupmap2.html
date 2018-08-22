@@ -10,7 +10,7 @@
 	        <a ui-sref-active="active" ui-sref="groupmap2">Liikekartta</a>
 	    </p>
 	    <p>
-	    Kartalla yhdistetään henkilöiden synnyin- ja kuolinpaikat nuolilla. 
+	    Kartalla yhdistetään henkilöiden <span style="color:blue">synnyin-</span> ja <span style="color:red">kuolin</span>paikat nuolilla. 
 	    Alapuoleisilla suodattimilla voidaan rajata haluttu henkilöryhmä.
 	    </p>
 	    Näytä kartalla korkeintaan 
@@ -34,8 +34,8 @@
 		   			id="ui-gmap-window" 
 		   			show="vm.window.show" 
 		   			options="vm.window" 
-		   			templateUrl="'views/groupmap.popup.html'"
-                    templateParameter="vm"
+		   			templateUrl="'views/groupmap/popup.html'"
+                    templateParameter="vm"/
             		closeClick="vm.closeWindow">
             		<span></span>
         		</ui-gmap-window>
