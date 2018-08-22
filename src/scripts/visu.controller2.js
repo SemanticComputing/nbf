@@ -26,7 +26,7 @@
         
         vm.showForm = function () {
             var modalInstance = $uibModal.open({
-                templateUrl: 'views/visu.popup.html',
+                templateUrl: 'views/visu/popup.html',
                 scope: $scope
             });
             /**

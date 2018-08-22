@@ -112,11 +112,11 @@
         .state('groupmap', {
             url: '/joukkokartta',
             abstract: true,
-            templateUrl: 'views/groupmap.html',
+            templateUrl: 'views/groupmap/groupmap.html',
         })
         .state('groupmap.singleview', {
             url: '',
-            templateUrl: 'views/groupmap.singleview.html',
+            templateUrl: 'views/groupmap/singleview.html',
             controller: 'GroupmapController',
             controllerAs: 'vm',
         })
@@ -129,12 +129,12 @@
             url: '',
             views: {
                 'left@groupmap.comparison': {
-                    templateUrl: 'views/groupmap.comparison.left.html',
+                    templateUrl: 'views/groupmap/comparison.left.html',
                     controller: 'GroupmapController',
                     controllerAs: 'vm',
                 },
                 'right@groupmap.comparison': {
-                    templateUrl: 'views/groupmap.comparison.right.html',
+                    templateUrl: 'views/groupmap/comparison.right.html',
                     controller: 'GroupmapController',
                     controllerAs: 'vm',
                 }
@@ -164,36 +164,32 @@
             controller: 'CardsController',
             controllerAs: 'vm'
         })
-        .state('search', {
-            url: '/haku',
-            templateUrl: 'views/search.html'
-        })
         .state('nlp', {
             url: '/nlp',
             abstract: true,
-            templateUrl: 'views/nlp.html',
+            templateUrl: 'views/nlp/nlp.html',
         })
         .state('nlp.statistics', {
             url: '',
-            templateUrl: 'views/nlp.statistics.html',
+            templateUrl: 'views/nlp/statistics.html',
             controller: 'NlpStatisticsController',
             controllerAs: 'vm',
         })
         .state('nlp.comparison', {
             url: '/vertaa',
             abstract: true,
-            templateUrl: 'views/nlp.comparison.html',
+            templateUrl: 'views/nlp/comparison.html',
         })
         .state('nlp.comparison.sides', {
             url: '',
             views: {
                 'left@nlp.comparison': {
-                    templateUrl: 'views/nlp.comparison.left.html',
+                    templateUrl: 'views/nlp/comparison.left.html',
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',
                 },
                 'right@nlp.comparison': {
-                    templateUrl: 'views/nlp.comparison.right.html',
+                    templateUrl: 'views/nlp/comparison.right.html',
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',
                 }
@@ -202,11 +198,11 @@
         .state('visu', {
             url: '/visu',
             abstract: true,
-            templateUrl: 'views/visu.html',
+            templateUrl: 'views/visu/visu.html',
         })
         .state('visu.statistics', {
             url: '',
-            templateUrl: 'views/visu.statistics.html',
+            templateUrl: 'views/visu/statistics.html',
             controller: 'VisuController',
             controllerAs: 'vm',
         })
@@ -219,12 +215,12 @@
             url: '',
             views: {
                 'left@visu.comparison': {
-                    templateUrl: 'views/visu.comparison.left.html',
+                    templateUrl: 'views/visu/comparison.left.html',
                     controller: 'VisuController',
                     controllerAs: 'vm',
                 },
                 'right@visu.comparison': {
-                    templateUrl: 'views/visu.comparison.right.html',
+                    templateUrl: 'views/visu/comparison.right.html',
                     controller: 'VisuController2',
                     controllerAs: 'vm',
                 }
