@@ -18,8 +18,8 @@
             <div class="row">
               <div class="col-xs-12">
                 <p ng-if="(vm.person.birthPlace || vm.person.birthDate || vm.person.deathDate)">
-                <span ng-if="(vm.person.birthPlace || vm.person.birthDate)">&#8727;&nbsp;{{ vm.person.birthPlace }} {{ vm.person.birthDate }}</span>
-                <span ng-if="(vm.person.deathPlace || vm.person.deathDate)">&dagger;&nbsp;{{ vm.person.deathPlace }}</span>
+                <span ng-if="(vm.person.birthPlace || vm.person.birthDate)">&#8727;&nbsp;{{ vm.person.birthPlace | castArray | join:', ' }} {{ vm.person.birthDate }}</span>
+                <span ng-if="(vm.person.deathPlace || vm.person.deathDate)">&dagger;&nbsp;{{ vm.person.deathPlace | castArray | join:', ' }}</span>
                 <span ng-if=vm.person.deathDate>{{ vm.person.deathDate }}</span>
                 </p>
               </div>

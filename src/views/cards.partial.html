@@ -19,9 +19,9 @@
                 </div>
                 <div class="col-xs-12 col-sm-9 col-md-12">
                   <p ng-if="::(person.birthPlace || person.birthDate || person.deathDate)">
-                    &#8727;&nbsp;<span ng-if="::person.birthPlace">{{ ::person.birthPlace }}</span>
+                    &#8727;&nbsp;<span ng-if="::person.birthPlace">{{ ::person.birthPlace | castArray | join:', ' }}</span>
                     {{ ::person.birthDate }}
-                    <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathPlace }}&nbsp;{{ ::person.deathDate }}</span>
+                    <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathPlace | castArray | join:', ' }}&nbsp;{{ ::person.deathDate }}</span>
                   </p>
                 </div>
                 <div ng-if="::person.occupation" class="col-xs-12">

@@ -108,11 +108,37 @@
             controller: 'CardsController',
             controllerAs: 'vm',
         })
+        
         .state('groupmap', {
             url: '/joukkokartta',
+            abstract: true,
             templateUrl: 'views/groupmap.html',
+        })
+        .state('groupmap.singleview', {
+            url: '',
+            templateUrl: 'views/groupmap.singleview.html',
             controller: 'GroupmapController',
             controllerAs: 'vm',
+        })
+        .state('groupmap.comparison', {
+            url: '/vertaa',
+            abstract: true,
+            templateUrl: 'views/comparison.html',
+        })
+        .state('groupmap.comparison.sides', {
+            url: '',
+            views: {
+                'left@groupmap.comparison': {
+                    templateUrl: 'views/groupmap.comparison.left.html',
+                    controller: 'GroupmapController',
+                    controllerAs: 'vm',
+                },
+                'right@groupmap.comparison': {
+                    templateUrl: 'views/groupmap.comparison.right.html',
+                    controller: 'GroupmapController',
+                    controllerAs: 'vm',
+                }
+            }
         })
         .state('groupmap2', {
             url: '/joukkokartta2',
@@ -137,6 +163,10 @@
             templateUrl: 'views/testing.html',
             controller: 'CardsController',
             controllerAs: 'vm'
+        })
+        .state('search', {
+            url: '/haku',
+            templateUrl: 'views/search.html'
         })
         .state('nlp', {
             url: '/nlp',
@@ -183,7 +213,7 @@
         .state('visu.comparison', {
             url: '/vertaa',
             abstract: true,
-            templateUrl: 'views/visu.comparison.html',
+            templateUrl: 'views/comparison.html',
         })
         .state('visu.comparison.sides', {
             url: '',

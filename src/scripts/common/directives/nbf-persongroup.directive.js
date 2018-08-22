@@ -9,9 +9,10 @@
 		        
 		        nbfService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
 		        	
-		        	data.forEach(function (ob) {
-		        		ob.link = '#!/'+ (ob.id).replace(new RegExp('/', 'g'), '~2F');
-		        		if (ob.lifespan == '( - )') ob.lifespan = '';
+		        	data.forEach(function (person, i) {
+		        		person.link = '#!/'+ (person.id).replace(new RegExp('/', 'g'), '~2F');
+		        		if (person.lifespan == '( - )') person.lifespan = '';
+		        		person.placement = i>12 ? "top" : "bottom";
 		        	});
 		        	$scope.people = data;
 		        	

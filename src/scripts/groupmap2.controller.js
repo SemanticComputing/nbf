@@ -27,12 +27,26 @@
         			lng: 24.945831}
         };
         
+        vm.limitoptions = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
+        vm.SEARCHLIMIT = vm.limitoptions[1];
+        
+        vm.change = function() {
+        	fetchResults({ constraint: vm.previousSelections });
+        };
+        
         vm.message = "";
         vm.heatmap = null;
         
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.getSortClass = groupmapService.getSortClass;
+        
+        vm.showWindow = function() {
+        	vm.window.show = true;
+        }
+        vm.closeWindow = function() {
+        	vm.window.show = false;
+        }
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
@@ -95,7 +109,7 @@
             latestUpdate = updateId;
             
             vm.polylines = [];
-            return groupmapService.getResults2(facetSelections)
+            return groupmapService.getResults2(facetSelections, vm.SEARCHLIMIT.value)
             .then(function(res) {
             	vm.isLoadingResults = false;
             	vm.message = "";
@@ -104,10 +118,6 @@
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
-            	
-            	if (res.length>499) {
-            		vm.message = "Tulosjoukko on hyvin suuri, joten näytetään vain 500 ensimmäistä tulosta."
-            	} 
             	
             	processEvents(res, vm);
             	
@@ -120,16 +130,16 @@
         }
         
         function processEvents(events, vm) {
-        	
+
         	//	normalize to counts to range [minweight, maxweight]
         	var minweight = 1,
-        		maxweight = 8,
+        		maxweight = 9,
         		a = 1.0,
         		b = 0,
         		mincount = events[0].count,
     			maxcount = events[events.length-1].count;
         	
-        	if (maxcount>maxweight && maxcount!=mincount) {
+        	if (maxcount!=mincount) {
         		a = (maxweight-minweight)/(maxcount-mincount);
         		b = minweight-a*mincount;
         	}
@@ -138,20 +148,79 @@
 	        	evt.weight = a*evt.count+b;
 	        });
         	
-        	vm.polylines = events.map(function(evt, i) { return eventToObject(evt, i); });
+        	var arr = events.map(function(evt, i) { return eventToObject(evt, i); });
+        	
+        	var flatten = function (arr) {
+        		  return arr.reduce(function (flat, toFlatten) {
+        		    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+        		  }, []);
+        		};
+        	
+        	vm.polylines = flatten(arr); 
         }
         
-        function eventToObject(evt, id){
+        function eventToObject(evt, id) {
         	
         	// var randomColor = ['LightSkyBlue','DeepSkyBlue','DodgerBlue','CornflowerBlue'][(4*Math.random())>>0];
-        	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)';
+        	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
+        		hiliteColor = 'blue', // "hsl(160, 100%, 60%)",
+        		mapaverageColor = 'rgb(203,231,226)';
         	
-        	return {
+        	var obj = [];
+        	
+        	if (evt.weight<4) {
+        		obj.push({
+            		id: -id,
+            		path: [ evt.birth, evt.death ],
+            		events: {
+            			'click': function(obj) { 
+            				
+            				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
+    	        			vm.people = evt.person.ids ;
+    	        			
+    	        			vm.showWindow();
+    	        			
+    	        			$scope.$apply();
+    	        			},
+	        			'mouseover': function(obj) { 
+	        				obj.setOptions({
+	        					strokeWeight: evt.weight+2, 
+	        					strokeColor: hiliteColor,
+	        					strokeOpacity: 1.0
+	        						}); },
+	        			'mouseout': function(obj) { 
+	        				obj.setOptions({
+	        					strokeWeight: 8, 
+	        					strokeColor: mapaverageColor,
+	        					strokeOpacity: 0.1
+	        						}); }
+            		},
+            		stroke: {
+            			color: mapaverageColor ,
+            			weight: 8 ,
+            			opacity: 0.1
+            		}
+            	});
+        	}
+        	
+        	obj.push({
         		id: id,
         		path: [ evt.birth, evt.death ],
         		events: {
-        			'click': function(obj, eventName, model) { console.log('click', obj);  }
-        			// 'mouseover': function() { console.log('mouseover'); }
+        			'click': function(obj) { 
+        				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
+	        			vm.people = evt.person.ids ;
+	        			
+	        			vm.showWindow();
+	        			
+	        			$scope.$apply();
+	        			},
+        			'mouseover': function(obj) { 
+        				obj.icons[0].icon.scale = evt.weight+2;
+        				obj.setOptions({strokeWeight: evt.weight+2, strokeColor: hiliteColor}); },
+        			'mouseout': function(obj) { 
+        				obj.icons[0].icon.scale = evt.weight;
+        				obj.setOptions({strokeWeight: evt.weight, strokeColor: randomColor}); }
         		},
         		stroke: {
         			color: randomColor ,
@@ -163,7 +232,8 @@
                         scale: evt.weight
                     }
                 }]
-        	};
+        	});
+        	return obj;
         }
         
         

@@ -1,0 +1,24 @@
+<div class="col-md-8 col-lg-9">
+	<div class="col-sm-12 mapspinner" ng-show="vm.isLoadingResults" >
+    		<img class="loading-img" src="images/loading-lg.gif"></img>
+	</div>
+	<ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
+  		
+  		<ui-gmap-window 
+  			id="ui-gmap-window" 
+  			show="vm.window.show" 
+  			options="vm.window" 
+  			templateUrl="'views/groupmap.popup.html'"
+            templateParameter="vm"
+         	closeClick="vm.closeWindow">
+         	<span></span>
+     	</ui-gmap-window>
+     		
+      	<ui-gmap-marker ng-repeat="marker in vm.markers" 
+      		coords="marker" 
+      		idkey="marker.id" 
+      		options="marker.options"
+      		click="marker.onClick()">
+      	</ui-gmap-marker>
+	</ui-gmap-google-map>
+</div>

@@ -29,14 +29,14 @@
         };
         
         vm.limitoptions = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
-        vm.SEARCHLIMIT = vm.limitoptions[2];
+        vm.SEARCHLIMIT = vm.limitoptions[1];
         
         vm.eventtypes = [
-        	{type:"0", check: true, color:"hsl(222, 90%, 60%)", label: "Syntymä", label2: "syntyneet", tooltip: "Henkilöiden syntymäpaikat lämpökarttana"}, 
-        	{type:"1", check: true, color:"hsl(0, 90%, 60%)", label: "Kuolema", label2: "kuolleet", tooltip: "Henkilöiden kuolinpaikat lämpökarttana"},
+        	{type:"0", check: true, color:"hsl(222, 90%, 60%)", label: "Syntymä", label2: "syntyneet", tooltip: "Henkilöiden syntymäpaikat kartalla"}, 
+        	{type:"1", check: true, color:"hsl(0, 90%, 60%)", label: "Kuolema", label2: "kuolleet", tooltip: "Henkilöiden kuolinpaikat kartalla"},
         	{type:"2", check: false, color:"hsl(0, 0%, 45%)", label: "Ura", label2: "ura", tooltip: "Henkilöiden opiskelu- ja työpaikat"},
         	{type:"3", check: false, color:"hsl(120, 90%, 40%)", label: "Teokset", label2: "teokset", tooltip: "Paikat, joissa on henkilöihin liittyviä teoksia"},
-        	{type:"4", check: false, color:"hsl(180, 90%, 40%)", label: "Kunniamaininnat", label2: "kunniamaininnat", tooltip:"Kunniamaininnat"}
+        	{type:"4", check: false, color:"hsl(180, 90%, 40%)", label: "Kunniamaininnat", label2: "kunniamaininnat", tooltip:"Kunniamainintoihin liittyvät paikat"}
         	];
         
         vm.change = function() {

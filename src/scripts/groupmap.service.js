@@ -227,31 +227,35 @@
         	
         
         
-        // http://yasgui.org/short/ry0yGeVIm
-        var query2 = 	
+        // http://yasgui.org/short/rkRBPKYU7
+        var query2 = 
         	'SELECT * WHERE { ' +
         	'  { ' +
-        	'  SELECT DISTINCT ?birth__place ?death__place (COUNT(?id) AS ?count) WHERE { ' +
+        	'  SELECT DISTINCT ?birth__place ?death__place (COUNT(distinct ?id2) AS ?count) (GROUP_CONCAT(?id2; separator=",") AS ?person__ids) WHERE { ' +
         	'    <RESULT_SET> ' +
+        	'    ?id owl:sameAs* ?id2 . ' +
+        	'    FILTER NOT EXISTS { ?id2 owl:sameAs [] } . ' +
         	'    ?id foaf:focus ?prs . ' +
-        	' ' +
-        	'    ?death__id crm:P100_was_death_of ?prs ; ' +
-        	'               nbf:place ?death__place . ' +
         	' ' +
         	'    ?birth__id crm:P98_brought_into_life ?prs ; ' +
         	'              nbf:place ?birth__place . ' +
+        	' ' +
+        	'    ?death__id crm:P100_was_death_of ?prs ; ' +
+        	'               nbf:place ?death__place . ' +
         	'       ' +
-        	// '    FILTER (?birth__place!=?death__place) ' +
-        	'       ' +
-        	'    } GROUP BY ?birth__place ?death__place ORDER BY DESC(?count) LIMIT 2500  } ' +
+        	'    } GROUP BY ?birth__place ?death__place ORDER BY DESC(?count) LIMIT <LIMIT>  } ' +
         	'  FILTER (?count>0) ' +
         	'  ?birth__place geo:lat ?birth__latitude ; ' +
-        	'              geo:long ?birth__longitude . ' +
+        	'              geo:long ?birth__longitude ; ' +
+        	'              skos:prefLabel ?birth__label . ' +
+        	'  FILTER (LANG(?birth__label)="fi") ' +
         	'   ' +
         	'  ?death__place geo:lat ?death__latitude ; ' +
-        	'              geo:long ?death__longitude . ' +
+        	'              geo:long ?death__longitude ; ' +
+        	'              skos:prefLabel ?death__label . ' +
+        	'  FILTER (LANG(?death__label)="fi") ' +
         	'} ORDER BY ?count ';
-        
+        	
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -296,8 +300,12 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getResults2(facetSelections) {
-        	var q = prefixes + query2.replace("<RESULT_SET>", facetSelections.constraint.join(' '));
+        function getResults2(facetSelections, limit) {
+        	var q = prefixes + 
+        		query2
+        			.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
+        			.replace("<LIMIT>", limit);
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         

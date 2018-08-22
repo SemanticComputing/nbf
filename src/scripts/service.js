@@ -287,7 +287,7 @@
         	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime }    ' +
         	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime }    ' +
         	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
-        	'} ORDER BY ?fname ?gname ';
+        	'} ORDER BY UCASE(?fname) ?gname ';
         
         // The SPARQL endpoint URL
         var endpointConfig = {
