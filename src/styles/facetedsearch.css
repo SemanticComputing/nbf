@@ -236,4 +236,8 @@ h1 {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.chartcontainer {
+	margin-top: -10px;
+	margin-bottom: -50px;
+}
 

@@ -1,4 +1,4 @@
 <img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>
-<div  ng-if="!vm.isLoadingResults">
-	<div ng-repeat="id in vm.chart_ids" ng-attr-id="{{ id }}"></div>
+<div ng-if="!vm.isLoadingResults">
+	<div class="chartcontainer" ng-repeat="id in vm.chart_ids" ng-attr-id="{{ id }}"></div>
 </div>

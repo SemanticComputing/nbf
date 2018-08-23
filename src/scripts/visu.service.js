@@ -8,7 +8,7 @@
     .service('visuService', visuService);
 
     /* @ngInject */
-    function visuService($q, _, FacetResultHandler, AdvancedSparqlService, objectMapperService, facetService, SPARQL_ENDPOINT_URL) {
+    function visuService($q, _, FacetResultHandler, AdvancedSparqlService, objectMapperService, mapfacetService, SPARQL_ENDPOINT_URL) {
     	
         /* Public API */
 
@@ -24,14 +24,14 @@
 
         // Get the facets.
         // Return a promise (because of translation).
-        this.getFacets = facetService.getFacets;
+        this.getFacets = mapfacetService.getFacets;
         // Get the facet options.
         // Return an object.
         this.getFacetOptions = getFacetOptions;
 
 
         /* Implementation */
-
+        
         //	TODO: query for a certain title, here "maisteri": http://yasgui.org/short/SJbyBeseM
         var prefixes =
             'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
@@ -53,27 +53,20 @@
             'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ' +
             'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
 
-        // The query for the results.
-        // ?id is bound to the person URI.
-
+        // The query for the results 
         var queryAge = prefixes +
-            'SELECT DISTINCT (?id AS ?id__uri) ?id__name ?value ' +
-            'WHERE { ' +
-            ' { <RESULT_SET> } ' +
-            '  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
-            '      foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] . ' +
-            '  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
-            '  FILTER (-1<?value && ?value<120) ' +
-            '   ' +
-            '  ?id skosxl:prefLabel ?id__label . ' +
-            '    OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-            '    OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-            '    BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-            ' ' +
-            '} ORDER BY ?value ?id__fname ?id__gname ';
-
+	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	    	'WHERE { ' +
+	    	'  { <RESULT_SET> } ' +
+	    	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
+	    	'       foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] . ' +
+	    	'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
+	    	'  FILTER (-1<?value && ?value<120) ' +
+	    	'} GROUP BY ?value ';
+        
+        
         var queryMarriageAge = prefixes +
-            'SELECT DISTINCT (?id AS ?id__uri) ?id__name ?value ' +
+            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
             ' WHERE {    ' +
             '  {     SELECT DISTINCT ?id (min(?age) AS ?value) ' +
             '    WHERE { ' +
@@ -85,14 +78,10 @@
             '      FILTER (13<?age && ?age<120)} ' +
             '   GROUP BY ?id } ' +
             '   FILTER (BOUND(?id)) ' +
-            ' 	?id skosxl:prefLabel ?id__label . ' +
-            '      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-            '      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-            '      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-            '} ORDER BY ?value ?id__fname ?id__gname ';
+            '} GROUP BY ?value ';
 
         var queryFirstChildAge = prefixes +
-            'SELECT DISTINCT (?id AS ?id__uri) ?id__name ?value ' +
+            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
             ' WHERE {    ' +
             '  {     SELECT DISTINCT ?id (min(?age) AS ?value) ' +
             '    WHERE { ' +
@@ -104,14 +93,10 @@
             '      FILTER (13<?age && ?age<120)} ' +
             '    GROUP BY ?id } ' +
             '   FILTER (BOUND(?id)) ' +
-            ' 	?id skosxl:prefLabel ?id__label . ' +
-            '      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-            '      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-            '      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-            '} ORDER BY ?value ?id__fname ?id__gname ';
+            '} GROUP BY ?value ';
 
         var queryNumberOfChildren = prefixes +
-            'SELECT DISTINCT (?id as ?id__uri) ?id__name ?value ' +
+            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
             'WHERE { ' +
             '  { ' +
             '      SELECT DISTINCT ?id (count(?rel) AS ?value) ' +
@@ -126,33 +111,30 @@
             '      FILTER not exists { ?id bioc:has_family_relation/a relations:Child } ' +
             '	   BIND (0 AS ?value) } ' +
             '  FILTER (BOUND(?id)) ' +
-            '  ?id skosxl:prefLabel ?id__label . ' +
-            '      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-            '      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-            '      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-            '} ORDER BY ?value ?id__fname ?id__gname ';
+            '} GROUP BY ?value ';
 
+        //	http://yasgui.org/short/ByVXkyhIX
         var queryNumberOfSpouses = prefixes +
-            'SELECT DISTINCT (?id as ?id__uri) ?id__name ?value ' +
-            'WHERE { ' +
-            '  { ' +
-            '      SELECT DISTINCT ?id (count(?rel) AS ?value) ' +
-            '      WHERE { { <RESULT_SET> } ' +
-            '        VALUES ?rel { relations:Spouse } ' +
-            '        ?id bioc:has_family_relation/a ?rel . }  ' +
-            '      GROUP BY ?id } ' +
-            '  UNION { ' +
-            '    	{ <RESULT_SET> } ' +
-            '      ?id dcterms:source sources:source1 ; ' +
-            '          foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
-            '      FILTER not exists { ?id bioc:has_family_relation/a relations:Spouse } ' +
-            '	   BIND (0 AS ?value) } ' +
-            '  FILTER (BOUND(?id)) ' +
-            '  ?id skosxl:prefLabel ?id__label . ' +
-            '      OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-            '      OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-            '      BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-            '} ORDER BY ?value ?id__fname ?id__gname ';
+	        'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	    	'WHERE { ' +
+	    	'  { ' +
+	    	'    SELECT DISTINCT ?id (count(?rel) AS ?value) WHERE ' +
+	    	'    { ' +
+	    	'      { <RESULT_SET> } ' +
+	    	'      VALUES ?rel { relations:Spouse } ' +
+	    	'      ?id bioc:has_family_relation/a ?rel . } ' +
+	    	'    GROUP BY ?id ' +
+	    	'  } ' +
+	    	'  UNION { ' +
+	    	'    { <RESULT_SET> } ' +
+	    	'    ?id dcterms:source sources:source1 ; ' +
+	    	'        foaf:focus/nbf:has_biography/nbf:has_paragraph/nbf:id "2"^^xsd:integer . ' +
+	    	'    FILTER not exists { ?id bioc:has_family_relation/a relations:Spouse } ' +
+	    	'    BIND (0 AS ?value) ' +
+	    	'  } ' +
+	    	'  FILTER (BOUND(?id)) ' +
+	    	'} GROUP BY ?value ';
+        
 
         // The SPARQL endpoint URL
         var endpointUrl = SPARQL_ENDPOINT_URL;
@@ -181,7 +163,7 @@
 
         function getAge(facetSelections) {
             var cons = facetSelections.constraint.join(' '),
-                q = queryAge.replace('<RESULT_SET>', cons);
+                q = queryAge.replace(/<RESULT_SET>/g, cons);
             return endpoint.getObjectsNoGrouping(q) ;
         }
 
@@ -200,11 +182,11 @@
 
         function getResults(facetSelections) {
             var promises = [
-                this.getAge(facetSelections),
-                this.getMarriageAge(facetSelections),
+                this.getAge(facetSelections) ,
+                this.getMarriageAge(facetSelections), 
                 this.getFirstChildAge(facetSelections),
                 this.getNumberOfChildren(facetSelections),
-                this.getNumberOfSpouses(facetSelections)
+                this.getNumberOfSpouses(facetSelections) 
             ];
             return $q.all(promises);
         }

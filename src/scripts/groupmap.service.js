@@ -8,7 +8,7 @@
     .service('groupmapService', groupmapService);
 
     /* @ngInject */
-    function groupmapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
+    function groupmapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL, mapfacetService,
             AdvancedSparqlService, personMapperService) {
 
         /* Public API */
@@ -21,10 +21,12 @@
         
         // Get the facets.
         // Return a promise (because of translation).
-        this.getFacets = getFacets;
+        this.getFacets = mapfacetService.getFacets;
         // Get the facet options.
         // Return an object.
         this.getFacetOptions = getFacetOptions;
+
+        
         // Update sorting URL params.
         this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
