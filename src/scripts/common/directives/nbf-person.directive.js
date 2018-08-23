@@ -15,7 +15,8 @@
 		        	if (data.length) data = data[0];
 		        	
 		        	$scope.label = data.label;
-		        	if (data.lifespan != '( - )') $scope.lifespan = data.lifespan;
+		        	//	lifespan is valid if contains any numeric char
+		        	if ((new RegExp(/\d/)).test(data.lifespan)) $scope.lifespan = data.lifespan;
 		        	
 		        	if (data.hasOwnProperty('image')) $scope.image = data.image;
 		        	

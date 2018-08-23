@@ -30,10 +30,9 @@
         
         vm.showForm = function () {
             var modalInstance = $uibModal.open({
-                templateUrl: 'views/visu/popup.html',
+                templateUrl: 'views/popup.html',
                 scope: $scope
             });
-            
         };
 
         vm.removeFacetSelections = removeFacetSelections;
@@ -133,7 +132,10 @@
                         ticks: ticksByRange(range)
                     },
                     vAxis: {
-                        maxValue: 4
+                    	maxValue: 4,
+                        viewWindow: {
+                          min: 1
+                        }
                     },
                     width: '95%',
                     bar: {

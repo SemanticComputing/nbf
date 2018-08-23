@@ -23,16 +23,18 @@
         /* Implementation */
 
         var facets = {
+        		/*
                 entryText: {
                     facetId: 'entryText',
                     graph: '<http://ldf.fi/nbf/people>',
                     name: 'Haku',
                     enabled: true
-                },
+                }, */
                 dataset: {
                     facetId: 'dataset',
                     predicate: '<http://purl.org/dc/terms/source>',
-                    name: 'Tietokanta'
+                    name: 'Tietokanta',
+                    enabled: true
                 },
                 slider: {
                     facetId: 'slider',
@@ -106,7 +108,8 @@
                         }
                     ],
                     enabled: true,
-                    name: 'Linkit'
+                    chart: true,
+                    name: 'Linkitetyt tietokannat'
                 },
                 period: {
                     facetId: 'period',
@@ -152,8 +155,7 @@
                     facetId: 'title',
                     predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
                     name: 'Arvo, ammatti tai toiminta',
-                    hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
-                    depth: 3,
+                    chart: true,
                     enabled: true
                 },
                 company: {
@@ -171,7 +173,8 @@
                 gender: {
                     facetId: 'gender',
                     predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
-                    name: 'Sukupuoli',
+                    name: 'Sukupuoli tai ryhmä',
+                    chart: true,
                     enabled: true
                 },
                 keywords: {

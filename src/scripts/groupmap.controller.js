@@ -46,17 +46,16 @@
         	fetchResults({ constraint: vm.previousSelections });
         };
         
-        vm.showWindow = function() {
-        	vm.window.show = true;
-        }
-        vm.closeWindow = function() {
-        	vm.window.show = false;
-        }
+        vm.showForm = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'views/popup.html',
+                scope: $scope
+            });
+        };
         
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.getSortClass = groupmapService.getSortClass;
-        
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
@@ -75,7 +74,7 @@
             $state.reload();
         }
 
-        function openPage(person) {
+        function openPageOLD(person) {
             $uibModal.open({
                 component: 'registerPageModal',
                 size: 'lg',
@@ -190,16 +189,9 @@
 						title: tooltiplabel
 						},
 	        		"onClick": function () {
-	        			
-	        			vm.place_label = tooltiplabel;
-	        			
+	        			vm.popuptitle = tooltiplabel;
 	        			vm.people = people;
-	        			
-	        			vm.window.position.lat = parseInt(lat);
-	        			vm.window.position.lng = parseInt(lon);
-	        			vm.showWindow();
-	        			
-	        			$scope.$apply();
+	        			vm.showForm();
         		}
         	};
         	

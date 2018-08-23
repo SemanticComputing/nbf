@@ -28,168 +28,12 @@
 
         
         // Update sorting URL params.
-        this.updateSortBy = updateSortBy;
+        //this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
-        this.getSortClassOLD = getSortClass;
+        // this.getSortClassOLD = getSortClass;
 
         /* Implementation */
-
-        var facets = {
-            entryText: {
-                facetId: 'entryText',
-                graph: '<http://ldf.fi/nbf/people>',
-                name: 'Haku',
-                enabled: true
-            },
-            dataset: {
-                facetId: 'dataset',
-                predicate: '<http://purl.org/dc/terms/source>',
-                name: 'Tietokanta'
-            },
-            slider: {
-                facetId: 'slider',
-                name: 'Rajaa henkilöiden syntymäaika',
-                predicate: ('<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/' +
-                    '<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart>'),
-                enabled: true
-            },
-            link: {
-                facetId: 'link',
-                choices: [
-                    {
-                        id: 'wikipedia',
-                        pattern: '?id <http://ldf.fi/nbf/wikipedia> [] .',
-                        label: 'Wikipedia'
-                    },
-                    {
-                        id: 'wikidata',
-                        pattern: '?id <http://ldf.fi/nbf/wikidata> [] .',
-                        label: 'Wikidata'
-                    },
-                    {
-                        id: 'sotasampo',
-                        pattern: '?id <http://ldf.fi/nbf/warsampo> [] .',
-                        label: 'Sotasampo'
-                    },
-                    {
-                        id: 'norssit',
-                        pattern: '?id <http://ldf.fi/nbf/norssi> [] .',
-                        label: 'Norssit'
-                    },
-                    {
-                        id: 'kirjasampo',
-                        pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] . ',
-                        label: 'Kirjasampo'
-                    },
-                    {
-                        id: 'blf',
-                        pattern: '?id <http://ldf.fi/nbf/blf> [] .',
-                        label: 'Biografiskt lexikon för Finland'
-                    },
-                    {
-                        id: 'ulan',
-                        pattern: '?id <http://ldf.fi/nbf/ulan> [] .',
-                        label: 'ULAN'
-                    },
-                    {
-                        id: 'viaf',
-                        pattern: '?id <http://ldf.fi/nbf/viaf> [] .',
-                        label: 'VIAF'
-                    },
-                    {
-                        id: 'genicom',
-                        pattern: '?id <http://ldf.fi/nbf/genicom> [] .',
-                        label: 'Geni.com'
-                    },
-                    {
-                        id: 'website',
-                        pattern: '?id <http://ldf.fi/nbf/website> [] .',
-                        label: 'Kotisivu'
-                    },
-                    {
-                        id: 'eduskunta',
-                        pattern: '?id <http://ldf.fi/nbf/eduskunta> [] .',
-                        label: 'Eduskunta'
-                    }
-                ],
-                enabled: true,
-                name: 'Linkit'
-            },
-            period: {
-                facetId: 'period',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_period>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
-                name: 'Ajanjakso',
-                enabled: true
-            },
-            author: {
-                facetId: 'author',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://schema.org/author>',
-                name: 'Kirjoittaja'
-            },
-            birthYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>',
-                name: 'Synnyinaika',
-                enabled: true
-            },
-            place: {
-                facetId: 'place',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/<http://ldf.fi/nbf/place>',
-                //predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>|^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>',
-                name: 'Syntymäpaikka',
-                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
-                depth: 5, 
-                enabled: true
-            },
-            deathplace: {
-                facetId: 'deathplace',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>)/<http://ldf.fi/nbf/place>',
-                name: 'Kuolinpaikka',
-                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
-                depth: 5, 
-                enabled: true
-            },
-            deathYear: {
-                facetId: 'birthYear',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P100_was_death_of>/<http://ldf.fi/nbf/time>',
-                name: 'Kuolinaika',
-                enabled: true
-            },
-            title: {
-                facetId: 'title',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
-                name: 'Arvo, ammatti tai toiminta',
-                hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
-                depth: 3,
-                enabled: true
-            },
-            company: {
-                facetId: 'company',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>',
-                name: 'Yritys tai yhteisö',
-                enabled: true
-            },
-            category: {
-                facetId: 'category',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
-                name: 'Toimiala',
-                enabled: true
-            },
-            gender: {
-                facetId: 'gender',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli>',
-                name: 'Sukupuoli',
-                enabled: true
-            },
-            keywords: {
-                facetId: 'keywords',
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography>/<http://purl.org/dc/elements/1.1/subject>',
-                name: 'Avainsanat',
-                chart: true,
-                enabled: true
-            }
-        };
-
+        
         var prefixes =
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
@@ -345,7 +189,8 @@
         function getFacetOptions() {
             return facetOptions;
         }
-
+        
+        /*
         function updateSortBy(sortBy) {
             var sort = $location.search().sortBy || '?ordinal';
             if (sort === sortBy) {
@@ -367,7 +212,8 @@
             }
             return sortBy === '?ordinal' ? sort : sort + ' ?ordinal';
         }
-
+         */
+        
         function getSortClass(sortBy, numeric) {
             var sort = $location.search().sortBy || '?ordinal';
             var cls = numeric ? 'glyphicon-sort-by-order' : 'glyphicon-sort-by-alphabet';

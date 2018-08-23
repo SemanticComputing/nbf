@@ -37,18 +37,18 @@
         };
         
         vm.message = "";
-        vm.heatmap = null;
+        // vm.heatmap = null;
         
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.getSortClass = groupmapService.getSortClass;
         
-        vm.showWindow = function() {
-        	vm.window.show = true;
-        }
-        vm.closeWindow = function() {
-        	vm.window.show = false;
-        }
+        vm.showForm = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'views/popup.html',
+                scope: $scope
+            });
+        };
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
@@ -67,7 +67,7 @@
             $state.reload();
         }
 
-        function openPage(person) {
+        function openPageOLD(person) {
             $uibModal.open({
                 component: 'registerPageModal',
                 size: 'lg',
@@ -111,6 +111,7 @@
             latestUpdate = updateId;
             
             vm.polylines = [];
+            
             return groupmapService.getResults2(facetSelections, vm.SEARCHLIMIT.value)
             .then(function(res) {
             	vm.isLoadingResults = false;
@@ -162,13 +163,14 @@
         }
         
         var idcount = 0;
+        
+        var midPoint = function (x,y) {
+    		var a = new google.maps.LatLng(x.latitude, x.longitude),
+    			b = new google.maps.LatLng(y.latitude, y.longitude);
+    		return google.maps.geometry.spherical.interpolate(a, b, 0.5);
+    	};
+    	
         function eventToObject(evt) {
-        	
-        	var midPoint = function (x,y) {
-        		var a = new google.maps.LatLng(x.latitude, x.longitude),
-        			b = new google.maps.LatLng(y.latitude, y.longitude);
-        		return google.maps.geometry.spherical.interpolate(a, b, 0.5);
-        	};
         	
         	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
         		hiliteColor = 'blue', // "hsl(160, 100%, 60%)",
@@ -186,12 +188,18 @@
     	        		path: [ evt.birth, evt.death ],
     	        		events: {
     	        			'click': function(obj) { 
+    	        				/*
     	        				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
     		        			vm.people = evt.person.ids ;
     		        			
     		        			vm.showWindow();
     		        			
     		        			$scope.$apply();
+    		        			*/
+    	        				
+    		        			vm.popuptitle = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
+    		        			vm.people = evt.person.ids ;
+    		        			vm.showForm();
     		        			},
     	        			'mouseover': function(obj) { 
     	        				obj.setOptions({
@@ -239,6 +247,7 @@
         	return obj;
         };
         
+        /*
         function eventToObjectSingleColor(evt) {
         	
         	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
@@ -314,7 +323,7 @@
         	});
         	return obj;
         };
-        
+        */
         
     }
 })();
