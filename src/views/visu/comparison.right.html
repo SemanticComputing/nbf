@@ -1,14 +1,7 @@
 <div class="row">
-<div class="col-sm-8" min-height="500">
-  <img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>
-  <div ng-if="!vm.isLoadingResults">
-		<div id="chart_age2"></div>
-		<div id="chart_marriageAge2"></div>
-		<div id="chart_firstChildAge2"></div>
-		<div id="chart_numberOfChildren2"></div>
-		<div id="chart_numberOfSpouses2"></div>
-	</div>
-</div>
+  <div class="col-sm-8" min-height="500">
+    <div ng-include="'views/visu/results.partial.html'"></div>
+  </div>
   <div class="col-sm-4">
     <div ng-include="'views/facets.partial.html'"></div>
   </div>

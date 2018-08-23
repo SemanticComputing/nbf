@@ -22,20 +22,18 @@
         vm.people = [];
         vm.startYear = [];
 
-        vm.chart_ids = ['chart_age', 'chart_marriageAge', 'chart_firstChildAge', 'chart_numberOfChildren', 'chart_numberOfSpouses'];
+        //vm.chart_ids = ['chart_age', 'chart_marriageAge', 'chart_firstChildAge', 'chart_numberOfChildren', 'chart_numberOfSpouses'];
+        // assign random ids to chart div so we can use same controller on comparison page
+        vm.chart_ids = [0,1,2,3,4].map(function(val,i) {
+        	return(''+i+Math.random());
+        });
         
         vm.showForm = function () {
             var modalInstance = $uibModal.open({
                 templateUrl: 'views/visu/popup.html',
                 scope: $scope
             });
-            /**
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-            }, function () {
-                console.log('Modal dismissed at: ' + new Date());
-            });
-            */
+            
         };
 
         vm.removeFacetSelections = removeFacetSelections;
@@ -104,7 +102,7 @@
                 try {
                 	persons[parseInt(ob.value)].push(ob.id);
                 }
-                catch(err) { //
+                catch(err) { 
                 }
                 
             }
@@ -157,6 +155,7 @@
             google.visualization.events.addListener(chart, 'select', function() {
                 var sel = chart.getSelection();
                 vm.people = persons[sel[0].row];
+                vm.popuptitle = "Henkilöt ("+(vm.people.length)+")";
                 vm.showForm();
             });
 

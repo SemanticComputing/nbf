@@ -222,7 +222,7 @@
                 },
                 'right@visu.comparison': {
                     templateUrl: 'views/visu/comparison.right.html',
-                    controller: 'VisuController2',
+                    controller: 'VisuController',
                     controllerAs: 'vm',
                 }
             }
