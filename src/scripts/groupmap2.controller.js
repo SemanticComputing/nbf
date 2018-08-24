@@ -37,7 +37,6 @@
         };
         
         vm.message = "";
-        // vm.heatmap = null;
         
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
@@ -115,12 +114,14 @@
             return groupmapService.getResults2(facetSelections, vm.SEARCHLIMIT.value)
             .then(function(res) {
             	vm.isLoadingResults = false;
-            	vm.message = "";
 
             	if (res.length<1) {
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
+            	vm.message = (res.length<vm.SEARCHLIMIT.value) ?
+            			"Haku tuotti "+(res.length)+" tulosta." :
+            			"Kartalla näytetään "+(res.length)+" ensimmäistä tulosta.";
             	
             	processEvents(res, vm);
             	

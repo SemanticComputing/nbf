@@ -23,7 +23,7 @@
         vm.data = {};
 
         // assign random ids to chart div so we can use same controller on comparison page
-        vm.chart_ids = [0,1,2,3,4].map(function(i) {
+        vm.chart_ids = [0,1,2,3,4,5].map(function(i) {
         	return(''+i+Math.random());
         });
         // vm.chart_ids = ['chart_age', 'chart_marriageAge', 'chart_firstChildAge', 'chart_numberOfChildren', 'chart_numberOfSpouses'];
@@ -66,33 +66,88 @@
                 vm.previousSelections)) {
                 return;
             }
+            
             vm.previousSelections = _.clone(facetSelections.constraint);
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
 
             return fetchResults(facetSelections).then(function (res) {
-                google.charts.setOnLoadCallback(function () {
-                    drawYearChart(res[0], [0,120], 'Elinikä', vm.chart_ids[0])
+            	google.charts.setOnLoadCallback(function () {
+                    drawYearChart(res[0], null, 'Henkilöjakauma vuosikymmenittäin', vm.chart_ids[0])
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(res[1], [0,120], 'Naimisiinmenoikä', vm.chart_ids[1])
+                    drawAgeChart(res[1], [0,120], 'Elinikä', vm.chart_ids[1], ' vuotta')
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(res[2], [0,120], 'Lapsensaanti-ikä', vm.chart_ids[2])
+                    drawAgeChart(res[2], [0,120], 'Naimisiinmenoikä', vm.chart_ids[2], ' vuotta')
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(res[3], [0,25], 'Lasten lukumäärä', vm.chart_ids[3])
+                    drawAgeChart(res[3], [0,120], 'Lapsensaanti-ikä', vm.chart_ids[3], ' vuotta')
                 });
                 google.charts.setOnLoadCallback(function () {
-                    drawYearChart(res[4], [0,10], 'Puolisoiden lukumäärä', vm.chart_ids[4])
+                    drawAgeChart(res[4], [0,25], 'Lasten lukumäärä', vm.chart_ids[4], '')
+                });
+                google.charts.setOnLoadCallback(function () {
+                    drawAgeChart(res[5], [0,10], 'Puolisoiden lukumäärä', vm.chart_ids[5], '')
                 });
 
                 return;
             });
         }
 
-
         function drawYearChart(res, range, label, target) {
-        	// console.log(res);
+           
+        	// var ticks = res.map(function(ob) { return 1+parseInt(ob.value); });
+            var rows = res.map(function(ob) { return [ob.value, parseInt(ob.count)]; });
+            
+            vm.data[target] = res.map(function(ob) {return ob.persons});
+            
+            var 
+                data = new google.visualization.DataTable(),
+                options = {
+                    title: label ,
+                    legend: { position: 'none' },
+
+                    tooltip: {format: 'none'},
+                    colors: ['blue'],
+
+                    hAxis: {
+                        slantedText:false,
+                        maxAlternation: 1,
+                        format: '' // , ticks: ticks
+                    },
+                    vAxis: {
+                    	maxValue: 4
+                    },
+                    width: '95%',
+                    bar: {
+                        groupWidth: '88%'
+                    },
+                    height:500
+                },
+                
+                chart = new google.visualization.ColumnChart(document.getElementById(target));
+            
+            
+            data.addColumn('string', 'Vuosikymmen');
+            data.addColumn('number', 'Henkilöä');
+
+            data.addRows(rows);
+            chart.draw(data, options);
+            
+            
+            
+            google.visualization.events.addListener(chart, 'select', function() {
+                var sel = chart.getSelection(),
+                	dec = sel[0].row,
+                	year1 = parseInt(rows[dec][0]),
+                	year2 = year1 + 9;
+                vm.people = vm.data[target][dec];
+                vm.popuptitle = 'Vuodet '+year1+ '–'+year2+': '+rows[dec][1]+' henkilöä'; 
+                vm.showForm();
+            });
+        }
+        
+        function drawAgeChart(res, range, label, target, quantity) {
             
             var N = range[1]-range[0]+1,
             	arr = new Array(N);
@@ -158,7 +213,7 @@
                 	age = sel[0].row;
                 
                 vm.people = vm.data[target][age];
-                vm.popuptitle = label+' '+age+": "+arr[age][1]+ (arr[age][1]==1 ? " henkilö" : " henkilöä");
+                vm.popuptitle = label+' '+age+quantity+": "+arr[age][1]+ (arr[age][1]==1 ? " henkilö" : " henkilöä");
                 vm.showForm();
             });
 

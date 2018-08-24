@@ -123,12 +123,13 @@
             .then(function(res) {
             	vm.isLoadingResults = false;
             	
-            	vm.message = "";
-            	
             	if (res.length<1) {
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
+            	vm.message = (res.length<vm.SEARCHLIMIT.value) ?
+            			"Haku tuotti "+(res.length)+" tulosta." :
+            			"Kartalla näytetään "+(res.length)+" ensimmäistä tulosta.";
             	
             	vm.events = processEvents(res, vm);
             }).catch(handleError);

@@ -14,6 +14,7 @@
 
         // Get the results based on facet selections.
         // Return a promise.
+    	this.getYears = getYears;
         this.getAge = getAge;
         this.getMarriageAge = getMarriageAge;
         this.getFirstChildAge = getFirstChildAge;
@@ -52,7 +53,16 @@
             'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
             'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ' +
             'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
-
+        
+        var queryYears = prefixes +
+	    	'SELECT DISTINCT ?value ?value2 (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	    	'WHERE { ' +
+	    	'  { <RESULT_SET> } ' +
+	    	'  ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth .' +
+	    	'  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?value)' +
+	    	'  BIND (?value+9 AS ?value2)' +
+	    	'} GROUP BY ?value ?value2 ORDER BY ?value ';
+        
         // The query for the results 
         var queryAge = prefixes +
 	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
@@ -148,6 +158,17 @@
 
         var endpoint = new AdvancedSparqlService(endpointUrl, objectMapperService);
 
+        function getYears(facetSelections) {
+            var cons = facetSelections.constraint.join(' '),
+                q = queryYears.replace('<RESULT_SET>', cons);
+            return endpoint.getObjectsNoGrouping(q) ;
+        }
+
+        function getAge(facetSelections) {
+            var cons = facetSelections.constraint.join(' '),
+                q = queryAge.replace(/<RESULT_SET>/g, cons);
+            return endpoint.getObjectsNoGrouping(q) ;
+        }
 
         function getMarriageAge(facetSelections) {
             var cons = facetSelections.constraint.join(' '),
@@ -161,12 +182,7 @@
             return endpoint.getObjectsNoGrouping(q) ;
         }
 
-        function getAge(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryAge.replace(/<RESULT_SET>/g, cons);
-            return endpoint.getObjectsNoGrouping(q) ;
-        }
-
+        
         function getNumberOfChildren(facetSelections) {
             var cons = facetSelections.constraint.join(' '),
                 q = queryNumberOfChildren.replace(/<RESULT_SET>/g, cons);
@@ -182,7 +198,8 @@
 
         function getResults(facetSelections) {
             var promises = [
-                this.getAge(facetSelections) ,
+            	this.getYears(facetSelections),
+                this.getAge(facetSelections),
                 this.getMarriageAge(facetSelections), 
                 this.getFirstChildAge(facetSelections),
                 this.getNumberOfChildren(facetSelections),
