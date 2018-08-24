@@ -104,7 +104,9 @@
 			vm.data[target] = res.map(function(ob) {return ob.persons});
 			
 			var options = {
-			    title: label+(total==0 ? ': ei tuloksia' : ': yhteensä ' +total+ ' henkilöä')
+			    title: label+(total==0 ? ': ei tuloksia' : ': '+
+			    		res.length+ (res.length>1 ? ' luokkaa, ' : ' luokka, ')+
+			    		'yhteensä ' +total+ ' henkilöä')
 			  };
 			
 			var chart = new google.visualization.PieChart(document.getElementById(target));
@@ -117,7 +119,6 @@
             	try {
             		var sel = chart.getSelection();
             		pie = sel[0].row;
-            		console.log(pie);
             	} 
             	catch(err) {
             		console.log('Unhandled click');

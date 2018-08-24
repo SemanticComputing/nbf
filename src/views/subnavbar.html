@@ -1,17 +1,8 @@
 <ul class="nav navbar-nav">
   <li><a href="" id="show-help" ng-click="vm.showHelp()"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Ohje</a></li>
-	<!-- 
-  <li ui-sref-active="active"><a ui-sref="table"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Lista</a></li>
-  <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="" id="personsearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Henkil&ouml;haku<span class="caret"></span></a>
-	  <ul class="dropdown-menu">
-	      <li ui-sref-active="active"><a ui-sref="cards"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Ruudukko</a></li>
-	      <li ui-sref-active="active"><a ui-sref="table"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Lista</a></li>
-	  </ul>
-  </li>
-   -->
-  <li ui-sref-active="active"><a ui-sref="cards"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Henkilöhaku</a></li>
-  <li ui-sref-active="active"><a ui-sref="groupmap.singleview"><span class="glyphicon glyphicon glyphicon-globe" aria-hidden="true"></span> Kartat</a></li>
+	
+  <li ui-sref-active="{ active: 'search.**' }"><a ui-sref="search.cards"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Henkilöhaku</a></li>
+  <li ui-sref-active="{ active: 'maps.**' }"><a ui-sref="maps.singleview"><span class="glyphicon glyphicon glyphicon-globe" aria-hidden="true"></span> Kartat</a></li>
   <li ui-sref-active="{ active: 'visu.**' }"><a ui-sref="visu.statistics"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tilastoja</a></li>
   <li ui-sref-active="{ active: 'nlp.**' }"><a ui-sref="nlp.statistics"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Kielianalyysi</a></li>
   <li ui-sref-active="active"><a ui-sref="network"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> Verkosto</a></li>

@@ -8,7 +8,7 @@
     .service('networkService', networkService);
 
     /* @ngInject */
-    function networkService($q, $location, _, facetService, FacetResultHandler, SPARQL_ENDPOINT_URL,
+    function networkService($q, $location, _, mapfacetService, FacetResultHandler, SPARQL_ENDPOINT_URL,
             AdvancedSparqlService, personMapperService) {
 
         /* Public API */
@@ -18,7 +18,7 @@
         this.getResults = getResults;
         // Get the facets.
         // Return a promise (because of translation).
-        this.getFacets = facetService.getFacets;
+        this.getFacets = mapfacetService.getFacets;
         // Get the facet options.
         // Return an object.
         this.getFacetOptions = getFacetOptions;

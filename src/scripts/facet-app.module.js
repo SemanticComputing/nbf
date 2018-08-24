@@ -37,12 +37,12 @@
     })
 
     .config(function($urlRouterProvider){
-        $urlRouterProvider.when('', '/ruudukko');
+        $urlRouterProvider.when('', '/haku/ruudukko');
     })
 
     .service('authInterceptor', function ($q, $state) {
         this.responseError = function(response) {
-            if (response.status == 401) {
+            if (response.status == 401) { 
                 $state.go('login');
             }
             return $q.reject(response);
@@ -96,44 +96,57 @@
             controller: 'TitleController',
             controllerAs: 'vm'
         })
-        .state('table', {
+        
+        .state('search', {
+            url: '/haku',
+            // abstract: true,
+            templateUrl: 'views/search.html'
+        })
+        .state('search.table', {
             url: '/lista',
             templateUrl: 'views/table.html',
             controller: 'TableController',
             controllerAs: 'vm'
         })
-        .state('cards', {
+        .state('search.cards', {
             url: '/ruudukko',
             templateUrl: 'views/cards.html',
             controller: 'CardsController',
             controllerAs: 'vm',
         })
         
-        .state('groupmap', {
-            url: '/joukkokartta',
-            abstract: true,
+        
+        /*
+        .state('maps.groupmap', {
+            url: '/joukkokarttaX',
+            // abstract: true,
             templateUrl: 'views/groupmap/groupmap.html',
+        })*/
+        .state('maps', {
+            url: '/kartta',
+            // abstract: true,
+            templateUrl: 'views/maps.html'
         })
-        .state('groupmap.singleview', {
-            url: '',
+        .state('maps.singleview', {
+            url: '/joukkokartta',
             templateUrl: 'views/groupmap/singleview.html',
             controller: 'GroupmapController',
             controllerAs: 'vm',
         })
-        .state('groupmap.comparison', {
+        .state('maps.comparison', {
             url: '/vertaa',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
-        .state('groupmap.comparison.sides', {
+        .state('maps.comparison.sides', {
             url: '',
             views: {
-                'left@groupmap.comparison': {
+                'left@maps.comparison': {
                     templateUrl: 'views/groupmap/comparison.left.html',
                     controller: 'GroupmapController',
                     controllerAs: 'vm',
                 },
-                'right@groupmap.comparison': {
+                'right@maps.comparison': {
                     templateUrl: 'views/groupmap/comparison.right.html',
                     controller: 'GroupmapController',
                     controllerAs: 'vm',
@@ -141,14 +154,14 @@
             }
         })
         
-        .state('groupmap2', {
-            url: '/joukkokartta2',
+        .state('maps.groupmap2', {
+            url: '/liikekartta',
             templateUrl: 'views/groupmap2.html',
             controller: 'GroupmapController2',
             controllerAs: 'vm',
         })
-        .state('groupmap3', {
-            url: '/joukkokartta3',
+        .state('maps.groupmap3', {
+            url: '/lampokartta',
             templateUrl: 'views/groupmap3.html',
             controller: 'GroupmapController3',
             controllerAs: 'vm',
@@ -196,13 +209,20 @@
                 }
             }
         })
+        
+        .state('visu', {
+            url: '/visu',
+            // abstract: true,
+            templateUrl: 'views/stats.html'
+        })
+        /*
         .state('visu', {
             url: '/visu',
             abstract: true,
             templateUrl: 'views/visu/visu.html',
-        })
+        })*/
         .state('visu.statistics', {
-            url: '',
+            url: '/palkit',
             templateUrl: 'views/visu/statistics.html',
             controller: 'VisuController',
             controllerAs: 'vm',
@@ -233,26 +253,26 @@
             abstract: true,
             templateUrl: 'views/visu2/visu.html',
         })
-        .state('visu2.statistics', {
-            url: '',
+        .state('visu.statistics2', {
+            url: '/piiraat',
             templateUrl: 'views/visu2/statistics.html',
             controller: 'VisuController2',
             controllerAs: 'vm',
         })
-        .state('visu2.comparison', {
-            url: '/vertaa',
+        .state('visu.comparison2', {
+            url: '/vertaa2',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
-        .state('visu2.comparison.sides', {
+        .state('visu.comparison2.sides', {
             url: '',
             views: {
-                'left@visu2.comparison': {
+                'left@visu.comparison2': {
                     templateUrl: 'views/visu2/comparison.left.html',
                     controller: 'VisuController2',
                     controllerAs: 'vm',
                 },
-                'right@visu2.comparison': {
+                'right@visu.comparison2': {
                     templateUrl: 'views/visu2/comparison.right.html',
                     controller: 'VisuController2',
                     controllerAs: 'vm',

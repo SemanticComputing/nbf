@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+	    <ul class="nav nav-tabs">
+	      <li ui-sref="maps.singleview" ui-sref-active="active">
+	        <a href=""><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Tapahtumakartta</a>
+	      </li>
+	      <li ui-sref="maps.comparison.sides" ui-sref-active="active">
+	        <a href=""><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Vertailu</a>
+	      </li>
+	      <li ui-sref="maps.groupmap2" ui-sref-active="active">
+	        <a href=""><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Liikekartta</a>
+	      </li>
+	    </ul>
+	  </div>
+  </div>
+  <div class="row">
+  	<br />
+    <div ui-view></div>
+  </div>
+</div>

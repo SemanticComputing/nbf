@@ -153,20 +153,20 @@
                 },
                 title: {
                     facetId: 'title',
-                    predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>',
+                    predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/has_title>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                     name: 'Arvo, ammatti tai toiminta',
                     chart: true,
                     enabled: true
                 },
                 company: {
                     facetId: 'company',
-                    predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>',
+                    predicate: '<http://xmlns.com/foaf/0.1/focus>/^<http://ldf.fi/schema/bioc/inheres_in>/<http://ldf.fi/nbf/related_company>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                     name: 'Yritys tai yhteisö',
                     enabled: true
                 },
                 category: {
                     facetId: 'category',
-                    predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>',
+                    predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                     name: 'Toimiala',
                     enabled: true
                 },
