@@ -226,6 +226,40 @@
                     controllerAs: 'vm',
                 }
             }
-        });
+        })
+        
+        .state('visu2', {
+            url: '/visu2',
+            abstract: true,
+            templateUrl: 'views/visu2/visu.html',
+        })
+        .state('visu2.statistics', {
+            url: '',
+            templateUrl: 'views/visu2/statistics.html',
+            controller: 'VisuController2',
+            controllerAs: 'vm',
+        })
+        .state('visu2.comparison', {
+            url: '/vertaa',
+            abstract: true,
+            templateUrl: 'views/comparison.html',
+        })
+        .state('visu2.comparison.sides', {
+            url: '',
+            views: {
+                'left@visu2.comparison': {
+                    templateUrl: 'views/visu2/comparison.left.html',
+                    controller: 'VisuController2',
+                    controllerAs: 'vm',
+                },
+                'right@visu2.comparison': {
+                    templateUrl: 'views/visu2/comparison.right.html',
+                    controller: 'VisuController2',
+                    controllerAs: 'vm',
+                }
+            }
+        })
+        
+        ;
     });
 })();

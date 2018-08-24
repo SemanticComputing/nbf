@@ -55,13 +55,12 @@
             'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
         
         var queryYears = prefixes +
-	    	'SELECT DISTINCT ?value ?value2 (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
 	    	'  { <RESULT_SET> } ' +
 	    	'  ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth .' +
 	    	'  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?value)' +
-	    	'  BIND (?value+9 AS ?value2)' +
-	    	'} GROUP BY ?value ?value2 ORDER BY ?value ';
+	    	'} GROUP BY ?value ORDER BY ?value ';
         
         // The query for the results 
         var queryAge = prefixes +

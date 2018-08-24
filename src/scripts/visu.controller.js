@@ -97,14 +97,15 @@
         function drawYearChart(res, range, label, target) {
            
         	// var ticks = res.map(function(ob) { return 1+parseInt(ob.value); });
-            var rows = res.map(function(ob) { return [ob.value, parseInt(ob.count)]; });
+            var rows = res.map(function(ob) { return [ob.value, parseInt(ob.count)]; }),
+            	total = res.map(function(ob) { return parseInt(ob.count); }).reduce((a, b) => a + b, 0);
             
             vm.data[target] = res.map(function(ob) {return ob.persons});
             
             var 
                 data = new google.visualization.DataTable(),
                 options = {
-                    title: label ,
+                    title: label+', yhteensä ' +total+ ' henkilöä' ,
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},
@@ -133,7 +134,6 @@
 
             data.addRows(rows);
             chart.draw(data, options);
-            
             
             
             google.visualization.events.addListener(chart, 'select', function() {
