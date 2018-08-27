@@ -61,7 +61,9 @@
     	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
     	'' +
     	'  { ?pc bioc:has_family_relation ?id . ' +
-    	'		?id bioc:inheres_in ?relative } ' +
+    	'		?id bioc:inheres_in ?rel . ' +
+    	'		?rel owl:sameAs* ?relative . ' +
+    	'		FILTER NOT EXISTS { ?relative owl:sameAs [] } }' +
     	'  UNION ' +
     	'  { ?id crm:P100_was_death_of ?prs . } ' +
     	'  UNION ' +

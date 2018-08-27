@@ -1,21 +1,57 @@
-
 <div class="container-fluid">
   <div class="row">
-        <!-- DO NOT REMOVE THIS COMMENT, IT IS A HACK
- --><!-- <div class="col-xs-9 col-md-8 col-lg-9 vcenter push-xs-9">
-      <div ng-include="'views/description.network.partial.html'"></div>
-    </div> -->
-
-    <div class="container-fluid text-center">
-    		
-      	<h1>{{ vm.label }}</h1>
-      	<br/><span style="color: red">{{ vm.message }}</span>
-      	<a ui-sref="person.detail({ personId: vm.chosenNode.url })" ng-if="vm.chosenNode">{{ vm.chosenNode.label }}</a>
-   		<div class="container-fluid thumbnail">
-   			<img class="loading-img" src="images/loading-lg.gif" ng-if="!vm.cy"></img>
+    <div class="col-sm-12" ng-show="vm.loading">
+      <img class="loading-img" src="images/loading-lg.gif"></img>
+    </div>
+    <div uib-alert ng-if="vm.error">
+      {{ vm.error }}
+    </div>
+    <div class="container-fluid text-center" >
+      <h1>{{ vm.label }}</h1>
+    
+    <div class="container-fluid thumbnail">
+    
+	    <div>
+		    <div class="col-md-4 pull-md-4 col-lg-3 text-left" >
+		    	<h1>Tutki henki&shy;löön liit&shy;tyvää verkostoa</h1>
+		    	<p>
+		    	Sivulla näytetään havainnekuva henkilöön liittyvästä verkostosta.
+		    	Linkitys on luotu biografiakuvausten viittausten perusteella.
+		    	</p>
+		    	
+		    	<div class="well well-sm">
+		    		<p>{{ vm.message }}</p>
+	     			<p>
+						Näytä verkostossa korkeintaan 
+						<select ng-model="vm.searchlimit" 
+								ng-options="item.value for item in vm.LIMITOPTIONS"
+								ng-change="vm.changelimit()">
+				     	</select> linkkiä.
+				     </p>
+				     
+	     			<p>
+		     			Solmujen koko: 
+						<select ng-model="vm.sizeoption" 
+								ng-options="item.value for item in vm.SIZEOPTIONS"
+								ng-change="vm.changesize()">
+				     	</select>
+				     </p>
+				     
+				     <p>
+		     			Solmujen väri: 
+						<select ng-model="vm.coloroption" 
+								ng-options="item.value for item in vm.COLOROPTIONS"
+								ng-change="vm.changecolor()">
+				     	</select>
+				     </p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-8 col-lg-9 text-center thumbnail">
    			<div id="personnetworkcontainer"></div>
-      	</div>
-	   
-	  </div>
-	</div>
+	    </div>
+      </div>
+    </div>
+  </div>
 </div>

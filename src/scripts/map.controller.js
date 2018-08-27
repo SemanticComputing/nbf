@@ -46,6 +46,7 @@
         function init() {
         	
         	mapService.getEvents($stateParams.personId).then(function(events) {
+        		console.log(events);
         		vm.currentEvent = ".";
         		vm.events = events;
         		if (events.length) {

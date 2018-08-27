@@ -126,11 +126,14 @@
             '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +
             '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
-            '  		bioc:inheres_in ?relative__id ; ' +
+            '  		bioc:inheres_in ?rel ; ' +
             '  		a/skos:prefLabel ?relative__type ] . } ' +
-            '		UNION { ?relative__id bioc:has_family_relation [ ' +
+            '		UNION { ?rel bioc:has_family_relation [ ' +
             '  		bioc:inheres_in ?id ; ' +
             '  		bioc:inverse_role/skos:prefLabel ?relative__type ] . } ' +
+            '		?rel owl:sameAs* ?relative__id . ' +
+            '		FILTER NOT EXISTS { ?relative__id owl:sameAs [] } ' +
+            '		' +
             '  		FILTER (LANG(?relative__type)="fi") ' +
             '  		?relative__id skosxl:prefLabel ?relative__label . ' +
             '  		OPTIONAL { ?relative__label schema:familyName ?relative__familyName } ' +
@@ -255,7 +258,8 @@
         	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
         	'WHERE {' +
         	'  <RESULT_SET> ' +
-        	'  ?id owl:sameAs*/foaf:focus ?prs . ' +
+        	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
+        	'  ?id foaf:focus ?prs . ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
         	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
@@ -374,7 +378,7 @@
         
         function getPopover(id) {
         	var qry = prefixes + queryForPopover;
-            var constraint = 'VALUES ?id { <' + id + '> } . ';
+            var constraint = 'VALUES ?id2 { <' + id + '> } . ';
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
             	return result[0];

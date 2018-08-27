@@ -119,10 +119,11 @@
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
-            	vm.message = (res.length<vm.SEARCHLIMIT.value) ?
-            			"Haku tuotti "+(res.length)+" tulosta." :
-            			"Kartalla näytetään "+(res.length)+" ensimmäistä tulosta.";
             	
+    			vm.message = (res.length<vm.SEARCHLIMIT.value) ?
+            			"Haku tuotti "+(res.length)+" paikkatulosta." :
+            			"Kartalla näytetään "+(res.length)+" ensimmäistä paikkaa.";
+                    			
             	processEvents(res, vm);
             	
             }).catch(handleError);

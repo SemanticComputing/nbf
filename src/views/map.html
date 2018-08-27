@@ -12,20 +12,24 @@
     <div class="container-fluid thumbnail">
     
 	    <div>
-		    <div id="labelcontainer" class="col-sm-4 col-md-2 text-center" ng-show="vm.person">
-		    	
-				<p ng-repeat="event in ::vm.events"
+		    <div id="labelcontainer" class="col-md-4 pull-md-4 col-lg-3" >
+		    	<h1>Tutki henki&shy;löön liit&shy;tyviä tapah&shy;tumia</h1>
+		    	<p>
+		    	Sivulla näytetään lista henkilöön liittyvistä tapahtumista, niihin liittyvät paikat kartalla sekä tapahtumasarja aikajanalla.
+		    	Tapahtumat on poimittu biografiakuvausten tekstikentistä.
+		    	</p>
+				<p ng-show="vm.person" ng-repeat="event in ::vm.events"
 					class="{{event.class}}"
 					ng-mouseenter="vm.focusEvent(event)"
 					ng-mouseleave="vm.unfocusEvent(event)">
-					<a ng-if="::event.relative" ui-sref="person.detail({ personId: event.relative })">
-					{{ event.id }}: {{ event.label }}</a>
-                	<span ng-if="::!event.relative">{{ event.id }}: {{ event.label }}</span>
+					{{$index+1}}: 
+					<span ng-if="::event.relative" class="personlink" url="{{ ::event.relative }}">{{ event.label }}</span>
+                	<span ng-if="::!event.relative">{{ ::event.label }}</span>
 				</p>
 			</div>
 		</div>
 		
-		<div class="col-sm-12 col-md-10 text-center ">
+		<div class="col-md-8 col-lg-9 text-center ">
 		   <ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
 	        	<ui-gmap-marker ng-repeat="marker in vm.markers" 
 	        		coords="marker"
@@ -44,8 +48,8 @@
 				  	<path ng-repeat="event in vm.events"
 				  		ng-mouseenter="vm.focusEvent(event)"
 				  		ng-mouseleave="vm.unfocusEvent(event)" 
-				  		class="{{ event.class }}" 
-				  		ng-attr-d="{{ event.path }}">
+				  		class="{{ ::event.class }}" 
+				  		ng-attr-d="{{ ::event.path }}">
 				  	</path>
 				  	
 			  		

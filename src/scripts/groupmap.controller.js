@@ -128,8 +128,8 @@
             		return;
             	}
             	vm.message = (res.length<vm.SEARCHLIMIT.value) ?
-            			"Haku tuotti "+(res.length)+" tulosta." :
-            			"Kartalla näytetään "+(res.length)+" ensimmäistä tulosta.";
+            			"Haku tuotti "+(res.length)+" paikkatulosta." :
+            			"Kartalla näytetään "+(res.length)+" ensimmäistä paikkaa.";
             	
             	vm.events = processEvents(res, vm);
             }).catch(handleError);
