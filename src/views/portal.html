@@ -85,7 +85,9 @@
       <div class="row">
         <div class="col-md-12">
 
-          <p id="generalDesc">{{ ::vm.strings["generalDesc"] }}</p>
+          <p id="generalDesc">
+          {{ ::vm.strings["generalDesc"] }}
+           (<a data-toggle='modal' data-target='#myModal' href='#'>{{ ::vm.strings["ins"] }}</a>)</p>
           <noscript>
             <p>Portaalilla voi hakea, selata ja visualisoida laajoja tietoaineistoja Suomen historiallisista henkilöistä.</p>
             <p><b>Salli JavaScript käyttääksesi Suomen sukua. Please enable JavaScript to use Semantic Biography of Finland.</b></p>
@@ -118,8 +120,8 @@
 
             <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
               <div class="persbox" id="nav-statistics">
-                <h4 id="statisticsH">{{ ::vm.strings["mapsP"] }}</h4>
-                <p  id="statisticsP">{{ ::vm.strings["mapsP"] }}</p>
+                <h4 id="statisticsH">{{ ::vm.strings["statisticsH"] }}</h4>
+                <p  id="statisticsP">{{ ::vm.strings["statisticsP"] }}</p>
               </div>
             </a>
 

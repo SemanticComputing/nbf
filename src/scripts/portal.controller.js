@@ -35,7 +35,7 @@
                 networksP: "Tutki historiallisten henkilöiden verkostoja",
                 relationsH: "Yhteyshaku",
                 relationsP: "Hae henkilöiden ja paikkojen välisisä yhteyksiä",
-                casultiesH: "Kielianayysi",
+                casultiesH: "Kielianalyysi",
                 casultiesP: "Tutki elämäkerroissa käytetttyä kieltä",
                 
                 metaDescription: "Sovelluksen avulla voi hakea, selata, visualisoida ja tutkia laajoja suomalaisiin historiallisiin henkilöihin liittyviä tietoaineistoja."
