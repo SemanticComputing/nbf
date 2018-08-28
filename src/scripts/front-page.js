@@ -12,7 +12,7 @@
         });
     } */
 
-//	TODO: move the functionality from this file into controller at scripts/portal.controller.js
+//	NOTE: moved the functionality from this file into controller at scripts/portal.controller.js
 (function($) {
 /* ==========================================================================
    Code for generating language dependent strings for the WarSampo.fi service front page.

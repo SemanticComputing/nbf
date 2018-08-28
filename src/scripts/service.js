@@ -402,7 +402,7 @@
         
         function getPortal() {
         	return endpoint.getObjectsNoGrouping(prefixes+queryPortal)
-        		.then(function(result) {return result;});
+        		.then(function(result) { return result; });
         }
         
         function updateSortBy(sortBy) {

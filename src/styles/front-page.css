@@ -45,26 +45,6 @@ html, body {
     min-height: 300px;
 }
 
-.exbox#unit-ex {
-    background: url('https://static.sotasampo.fi/photographs/r500/sakuva_131822.jpg');
-    background-position: -10px -5px;
-    background-repeat: no-repeat;
-}
-.exbox#event-ex {
-    background: url('https://static.sotasampo.fi/photographs/r500/sakuva_104767.jpg');
-    background-position: -2px;
-    background-repeat: no-repeat;
-}
-
-.exbox#person-ex {
-    background: url('https://static.sotasampo.fi/photographs/r500/sakuva_119424.jpg');
-    background-position: -3px -10px;
-    background-repeat: no-repeat;
-}
-.exbox#photo-ex {
-    background: url('https://static.sotasampo.fi/photographs/r500/sakuva_165835.jpg');
-    background-repeat: no-repeat;
-}
 
 .pers-link, .ex-link {
     text-decoration: none !important;
@@ -86,18 +66,18 @@ html, body {
     background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('bios-4-6.png');
     background-position: top, middle;
     */
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('search.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/search.png');
     background-size: cover;
 }
 
 .persbox#nav-maps {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('map.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('../images/map.png');
     background-size: cover;
 }
 
 
 .persbox#nav-statistics {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('histo.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('../images/histo.png');
     background-position: top, middle;
     background-size: cover;
 }
@@ -105,17 +85,17 @@ html, body {
 /* 2. rivi */
 
 .persbox#nav-networks {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('network.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/network.png');
     background-size: cover;
 }
 
 .persbox#nav-relations {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('bios-4-6.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/bios-4-6.png');
     background-position: top, middle;
 }
 
 .persbox#nav-language {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('language.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/language.png');
     background-size: cover;
 }
 
@@ -123,7 +103,7 @@ html, body {
 
 
 .persbox#nav-photographs {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('bios.png');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/bios.png');
     background-position: 20% 0%;
 }
 
@@ -138,7 +118,7 @@ html, body {
 }
 
 #jumbo {
-	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6) ), url('parchment.jpg');
+	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6) ), url('../images/parchment.jpg');
     background-size: cover;
     background-repeat: no-repeat, repeat;
     /* background-blend-mode: lighten; */

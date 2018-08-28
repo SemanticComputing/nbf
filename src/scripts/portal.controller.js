@@ -14,6 +14,36 @@
     	
         var vm = this;
         
+        var finnishStrings = {
+                pageTitle: "Semanttinen kansallisbiografia",
+                jumboTitle: "Semanttinen kansallisbiografia",
+                jumboSubtitle: "Suomalaisten elämäkertojen verkosto semanttisessa webissä",
+                generalDesc: "Sovellus mahdollistaa suomalaisten historiallisten henkilöiden elämäkertojen ja henkilöryhmien tutkimisen " +
+                		"toisiinsa linkitettyjen laajojen tietoaineistojen avulla.",
+                ins: "ohje",
+                followFacebook: "Liity Semanttinen kansallisbiografia -ryhmään Facebookissa",
+                localeLinkText: "In English",
+                choosePerspective: "Valitse sovellusnäkymä aineistoihin",
+                perspectiveTooltip: "Klikkaa käynnistääksesi sovellus",
+                searchH: "Hae ja selaa",
+                searchP: "Etsi elämäkertoja joustavasti eri näkökulmista",
+                mapsH: "Kartat",
+                mapsP: "Elämäkerrat kartalla",
+                statisticsH: "Tilastot",
+                statisticsP: "Ryhmien elämäntarinat tilastojen kautta",
+                networksH: "Verkostot",
+                networksP: "Tutki historiallisten henkilöiden verkostoja",
+                relationsH: "Yhteyshaku",
+                relationsP: "Hae henkilöiden ja paikkojen välisisä yhteyksiä",
+                casultiesH: "Kielianayysi",
+                casultiesP: "Tutki elämäkerroissa käytetttyä kieltä",
+                
+                metaDescription: "Sovelluksen avulla voi hakea, selata, visualisoida ja tutkia laajoja suomalaisiin historiallisiin henkilöihin liittyviä tietoaineistoja."
+            };
+        
+        vm.strings = finnishStrings;
+        vm.testing = "Testing";
+        
         init();
         
         function init() {

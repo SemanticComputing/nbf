@@ -2,8 +2,8 @@
 <html lang="fi">
 
 <head>
-  <script src="scripts/front-page.js"></script>
   <!-- 
+  <script src="../scripts/front-page.js"></script>
   <title></title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,9 +13,7 @@
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-   -->
-  
-  <!--  
+   
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
@@ -66,7 +64,6 @@
 
 <!--  HEADER -->  
  
-
 <!-- 
 <div id="nav"></div>
 <img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px"> <img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px">      
@@ -80,69 +77,70 @@
               <h1>Suomen suku</h1>
               <p>Semanttinen kansallisbiografia</p>
             </noscript>
-            <h1 id="jumboTitle"></h1>
-            <p id="jumboSubtitle" ></p>
+            <h1 id="jumboTitle">{{ ::vm.strings["jumboTitle"] }}</h1>
+            <p id="jumboSubtitle" >{{ ::vm.strings["jumboSubtitle"] }}</p>
           </div>
         </div>
       </div> <!-- Jumbotron -->
       <div class="row">
         <div class="col-md-12">
 
-          <p id="generalDesc"> </p>
+          <p id="generalDesc">{{ ::vm.strings["generalDesc"] }}</p>
           <noscript>
             <p>Portaalilla voi hakea, selata ja visualisoida laajoja tietoaineistoja Suomen historiallisista henkilöistä.</p>
             <p><b>Salli JavaScript käyttääksesi Suomen sukua. Please enable JavaScript to use Semantic Biography of Finland.</b></p>
           </noscript>
-          <p><a href="https://www.facebook.com/groups/sotasampo/"><img src="http://www.sotasampo.fi/images/FB-f-Logo__blue_29.png" /> <span id="followFacebook"></span></a></p>
+          <p><a href="https://www.facebook.com/groups/sotasampo/"><img src="http://www.sotasampo.fi/images/FB-f-Logo__blue_29.png" />
+          <span id="followFacebook">{{ ::vm.strings["followFacebook"] }}</span></a></p>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-12">
           <hr/>
-          <h3 id="choosePerspective"></h3>
+          <h3 id="choosePerspective">{{ ::vm.strings["choosePerspective"] }}</h3>
           <!-- PERSPECTIVES -->
 
           <div class="row">
             <a id="events" class="col-md-4 pers-link" ui-sref="search.cards">
               <div class="persbox" id="nav-events")>
-                <h4  id="searchH"></h4>
-                <p id="searchP"></p>
+                <h4 id="searchH">{{ ::vm.strings["searchH"] }}</h4>
+                <p id="searchP">{{ ::vm.strings["searchP"] }}</p>
               </div>
             </a>
 
             <a id="maps" class="col-md-4 pers-link" ui-sref="maps.singleview">
               <div class="persbox" id="nav-maps" >
-                <h4 id="mapsH"></h4>
-                <p  id="mapsP"></p>
+                <h4 id="mapsH">{{ ::vm.strings["mapsH"] }}</h4>
+                <p  id="mapsP">{{ ::vm.strings["mapsP"] }}</p>
               </div>
             </a>
 
             <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
               <div class="persbox" id="nav-statistics">
-                <h4 id="statisticsH"></h4>
-                <p  id="statisticsP"></p>
+                <h4 id="statisticsH">{{ ::vm.strings["mapsP"] }}</h4>
+                <p  id="statisticsP">{{ ::vm.strings["mapsP"] }}</p>
               </div>
             </a>
 
             <a id="networks" class="col-md-4 pers-link" ui-sref="network">
               <div class="persbox" id="nav-networks">
-                <h4 id="networksH"></h4>
-                <p  id="networksP"></p>
+                <h4 id="networksH">{{ ::vm.strings["networksH"] }}</h4>
+                <p  id="networksP">{{ ::vm.strings["networksP"] }}</p>
               </div>
             </a>
 			
             <a id="relations" class="col-md-4 pers-link">
               <div class="persbox" id="nav-relations">
-                <h4 id="relationsH"></h4>
-                <p  id="relationsP"></p>
+                <h4 id="relationsH">{{ ::vm.strings["relationsH"] }}</h4>
+                <p  id="relationsP">{{ ::vm.strings["relationsP"] }}</p>
               </div>
             </a>
 
             <a id="language" class="col-md-4 pers-link" ui-sref="nlp.statistics">
               <div class="persbox" id="nav-language">
-                <h4 id="casultiesH"></h4>
-                <p  id="casultiesP"></p>
+                <h4 id="casultiesH">{{ ::vm.strings["casultiesH"] }}</h4>
+                <p  id="casultiesP">{{ ::vm.strings["casultiesP"] }}</p>
               </div>
             </a>
             
