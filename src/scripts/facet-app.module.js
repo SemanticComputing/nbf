@@ -37,7 +37,7 @@
     })
 
     .config(function($urlRouterProvider){
-        $urlRouterProvider.when('', '/haku/ruudukko');
+        $urlRouterProvider.when('', '/portal');
     })
 
     .service('authInterceptor', function ($q, $state) {
@@ -59,6 +59,12 @@
             url: '/login',
             templateUrl: 'views/login.html',
             controller: 'LoginController',
+            controllerAs: 'vm'
+        })
+        .state('portal', {
+            url: '/portal',
+            templateUrl: 'views/portal.html',
+            controller: 'PortalController',
             controllerAs: 'vm'
         })
         .state('person', {

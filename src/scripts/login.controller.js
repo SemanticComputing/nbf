@@ -19,7 +19,7 @@
         function login() {
             return loginService.login(vm.un, vm.pw).then(function(success) {
                 if (success) {
-                    return $state.transitionTo('search.cards', $stateParams, {
+                    return $state.transitionTo('portal', $stateParams, {
                         reload: true, inherit: false, notify: true
                     });
                 }

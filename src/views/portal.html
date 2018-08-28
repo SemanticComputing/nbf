@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+  <script src="scripts/front-page.js"></script>
+  <!-- 
+  <title></title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="google-site-verification" content="yC4ofDhxNJ_sXh8xCtC7RxpxGtbTdTxavHmkx9aaTJ4" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+   -->
+  
+  <!--  
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "https://www.sotasampo.fi",
+      "name": "Sotasampo",
+      "alternateName": "WarSampo",
+      "sameAs": [
+        "https://www.wikidata.org/entity/Q28942343",
+        "https://www.facebook.com/groups/sotasampo"
+      ]
+    }
+  </script>
+
+  <script>
+    if (window.location.host === 'www.sotasampo.fi') {
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-12724615-12', 'auto');
+      ga('send', 'pageview');
+    }
+</script>
+<script>
+  	$(document).ready(function(){
+  		$("#nav").load("page-templates/navbar-fi.html.partial");
+    	$("#footer").load("views/footer.html.partial") 
+		}) 
+</script>
+  -->
+  
+</head>
+
+<body>
+
+<div class="wrapper">
+  	<noscript>
+        <div class="alert alert-danger text-center">
+          <h3>Sovellus vaatii toimiakseen JavaScriptin. The application requires JavaScript to function.</h3>
+        </div>
+    </noscript>
+	
+     <!--  CONTAINER -->
+     
+    <div class="container">
+
+<!--  HEADER -->  
+ 
+
+<!-- 
+<div id="nav"></div>
+<img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px"> <img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px">      
+ -->
+    <!--  JUMBO -->
+    
+      <div id="jumbo" class="jumbotron" >
+        <div class="row">
+          <div class="col-md-10">
+            <noscript>
+              <h1>Suomen suku</h1>
+              <p>Semanttinen kansallisbiografia</p>
+            </noscript>
+            <h1 id="jumboTitle"></h1>
+            <p id="jumboSubtitle" ></p>
+          </div>
+        </div>
+      </div> <!-- Jumbotron -->
+      <div class="row">
+        <div class="col-md-12">
+
+          <p id="generalDesc"> </p>
+          <noscript>
+            <p>Portaalilla voi hakea, selata ja visualisoida laajoja tietoaineistoja Suomen historiallisista henkilöistä.</p>
+            <p><b>Salli JavaScript käyttääksesi Suomen sukua. Please enable JavaScript to use Semantic Biography of Finland.</b></p>
+          </noscript>
+          <p><a href="https://www.facebook.com/groups/sotasampo/"><img src="http://www.sotasampo.fi/images/FB-f-Logo__blue_29.png" /> <span id="followFacebook"></span></a></p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <hr/>
+          <h3 id="choosePerspective"></h3>
+          <!-- PERSPECTIVES -->
+
+          <div class="row">
+            <a id="events" class="col-md-4 pers-link" ui-sref="search.cards">
+              <div class="persbox" id="nav-events")>
+                <h4  id="searchH"></h4>
+                <p id="searchP"></p>
+              </div>
+            </a>
+
+            <a id="maps" class="col-md-4 pers-link" ui-sref="maps.singleview">
+              <div class="persbox" id="nav-maps" >
+                <h4 id="mapsH"></h4>
+                <p  id="mapsP"></p>
+              </div>
+            </a>
+
+            <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
+              <div class="persbox" id="nav-statistics">
+                <h4 id="statisticsH"></h4>
+                <p  id="statisticsP"></p>
+              </div>
+            </a>
+
+            <a id="networks" class="col-md-4 pers-link" ui-sref="network">
+              <div class="persbox" id="nav-networks">
+                <h4 id="networksH"></h4>
+                <p  id="networksP"></p>
+              </div>
+            </a>
+			
+            <a id="relations" class="col-md-4 pers-link">
+              <div class="persbox" id="nav-relations">
+                <h4 id="relationsH"></h4>
+                <p  id="relationsP"></p>
+              </div>
+            </a>
+
+            <a id="language" class="col-md-4 pers-link" ui-sref="nlp.statistics">
+              <div class="persbox" id="nav-language">
+                <h4 id="casultiesH"></h4>
+                <p  id="casultiesP"></p>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+       
+
+      <div class="push"></div>
+     
+    </div> <!-- container -->
+    	 
+    
+    
+    
+  </div> <!-- wrapper -->
+
+  <!--   FOOTER     -->
+  <div id="footer">
+  <footer class="footer">
+	<div class="container-fluid" height="100px" >
+		<hr />
+		<a href="https://seco.cs.aalto.fi" style="border:0px">
+			<img id="seco" alt="Semantic Computing Research Group" src="https://www.ldf.fi/img/seco-logo.png"
+											style="height:50px;padding-right:30px; border:none" ></img></a>
+		<a href="https://www.aalto.fi/en/">
+			<img id="aalto" alt="Aalto University" src="https://www.ldf.fi/img/aalto-logo.png"
+											style="height:50px; padding-right:30px; padding-bottom:5px; border:none"></img></a>
+		<a href="http://www.heldig.fi/">
+			<img id="heldig" alt="HELDIG - Helsinki Centre for Digital Humanities" src="http://www.ldf.fi/img/bio/heldig-text.jpg"
+											style="height:50px; padding-right:30px; border:none"></img></a>
+		<a href="https://www.finlit.fi/">
+			<img id="sks" alt="Finnish Literature Society" src="https://www.ldf.fi/img/sks.jpg"
+											style="height:50px; padding-right:30px; border:none"></img></a>
+	</div>
+</footer>
+</div>
+
+</body>
+</html>

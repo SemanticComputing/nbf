@@ -36,6 +36,8 @@
         this.getBios = getBios;
         this.getPopover = getPopover;
         this.getPopoverGroup = getPopoverGroup;
+        
+        this.getPortal = getPortal;
         /* Implementation */
 
         var prefixes =
@@ -293,6 +295,9 @@
         	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
         	'} ORDER BY UCASE(?fname) ?gname ';
         
+
+        var queryPortal = 'SELECT * WHERE { ?x ?y ?z } LIMIT 1 ';
+        
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -393,6 +398,11 @@
             .then(function(result) {
             	return result;
             });
+        }
+        
+        function getPortal() {
+        	return endpoint.getObjectsNoGrouping(prefixes+queryPortal)
+        		.then(function(result) {return result;});
         }
         
         function updateSortBy(sortBy) {

@@ -115,7 +115,7 @@
             	if (res.length<2) {
             		vm.message = "Hakuehdoilla on löydy verkostoa."
             	}
-            	console.log(res);
+            	// console.log(res);
             	/* vm.network = */ processData(res, vm);
             }).catch(handleError);
         }

@@ -150,7 +150,7 @@
         function drawAgeChart(res, range, label, target, quantity) {
             
             var N = range[1]-range[0]+1,
-            	arr = new Array(N);
+            	arr = new Array(N),
                 persons = new Array(N);
                 
             for (var i=0; i<N; i++) {
