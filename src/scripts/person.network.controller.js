@@ -26,12 +26,13 @@
         vm.dict = {};
         vm.chosenNode = null;
         vm.loading = false;
+        vm.showlegend = false;
         
-        var GOOGLE_COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
+        vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
     		'#990099', '#3B3EAC', '#0099C6', '#DD4477', 
     		'#66AA00', '#B82E2E', '#316395', '#994499', 
     		'#22AA99', '#AAAA11', '#6633CC', '#E67300', 
-    		'#8B0707', '#329262', '#5574A6', '#3B3EAC' ];
+    		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
         vm.LIMITOPTIONS = [{value:100},{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
         vm.searchlimit = vm.LIMITOPTIONS[1];
@@ -94,6 +95,7 @@
         vm.coloroption = vm.COLOROPTIONS[3];
         
         vm.changecolor = function() {
+        	vm.showlegend = false;
         	var str;
         	
         	switch(vm.coloroption) {
@@ -101,12 +103,14 @@
 	            	//	GENDER
 	            	category2Color(vm.elems, "gender", "gendercolor");
 	            	str = 'data(gendercolor)';
+	            	vm.showlegend = true;
 	            	break;
 	            	
 	            case vm.COLOROPTIONS[2]:
 	            	//	CATEGORY
 	            	category2Color(vm.elems, "category", "categorycolor");
             		str = 'data(categorycolor)';
+            		vm.showlegend = true;
             		break;
             		
 	            case vm.COLOROPTIONS[3]:
@@ -121,7 +125,7 @@
 	                break;
 	                
 	            default:
-	            	str = GOOGLE_COLORS[0]
+	            	str = vm.COLORS[0]
 	                break;
 	            
 	        }
@@ -157,23 +161,17 @@
             	vm.cy.elements().remove();
             }
             
+            vm.message = '';
+        	
             vm.cy = null;
             
             return personNetworkService.getLinks($stateParams.personId, vm.searchlimit.value)
             .then(function(res) {
             	
-            	vm.message = '';
-            	
             	if (res.length<1) {
             		vm.message = "Hakuehdoilla ei löydy verkostoa.";
             		vm.loading = false;
             		return;
-            	}
-            	
-            	if (res.length==vm.searchlimit.value) {
-            		vm.message = "Näytetään {} ensimmäistä linkkiä".replace('{}', vm.searchlimit.value);
-            	} else {
-            		vm.message = "Näytetään {} linkkiä".replace('{}', res.length);
             	}
             	
             	
@@ -205,6 +203,16 @@
                 	processData(res, vm);
                 	
                 	vm.loading = false;
+                	
+                	if (vm.elems.edges.length==vm.searchlimit.value) {
+                		vm.message = "Näytetään {} ensimmäistä linkkiä ja {2} henkilöä"
+                			.replace('{}', vm.searchlimit.value)
+                			.replace('{2}', vm.elems.nodes.length);
+                	} else {
+                		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
+                			.replace('{}', vm.elems.edges.length)
+                			.replace('{2}', vm.elems.nodes.length);;
+                	}
                  });
             	
             }).catch(handleError);
@@ -228,14 +236,15 @@
 		    			"text-valign": "center",
 		    			"text-halign": "right",
 		    			"content": '  data(label)',
-		    			'background-color': GOOGLE_COLORS[0]
+		    			'background-color': vm.COLORS[0],
+                        'color': '#888'
     	            }
     	        },
                 {
                     selector: ':active',
                     style: {
                         'background-color': '#800',
-                        'color': '#800'
+                        'color': '#000'
                     }
                 },
     	        {
@@ -318,10 +327,22 @@
     		}
     		arr.sort(function(a, b) { return b.count - a.count; });
     		
+    			
     		dct = {};
     		arr.forEach(function (ob, i) {
-    			dct[ob.label] = i<GOOGLE_COLORS.length ? GOOGLE_COLORS[i] : GOOGLE_COLORS[GOOGLE_COLORS.length-1] ;
+    			dct[ob.label] = i<vm.COLORS.length ? vm.COLORS[i] : vm.COLORS[vm.COLORS.length-1] ;
     		});
+    		
+    		vm.legend = arr.map(function(ob,i) { 
+    			return {
+    				label: (''+ob.label=='undefined' ? 'ei tiedossa' : ob.label), 
+    				color:vm.COLORS[i]}; });
+    		
+    		var n = vm.COLORS.length;
+    		if (vm.legend.length>n) {
+    			vm.legend = vm.legend.slice(0,n);
+    			vm.legend[n-1].label = 'muut';
+    		}
     		
     		elems.nodes.forEach(function(ob) {
     			var val = ob.data[prop];

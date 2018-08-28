@@ -45,6 +45,13 @@
 				     	</select>
 				     </p>
 				</div>
+				<div class="well well-sm" ng-if="vm.showlegend">
+					<br/>
+					<p ng-if="vm.legend" ng-repeat="item in vm.legend">
+						<span class="legenddot" style="background-color: {{item.color}};"></span>
+						{{item.label}}
+					</p>
+				</div>
 			</div>
 		</div>
 		

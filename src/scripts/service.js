@@ -106,8 +106,8 @@
             '    <RESULT_SET> ' +
             '  } ' +
             '  ?id skosxl:prefLabel ?plabel . ' +
-            '  		OPTIONAL { ?plabel schema:givenName ?givenName . }' +
-            '  		OPTIONAL { ?plabel schema:familyName ?familyName . }' +
+            '  	  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
+            '  	  OPTIONAL { ?plabel schema:familyName ?familyName . }' +
             ' ' +
             '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
             '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
@@ -223,7 +223,7 @@
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY ?id__fname ?id__gname ';
+        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
         
         var queryAuthoredBios =
         	'SELECT DISTINCT  (?id as ?id__url) ?id__name WHERE { ' +
@@ -234,7 +234,7 @@
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY ?id__fname ?id__gname ';
+        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
         
         //	http://yasgui.org/short/SkYYOLRxm
         var queryByReferences =
@@ -251,7 +251,7 @@
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY ?id__fname ?id__gname ';
+        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
         
         //	http://yasgui.org/short/ByjM-gdIm
         var queryForPopover =
