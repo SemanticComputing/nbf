@@ -1,4 +1,23 @@
 <ul class="nav navbar-nav">
+	<!-- 
+  <li><a href="" id="show-help" ng-click="vm.showHelp()"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Ohje</a></li>
+   -->
+  <li class="dropdown" >
+  <a class="dropdown-toggle" data-toggle="dropdown" href="" id="statistics"> Näkymät<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+      <li ui-sref-active="{ active: 'search.**' }"><a ui-sref="search.cards"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Hae ja selaa</a></li>
+  		<li ui-sref-active="{ active: 'maps.**' }"><a ui-sref="maps.singleview"><span class="glyphicon glyphicon glyphicon-globe" aria-hidden="true"></span> Kartat</a></li>
+      <li ui-sref-active="{ active: 'visu.**' }"><a ui-sref="visu.statistics"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tilastot</a></li>
+      <li ui-sref-active="{ active: 'network' }"><a ui-sref="network"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> Verkostoanalyysi</a></li>
+      <li ui-sref-active="active"><a ui-sref="#"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> Yhteyshaku</a></li>
+  		<li ui-sref-active="{ active: 'nlp.**' }"><a ui-sref="nlp.statistics"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Kielianalyysi</a></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- 
+ <ul class="nav navbar-nav">
+
   <li><a href="" id="show-help" ng-click="vm.showHelp()"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Ohje</a></li>
 	
   <li ui-sref-active="{ active: 'search.**' }"><a ui-sref="search.cards"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Henkilöhaku</a></li>
@@ -6,5 +25,6 @@
   <li ui-sref-active="{ active: 'visu.**' }"><a ui-sref="visu.statistics"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tilastoja</a></li>
   <li ui-sref-active="{ active: 'nlp.**' }"><a ui-sref="nlp.statistics"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Kielianalyysi</a></li>
   <li ui-sref-active="active"><a ui-sref="network"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> Verkosto</a></li>
-
+	
 </ul>
+ -->
