@@ -24,13 +24,11 @@
         function postProcess(objects) {
         	
             objects.forEach(function(person) {
-                person.hasImage = !!person.images;
+                // person.hasImage = !!person.images;
                 person.images = person.images ? _.castArray(person.images) : ['images/person_placeholder.svg'];
                 person.imagesources = person.imagesources ? _.castArray(person.imagesources) : [ false ];
                 
-                if (person.description) {
-                	person.description = $sce.trustAsHtml(person.description);
-                }
+                if (person.description) person.description = $sce.trustAsHtml(person.description);
                 if (person.source_paragraph) person.source_paragraph = $sce.trustAsHtml(person.source_paragraph);
                 if (person.lead_paragraph) person.lead_paragraph = $sce.trustAsHtml(person.lead_paragraph);
                 

@@ -41,10 +41,10 @@
               <div ng-if="vm.person.wikidata" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.wikidata }}">Wikidata</a>
               </div>
-              <div ng-if="vm.person.fennica[0]" class="col-xs-6 col-xs-offset-3">
+              <div ng-if="vm.person.fennica" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.fennica[0] }}">Fennica</a>
               </div>
-              <div ng-if="vm.person.fennica[1]" class="col-xs-6 col-xs-offset-3">
+              <div ng-if="vm.person.fennica && vm.person.fennica[1]" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.fennica[1] }}">Fennica (2)</a>
               </div>
               <div ng-if="vm.person.warsampo" class="col-xs-6 col-xs-offset-3">
@@ -70,7 +70,7 @@
               </div>
               <div ng-if="vm.person.norssi" class="col-xs-6 col-xs-offset-3">
                   <a ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}">Norssi</a>
-                </div>
+              </div>
               <div ng-if="vm.person.website" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.website }}">Kotisivu</a>
               </div>
@@ -82,11 +82,13 @@
               </div>
             </div>
             
-            <div class="col-sm-6 col-md-12" ng-repeat="bio in vm.person.bios | castArray">
+            
+			<!-- 
+            <div class="col-sm-6 col-md-12" ng-if="false && vm.person.bios && vm.person.bios.length" ng-repeat="bio in vm.person.bios | castArray">
             	<div ng-if="bio.database" class="entry-text text-left icon-menu">
 	              <hr />
 	              
-	              	<h4>{{ bio.database }} <a ng-if="bio.link" title="Artikkeli Biografiakeskuksen sivulla" class="" ng-href="{{ bio.link }}">
+	              	<h4>{{ bio.database }} <a ng-if="bio.link" title="Artikkeli Biografiakeskuksen sivulla" ng-href="{{ bio.link }}">
 	              	<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
 	              	</a></h4>
 	              
@@ -132,7 +134,7 @@
 	              <p ng-bind-html="bio.source_paragraph"></p>
 	            </div>
 	            
-	            <div  class="entry-text text-left">
+	            <div class="entry-text text-left">
 	            	<hr />
 	            	<span ng-if="bio.author_text">Kirjoittaja(t): {{ bio.author_text }}</span>
 	            	<span ng-if="bio.created">Julkaistu {{ bio.created | date:'dd.MM.yyyy' }}</span>
@@ -140,14 +142,44 @@
 	            </div>
 	            <hr />
             </div>
+            -->
+            
           </div>
         </div>
       </div>
+      
+      <div class="col-sm-6 col-md-12 text-left" ng-if="(vm.person) && !vm.person.bios">
+           	<br />
+           	<h4>Henkilöllä ei ole biografiakuvauksia</h4>
+           	<hr />
+      </div>
+            
+      <div class="col-sm-6 col-md-12 text-left thumbnail"
+           	ng-if="vm.person.bios && vm.person.bios.length"
+           	>
+            <ul class="nav nav-tabs">
+		       	<li ng-repeat="bio in vm.person.bios | castArray" ng-class="{ active: vm.isSet($index) }">
+		          	<a href ng-click="vm.setTab($index)"><span class="glyphicon glyphicon-book" aria-hidden="true"></span><span style="font-size: 120%;"> {{ bio.database }}</span></a>
+		       	</li>
+		       	
+		       	<li ng-repeat="link in vm.person.externalLinks" ng-class="{ active: vm.isSet(link.label) }">
+		       		<a href ng-click="vm.setTab(link.label)">{{ link.label }}</a>
+		       	</li>
+	     	</ul>
+	     	
+	     	<div ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)">
+         		<nbf-biography url="{{ bio.bio }}"></nbf-biography>
+	        </div>
+        	
+        	<div ng-repeat="link in vm.person.externalLinks" ng-show="vm.isSet(link.label)">
+        		<p>{{ link.label }} {{ link.url }}</p> 
+        	</div>
+		</div>
+			
     </div>
      
-    <div class="col-md-4 text-left" ng-if="vm.person.relative">
+    <div class="col-md-4 text-left" ng-if="vm.person.relative && vm.person.relative.length">
       <h3 uib-tooltip="Henkilön sukulaiset." tooltip-placement="left">Sukulaiset</h3>
-      <img ng-if="!vm.person.relative" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="relative in vm.person.relative">
       	{{ relative.type }} <nbf-person url="{{ relative.id }}"></nbf-person>
       </div> 

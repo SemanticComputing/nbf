@@ -4,7 +4,7 @@
       <th class="col-xs-4">Nimi</th>
       <th class="col-xs-1">Henkilö</th>
       <th class="col-xs-1">Linkit</th>
-      <!-- <th class="col-xs-3"><span class="hidden-xs hidden-sm">Muuta</span></th>  -->
+      
       <th class="col-xs-3 hidden-xs hidden-sm">Matrikkeliteksti</th>
     </tr>
   </thead>
@@ -13,7 +13,7 @@
     <td class="person-image-container" data-title="'Nimi'">
       <div ng-class="::{ 'name-col col-md-12 col-lg-7': person.images }">
         <b><a ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
-        <span ng-if="::(person.birthDate)">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
+        <span ng-if="::person.birthDate">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
         <span ng-if="::person.deathDate">&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
           <br />
 
@@ -22,7 +22,7 @@
           <a title="Data" class="" ng-href="{{ ::person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
         </span>
       </div>
-      <div ng-if="::person.hasImage" class="name-col col-md-12 col-lg-5">
+      <div ng-if="::person.images" class="name-col col-md-12 col-lg-5">
         <div ng-repeat="img in ::person.images"
           ng-class="{ 'col-md-12': ($first && $last), 'col-sm-6': !($first && $last) }" class="person-img-col vcenter">
           <img uib-popover-template="'views/profile-image-popover.html'"

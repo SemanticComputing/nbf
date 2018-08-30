@@ -18,19 +18,27 @@
         
         init();
         
+        vm.tab = 0;
+        vm.setTab = function(newTab) {
+        	vm.tab = newTab;
+        };
+        
+        vm.isSet = function(tabNum){
+            return vm.tab === tabNum;
+        };
+        
+        
         function init() {
             nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
+                vm.person.externalLinks = [] ; // NOTE TEMP DISABLED getExternalLinks(person);
+                
                 nbfService.getBios(vm.person.id).then(function(data) {
-                	if (data.length) {
-                		
-                		data.forEach(function(bio) {
-                            if (bio.description) bio.description = $sce.trustAsHtml(bio.description);
-                            if (bio.source_paragraph) bio.source_paragraph = $sce.trustAsHtml(bio.source_paragraph);
-                            if (bio.lead_paragraph) bio.lead_paragraph = $sce.trustAsHtml(bio.lead_paragraph);
-                        });
-                		vm.person.bios = data;
-                	}
+                	if (data.length) vm.person.bios = data;
+                });
+                
+                nbfService.getAuthoredBios(vm.person.id).then(function(data) {
+                	if (data.length) vm.person.authoredBios = data;
                 });
                 
                 nbfService.getSimilar(vm.person.id).then(function(data) {
@@ -49,12 +57,24 @@
                 	if (data.length) vm.person.referenced = data;
                 });
                 
-                nbfService.getAuthoredBios(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.authoredBios = data;
-                });
-                
                 return person;
             }).catch(handleError);
+        }
+        
+        function getExternalLinks(person) {
+        	var p = person,
+        		arr = [];
+        	
+        	if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
+        	if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
+        	if (p.fennica) {
+        		arr.push({url:p.fennica[0], label:"Fennica"});
+        		if (p.fennica.length>1) arr.push({url:p.fennica[1], label:"Fennica (2)"});
+        	}
+        	if (p.norssi) arr.push({url:'http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit"});
+        	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia"});
+        	
+        	return arr;
         }
         
         function openPage() {

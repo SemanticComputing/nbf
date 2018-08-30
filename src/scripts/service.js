@@ -163,9 +163,8 @@
             ' { <RESULT_SET> }' +
             ' ?id owl:sameAs*|^owl:sameAs ?prs .' +
             ' ?prs foaf:focus/nbf:has_biography ?bio .' +
-            '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
+            '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' + /* MOVED TO biography.service.js
             '  OPTIONAL { ?bio nbf:authors ?author_text }' +
-            // '  OPTIONAL { ?bio schema:author ?author__url . ?author__url skos:prefLabel ?author__label }' +
             '  OPTIONAL { ?bio schema:dateCreated ?created }' +
             '  OPTIONAL { ?bio schema:dateModified ?modified }' +
             '  OPTIONAL { ?bio schema:relatedLink ?link }'  +
@@ -176,7 +175,7 @@
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "4"^^xsd:integer ; nbf:content ?spouse_paragraph ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
+            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' + */
             '} ORDER BY str(?source)';
 
 
