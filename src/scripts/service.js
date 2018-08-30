@@ -28,6 +28,7 @@
         this.getSortClass = getSortClass;
         // Get the details of a single person.
         this.getPerson = getPerson;
+        this.getRelatives = getRelatives;
         this.getSimilar = getSimilar;
         this.getAuthors = getAuthors;
         this.getByAuthor = getByAuthor;
@@ -127,6 +128,7 @@
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
             '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +
+            /*
             '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
             '  		bioc:inheres_in ?rel ; ' +
             '  		a/skos:prefLabel ?relative__type ] . } ' +
@@ -142,6 +144,7 @@
             '  		OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
             '  		BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?relative__name)  ' + 
             '  } ' +
+            */
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
             '  			OPTIONAL { ?bir nbf:place/skos:prefLabel ?birthPlace } ' +
@@ -156,8 +159,29 @@
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
             '  }' +
-            ' }';
+            ' }'; 
 
+        var relativeQuery =
+        	'SELECT DISTINCT ?type (?relative__id AS ?id2) ?name ' +
+        	'WHERE {  ' +
+        	'  <RESULT_SET> ' +
+        	'    { ?id bioc:has_family_relation [  ' +
+        	'          bioc:inheres_in ?rel ;  ' +
+        	'          a/skos:prefLabel ?type ] .  ' +
+        	'    } 		UNION  ' +
+        	'    { ?rel bioc:has_family_relation [  ' +
+        	'          bioc:inheres_in ?id ;  ' +
+        	'          bioc:inverse_role/skos:prefLabel ?type ] .  ' +
+        	'    }  ' +
+        	'    ?rel owl:sameAs* ?relative__id . ' +
+        	'    FILTER NOT EXISTS { ?relative__id owl:sameAs [] }  ' +
+        	'    FILTER (LANG(?type)="fi") ' +
+        	'    ?relative__id skosxl:prefLabel ?relative__label .  ' +
+        	'    OPTIONAL { ?relative__label schema:familyName ?relative__familyName } ' +
+        	'    OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
+        	'    BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?name)  ' +
+        	'} ';
+        
         var bioQuery =
             'SELECT DISTINCT * WHERE {' +
             ' { <RESULT_SET> }' +
@@ -324,7 +348,8 @@
 
         function getPerson(id) {
             var qry = prefixes + detailQuery;
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . ';
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
+            // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
             	if (person.length) {
@@ -340,6 +365,17 @@
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
                 return result;
+            });
+        }
+
+        function getRelatives(id) {
+        	var qry = prefixes + relativeQuery;
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
+            // console.log(qry.replace('<RESULT_SET>', constraint));
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(person) {
+            	return person;
+                // return $q.reject('Not found');
             });
         }
         

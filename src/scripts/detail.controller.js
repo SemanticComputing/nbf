@@ -31,10 +31,15 @@
         function init() {
             nbfService.getPerson($stateParams.personId).then(function(person) {
                 vm.person = person;
-                vm.person.externalLinks = [] ; // NOTE TEMP DISABLED getExternalLinks(person);
+                vm.person.externalLinks = getExternalLinks(person);
+                // vm.person.externalLinks = [] ; // NOTE TEMP DISABLED
                 
                 nbfService.getBios(vm.person.id).then(function(data) {
                 	if (data.length) vm.person.bios = data;
+                });
+                
+                nbfService.getRelatives(vm.person.id).then(function(data) {
+                	if (data.length) vm.person.relative = data;
                 });
                 
                 nbfService.getAuthoredBios(vm.person.id).then(function(data) {

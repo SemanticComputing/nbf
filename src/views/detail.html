@@ -181,7 +181,7 @@
     <div class="col-md-4 text-left" ng-if="vm.person.relative && vm.person.relative.length">
       <h3 uib-tooltip="Henkilön sukulaiset." tooltip-placement="left">Sukulaiset</h3>
       <div class="col-sm-6" ng-repeat="relative in vm.person.relative">
-      	{{ relative.type }} <nbf-person url="{{ relative.id }}"></nbf-person>
+      	{{ relative.type }} <personlink url="{{ relative.id2 }}">{{ relative.name }}</personlink>
       </div> 
     </div>
     
