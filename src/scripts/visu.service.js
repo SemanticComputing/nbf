@@ -30,10 +30,8 @@
         // Return an object.
         this.getFacetOptions = getFacetOptions;
 
-
         /* Implementation */
         
-        //	TODO: query for a certain title, here "maisteri": http://yasgui.org/short/SJbyBeseM
         var prefixes =
             'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
             'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
@@ -55,27 +53,29 @@
             'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
         
         var queryYears = prefixes +
-	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
 	    	'  { <RESULT_SET> } ' +
 	    	'  ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth .' +
 	    	'  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?value)' +
+	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
 	    	'} GROUP BY ?value ORDER BY ?value ';
         
         // The query for the results 
         var queryAge = prefixes +
-	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
 	    	'  { <RESULT_SET> } ' +
 	    	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
 	    	'       foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] . ' +
 	    	'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
 	    	'  FILTER (-1<?value && ?value<120) ' +
+	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
 	    	'} GROUP BY ?value ';
         
         
         var queryMarriageAge = prefixes +
-            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
             ' WHERE {    ' +
             '  {     SELECT DISTINCT ?id (min(?age) AS ?value) ' +
             '    WHERE { ' +
@@ -87,10 +87,11 @@
             '      FILTER (13<?age && ?age<120)} ' +
             '   GROUP BY ?id } ' +
             '   FILTER (BOUND(?id)) ' +
+	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
             '} GROUP BY ?value ';
 
         var queryFirstChildAge = prefixes +
-            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
             ' WHERE {    ' +
             '  {     SELECT DISTINCT ?id (min(?age) AS ?value) ' +
             '    WHERE { ' +
@@ -102,10 +103,11 @@
             '      FILTER (13<?age && ?age<120)} ' +
             '    GROUP BY ?id } ' +
             '   FILTER (BOUND(?id)) ' +
+	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
             '} GROUP BY ?value ';
 
         var queryNumberOfChildren = prefixes +
-            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+            'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
             'WHERE { ' +
             '  { ' +
             '      SELECT DISTINCT ?id (count(?rel) AS ?value) ' +
@@ -120,11 +122,12 @@
             '      FILTER not exists { ?id bioc:has_family_relation/a relations:Child } ' +
             '	   BIND (0 AS ?value) } ' +
             '  FILTER (BOUND(?id)) ' +
+	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
             '} GROUP BY ?value ';
 
         //	http://yasgui.org/short/ByVXkyhIX
         var queryNumberOfSpouses = prefixes +
-	        'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons) ' +
+	        'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
 	    	'  { ' +
 	    	'    SELECT DISTINCT ?id (count(?rel) AS ?value) WHERE ' +
@@ -142,6 +145,7 @@
 	    	'    BIND (0 AS ?value) ' +
 	    	'  } ' +
 	    	'  FILTER (BOUND(?id)) ' +
+	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
 	    	'} GROUP BY ?value ';
         
 

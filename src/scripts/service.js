@@ -391,7 +391,15 @@
         }
         
         function getPopoverGroup(arr) {
-        	var ids = '<'+arr.join('> <')+'>';
+        	var ids = arr.map(function(st) {
+        		if (st.match(/^p\d+$/)) {
+        			// 	st is identifier 'p1234'
+        			return 'nbf:'+st;
+        		} 
+        		// st is full url 'http://ldf.fi/nbf/p1234'
+        		return '<'+st+'>';
+        	}).join(' ');
+        	
         	var qry = prefixes + queryForPopoverGroup;
             var constraint = 'VALUES ?id2 { ' + ids + ' } . ';
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))

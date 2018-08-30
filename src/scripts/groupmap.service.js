@@ -54,7 +54,7 @@
 
         
         var query = 'SELECT * WHERE { ' +
-    	'  { SELECT ?place__uri (COUNT(?prs) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?person__ids) ?type WHERE {  ' +
+    	'  { SELECT ?place__uri (COUNT(?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?person__ids) ?type WHERE {  ' +
     	'    { SELECT ?id WHERE { <RESULT_SET> } LIMIT <LIMIT> } FILTER(BOUND(?id)) ' +
     	' ' +
     	'    VALUES (?prop ?eclass ?type) { <VALUES> } ' +
@@ -62,6 +62,7 @@
     	'    ?evt__id ?prop ?prs ; ' +
     	'          a ?eclass ;  ' +
     	'          nbf:place ?place__uri . ' +
+    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
     	'    } GROUP BY ?place__uri ?type ORDER BY DESC(?count) ' +
     	'  } ' +
     	'  FILTER (?count>0) ' +
@@ -77,7 +78,7 @@
         var query2 = 
         	'SELECT * WHERE { ' +
         	'  { ' +
-        	'  SELECT DISTINCT ?birth__place ?death__place (COUNT(distinct ?id2) AS ?count) (GROUP_CONCAT(?id2; separator=",") AS ?person__ids) WHERE { ' +
+        	'  SELECT DISTINCT ?birth__place ?death__place (COUNT(distinct ?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?person__ids) WHERE { ' +
         	'    <RESULT_SET> ' +
         	'    ?id owl:sameAs* ?id2 . ' +
         	'    FILTER NOT EXISTS { ?id2 owl:sameAs [] } . ' +
@@ -89,6 +90,7 @@
         	'    ?death__id crm:P100_was_death_of ?prs ; ' +
         	'               nbf:place ?death__place . ' +
         	'       ' +
+        	'    BIND (replace(str(?id2),"http://ldf.fi/nbf/","") AS ?url)' +
         	'    } GROUP BY ?birth__place ?death__place ORDER BY DESC(?count) LIMIT <LIMIT>  } ' +
         	'  FILTER (?count>0) ' +
         	'  ?birth__place geo:lat ?birth__latitude ; ' +
@@ -142,7 +144,7 @@
         		q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
         		.replace("<VALUES>", values)
         		.replace("<LIMIT>", limit);
-        	
+
         	return endpoint.getObjectsNoGrouping(q);
         }
         

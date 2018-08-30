@@ -18,7 +18,13 @@
 		        	
 		        	$scope.label = data.label;
 		        	
-		        	if ((new RegExp(/\d/)).test(data.lifespan)) $scope.lifespan = data.lifespan;
+		        	//	check if lifespan contains any numbers
+		        	if ((new RegExp(/\d/)).test(data.lifespan)) {
+		        		// remove leading zeros (0800-0900) -> (800-900)
+		        		data.lifespan = data.lifespan.replace(/(\D)0/g, "$1");
+		        		
+		        		$scope.lifespan = data.lifespan;
+		        	}
 		        	
 		        	if (data.hasOwnProperty('image')) $scope.image = data.image;
 		        });
