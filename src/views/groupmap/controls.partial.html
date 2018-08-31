@@ -3,16 +3,6 @@
       {{ vm.error }}
     </div>
     <h1>Tutki elämäkertoja kartoilla</h1>
-    <!-- 
-    <p><b>Karttatyyppi:</b>
-        <a ui-sref-active="active" ui-sref="groupmap.singleview">Tapahtumakartta</a> |
-        <a ui-sref-active="active" ui-sref="groupmap2">Liikekartta</a>
-    </p>
-    <p><b>Näkymä:</b>
-        <a ui-sref-active="active" ui-sref="groupmap.singleview">Yhtenäinen</a> |
-        <a ui-sref-active="active" ui-sref="groupmap.comparison.sides">Vertailu</a>
-    </p>
-     -->
     <p>
     Kartalla näytetään henkilöiden elinaikaisia tapahtumia. 
     Alapuoleisilla suodattimilla voidaan valita halutut tapahtumatyypit ja henkilöryhmä.
@@ -21,7 +11,7 @@
     
     <div class="well well-sm">
 	    <b>Tapahtumatyypit</b>
-	    <form name="eventForm" class="eventForm" ng-repeat="type in vm.eventtypes">
+	    <form name="eventForm" class="eventForm" ng-repeat="type in vm.EVENTTYPES">
 		  <label title="{{ type.tooltip }}" style="color: {{ type.color }};">
 		    <input type="checkbox" ng-model="type.check" ng-change="vm.change()">
 		    <span>{{ type.label }}</span>
@@ -29,8 +19,8 @@
 		 </form>
 		 
 		Näytä kartalla korkeintaan 
-		<select ng-model="vm.SEARCHLIMIT" 
-				ng-options="item.value for item in vm.limitoptions"
+		<select ng-model="vm.searchlimit" 
+				ng-options="item.value for item in vm.LIMITOPTIONS"
 				ng-change="vm.change()">
      	</select> tulosta.
      		

@@ -28,10 +28,10 @@
         			lng: 24.945831}
         };
         
-        vm.limitoptions = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
-        vm.SEARCHLIMIT = vm.limitoptions[1];
+        vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
+        vm.searchlimit = vm.LIMITOPTIONS[1];
         
-        vm.eventtypes = [
+        vm.EVENTTYPES = [
         	{type:"0", check: true, color:"hsl(222, 90%, 60%)", label: "Syntymä", label2: "syntyneet", tooltip: "Henkilöiden syntymäpaikat kartalla"}, 
         	{type:"1", check: true, color:"hsl(0, 90%, 60%)", label: "Kuolema", label2: "kuolleet", tooltip: "Henkilöiden kuolinpaikat kartalla"},
         	{type:"2", check: false, color:"hsl(0, 0%, 45%)", label: "Ura", label2: "ura", tooltip: "Henkilöiden opiskelu- ja työpaikat"},
@@ -40,17 +40,38 @@
         	];
         
         vm.change = function() {
-        	if (vm.eventtypes.every(function (val) {return !(val.check);})) {
-        		vm.eventtypes[0].check = true;
+        	if (vm.EVENTTYPES.every(function (val) {return !(val.check);})) {
+        		vm.EVENTTYPES[0].check = true;
         	}
+        	
+        	$location.search('limit', vm.searchlimit.value);
+        	
+        	var st = vm.EVENTTYPES.map(function(val) { return val.check ? 1 : 0; }).join(',');
+        	$location.search('events', st);
+        	
         	fetchResults({ constraint: vm.previousSelections });
         };
+        
+//    	set url parameters:
+        var lc = $location.search();
+        
+        if (lc.limit) {
+        	var lim = parseInt(lc.limit);
+        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+        	});
+        }
+
+        if (lc.events) {
+        	(lc.events.split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x=="1"); });
+        }
+        
         
         vm.showForm = function () {
             var modalInstance = $uibModal.open({
                 templateUrl: 'views/popup.html',
                 scope: $scope
-            });
+            }).result.then(function(){}, function(res){});
         };
         
         vm.isScrollDisabled = isScrollDisabled;
@@ -73,7 +94,8 @@
         function removeFacetSelections() {
             $state.reload();
         }
-
+        
+        /*
         function openPageOLD(person) {
             $uibModal.open({
                 component: 'registerPageModal',
@@ -83,7 +105,7 @@
                 }
             });
         }
-
+		*/
         function getFacetOptions() {
             var options = groupmapService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
@@ -117,9 +139,9 @@
             var updateId = _.uniqueId();
             latestUpdate = updateId;
             
-            var selections = vm.eventtypes.map(function(ob) { return ob.check; } );
+            var selections = vm.EVENTTYPES.map(function(ob) { return ob.check; } );
             
-            return groupmapService.getResults(facetSelections, selections, vm.SEARCHLIMIT.value)
+            return groupmapService.getResults(facetSelections, selections, vm.searchlimit.value)
             .then(function(res) {
             	vm.isLoadingResults = false;
             	
@@ -127,7 +149,7 @@
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
-            	vm.message = (res.length<vm.SEARCHLIMIT.value) ?
+            	vm.message = (res.length<vm.searchlimit.value) ?
             			"Haku tuotti "+(res.length)+" paikkatulosta." :
             			"Kartalla näytetään "+(res.length)+" ensimmäistä paikkaa.";
             	
@@ -180,7 +202,7 @@
 	        				path:"M-"+r+" 0 A "+r+","+r+", 0 ,1, 1,"+r+",0 A"+r+","+r+",0,1,1,-"+r+",0 Z",
 							scale: 1.0,
 							anchor: new google.maps.Point(0,0),
-							fillColor: vm.eventtypes[parseInt(type)].color,
+							fillColor: vm.EVENTTYPES[parseInt(type)].color,
 							fillOpacity: 0.6,
 							strokeOpacity: 0.2,
 							strokeWeight: 1,
@@ -200,7 +222,7 @@
         
         function getPlaceLabel(label, type, count) {
         	var arr = ['syntyneet', 'kuolleet', 'ura', 'teokset' ,'kunniamaininnat'];
-        	return label + ", "+vm.eventtypes[parseInt(type)].label2+" ("+count+")";
+        	return label + ", "+vm.EVENTTYPES[parseInt(type)].label2+" ("+count+")";
 			
         }
     }

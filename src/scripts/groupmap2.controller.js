@@ -46,7 +46,7 @@
             var modalInstance = $uibModal.open({
                 templateUrl: 'views/popup.html',
                 scope: $scope
-            });
+            }).result.then(function(){}, function(res){});
         };
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
