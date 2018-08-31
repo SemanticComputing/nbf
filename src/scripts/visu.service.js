@@ -21,7 +21,7 @@
         this.getNumberOfChildren = getNumberOfChildren;
         this.getNumberOfSpouses = getNumberOfSpouses;
 
-        this.getResults = getResults;
+        //this.getResults = getResults;
 
         // Get the facets.
         // Return a promise (because of translation).
@@ -52,16 +52,16 @@
             'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ' +
             'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
         
+        //	http://yasgui.org/short/rkR8h_LD7
         var queryYears = prefixes +
 	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
 	    	'  { <RESULT_SET> } ' +
 	    	'  ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth .' +
 	    	'  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?value)' +
-	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
 	    	'} GROUP BY ?value ORDER BY ?value ';
         
-        // The query for the results 
         var queryAge = prefixes +
 	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
@@ -70,7 +70,7 @@
 	    	'       foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] . ' +
 	    	'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
 	    	'  FILTER (-1<?value && ?value<120) ' +
-	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
 	    	'} GROUP BY ?value ';
         
         
@@ -87,7 +87,7 @@
             '      FILTER (13<?age && ?age<120)} ' +
             '   GROUP BY ?id } ' +
             '   FILTER (BOUND(?id)) ' +
-	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
             '} GROUP BY ?value ';
 
         var queryFirstChildAge = prefixes +
@@ -103,7 +103,7 @@
             '      FILTER (13<?age && ?age<120)} ' +
             '    GROUP BY ?id } ' +
             '   FILTER (BOUND(?id)) ' +
-	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
             '} GROUP BY ?value ';
 
         var queryNumberOfChildren = prefixes +
@@ -122,7 +122,7 @@
             '      FILTER not exists { ?id bioc:has_family_relation/a relations:Child } ' +
             '	   BIND (0 AS ?value) } ' +
             '  FILTER (BOUND(?id)) ' +
-	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
             '} GROUP BY ?value ';
 
         //	http://yasgui.org/short/ByVXkyhIX
@@ -145,7 +145,7 @@
 	    	'    BIND (0 AS ?value) ' +
 	    	'  } ' +
 	    	'  FILTER (BOUND(?id)) ' +
-	    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
 	    	'} GROUP BY ?value ';
         
 
@@ -162,55 +162,35 @@
         var endpoint = new AdvancedSparqlService(endpointUrl, objectMapperService);
 
         function getYears(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryYears.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryYears);
         }
 
         function getAge(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryAge.replace(/<RESULT_SET>/g, cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryAge);
         }
 
         function getMarriageAge(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryMarriageAge.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryMarriageAge);
         }
 
         function getFirstChildAge(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryFirstChildAge.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryFirstChildAge);
         }
 
-        
         function getNumberOfChildren(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryNumberOfChildren.replace(/<RESULT_SET>/g, cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryNumberOfChildren);
         }
 
         function getNumberOfSpouses(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryNumberOfSpouses.replace(/<RESULT_SET>/g, cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryNumberOfSpouses);
         }
 
-
-        function getResults(facetSelections) {
-            var promises = [
-            	this.getYears(facetSelections),
-                this.getAge(facetSelections),
-                this.getMarriageAge(facetSelections), 
-                this.getFirstChildAge(facetSelections),
-                this.getNumberOfChildren(facetSelections),
-                this.getNumberOfSpouses(facetSelections) 
-            ];
-            return $q.all(promises);
+        function getResults(facetSelections, query) {
+        	var cons = facetSelections.constraint.join(' '),
+            	q = query.replace(/<RESULT_SET>/g, cons);
+        	return endpoint.getObjectsNoGrouping(q) ;
         }
-
+        
         function getFacetOptions() {
             return facetOptions;
         }

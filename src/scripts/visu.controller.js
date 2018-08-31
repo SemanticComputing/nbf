@@ -29,10 +29,10 @@
         // vm.chart_ids = ['chart_age', 'chart_marriageAge', 'chart_firstChildAge', 'chart_numberOfChildren', 'chart_numberOfSpouses'];
         
         vm.showForm = function () {
-            var modalInstance = $uibModal.open({
+            $uibModal.open({
                 templateUrl: 'views/popup.html',
                 scope: $scope
-            });
+            }).result.then(function(){}, function(res){});
         };
 
         vm.removeFacetSelections = removeFacetSelections;
@@ -69,7 +69,63 @@
             
             vm.previousSelections = _.clone(facetSelections.constraint);
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            
+            visuService.getYears(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawYearChart(data, null, 'Henkilöjakauma vuosikymmenittäin', vm.chart_ids[0])
+                    });
+            	}
+            });
+            
+            visuService.getAge(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawAgeChart(data, [0,120], 'Elinikä', vm.chart_ids[1], ' vuotta')
+                    });
+            	}
+            });
+            
+            visuService.getMarriageAge(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawAgeChart(data, [0,120], 'Naimisiinmenoikä', vm.chart_ids[2], ' vuotta')
+                    });
+            	}
+            });
 
+            visuService.getFirstChildAge(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawAgeChart(data, [0,120], 'Lapsensaanti-ikä', vm.chart_ids[3], ' vuotta')
+                    });
+            	}
+            });
+            
+            visuService.getNumberOfChildren(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawAgeChart(data, [0,25], 'Lasten lukumäärä', vm.chart_ids[4], '')
+                    });
+            	}
+            });
+            
+            visuService.getNumberOfSpouses(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawAgeChart(data, [0,10], 'Puolisoiden lukumäärä', vm.chart_ids[5], '')
+                    });
+            	}
+            });
+            
+            /*
+            this.getYears(facetSelections),
+            this.getAge(facetSelections),
+            this.getMarriageAge(facetSelections), 
+            this.getFirstChildAge(facetSelections),
+            this.getNumberOfChildren(facetSelections),
+            this.getNumberOfSpouses(facetSelections) 
+            
             return fetchResults(facetSelections).then(function (res) {
             	google.charts.setOnLoadCallback(function () {
                     drawYearChart(res[0], null, 'Henkilöjakauma vuosikymmenittäin', vm.chart_ids[0])
@@ -92,6 +148,7 @@
 
                 return;
             });
+            */
         }
 
         function drawYearChart(res, range, label, target) {
@@ -148,6 +205,17 @@
         }
         
         function drawAgeChart(res, range, label, target, quantity) {
+        	
+        	// limit range by largest value in current data
+            var maxage = 5;
+            res.forEach(function(ob) {
+            	var age=parseInt(ob.value);
+            	if (maxage<age && age<=range[1]) {
+            		maxage=age;
+            	}
+            });
+            if (maxage<range[1]) range[1]=maxage;
+            
             
             var N = range[1]-range[0]+1,
             	arr = new Array(N),
@@ -204,7 +272,7 @@
             
             data.addColumn('number', 'Ikä');
             data.addColumn('number', 'Henkilöä');
-
+            
             data.addRows(arr);
             chart.draw(data, options);
             
@@ -216,7 +284,6 @@
                 vm.popuptitle = label+' '+age+quantity+": "+arr[age][1]+ (arr[age][1]==1 ? " henkilö" : " henkilöä");
                 vm.showForm();
             });
-
         }
 
         function ticksByRange(range) {
@@ -250,13 +317,21 @@
         
 
         var latestUpdate;
+        /*
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
             vm.error = undefined;
 
             var updateId = _.uniqueId();
             latestUpdate = updateId;
-
+            
+            this.getYears(facetSelections),
+                this.getAge(facetSelections),
+                this.getMarriageAge(facetSelections), 
+                this.getFirstChildAge(facetSelections),
+                this.getNumberOfChildren(facetSelections),
+                this.getNumberOfSpouses(facetSelections) 
+             
             return visuService.getResults(facetSelections).then(function(res) {
                 if (latestUpdate !== updateId) {
                     return;
@@ -266,8 +341,9 @@
                 vm.data = {};
                 return res;
             }).catch(handleError);
+            
         }
-
+		*/
         function handleError(error) {
             console.log(error)
             vm.isLoadingResults = false;

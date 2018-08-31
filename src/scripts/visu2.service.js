@@ -17,7 +17,6 @@
     	this.getGenders = getGenders;
     	this.getCategories = getCategories;
     	this.getTitles = getTitles;
-        this.getResults = getResults;
         this.getDatabases = getDatabases;
         this.getCompanies = getCompanies;
         
@@ -51,40 +50,50 @@
             'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' 
             ;
         
-        //	http://yasgui.org/short/B1XvJr6Im
+        //	http://yasgui.org/short/Sy3hkK8DX
         var queryGenders = prefixes +
-	    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons)  ' +
-	    			'WHERE { { <RESULT_SET> } ' +
-	    			'  ?id foaf:focus/nbf:sukupuoli ?value ' +
-	    			'} GROUP BY ?value ORDER BY DESC(?count)';
+    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons)   ' +
+    	'WHERE {  <RESULT_SET> ' +
+    	'  ?id foaf:focus ?prs . ' +
+    	'  { ?prs nbf:sukupuoli ?value } ' +
+    	'  UNION ' +
+    	'  { BIND ("ei tiedossa" AS ?value) . ' +
+    	'    FILTER NOT EXISTS { ?prs nbf:sukupuoli [] } ' +
+    	'  } ' +
+    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url)  ' +
+    	'} GROUP BY ?value ORDER BY DESC(?count) ';
         
         var queryCategory = prefixes +
-    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons)  ' +
+    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons)  ' +
     			'WHERE { { <RESULT_SET> } ' +
     			'  ?id foaf:focus/nbf:has_category/skos:prefLabel ?value ' +
+    	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
     			'} GROUP BY ?value ORDER BY DESC(?count)';
         
         var queryTitle = prefixes +
-    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons)  ' +
+    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons)  ' +
     			'WHERE { { <RESULT_SET> } ' +
     			'  ?id foaf:focus/^bioc:inheres_in/nbf:has_title/skos:prefLabel ?value ' +
+    	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
     			'} GROUP BY ?value ORDER BY DESC(?count)';
         
         var queryDatabase = prefixes +
-    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons)  ' +
+    	'SELECT DISTINCT ?value (COUNT(DISTINCT ?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons)  ' +
     			'WHERE { { <RESULT_SET> } ' +
     			'  ?id owl:sameAs*|^(owl:sameAs)* ?id2 . ' +
     			'  ?id2 dcterms:source ?source . ' +
     			'  FILTER (?source!=<http://ldf.fi/nbf/sources/source7>) ' +
     			'  ?source skos:prefLabel ?value . ' +
+    	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
     			'} GROUP BY ?value ORDER BY DESC(?count)';
         
         var queryCompanies = prefixes +
-    	'SELECT DISTINCT (SAMPLE(?label) AS ?value) (COUNT(DISTINCT ?id) AS ?count) (GROUP_CONCAT(?id; separator=",") AS ?persons)  ' +
+    	'SELECT DISTINCT (SAMPLE(?label) AS ?value) (COUNT(DISTINCT ?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons)  ' +
     	'WHERE {  ' +
     	'  { <RESULT_SET> } ' +
     	'  ?id foaf:focus/^bioc:inheres_in/nbf:related_company ?cmp . ' +
     	'  ?cmp skos:prefLabel ?label . ' +
+    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
     	'} GROUP BY ?cmp ORDER BY DESC(?count)';
         
         // The SPARQL endpoint URL
@@ -100,47 +109,31 @@
         var endpoint = new AdvancedSparqlService(endpointUrl, objectMapperService);
 
         function getGenders(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryGenders.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryGenders);
         }
         
         function getCategories(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryCategory.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryCategory);
         }
         
         function getTitles(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryTitle.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryTitle);
         }
         
         function getDatabases(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryDatabase.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryDatabase);
         }
         
-
         function getCompanies(facetSelections) {
-            var cons = facetSelections.constraint.join(' '),
-                q = queryCompanies.replace('<RESULT_SET>', cons);
-            return endpoint.getObjectsNoGrouping(q) ;
+        	return getResults(facetSelections, queryCompanies);
         }
         
-        function getResults(facetSelections) {
-            var promises = [
-            	this.getGenders(facetSelections) ,
-                this.getCategories(facetSelections),
-                this.getTitles(facetSelections),
-                this.getDatabases(facetSelections),
-                this.getCompanies(facetSelections)
-            ];
-            return $q.all(promises);
+        function getResults(facetSelections, query) {
+        	var cons = facetSelections.constraint.join(' '),
+            	q = query.replace(/<RESULT_SET>/g, cons);
+        	return endpoint.getObjectsNoGrouping(q) ;
         }
-
+        
         function getFacetOptions() {
             return facetOptions;
         }

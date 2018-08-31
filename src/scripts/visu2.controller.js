@@ -29,10 +29,10 @@
         // vm.chart_ids = ['chart_age', 'chart_marriageAge', 'chart_firstChildAge', 'chart_numberOfChildren', 'chart_numberOfSpouses'];
         
         vm.showForm = function () {
-            var modalInstance = $uibModal.open({
+            $uibModal.open({
                 templateUrl: 'views/popup.html',
                 scope: $scope
-            });
+            }).result.then(function(){}, function(res){});
         };
 
         vm.removeFacetSelections = removeFacetSelections;
@@ -69,29 +69,47 @@
             
             vm.previousSelections = _.clone(facetSelections.constraint);
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
-
-            return fetchResults(facetSelections).then(function (res) {
-            	
-            	google.charts.setOnLoadCallback(function () {
-                    drawPieChart(res[0], 'Sukupuoli tai ryhmä', vm.chart_ids[0])
-                });
-            	
-            	google.charts.setOnLoadCallback(function () {
-                    drawPieChart(res[1], 'Toimiala', vm.chart_ids[2])
-                });
-
-            	google.charts.setOnLoadCallback(function () {
-                    drawPieChart(res[2], 'Arvo, ammatti tai toiminta', vm.chart_ids[3])
-                });
-            	
-            	google.charts.setOnLoadCallback(function () {
-                    drawPieChart(res[3], 'Tietokanta', vm.chart_ids[1])
-                });
-            	
-            	google.charts.setOnLoadCallback(function () {
-                    drawPieChart(res[4], 'Yritys tai yhteisö', vm.chart_ids[4])
-                });
+            
+            visuService2.getGenders(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawPieChart(data, 'Sukupuoli tai ryhmä', vm.chart_ids[0])
+                    });
+            	}
             });
+            
+            visuService2.getCategories(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawPieChart(data, 'Toimiala', vm.chart_ids[2])
+                    });
+            	}
+            });
+            
+            visuService2.getTitles(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawPieChart(data, 'Arvo, ammatti tai toiminta', vm.chart_ids[3])
+                    });
+            	}
+            });
+
+            visuService2.getDatabases(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawPieChart(data, 'Tietokanta', vm.chart_ids[1])
+                    });
+            	}
+            });
+            
+            visuService2.getCompanies(facetSelections).then(function(data) {
+            	if (data.length) {
+            		google.charts.setOnLoadCallback(function () {
+                        drawPieChart(data, 'Yritys tai yhteisö', vm.chart_ids[4])
+                    });
+            	}
+            });
+            
         }
         
         function drawPieChart(res, label, target) {
@@ -128,29 +146,10 @@
                 vm.popuptitle = arr[pie][0]+ ': '+arr[pie][1]+ ' tulosta';
                 vm.showForm();
             });
-            
-			
         }
         
 
-        var latestUpdate;
-        function fetchResults(facetSelections) {
-            vm.isLoadingResults = true;
-            vm.error = undefined;
-
-            var updateId = _.uniqueId();
-            latestUpdate = updateId;
-
-            return visuService2.getResults(facetSelections).then(function(res) {
-                if (latestUpdate !== updateId) {
-                    return;
-                }
-                vm.isLoadingResults = false;
-                
-                vm.data = {};
-                return res;
-            }).catch(handleError);
-        }
+        // var latestUpdate;
 
         function handleError(error) {
             console.log(error)
