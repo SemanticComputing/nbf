@@ -8,26 +8,15 @@
     .service('mapService', mapService);
 
     /* @ngInject */
-    function mapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL,
+    function mapService($q, // $location, _, 
+    		SPARQL_ENDPOINT_URL,
             AdvancedSparqlService, personMapperService) {
 
         /* Public API */
 
-        // Get the facets.
-        // Return a promise (because of translation).
-        this.getFacets = getFacets;
-        // Get the facet options.
-        // Return an object.
-        this.getFacetOptions = getFacetOptions;
-        // Update sorting URL params.
-        this.updateSortBy = updateSortBy;
-        // Get the CSS class for the sort icon.
-        this.getSortClass = getSortClass;
-        // Get the events of a single person.
         this.getEvents = getEvents;
         
         /* Implementation */
-
 
         var prefixes =
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
@@ -50,7 +39,9 @@
         // The query for the results.
         // ?id is bound to the event URI.
         var query = 
-        ' SELECT DISTINCT * WHERE {' +
+        ' SELECT DISTINCT ?givenName ?familyName ?relative ?class ?id ?time__start ?time__end ?time__label ?time__span' +
+        '  ?label ?place__uri ?place__latitude ?place__longitude ?place__name' +
+        '  WHERE {' +
         '  { ' +
         '    <RESULT_SET> ' +
         '  } ' +
@@ -96,30 +87,13 @@
             'endpointUrl': SPARQL_ENDPOINT_URL,
             'usePost': true
         };
-
-        var resultOptions = {
-            mapper: personMapperService,
-            queryTemplate: query,
-            prefixes: prefixes,
-            paging: true,
-            pagesPerQuery: 2 // get two pages of results per query
-        };
-
-        // The FacetResultHandler handles forming the final queries for results,
-        // querying the endpoint, and mapping the results to objects.
-        var resultHandler = new FacetResultHandler(endpointConfig, resultOptions);
-
+        
         // This handler is for the additional queries.
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
-
-        function getResults(facetSelections) {
-            return resultHandler.getResults(facetSelections, getSortBy());
-        }
         
         function getEvents(id) {
             var qry = prefixes + query;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            // console.log(qry.replace('<RESULT_SET>', constraint));
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(events) {
             	
@@ -131,47 +105,5 @@
         }
         
         
-        function getFacets() {
-            var facetsCopy = angular.copy(facets);
-            return $q.when(facetsCopy);
-        }
-
-        function getFacetOptions() {
-            return facetOptions;
-        }
-
-        function updateSortBy(sortBy) {
-            var sort = $location.search().sortBy || '?ordinal';
-            if (sort === sortBy) {
-                $location.search('desc', $location.search().desc ? null : true);
-            }
-            $location.search('sortBy', sortBy);
-        }
-
-        function getSortBy() {
-            var sortBy = $location.search().sortBy;
-            if (!_.isString(sortBy)) {
-                sortBy = '?ordinal';
-            }
-            var sort;
-            if ($location.search().desc) {
-                sort = 'DESC(' + sortBy + ')';
-            } else {
-                sort = sortBy;
-            }
-            return sortBy === '?ordinal' ? sort : sort + ' ?ordinal';
-        }
-
-        function getSortClass(sortBy, numeric) {
-            var sort = $location.search().sortBy || '?ordinal';
-            var cls = numeric ? 'glyphicon-sort-by-order' : 'glyphicon-sort-by-alphabet';
-
-            if (sort === sortBy) {
-                if ($location.search().desc) {
-                    return cls + '-alt';
-                }
-                return cls;
-            }
-        }
     }
 })();

@@ -15,7 +15,6 @@
 
         // Get the results based on facet selections.
         // Return a promise.
-        this.getResults = getResults;
         this.getLinks = getLinks;
         this.getNodes = getNodes;
         
@@ -31,68 +30,42 @@
         	'PREFIX schema: <http://schema.org/> ' +
         	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
 
-        // The query for the results.
-        // http://yasgui.org/short/Byd-H4Zwm
-        var query =
-        	'SELECT distinct ?source ?source_name ?target ?target_name WHERE { ' +
-        	'  { <RESULT_SET> } ' +
-        	'' +
-        	'  { ?id nbf:references ?target . ' +
-        	'    BIND (?id as ?source) ' +
-        	'  } UNION { ' +
-        	'    ?source nbf:references ?id . ' +
-        	'    BIND (?id as ?target) ' +
-        	'  } UNION { ' +
-        	'  		?id nbf:references ?source .' +
-            '	    ?source nbf:references ?target .' +
-            '  } ' +
-            /**'  UNION { ' +
-        	'  		?id nbf:references ?target .' +
-            '	    ?source nbf:references ?target .' +
-            '  }' + */
-            '  FILTER (?source!=?target)' +
-        	'' +
-        	'  ?source skosxl:prefLabel ?id__label .   OPTIONAL { ?id__label schema:familyName ?id__fname }   OPTIONAL { ?id__label schema:givenName ?id__gname }    ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?source_name)      ' +
-        	'   ' +
-        	'  ?target skosxl:prefLabel ?id2__label .   OPTIONAL { ?id2__label schema:familyName ?id2__fname }   OPTIONAL { ?id2__label schema:givenName ?id2__gname }    ' +
-        	'  BIND (CONCAT(COALESCE(?id2__gname, "")," ",COALESCE(?id2__fname, "")) AS ?target_name)  ' +
-        	'}  LIMIT <LIMIT> ';
-
-        var querylinks =
-        	'SELECT distinct ?source ?target WHERE { ' +
-        	'  { <RESULT_SET> } ' +
-        	'' +
-        	'  { ?id nbf:references ?target . ' +
-        	'    BIND (?id as ?source) ' +
-        	'  } UNION { ' +
-        	'    ?source nbf:references ?id . ' +
-        	'    BIND (?id as ?target) ' +
-        	'  } UNION { ' +
-        	'  		?id nbf:references ?source .' +
-            '	    ?source nbf:references ?target .' +
-            '  } ' +
-            /**'  UNION { ' +
-        	'  		?id nbf:references ?target .' +
-            '	    ?source nbf:references ?target .' +
-            '  }' + */
-            '  FILTER (?source!=?target)' +
-        	'' +
-        	'}  LIMIT <LIMIT> ';
         
+        var querylinks = 
+        	'SELECT distinct * WHERE {    ' +
+        	' VALUES ?source { <RESULT_SET> } ' +
+        	' VALUES ?target { <RESULT_SET> } ' +
+        	' ?source nbf:references ?target . ' +
+        	' FILTER (?source!=?target) . ' +
+        	'} ';
+        
+        //	http://yasgui.org/short/rJmqP9Iv7
         var querynodes =
-        	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category) ' +
-        	'WHERE { ' +
-        	'  { <RESULT_SET> } ' +
+        	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
+        	'WHERE {    ' +
+        	'  VALUES ?source { <RESULT_SET> } ' +
+        	'  GRAPH nbf:links { ' +
+        	'    {  VALUES ?id { <RESULT_SET> } ' +
+        	'      BIND (0 AS ?level) } ' +
+        	'    UNION  ' +
+        	'    { ?source nbf:references  ?id . BIND (1 AS ?level) } ' +
+        	'    UNION  ' +
+        	'    { ?id nbf:references ?source . BIND (1 AS ?level) } ' +
+        	'    UNION  ' +
+        	'    { ?source nbf:references/nbf:references ?id . BIND (2 AS ?level)} ' +
+        	'  } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?label) ' +
-        	'   ' +
-        	'  ?id foaf:focus ?prs . ' +
-        	'  OPTIONAL { ?prs nbf:sukupuoli ?gender } ' +
-        	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats . } ' +
-        	'} GROUP BY ?id ?label ?gender ';
+        	' ' +
+        	'  ?id foaf:focus ?prs .  ' +
+        	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
+        	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
+        	'}  ' +
+        	'GROUP BY ?level ?id ?label ?gender ' +
+        	'ORDER BY ?level LIMIT <LIMIT> ';
+        
         
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -100,8 +73,8 @@
             'usePost': true
         };
 
-        var resultOptions = {};
-
+        var resultOptions = {};	
+        
         // The FacetResultHandler handles forming the final queries for results,
         // querying the endpoint, and mapping the results to objects.
         // var resultHandler = new FacetResultHandler(endpointConfig, resultOptions);
@@ -109,30 +82,16 @@
         // This handler is for the additional queries.
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
-        function getResults(id, limit) {
-        	var constraint = 'VALUES ?id { <' + id + '> } ';
-        	var q = prefixes + query.replace("<RESULT_SET>", constraint).replace("<LIMIT>", ''+limit);
-        	
-        	var res = endpoint.getObjectsNoGrouping(q);
-        	return res;
-        }
-
-        function getLinks(id, limit) {
-        	var constraint = 'VALUES ?id { <' + id + '> } ';
-        	var q = prefixes + querylinks.replace("<RESULT_SET>", constraint).replace("<LIMIT>", ''+limit);
-        	
-        	var res = endpoint.getObjectsNoGrouping(q);
-        	return res;
+        
+        function getLinks(ids) {
+        	var q = prefixes + querylinks.replace(/<RESULT_SET>/g, ids);
+        	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getNodes(ids) {
-        	var arr = ids.map(function(id) { return '<'+id+'>' }).join(' ');
-        	
-        	var constraint = 'VALUES ?id { ' + arr + ' } ';
-        	var q = prefixes + querynodes.replace("<RESULT_SET>", constraint);
-        	
-        	var res = endpoint.getObjectsNoGrouping(q);
-        	return res;
+        function getNodes(id, limit) {
+        	var constraint = '<{}>'.replace('{}',id),
+        		q = prefixes + querynodes.replace(/<RESULT_SET>/g, constraint).replace("<LIMIT>", ''+limit)
+        	return endpoint.getObjectsNoGrouping(q);
         }
         
         

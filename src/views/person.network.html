@@ -1,8 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-12" ng-show="vm.loading">
-      <img class="loading-img" src="images/loading-lg.gif"></img>
-    </div>
+    
     <div uib-alert ng-if="vm.error">
       {{ vm.error }}
     </div>
@@ -55,7 +53,11 @@
 			</div>
 		</div>
 		
+		
 		<div class="col-md-8 col-lg-9 text-center thumbnail">
+			<div class="col-sm-12" ng-show="vm.loading">
+	      		<img class="loading-img" src="images/loading-lg.gif"></img>
+	    	</div>
    			<div id="personnetworkcontainer"></div>
 	    </div>
       </div>

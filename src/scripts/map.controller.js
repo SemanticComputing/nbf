@@ -24,10 +24,10 @@
         	event.markers.forEach( function(m) {
         		m.options.icon.strokeWeight = 4;
         		m.options.zIndex += 100;
-        		
+        		/*
 	        	setTimeout(function () {
 	        		m.options.animation=null;
-	            }, 1200);
+	            }, 1200); */
         	});
         };
         
@@ -266,8 +266,8 @@
         	});
         	// console.log(vm.blobs);
         	
-        	//var map = document.getElementById('ui-gmap-google-map');
-        	//if (map && map.fitBounds) { map.fitBounds(bounds); }
+        	// var map = document.getElementById('ui-gmap-google-map');
+        	// if (map && map.fitBounds) { map.fitBounds(bounds); }
         	
         	return events;
         }

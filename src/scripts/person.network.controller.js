@@ -34,19 +34,34 @@
     		'#22AA99', '#AAAA11', '#6633CC', '#E67300', 
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
-        vm.LIMITOPTIONS = [{value:100},{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
+        vm.LIMITOPTIONS = [{value:10},{value:20},{value:50},{value:100},{value:200},{value:500}];
         vm.searchlimit = vm.LIMITOPTIONS[1];
         
+        
         vm.changelimit = function() {
+        	$location.search('limit',vm.searchlimit.value);
         	fetchResults({ constraint: vm.previousSelections });
         };
         
-        
-        vm.SIZEOPTIONS = [{value:'Vakio'},{value:'Etäisyys'},{value:'Asteluku'},{value:'Pagerank'}];
+        vm.SIZEOPTIONS = [
+        	{value:'Vakio'},
+        	{value:'Etäisyys'},
+        	{value:'Asteluku'},
+        	{value:'Tuloaste (indegree)'},
+        	{value:'Lähtöaste (outdegree)'},
+        	{value:'Pagerank'}
+        	];
+        //	tuloaste (indegree)
         vm.sizeoption = vm.SIZEOPTIONS[1];
         
         vm.changesize = function() {
+        	var i = vm.SIZEOPTIONS.indexOf(vm.sizeoption);
+        	if (i>-1) {
+        		$location.search('sizeoption', i);
+        	}
+        	
         	var str = '20 px';
+        	
         	switch(vm.sizeoption) {
 	            case vm.SIZEOPTIONS[1]:
 	            	//	DIJKSTRA
@@ -55,8 +70,8 @@
 	            		var node = vm.cy.getElementById(n.data.id);
 	            		n.data.dijkstra = -dj.distanceTo(node);
 	            	});
-	            	numeric2Size(vm.elems, 'dijkstra', 'dijkstrasize', 10, 50);
-	            	str = 'data(dijkstrasize)';
+	            	numeric2Size(vm.elems, 'dijkstra', 'size', 10, 50);
+	            	str = 'data(size)';
 	            	break;
 	            case vm.SIZEOPTIONS[2]:
 	            	//	DEGREE
@@ -65,10 +80,30 @@
 	            		n.data.degree = node.degree();
 	            	});
 
-            		numeric2Size(vm.elems, 'degree', 'degreesize', 10, 50);
-            		str = 'data(degreesize)';
+            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
+            		str = 'data(size)';
 	                break;
 	            case vm.SIZEOPTIONS[3]:
+	            	//	INDEGREE
+	            	vm.elems.nodes.forEach(function (n) {
+	            		var node = vm.cy.getElementById(n.data.id);
+	            		n.data.degree = node.indegree();
+	            	});
+
+            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
+            		str = 'data(size)';
+	                break;
+	            case vm.SIZEOPTIONS[4]:
+	            	//	OUTDEGREE
+	            	vm.elems.nodes.forEach(function (n) {
+	            		var node = vm.cy.getElementById(n.data.id);
+	            		n.data.degree = node.outdegree();
+	            	});
+
+            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
+            		str = 'data(size)';
+	                break;
+	            case vm.SIZEOPTIONS[5]:
 	            	//	PAGERANK
 	            	var pr = vm.cy.elements().pageRank();
 		            vm.elems.nodes.forEach(function (n) {
@@ -76,8 +111,8 @@
 	            		var rank = pr.rank(node);
 	            		n.data.pagerank = rank;
 	            	});
-            		numeric2Size(vm.elems, 'pagerank', 'ranksize', 10, 50);
-            		str = 'data(ranksize)';
+            		numeric2Size(vm.elems, 'pagerank', 'size', 10, 50);
+            		str = 'data(size)';
 	                break;
 	            default:
 	                break;
@@ -95,21 +130,26 @@
         vm.coloroption = vm.COLOROPTIONS[3];
         
         vm.changecolor = function() {
+        	var i = vm.COLOROPTIONS.indexOf(vm.coloroption);
+        	if (i>-1) {
+        		$location.search('coloroption', i);
+        	}
+        	
         	vm.showlegend = false;
         	var str;
         	
         	switch(vm.coloroption) {
 	            case vm.COLOROPTIONS[1]:
 	            	//	GENDER
-	            	category2Color(vm.elems, "gender", "gendercolor");
-	            	str = 'data(gendercolor)';
+	            	category2Color(vm.elems, "gender", "color");
+	            	str = 'data(color)';
 	            	vm.showlegend = true;
 	            	break;
 	            	
 	            case vm.COLOROPTIONS[2]:
 	            	//	CATEGORY
-	            	category2Color(vm.elems, "category", "categorycolor");
-            		str = 'data(categorycolor)';
+	            	category2Color(vm.elems, "category", "color");
+            		str = 'data(color)';
             		vm.showlegend = true;
             		break;
             		
@@ -120,8 +160,8 @@
 	            		var node = vm.cy.getElementById(n.data.id);
 	            		n.data.dijkstra = dj.distanceTo(node);
 	            	});
-	            	category2Color(vm.elems, 'dijkstra', 'dijkstracolor');
-	            	str = 'data(dijkstracolor)';
+	            	category2Color(vm.elems, 'dijkstra', 'color');
+	            	str = 'data(color)';
 	                break;
 	                
 	            default:
@@ -136,6 +176,25 @@
             	.update();
         };
         
+        //	set url parameters:
+        var lc = $location.search();
+        
+        if (lc.limit) {
+        	var lim = parseInt(lc.limit);
+        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+        	});
+        }
+
+        if (lc.coloroption) {
+        	vm.coloroption = vm.COLOROPTIONS[parseInt(lc.coloroption)];
+        }
+        
+        if (lc.sizeoption) {
+        	vm.sizeoption = vm.SIZEOPTIONS[parseInt(lc.sizeoption)];
+        }
+        
+        
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
         	fetchResults(event, config);
             initListener();
@@ -145,11 +204,6 @@
         
         vm.handler = new FacetHandler({scope : $scope});
         
-        Array.prototype.unique = function() {
-      	  return this.filter(function (value, index, self) { 
-      	    return self.indexOf(value) === index;
-      	  });
-      	}
         
         var latestUpdate;
         function fetchResults() {
@@ -164,43 +218,27 @@
             vm.message = '';
         	
             vm.cy = null;
-            
-            return personNetworkService.getLinks($stateParams.personId, vm.searchlimit.value)
+            return personNetworkService.getNodes($stateParams.personId, vm.searchlimit.value)
             .then(function(res) {
+            	vm.elems.nodes = res.map(function(ob) { return { data: ob }});
             	
-            	if (res.length<1) {
-            		vm.message = "Hakuehdoilla ei löydy verkostoa.";
-            		vm.loading = false;
-            		return;
-            	}
+            	var ids = res.map(function(ob) { return ob.id.replace('http://ldf.fi/nbf/','nbf:'); }).join(' ');
             	
+            	vm.label = res[0].label;
+            	vm.id = $stateParams.personId;
             	
-            	//	result to format:
-            	/*	edges: [
-                { data: { source: 'a', target: 'b' } },
-                { data: { source: 'c', target: 'b' } },
-                { data: { source: 'a', target: 'c' } },
-                { data: { source: 'c', target: 'd' } }
-                ]*/
-            	
-            	vm.elems.edges = res.map(function(ob) { return {data: ob};});
-            	
-            	var ids = res.map(function(ob) { return ob.source;}).concat(res.map(function(ob) { return ob.target;})).unique();
-            	
-            	return personNetworkService.getNodes(ids)
-                 .then(function(res) {
-                	 
-                	vm.elems.nodes = res.map(function(ob) { return { data: ob }});
+            	return personNetworkService.getLinks(ids)
+                .then(function(edges) {
+
+                	/*	edges: [
+                    { data: { source: 'a', target: 'b' } },
+                    { data: { source: 'c', target: 'b' } },
+                    { data: { source: 'a', target: 'c' } },
+                    { data: { source: 'c', target: 'd' } }
+                    ]*/
+                	vm.elems.edges = edges.map(function(ob) { return {data: ob};});
                 	
-                	//  detect person's name and id to show on the page
-                	vm.dict = {};
-                	res.forEach(function(ob) { vm.dict[ob.id] = ob.label });
-                	vm.id = $stateParams.personId;
-            		if (vm.dict.hasOwnProperty(vm.id)) {
-            			vm.label = vm.dict[vm.id];
-            		}
-            		
-                	processData(res, vm);
+                	processData(vm);
                 	
                 	vm.loading = false;
                 	
@@ -211,11 +249,12 @@
                 	} else {
                 		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
                 			.replace('{}', vm.elems.edges.length)
-                			.replace('{2}', vm.elems.nodes.length);;
+                			.replace('{2}', vm.elems.nodes.length);
                 	}
-                 });
+                }).catch(handleError);
             	
             }).catch(handleError);
+            
         }
 
         function handleError(error) {
@@ -224,7 +263,7 @@
         }
         
         
-        function processData(res, vm) {
+        function processData(vm) {
         	
     		var style = [
     	        {
@@ -264,6 +303,22 @@
                 elements: vm.elems,
                 wheelSensitivity: 0.2,
 	        	layout: {
+	        		name: 'circle'
+	        	},
+	        	style: style
+	            });
+            
+            var changePerson = function(evt){
+
+            	document.body.style.cursor = "auto";
+            	var id = this.id(),
+            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/henkiloverkosto';
+            	
+            	$location.url(link);
+	          	$scope.$apply();
+	    	}
+            /*
+            layout: {
 	        		name: 'cose',
 	        		idealEdgeLength: 100,
 	        		nodeOverlap: 20,
@@ -280,19 +335,8 @@
 	        		initialTemp: 200,
 	        		coolingFactor: 0.95,
 	        		minTemp: 1.0
-	        	},
-	        	style: style
-	              });
-            
-            var changePerson = function(evt){
-
-            	document.body.style.cursor = "auto";
-            	var id = this.id(),
-            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/henkiloverkosto';
-            	
-            	$location.url(link);
-	          	$scope.$apply();
-	    	}
+	        	}
+             */
             
             vm.cy.on('click', 'node', changePerson);
             
@@ -309,9 +353,29 @@
             vm.changecolor();
             vm.changesize();
             
+            vm.cy.layout({
+        		name: 'cose',
+        		idealEdgeLength: 100,
+        		nodeOverlap: 20,
+        		refresh: 20,
+        		fit: true,
+        		padding: 30,
+        		randomize: false,
+        		componentSpacing: 100,
+        		nodeRepulsion: 400000,
+        		edgeElasticity: 100,
+        		nestingFactor: 5,
+        		gravity: 80,
+        		numIter: 1000,
+        		initialTemp: 200,
+        		coolingFactor: 0.95,
+        		minTemp: 1.0
+	        }).run();
+            
             if (vm.cy.panzoom) {
             	vm.cy.panzoom({}); 
             };
+            
         }
         
         var category2Color = function (elems, prop, newprop) {
