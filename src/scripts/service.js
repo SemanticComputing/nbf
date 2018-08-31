@@ -57,7 +57,8 @@
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
-        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
 
         // The query for the results.
         // ?id is bound to the person URI.
@@ -160,27 +161,38 @@
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
             '  }' +
             ' }'; 
-
+        
+        //	http://yasgui.org/short/SJL3C8Iv7
         var relativeQuery =
-        	'SELECT DISTINCT ?type (?relative__id AS ?id2) ?name ' +
-        	'WHERE {  ' +
-        	'  <RESULT_SET> ' +
-        	'    { ?id bioc:has_family_relation [  ' +
-        	'          bioc:inheres_in ?rel ;  ' +
-        	'          a/skos:prefLabel ?type ] .  ' +
-        	'    } 		UNION  ' +
-        	'    { ?rel bioc:has_family_relation [  ' +
-        	'          bioc:inheres_in ?id ;  ' +
-        	'          bioc:inverse_role/skos:prefLabel ?type ] .  ' +
-        	'    }  ' +
-        	'    ?rel owl:sameAs* ?relative__id . ' +
-        	'    FILTER NOT EXISTS { ?relative__id owl:sameAs [] }  ' +
-        	'    FILTER (LANG(?type)="fi") ' +
-        	'    ?relative__id skosxl:prefLabel ?relative__label .  ' +
-        	'    OPTIONAL { ?relative__label schema:familyName ?relative__familyName } ' +
-        	'    OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
-        	'    BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?name)  ' +
-        	'} ';
+        	'SELECT DISTINCT ?type (?relative__id AS ?id2) ?name  ' +
+        	'WHERE { <RESULT_SET>  ' +
+        	'  VALUES (?class ?order) { ' +
+        	'    ( rels:Father 0) ' +
+        	'    ( rels:Mother 1) ' +
+        	'    ( rels:Parent 2) ' +
+        	'    ( rels:Spouse 3) ' +
+        	'    ( rels:Child 4) ' +
+        	'    ( rels:Daughter 4) ' +
+        	'    ( rels:Son 4 ) }  ' +
+        	'  { ?id bioc:has_family_relation [  ' +
+        	'        bioc:inheres_in ?rel ; ' +
+        	'        a ?class ; ' +
+        	'        a/skos:prefLabel ?type ] .  ' +
+        	'  } UNION  ' +
+        	'  { ?rel bioc:has_family_relation [  ' +
+        	'        bioc:inheres_in ?id ;  ' +
+        	'        a ?class ; ' +
+        	'        bioc:inverse_role/skos:prefLabel ?type ] .  ' +
+        	'  }  ' +
+        	'  FILTER (LANG(?type)="fi")  ' +
+        	'  ?rel owl:sameAs* ?relative__id .  ' +
+        	'  FILTER NOT EXISTS { ?relative__id owl:sameAs [] }  ' +
+        	'  ?relative__id skosxl:prefLabel ?relative__label .  ' +
+        	'  OPTIONAL { ?relative__label schema:familyName ?relative__familyName }  ' +
+        	'  OPTIONAL { ?relative__label schema:givenName ?relative__givenName }  ' +
+        	'  BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?name)  ' +
+        	'  OPTIONAL { ?relative__id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
+        	'} ORDER BY ?order ?btime ';
         
         var bioQuery =
             'SELECT DISTINCT * WHERE {' +
@@ -261,6 +273,24 @@
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
         	'} ORDER BY UCASE(?id__fname) ?id__gname ';
         
+        //	http://yasgui.org/short/BJu_EPUwQ
+        var queryReferences = 
+        	'SELECT distinct (?id as ?id__url) ?id__name WHERE { ' +
+        	' <RESULT_SET> ' +
+        	'   ?id2 nbf:formatted_link ?target . ' +
+        	'  BIND (URI(CONCAT("file:///tmp/data/",?target)) AS ?target_link) ' +
+        	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
+        	'   ?par <http://purl.org/dc/elements/1.1/source>/<http://ldf.fi/nbf/biography/data#link> ?target_link ; ' +
+        	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#bioId> ?id . ' +
+        	' } ' +
+        	'  ?id skosxl:prefLabel ?id__label . ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
+        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
+        
+        //	NOTE this queries for persons references in current biography
+        //	not used on the person page
         //	http://yasgui.org/short/SkYYOLRxm
         var queryByReferences =
         	'SELECT distinct (?id as ?id__url) ?id__name WHERE { ' +
@@ -277,6 +307,7 @@
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
         	'} ORDER BY UCASE(?id__fname) ?id__gname ';
+        
         
         //	http://yasgui.org/short/ByjM-gdIm
         var queryForPopover =
@@ -334,7 +365,7 @@
             paging: true,
             pagesPerQuery: 2 // get two pages of results per query
         };
-
+        
         // The FacetResultHandler handles forming the final queries for results,
         // querying the endpoint, and mapping the results to objects.
         var resultHandler = new FacetResultHandler(endpointConfig, resultOptions);
@@ -345,11 +376,11 @@
         function getResults(facetSelections) {
             return resultHandler.getResults(facetSelections, getSortBy());
         }
-
+        
         function getPerson(id) {
             var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
-            // console.log(qry.replace('<RESULT_SET>', constraint));
+            
             return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
             	if (person.length) {
@@ -371,7 +402,7 @@
         function getRelatives(id) {
         	var qry = prefixes + relativeQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
-            // console.log(qry.replace('<RESULT_SET>', constraint));
+            
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(person) {
             	return person;
@@ -408,7 +439,7 @@
         }
         
         function getByReferences(id) {
-            var qry = prefixes + queryByReferences;
+            var qry = prefixes + queryReferences;
             var constraint = 'VALUES ?id2 { <' + id + '> } . ';
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {

@@ -285,6 +285,8 @@
 	              });
             
             var changePerson = function(evt){
+
+            	document.body.style.cursor = "auto";
             	var id = this.id(),
             		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/henkiloverkosto';
             	
@@ -301,7 +303,7 @@
          	});
         	
             vm.cy.on('mouseout', 'node', function(evt){
-        		document.body.style.cursor = "default";
+        		document.body.style.cursor = "auto";
         	});
         	
             vm.changecolor();

@@ -79,7 +79,7 @@
         	if (p.norssi) arr.push({url:'http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit"});
         	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia"});
         	
-        	return arr;
+        	return [];
         }
         
         function openPage() {
