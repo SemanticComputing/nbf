@@ -15,13 +15,16 @@
     .controller('VisuController', VisuController);
 
     /* @ngInject */
-    function VisuController($log, $scope, $state, _, google, visuService, FacetHandler, facetUrlStateHandlerService, $uibModal) {
+    function VisuController($scope, $state, _, google, visuService, FacetHandler, facetUrlStateHandlerService, $uibModal) {
 
         var vm = this;
         
+        //console.log($state.current.name);
+        //console.log($state.current);
+        
         vm.people = [];
         vm.data = {};
-
+        
         // assign random ids to chart div so we can use same controller on comparison page
         vm.chart_ids = [0,1,2,3,4,5].map(function(i) {
         	return(''+i+Math.random());

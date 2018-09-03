@@ -18,7 +18,6 @@
         
         init();
         
-        vm.tab = 0;
         vm.setTab = function(newTab) {
         	vm.tab = newTab;
         };
@@ -35,7 +34,10 @@
                 // vm.person.externalLinks = [] ; // NOTE TEMP DISABLED
                 
                 nbfService.getBios(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.bios = data;
+                	if (data.length) {
+                		vm.person.bios = data;
+                		vm.setTab(0);
+                	}
                 });
                 
                 nbfService.getRelatives(vm.person.id).then(function(data) {
@@ -71,14 +73,33 @@
         		arr = [];
         	
         	if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
+        	
+        	/*
         	if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
+        	// Load denied by X-Frame-Options: https://www.eduskunta.fi/FI/kansanedustajat/Sivut/808.aspx does not permit cross-origin framing.
+        	*/
+        	
         	if (p.fennica) {
         		arr.push({url:p.fennica[0], label:"Fennica"});
         		if (p.fennica.length>1) arr.push({url:p.fennica[1], label:"Fennica (2)"});
         	}
+        	
+        	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com'});
+
+        	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo'});
+        	
+        	if (p.website) arr.push({url:p.website, label:'Kotisivu'});
+        	
+        	if (p.kulttuurisampo) arr.push({url:p.kulttuurisampo, label:'Kulttuurisampo'});
+        	
         	if (p.norssi) arr.push({url:'http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit"});
+        	
+        	if (p.warsampo) arr.push({url:'http://www.sotasampo.fi/fi/persons/?uri='+p.warsampo, label:"Sotasampo"});
+        	
         	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia"});
         	
+        	if (p.yo1853) arr.push({url:'https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id='+p.yo1853, label:"Ylioppilasmatrikkeli 1853–1899"});
+        
         	return arr;
         }
         

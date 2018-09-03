@@ -120,14 +120,6 @@
             controller: 'CardsController',
             controllerAs: 'vm',
         })
-        
-        
-        /*
-        .state('maps.groupmap', {
-            url: '/joukkokarttaX',
-            // abstract: true,
-            templateUrl: 'views/groupmap/groupmap.html',
-        })*/
         .state('maps', {
             url: '/kartta',
             // abstract: true,
@@ -221,12 +213,6 @@
             // abstract: true,
             templateUrl: 'views/stats.html'
         })
-        /*
-        .state('visu', {
-            url: '/visu',
-            abstract: true,
-            templateUrl: 'views/visu/visu.html',
-        })*/
         .state('visu.statistics', {
             url: '/palkit',
             templateUrl: 'views/visu/statistics.html',
@@ -253,7 +239,6 @@
                 }
             }
         })
-        
         .state('visu2', {
             url: '/visu2',
             abstract: true,

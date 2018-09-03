@@ -80,6 +80,9 @@
               <div ng-if="vm.person.genitree" class="col-xs-6 col-xs-offset-3">
                 <a ng-href="{{ vm.person.genitree }}">Sukupuu (Geni.com)</a>
               </div>
+              <div ng-if="vm.person.yo1853" class="col-xs-6 col-xs-offset-3">
+                <a ng-href="https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id={{ vm.person.yo1853 }}">Ylioppilasmatrikkeli 1853–1899</a>
+              </div>
             </div>
             
             
@@ -159,21 +162,21 @@
            	>
             <ul class="nav nav-tabs">
 		       	<li ng-repeat="bio in vm.person.bios | castArray" ng-class="{ active: vm.isSet($index) }">
-		          	<a href ng-click="vm.setTab($index)"><span class="glyphicon glyphicon-book" aria-hidden="true"></span><span style="font-size: 120%;"> {{ bio.database }}</span></a>
+		       		<a href ng-click="vm.setTab($index)"><span class="glyphicon glyphicon-book" aria-hidden="true"></span><span style="font-size: 120%;"> {{ bio.database }}</span></a>
 		       	</li>
 		       	
-		       	<li ng-repeat="link in vm.person.externalLinks" ng-class="{ active: vm.isSet(link.label) }">
+		       	<li ng-repeat="link in vm.person.externalLinks | castArray" ng-class="{ active: vm.isSet(link.label) }">
 		       		<a href ng-click="vm.setTab(link.label)">{{ link.label }}</a>
 		       	</li>
 	     	</ul>
 	     	
-	     	<div ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)">
-         		<nbf-biography url="{{ bio.bio }}"></nbf-biography>
-	        </div>
-        	
-        	<div ng-repeat="link in vm.person.externalLinks" ng-show="vm.isSet(link.label)">
-        		<p>{{ link.label }} {{ link.url }}</p> 
-        	</div>
+	     	
+         	<nbf-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.bio}}" active="{{vm.isSet($index)}}">
+         	</nbf-biography>
+	        
+	        <nbf-iframe ng-repeat="link in vm.person.externalLinks | castArray" ng-show="vm.isSet(link.label)" url="{{link.url}}" active="{{vm.isSet(link.label)}}">
+         	</nbf-iframe>
+         	
 		</div>
 			
     </div>

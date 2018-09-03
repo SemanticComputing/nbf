@@ -98,6 +98,11 @@
                         id: 'eduskunta',
                         pattern: '?id <http://ldf.fi/nbf/eduskunta> [] .',
                         label: 'Eduskunta'
+                    },
+                    {
+                        id: 'yo1853',
+                        pattern: '?id <http://ldf.fi/nbf/yo1853> [] .',
+                        label: 'Ylioppilasmatrikkeli 1853–1899'
                     }
                 ],
                 chart: true,
