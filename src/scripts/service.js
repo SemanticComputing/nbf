@@ -85,6 +85,7 @@
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
+        // '  OPTIONAL { ?id nbf:kulsa ?kulsa . }' +
         '  OPTIONAL { ?id nbf:yo1853 ?yo1853 . }' +
         '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +
@@ -125,6 +126,7 @@
             '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
+            // '  OPTIONAL { ?id nbf:kulsa ?kulsa . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +

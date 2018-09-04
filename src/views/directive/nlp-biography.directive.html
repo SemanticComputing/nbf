@@ -1,0 +1,8 @@
+<div class="col-sm-6 col-md-12" ng-if="!!data">
+	<p ng-repeat="parag in data">
+		<span ng-repeat="sentence in parag">
+			<span ng-repeat="x in sentence"><span ng-if="x.space"> </span><span>{{x.word}}</span></span>
+		</span>
+		<hr />
+	</p>
+</div>

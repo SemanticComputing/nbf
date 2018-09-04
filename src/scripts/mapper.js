@@ -36,7 +36,14 @@
                 	person.norssi = person.norssi.replace('http://ldf.fi/norssit/','')
                 }
                 
-                
+                if (person.kirjasampo) {
+                	person.kirjasampo = person.kirjasampo.replace('http://','https://')
+                }
+                /*
+                if (person.kulsa) {
+                	person.kulsa = person.kulsa.replace('http://','https://')
+                }
+                */
                 if (person.fennica) {
                 	// couples might have several fennica links:
                 	if (person.fennica.constructor !== Array) {
@@ -48,17 +55,17 @@
                          * into
                          * http://data.nationallibrary.fi/au/pn/000103310
                         */
-                		person.fennica[i] = 'http://data.nationallibrary.fi/'+
-                			person.fennica[i].replace('http://urn.fi/URN:NBN:fi:', '')
+                		person.fennica[i] = 'https://data.nationallibrary.fi/'+
+                			person.fennica[i].replace('https://urn.fi/URN:NBN:fi:', '')
                 				.replace(/:/g,'/');
                 	}
                 }
                 
                 if (!person.givenName) {
-                	person.givenName = ""; 
+                	person.givenName = "";
                 }
-                if (!person.familyName) { 
-                	person.familyName = ""; 
+                if (!person.familyName) {
+                	person.familyName = "";
                 }
                 
                 //	join the names of couples ["Heikki", "Kaija"] - > "Heikki ja Kaija"

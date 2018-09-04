@@ -68,7 +68,12 @@
                         id: 'kirjasampo',
                         pattern: '?id <http://ldf.fi/nbf/kirjasampo> [] . ',
                         label: 'Kirjasampo'
-                    },
+                    }, /*
+                    {
+                        id: 'kulttuurisampo',
+                        pattern: '?id <http://ldf.fi/nbf/kulsa> [] . ',
+                        label: 'Kulttuurisampo'
+                    }, */
                     {
                         id: 'blf',
                         pattern: '?id <http://ldf.fi/nbf/blf> [] .',

@@ -88,13 +88,13 @@
 
         	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo'});
         	
-        	if (p.website) arr.push({url:p.website, label:'Kotisivu'});
+        	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	
-        	if (p.kulttuurisampo) arr.push({url:p.kulttuurisampo, label:'Kulttuurisampo'});
+        	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	
-        	if (p.norssi) arr.push({url:'http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit"});
+        	if (p.norssi) arr.push({url:'https://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit"});
         	
-        	if (p.warsampo) arr.push({url:'http://www.sotasampo.fi/fi/persons/?uri='+p.warsampo, label:"Sotasampo"});
+        	if (p.warsampo) arr.push({url:'https://www.sotasampo.fi/fi/persons/?uri='+p.warsampo, label:"Sotasampo"});
         	
         	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia"});
         	
