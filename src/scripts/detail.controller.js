@@ -99,7 +99,11 @@
         	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia"});
         	
         	if (p.yo1853) arr.push({url:'https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id='+p.yo1853, label:"Ylioppilasmatrikkeli 1853–1899"});
-        
+        	
+        	arr = arr.map(function(ob) {
+        		ob.url = ob.url.replace(/^http[s]*:/,'');
+        		return ob;
+        	})
         	return arr;
         }
         
