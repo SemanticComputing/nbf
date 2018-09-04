@@ -72,10 +72,10 @@
         	var p = person,
         		arr = [];
         	
-        	if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
+        	// if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
         	
+        	// if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
         	/*
-        	if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
         	// Load denied by X-Frame-Options: https://www.eduskunta.fi/FI/kansanedustajat/Sivut/808.aspx does not permit cross-origin framing.
         	*/
         	
@@ -88,7 +88,7 @@
         	
         	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo'});
         	
-        	if (p.website) arr.push({url:p.website, label:'Kotisivu'});
+        	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	
         	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	
@@ -104,6 +104,7 @@
         		ob.url = ob.url.replace(/^http[s]*:/,'');
         		return ob;
         	})
+        	
         	return arr;
         }
         
