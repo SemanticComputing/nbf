@@ -85,10 +85,10 @@
         	}
         	
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com'});
-
+        	
         	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo'});
         	
-        	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
+        	if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	
         	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	

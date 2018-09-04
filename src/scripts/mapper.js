@@ -55,8 +55,8 @@
                          * into
                          * http://data.nationallibrary.fi/au/pn/000103310
                         */
-                		person.fennica[i] = 'https://data.nationallibrary.fi/'+
-                			person.fennica[i].replace('https://urn.fi/URN:NBN:fi:', '')
+                		person.fennica[i] = 'http://data.nationallibrary.fi/'+
+                			person.fennica[i].replace('http://urn.fi/URN:NBN:fi:', '')
                 				.replace(/:/g,'/');
                 	}
                 }
