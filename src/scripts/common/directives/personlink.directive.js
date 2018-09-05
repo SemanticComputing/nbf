@@ -6,14 +6,14 @@
 			restrict: 	'EC',
 			scope: 		{ url: '@' },
 			transclude: true,
-			controller: ['$scope', 'nbfService', function($scope, nbfService){
+			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        if (!$scope.url) return;
 		        
 		        $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        
-		        nbfService.getPopover($scope.url).then(function(data) {
+		        popoverService.getPopover($scope.url).then(function(data) {
 		        	if (data.length) data = data[0];
 		        	
 		        	$scope.label = data.label;

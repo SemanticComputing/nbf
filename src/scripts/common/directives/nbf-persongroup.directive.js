@@ -5,9 +5,9 @@
 		return {
 			restrict: 	'AE',
 			scope: 		{ url: '@' },
-			controller: ['$scope', 'nbfService', function($scope, nbfService){
+			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
-		        nbfService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
+				popoverService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
 		        	
 		        	data.forEach(function (person, i) {
 		        		person.link = '#!/'+ (person.id).replace(new RegExp('/', 'g'), '~2F');

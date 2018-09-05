@@ -35,8 +35,6 @@
         this.getAuthoredBios = getAuthoredBios;
         this.getByReferences = getByReferences;
         this.getBios = getBios;
-        this.getPopover = getPopover;
-        this.getPopoverGroup = getPopoverGroup;
         
         this.getPortal = getPortal;
         /* Implementation */
@@ -313,46 +311,6 @@
         	'} ORDER BY UCASE(?id__fname) ?id__gname ';
         
         
-        //	http://yasgui.org/short/ByjM-gdIm
-        var queryForPopover =
-        	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
-        	'WHERE {' +
-        	'  <RESULT_SET> ' +
-        	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
-        	'  ?id foaf:focus ?prs . ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
-        	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
-        	'   ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }    ' +
-        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)        ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime }    ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime }    ' +
-        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
-        	'} LIMIT 1 ';
-        
-        //	http://yasgui.org/short/HJksOSt87
-        var queryForPopoverGroup =
-        	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
-        	'WHERE {   ' +
-        	'  <RESULT_SET> ' +
-        	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
-        	'  ?id foaf:focus ?prs . ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
-        	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
-        	'   ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }    ' +
-        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)        ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime }    ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime }    ' +
-        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
-        	'} ORDER BY UCASE(?fname) ?gname ';
-        
 
         var queryPortal = 'SELECT * WHERE { ?x ?y ?z } LIMIT 1 ';
         
@@ -445,33 +403,6 @@
         function getByReferences(id) {
             var qry = prefixes + queryReferences;
             var constraint = 'VALUES ?id2 { <' + id + '> } . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
-            .then(function(result) {
-            	return result;
-            });
-        }
-        
-        function getPopover(id) {
-        	var qry = prefixes + queryForPopover;
-            var constraint = 'VALUES ?id2 { <' + id + '> } . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
-            .then(function(result) {
-            	return result[0];
-            });
-        }
-        
-        function getPopoverGroup(arr) {
-        	var ids = arr.map(function(st) {
-        		if (st.match(/^p\d+$/)) {
-        			// 	st is identifier 'p1234'
-        			return 'nbf:'+st;
-        		} 
-        		// st is full url 'http://ldf.fi/nbf/p1234'
-        		return '<'+st+'>';
-        	}).join(' ');
-        	
-        	var qry = prefixes + queryForPopoverGroup;
-            var constraint = 'VALUES ?id2 { ' + ids + ' } . ';
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(result) {
             	return result;
