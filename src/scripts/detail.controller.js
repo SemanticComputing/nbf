@@ -74,15 +74,17 @@
         	
         	// if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
         	
-        	// if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
         	/*
+        	if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
         	// Load denied by X-Frame-Options: https://www.eduskunta.fi/FI/kansanedustajat/Sivut/808.aspx does not permit cross-origin framing.
         	*/
         	
+        	/*
         	if (p.fennica) {
         		arr.push({url:p.fennica[0], label:"Fennica"});
         		if (p.fennica.length>1) arr.push({url:p.fennica[1], label:"Fennica (2)"});
         	}
+        	*/
         	
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com'});
         	

@@ -10,8 +10,8 @@
 	    Alapuoleisilla suodattimilla voidaan rajata haluttu henkilöryhmä.
 	    </p>
 	    Näytä kartalla korkeintaan 
-			<select ng-model="vm.SEARCHLIMIT" 
-					ng-options="item.value for item in vm.limitoptions"
+			<select ng-model="vm.searchlimit" 
+					ng-options="item.value for item in vm.LIMITOPTIONS"
 					ng-change="vm.change()">
       		</select> tulosta.
       	<br/>
@@ -40,6 +40,13 @@
 		   			ng-repeat="p in vm.polylines" path="p.path" stroke="p.stroke" icons="p.icons" events="p.events">
 		   		</ui-gmap-polyline>
 	        	
+	        	<ui-gmap-marker ng-repeat="marker in vm.markers" 
+		      		coords="marker" 
+		      		idkey="marker.id" 
+		      		options="marker.options"
+		      		click="marker.click()">
+		      	</ui-gmap-marker>
+		      	
 	        </ui-gmap-google-map>
 	        
 	      </div>

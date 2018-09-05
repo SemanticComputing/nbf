@@ -20,7 +20,6 @@
             FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
 
     	
-        
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.window = { show: false, 
@@ -29,10 +28,11 @@
         			lng: 24.945831}
         };
         
-        vm.limitoptions = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
-        vm.SEARCHLIMIT = vm.limitoptions[1];
+        vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
+        vm.searchlimit = vm.LIMITOPTIONS[1];
         
         vm.change = function() {
+        	$location.search('limit', vm.searchlimit.value);
         	fetchResults({ constraint: vm.previousSelections });
         };
         
@@ -65,7 +65,7 @@
         function removeFacetSelections() {
             $state.reload();
         }
-
+        /*
         function openPageOLD(person) {
             $uibModal.open({
                 component: 'registerPageModal',
@@ -75,7 +75,7 @@
                 }
             });
         }
-
+		*/
         function getFacetOptions() {
             var options = groupmapService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
@@ -101,6 +101,16 @@
             return fetchResults(facetSelections);
         }
 
+        // set url parameters:
+        var lc = $location.search();
+        
+        if (lc.limit) {
+        	var lim = parseInt(lc.limit);
+        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+        	});
+        }
+           
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
@@ -111,16 +121,16 @@
             
             vm.polylines = [];
             
-            return groupmapService.getResults2(facetSelections, vm.SEARCHLIMIT.value)
+            return groupmapService.getResults2(facetSelections, vm.searchlimit.value)
             .then(function(res) {
             	vm.isLoadingResults = false;
-
+            	
             	if (res.length<1) {
             		vm.message = "Haku ei tuottanut tuloksia."
             		return;
             	}
             	
-    			vm.message = (res.length<vm.SEARCHLIMIT.value) ?
+    			vm.message = (res.length<vm.searchlimit.value) ?
             			"Haku tuotti "+(res.length)+" paikkatulosta." :
             			"Kartalla näytetään "+(res.length)+" ensimmäistä paikkaa.";
                     			
@@ -153,15 +163,13 @@
 	        	evt.weight = a*evt.count+b;
 	        });
         	
-        	var arr = events.map(function(evt) { return eventToObject(evt); });
+	        var polylines = [], 
+	        	markers = [];
         	
-        	var flatten = function (arr) {
-        		  return arr.reduce(function (flat, toFlatten) {
-        		    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-        		  }, []);
-        		};
+	        events.forEach(function(evt) { eventToObject(evt, polylines, markers); });
         	
-        	vm.polylines = flatten(arr); 
+        	vm.polylines = polylines;
+        	vm.markers = markers;
         }
         
         var idcount = 0;
@@ -172,7 +180,7 @@
     		return google.maps.geometry.spherical.interpolate(a, b, 0.5);
     	};
     	
-        function eventToObject(evt) {
+        function eventToObject(evt, polylines, markers) {
         	
         	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
         		hiliteColor = 'blue', // "hsl(160, 100%, 60%)",
@@ -180,26 +188,45 @@
         		hoverOpacity = 0.03,
         		hoverWeight = 6;
         	
-        	var obj = [];
-
-        	var middle = midPoint(evt.birth, evt.death);
-            
-        	obj.push(
+        	
+        	if (evt.birth.label==evt.death.label) {
+        		//	same place of birth and death
+        		var r = 8.0*Math.sqrt(evt.weight);
+        	
+        		markers.push({
+	        			"count": evt.weight,
+	        			"latitude": evt.birth.latitude,
+	        			"longitude": evt.birth.longitude,
+	        			"id": idcount++,
+	        			"options": {
+	        				icon:{
+		        				path:"M-"+r+" 0 A "+r+","+r+", 0 ,1, 1,"+r+",0 A"+r+","+r+",0,1,1,-"+r+",0 Z",
+								scale: 1.0,
+								anchor: new google.maps.Point(0,0),
+								fillColor: 'red',
+								strokeColor: 'blue',
+								fillOpacity: 0.6
+								},
+							optimized: true, 
+							title: evt.birth.label+": "+evt.count
+							},
+		        		"click": function () {
+		        			vm.popuptitle = "Synnyin- ja kuolinpaikka "+evt.birth.label+": "+evt.count;
+		        			vm.people = evt.person.ids;
+		        			vm.showForm();
+	        		}
+	        	});
+        		return;
+        	}
+        	
+        	//	tooltip: https://stackoverflow.com/questions/5112867/google-maps-v3-polyline-tooltip
+        	polylines.push(
         			{
     	        		id: idcount++,
     	        		path: [ evt.birth, evt.death ],
     	        		events: {
     	        			'click': function(obj) { 
-    	        				/*
-    	        				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
-    		        			vm.people = evt.person.ids ;
-    		        			
-    		        			vm.showWindow();
-    		        			
-    		        			$scope.$apply();
-    		        			*/
-    	        				
-    		        			vm.popuptitle = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
+    	        				vm.popuptitle = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
     		        			vm.people = evt.person.ids ;
     		        			vm.showForm();
     		        			},
@@ -223,15 +250,20 @@
 		                        scale: 4
 		                    }
 		                }]
-            		},
-	        		{
+            		});
+        	
+        	var middle = midPoint(evt.birth, evt.death);
+        	
+        	polylines.push({
 		        		id: idcount++,
 		        		path: [ evt.birth, middle ],
 		        		stroke: {
 		        			color: 'blue' ,
 		        			weight: evt.weight
 		        		}
-	        		},{
+	        		});
+        	
+        	polylines.push({
 		        		id: idcount++,
 		        		path: [ middle, evt.death ],
 		        		stroke: {
@@ -244,88 +276,10 @@
 		                        scale: evt.weight
 		                    }
 		                }]
-	        		}
-        		);
-        	return obj;
+	        		});
         };
         
-        /*
-        function eventToObjectSingleColor(evt) {
-        	
-        	var randomColor = 'hsl('+(100+120*Math.random())+', 100%, 25%)',
-        		hiliteColor = 'blue', // "hsl(160, 100%, 60%)",
-        		mapaverageColor = 'rgb(203,231,226)';
-        	
-        	var obj = [];
-        	
-        	if (evt.weight<4) {
-        		obj.push({
-            		id: idcount++,
-            		path: [ evt.birth, evt.death ],
-            		events: {
-            			'click': function(obj) { 
-            				
-            				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
-    	        			vm.people = evt.person.ids ;
-    	        			
-    	        			vm.showWindow();
-    	        			
-    	        			$scope.$apply();
-    	        			},
-	        			'mouseover': function(obj) { 
-	        				obj.setOptions({
-	        					strokeWeight: evt.weight+2, 
-	        					strokeColor: hiliteColor,
-	        					strokeOpacity: 1.0
-	        						}); },
-	        			'mouseout': function(obj) { 
-	        				obj.setOptions({
-	        					strokeWeight: 8, 
-	        					strokeColor: mapaverageColor,
-	        					strokeOpacity: 0.1
-	        						}); }
-            		},
-            		stroke: {
-            			color: mapaverageColor ,
-            			weight: 8 ,
-            			opacity: 0.1
-            		}
-            	});
-        	}
-        	
-        	obj.push({
-        		id: idcount++,
-        		path: [ evt.birth, evt.death ],
-        		events: {
-        			'click': function(obj) { 
-        				vm.place_label = "Syntymäpaikka "+evt.birth.label+", kuolinpaikka "+evt.death.label+" ("+evt.count+")";
-	        			vm.people = evt.person.ids ;
-	        			
-	        			vm.showWindow();
-	        			
-	        			$scope.$apply();
-	        			},
-        			'mouseover': function(obj) { 
-        				obj.icons[0].icon.scale = evt.weight+2;
-        				obj.setOptions({strokeWeight: evt.weight+2, strokeColor: hiliteColor}); },
-        			'mouseout': function(obj) { 
-        				obj.icons[0].icon.scale = evt.weight;
-        				obj.setOptions({strokeWeight: evt.weight, strokeColor: randomColor}); }
-        		},
-        		stroke: {
-        			color: randomColor ,
-        			weight: evt.weight
-        		},
-        		icons: [{
-                    icon: {
-                        path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
-                        scale: evt.weight
-                    }
-                }]
-        	});
-        	return obj;
-        };
-        */
+        
         
     }
 })();
