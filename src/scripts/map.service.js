@@ -39,47 +39,76 @@
         // The query for the results.
         // ?id is bound to the event URI.
         var query = 
-        ' SELECT DISTINCT ?givenName ?familyName ?relative ?class ?id ?time__start ?time__end ?time__label ?time__span' +
-        '  ?label ?place__uri ?place__latitude ?place__longitude ?place__name' +
-        '  WHERE {' +
-        '  { ' +
-        '    <RESULT_SET> ' +
-        '  } ' +
-    	'  ?pc a nbf:PersonConcept ; ' +
-    	'      foaf:focus ?prs ; ' +
-    	'  		skosxl:prefLabel ?ilabel . ' +
-    	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
-    	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
-    	'' +
-    	'  { ?pc bioc:has_family_relation ?id . ' +
-    	'		?id bioc:inheres_in ?rel . ' +
-    	'		?rel owl:sameAs* ?relative . ' +
-    	'		FILTER NOT EXISTS { ?relative owl:sameAs [] } }' +
-    	'  UNION ' +
-    	'  { ?id crm:P100_was_death_of ?prs . } ' +
-    	'  UNION ' +
-    	'  { ?id crm:P98_brought_into_life ?prs . } ' +
-    	'  UNION ' +
-    	'  { ?id bioc:inheres_in ?prs . } ' +
-    	' ' +
-    	'  ?id a/skos:prefLabel ?class . FILTER (lang(?class)="en") ' +
-    	'  ?id nbf:time ?time . ' +
-    	'		OPTIONAL { ?time gvp:estStart ?time__start. } ' +
-    	'  		OPTIONAL { ?time gvp:estEnd ?time__end. } ' +
-    	'  		OPTIONAL { ?time skos:prefLabel ?time__label. } ' +
-    	'  	    BIND ( CONCAT(' +
-    	'	        IF(bound(?time__start),str(year(?time__start)),"")' +
-    	'	        ,"-", ' +
-    	'	        IF(bound(?time__end),str(year(?time__end)),"")' +
-    	'	      ) AS ?time__span) ' +
-    	'' +
-    	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
-    	'  OPTIONAL { ?id nbf:place ?place__uri . ' +
-    	'    	?place__uri geo:lat ?place__latitude ;' +
-    	'            geo:long ?place__longitude  ;' +
-    	'    		skos:prefLabel ?place__name .' +
-    	'  } ' +
-    	' } ORDER BY ?time__start DESC(?time__end)';
+        	'SELECT DISTINCT ?givenName ?familyName ?relative ?class ?id ?time__start ?time__end ?time__label ?time__span  ?label ?place__uri ?place__latitude ?place__longitude ?place__name   ' +
+        	'WHERE { ' +
+        	'  { ' +
+        	'  { <RESULT_SET> }    ' +
+        	'  ?pc a nbf:PersonConcept ;        ' +
+        	'      foaf:focus ?prs ;   		 ' +
+        	'      skosxl:prefLabel ?ilabel . ' +
+        	'   ' +
+        	'  { ?id crm:P100_was_death_of ?prs . } ' +
+        	'  UNION   { ?id crm:P98_brought_into_life ?prs . } ' +
+        	'  UNION   { ?id bioc:inheres_in ?prs . } ' +
+        	'  ' +
+        	'  ?id a/skos:prefLabel ?class .  ' +
+        	'  FILTER (lang(?class)="en") ' +
+        	'   ' +
+        	'  ?id nbf:time ?time . 		 ' +
+        	'  OPTIONAL { ?time gvp:estStart ?time__start. }   		 ' +
+        	'  OPTIONAL { ?time gvp:estEnd ?time__end. }   		 ' +
+        	'  OPTIONAL { ?time skos:prefLabel ?time__label. }    ' +
+        	'   ' +
+        	'  BIND ( CONCAT( ' +
+        	'      IF(bound(?time__start),str(year(?time__start)),""), ' +
+        	'      "-", ' +
+        	'      IF(bound(?time__end),str(year(?time__end)),"") ' +
+        	'    ) AS ?time__span) ' +
+        	'   ' +
+        	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
+        	'   ' +
+        	'  OPTIONAL { ?id nbf:place ?place__uri .     	 ' +
+        	'    ?place__uri geo:lat ?place__latitude ;             ' +
+        	'                geo:long ?place__longitude  ;    		 ' +
+        	'                skos:prefLabel ?place__name .  }   ' +
+        	'   ' +
+        	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
+        	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
+        	'  } UNION { ' +
+        	'      { <RESULT_SET> }    ' +
+        	'  ?pc a nbf:PersonConcept ; ' +
+        	'      bioc:has_family_relation ?id ; ' +
+        	'      skosxl:prefLabel ?ilabel .    ' +
+        	'   ' +
+        	'  ?id bioc:inheres_in/owl:sameAs* ?relative . ' +
+        	'  FILTER NOT EXISTS { ?relative owl:sameAs [] } ' +
+        	'   ' +
+        	'  OPTIONAL { ?ilabel schema:givenName ?givenName } ' +
+        	'  OPTIONAL { ?ilabel schema:familyName ?familyName } ' +
+        	'   ' +
+        	'  ?id a/skos:prefLabel ?class .  ' +
+        	'  FILTER (lang(?class)="en") ' +
+        	'   ' +
+        	'  ?id nbf:time ?time . 		 ' +
+        	'  OPTIONAL { ?time gvp:estStart ?time__start. }   		 ' +
+        	'  OPTIONAL { ?time gvp:estEnd ?time__end. }   		 ' +
+        	'  OPTIONAL { ?time skos:prefLabel ?time__label. }   	     ' +
+        	'  BIND ( CONCAT( ' +
+        	'      IF(bound(?time__start),str(year(?time__start)),""), ' +
+        	'      "-", ' +
+        	'      IF(bound(?time__end),str(year(?time__end)),"") ' +
+        	'    ) AS ?time__span) ' +
+        	'   ' +
+        	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
+        	'   ' +
+        	'  OPTIONAL { ' +
+        	'    VALUES ?class { "Child"@en "Son"@en "Daughter"@en  } ' +
+        	'  	?relative foaf:focus/^crm:P98_brought_into_life/nbf:place ?place__uri .    	 ' +
+        	'    ?place__uri geo:lat ?place__latitude ;             ' +
+        	'                geo:long ?place__longitude  ;    		 ' +
+        	'                skos:prefLabel ?place__name .  } ' +
+        	'  } ' +
+        	'} ORDER BY ?time__start DESC(?time__end) ';
 
         
         // The SPARQL endpoint URL
@@ -92,9 +121,8 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
         
         function getEvents(id) {
-            var qry = prefixes + query;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            return endpoint.getObjects(qry.replace('<RESULT_SET>', constraint))
+            return endpoint.getObjects(prefixes + query.replace(/<RESULT_SET>/g, constraint))
             .then(function(events) {
             	
                 if (events.length) {
