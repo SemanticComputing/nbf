@@ -29,7 +29,7 @@
         };
         
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
-        vm.searchlimit = vm.LIMITOPTIONS[1];
+        vm.searchlimit = vm.LIMITOPTIONS[0];
         
         vm.change = function() {
         	$location.search('limit', vm.searchlimit.value);

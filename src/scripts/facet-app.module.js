@@ -123,10 +123,10 @@
         .state('maps', {
             url: '/kartta',
             // abstract: true,
-            templateUrl: 'views/maps.html'
+            templateUrl: 'views/groupmap/tabs.html'
         })
         .state('maps.singleview', {
-            url: '/joukkokartta',
+            url: '/tapahtumat',
             templateUrl: 'views/groupmap/singleview.html',
             controller: 'GroupmapController',
             controllerAs: 'vm',
@@ -152,18 +152,38 @@
             }
         })
         
-        .state('maps.groupmap2', {
-            url: '/liikekartta',
-            templateUrl: 'views/groupmap2.html',
+        .state('maps.singleview2', {
+            url: '/liike',
+            templateUrl: 'views/groupmap/singleview2.html',
             controller: 'GroupmapController2',
             controllerAs: 'vm',
         })
+        .state('maps.comparison2', {
+            url: '/vertaaliike',
+            abstract: true,
+            templateUrl: 'views/comparison.html',
+        })
+        .state('maps.comparison2.sides', { 
+            url: '',
+            views: {
+                'left@maps.comparison2': {
+                    templateUrl: 'views/groupmap/comparison2.left.html',
+                    controller: 'GroupmapController2',
+                    controllerAs: 'vm',
+                },
+                'right@maps.comparison2': {
+                    templateUrl: 'views/groupmap/comparison2.right.html',
+                    controller: 'GroupmapController2',
+                    controllerAs: 'vm',
+                }
+            }
+        }) /*
         .state('maps.groupmap3', {
             url: '/lampokartta',
             templateUrl: 'views/groupmap3.html',
             controller: 'GroupmapController3',
             controllerAs: 'vm',
-        })
+        }) */
         .state('network', {
             url: '/verkosto',
             templateUrl: 'views/network.html',
@@ -220,7 +240,7 @@
             controllerAs: 'vm',
         })
         .state('visu.comparison', {
-            url: '/vertaa',
+            url: '/vertaapalkit',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
@@ -251,7 +271,7 @@
             controllerAs: 'vm',
         })
         .state('visu.comparison2', {
-            url: '/vertaa2',
+            url: '/vertaapiiraat',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })

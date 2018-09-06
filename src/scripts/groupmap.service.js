@@ -153,7 +153,6 @@
         		query2
         			.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
         			.replace("<LIMIT>", limit);
-        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         
