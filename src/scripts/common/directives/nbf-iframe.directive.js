@@ -11,7 +11,7 @@
 				$scope.loadBio = function () {
 					if ($scope.active!='false') {
 						$scope.src = $sce.trustAsResourceUrl($scope.url);
-						console.log('content loaded',$scope.url);
+						// console.log('content loaded',$scope.url);
 					}; // else { console.log('not loaded'); };
 				};
 			}],

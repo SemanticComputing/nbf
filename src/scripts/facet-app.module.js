@@ -67,36 +67,38 @@
             controller: 'PortalController',
             controllerAs: 'vm'
         })
+        
         .state('person', {
             abstract: true,
             url: '/:personId',
-            templateUrl: 'views/person.html'
+            templateUrl: 'views/person/tabs.html'
         })
         .state('person.detail', {
             url: '',
-            templateUrl: 'views/detail.html',
+            templateUrl: 'views/person/detail.html',
             controller: 'DetailController',
             controllerAs: 'vm'
         })
         .state('person.map', {
             url: '/kartta',
-            templateUrl: 'views/map.html',
+            templateUrl: 'views/person/map.html',
             controller: 'MapController',
             controllerAs: 'vm'
         })
         .state('person.network', {
-            url: '/henkiloverkosto',
-            templateUrl: 'views/person.network.html',
+            url: '/verkosto',
+            templateUrl: 'views/person/network.html',
             controller: 'PersonNetworkController',
             controllerAs: 'vm'
         })
-        .state('place', {
+        
+        .state('place', { //	page not implemented
             url: '/place/:placeId',
             templateUrl: 'views/place.html',
             controller: 'PlaceController',
             controllerAs: 'vm'
         })
-        .state('title', {
+        .state('title', { //	page not implemented
             url: '/title/:titleId',
             templateUrl: 'views/title.html',
             controller: 'TitleController',
@@ -106,20 +108,21 @@
         .state('search', {
             url: '/haku',
             // abstract: true,
-            templateUrl: 'views/search.html'
+            templateUrl: 'views/search/tabs.html'
         })
         .state('search.table', {
             url: '/lista',
-            templateUrl: 'views/table.html',
+            templateUrl: 'views/search/table.html',
             controller: 'TableController',
             controllerAs: 'vm'
         })
         .state('search.cards', {
             url: '/ruudukko',
-            templateUrl: 'views/cards.html',
+            templateUrl: 'views/search/cards.html',
             controller: 'CardsController',
             controllerAs: 'vm',
         })
+        
         .state('maps', {
             url: '/kartta',
             // abstract: true,
@@ -151,7 +154,6 @@
                 }
             }
         })
-        
         .state('maps.singleview2', {
             url: '/liike',
             templateUrl: 'views/groupmap/singleview2.html',
@@ -177,25 +179,15 @@
                     controllerAs: 'vm',
                 }
             }
-        }) /*
-        .state('maps.groupmap3', {
-            url: '/lampokartta',
-            templateUrl: 'views/groupmap3.html',
-            controller: 'GroupmapController3',
-            controllerAs: 'vm',
-        }) */
+        }) 
+        
         .state('network', {
             url: '/verkosto',
             templateUrl: 'views/network.html',
             controller: 'NetworkController',
             controllerAs: 'vm',
         })
-        .state('testing', {
-            url: '/testing',
-            templateUrl: 'views/testing.html',
-            controller: 'CardsController',
-            controllerAs: 'vm'
-        })
+        
         .state('nlp', {
             url: '/nlp',
             abstract: true,
@@ -231,7 +223,7 @@
         .state('visu', {
             url: '/visu',
             // abstract: true,
-            templateUrl: 'views/stats.html'
+            templateUrl: 'views/visu/tabs.html'
         })
         .state('visu.statistics', {
             url: '/palkit',
@@ -290,7 +282,12 @@
                 }
             }
         })
-        
+        .state('testing', {
+            url: '/testing',
+            templateUrl: 'views/testing.html',
+            controller: 'CardsController',
+            controllerAs: 'vm'
+        })
         ;
     });
 })();
