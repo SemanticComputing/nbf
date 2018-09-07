@@ -91,7 +91,7 @@
 
 	var topTenResults = prefixes +
 	    ' SELECT DISTINCT ?id ?name ?cnt { ' +
-            '  VALUES ?id { ' +
+            '  { ' +
             '    <RESULT_SET> ' +
             '  } ' +
 	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
@@ -189,21 +189,23 @@
 
 	 function getResultsTop10(facetSelections) {
             var self = this;
-            var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
+            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
                 /*if (results.length > 10000) {
                     return $q.reject({
                         statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });
                 }*/
                 var promises = {};
-                var topQry = topTenResults.replace(/<RESULT_SET>/g, '<' + _.map(results, 'id').join('> <') + '>');
+                var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
 
                 //self.upos.forEach(function() {
+		//console.log("results", promises)
                 promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+		console.log("results", promises)
                 //});
                 return promises;
-            });
+           // });
         }
 
 	 function getResultsBottom10(facetSelections) {
