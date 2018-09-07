@@ -6,7 +6,7 @@
 (function() {
 
     'use strict';
-
+    
     /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
     
@@ -14,22 +14,28 @@
     * Controller for the results view.
     */
     .controller('GroupmapController', GroupmapController);
-
+    
+    
     /* @ngInject */
     function GroupmapController($scope, $location, $state, $uibModal, _, groupmapService,
-            FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
+            FacetHandler, facetUrlStateHandlerService, facetUrlStateHandlerService2, 
+            EVENT_FACET_CHANGED //, $httpParamSerializer
+            ) {
 
         var vm = this;
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
-        vm.window = { show: false, 
+        vm.window = { show: false,
         		position: {
         			lat: 60.192059,
         			lng: 24.945831}
         };
+        // $httpParamSerializer($scope.appForm.data)
+        var mapchange = function (map) { $location.search('map', $.param(vm.map)); };
+        vm.mapevents= { zoom_changed: mapchange, dragend: mapchange };
         
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
-        vm.searchlimit = vm.LIMITOPTIONS[1];
+        vm.searchlimit = vm.LIMITOPTIONS[0];
         
         vm.EVENTTYPES = [
         	{type:"0", check: true, color:"hsl(222, 90%, 60%)", label: "Syntymä", label2: "syntyneet", tooltip: "Henkilöiden syntymäpaikat kartalla"}, 
@@ -40,31 +46,43 @@
         	];
         
         vm.change = function() {
+        	// require at least one event type to be chosen
         	if (vm.EVENTTYPES.every(function (val) {return !(val.check);})) {
         		vm.EVENTTYPES[0].check = true;
         	}
         	
-        	$location.search('limit', vm.searchlimit.value);
+        	$location.search('limit'+(vm.right ? '2' : ''), vm.searchlimit.value);
         	
         	var st = vm.EVENTTYPES.map(function(val) { return val.check ? 1 : 0; }).join(',');
-        	$location.search('events', st);
+        	$location.search('events'+(vm.right ? '2' : ''), st);
         	
         	fetchResults({ constraint: vm.previousSelections });
+        }; 
+        
+        
+        // read url parameters:
+        vm.readUrl = function() {
+	        var lc = $location.search(),
+	        	param = 'limit'+(vm.right ? '2' : '');
+	        
+	        if (lc[param]) {
+	        	var lim = parseInt(lc[param]);
+	        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+	        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+	        	});
+	        }
+	        
+	        param = 'events'+(vm.right ? '2' : '');
+	        if (lc[param]) {
+	        	(lc[param].split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x!="0"); });
+	        }
         };
         
-//    	set url parameters:
-        var lc = $location.search();
-        
-        if (lc.limit) {
-        	var lim = parseInt(lc.limit);
-        	vm.LIMITOPTIONS.forEach(function(ob, i) {
-        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
-        	});
-        }
-
-        if (lc.events) {
-        	(lc.events.split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x=="1"); });
-        }
+        vm.right = false;
+        vm.setRightSide = function() {
+        	vm.right = true; 
+        	facetUrlStateHandlerService = facetUrlStateHandlerService2;
+        	vm.readUrl(); }
         
         
         vm.showForm = function () {
@@ -95,18 +113,9 @@
             $state.reload();
         }
         
-        /*
-        function openPageOLD(person) {
-            $uibModal.open({
-                component: 'registerPageModal',
-                size: 'lg',
-                resolve: {
-                    person: function() { return person; }
-                }
-            });
-        }
-		*/
+        
         function getFacetOptions() {
+        	vm.readUrl();
             var options = groupmapService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;

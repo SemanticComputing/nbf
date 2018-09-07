@@ -242,12 +242,12 @@
                 'left@visu.comparison': {
                     templateUrl: 'views/visu/comparison.left.html',
                     controller: 'VisuController',
-                    controllerAs: 'vm',
+                    controllerAs: 'vm'
                 },
                 'right@visu.comparison': {
                     templateUrl: 'views/visu/comparison.right.html',
                     controller: 'VisuController',
-                    controllerAs: 'vm',
+                    controllerAs: 'vm'
                 }
             }
         })

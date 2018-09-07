@@ -9,7 +9,7 @@
 
     /* @ngInject */
     function nlpService($q, _, AdvancedSparqlService, FacetResultHandler, SPARQL_ENDPOINT_URL,
-            facetService, objectMapperService) {
+    		mapfacetService, objectMapperService) {
 
         /* Public API */
 
@@ -19,7 +19,7 @@
         this.getStatistics = getStatistics;
         // Get the facets.
         // Return a promise (because of translation).
-        this.getFacets = facetService.getFacets;
+        this.getFacets = mapfacetService.getFacets;
         // Get the facet options.
         // Return an object.
         this.getFacetOptions = getFacetOptions;
