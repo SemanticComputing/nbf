@@ -154,7 +154,7 @@
                 },
                 'right@maps.comparison': {
                     templateUrl: 'views/groupmap/comparison.right.html',
-                    controller: 'GroupmapController',
+                    controller: 'GroupmapControllerRight',
                     controllerAs: 'vm',
                 }
             }

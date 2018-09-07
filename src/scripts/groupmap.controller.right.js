@@ -13,12 +13,12 @@
     /*
     * Controller for the results view.
     */
-    .controller('GroupmapController', GroupmapController);
-    
+    .controller('GroupmapControllerRight', GroupmapControllerRight);
+     
     
     /* @ngInject */
-    function GroupmapController($scope, $location, $state, $uibModal, _, groupmapService,
-            FacetHandler, facetUrlStateHandlerService, 
+    function GroupmapControllerRight($scope, $location, $state, $uibModal, _, groupmapService,
+            FacetHandler, facetUrlStateHandlerService2, 
             EVENT_FACET_CHANGED //, $httpParamSerializer
             ) {
 
@@ -51,19 +51,20 @@
         		vm.EVENTTYPES[0].check = true;
         	}
         	
-        	$location.search('limit', vm.searchlimit.value);
+        	$location.search('limit2', vm.searchlimit.value);
         	
         	var st = vm.EVENTTYPES.map(function(val) { return val.check ? 1 : 0; }).join(',');
-        	$location.search('events', st);
+        	$location.search('events2', st);
         	
         	fetchResults({ constraint: vm.previousSelections });
         }; 
         
+       
         
         // read url parameters:
         vm.readUrl = function() {
 	        var lc = $location.search(),
-	        	param = 'limit';
+	        	param = 'limit2';
 	        
 	        if (lc[param]) {
 	        	var lim = parseInt(lc[param]);
@@ -72,14 +73,13 @@
 	        	});
 	        }
 	        
-	        param = 'events';
+	        param = 'events2';
 	        if (lc[param]) {
 	        	(lc[param].split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x!="0"); });
 	        }
         };
         
-        // USELESS
-        vm.right = false;
+        
          
         vm.showForm = function () {
             var modalInstance = $uibModal.open({
@@ -113,7 +113,7 @@
         function getFacetOptions() {
         	vm.readUrl();
             var options = groupmapService.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            options.initialState = facetUrlStateHandlerService2.getFacetValuesFromUrlParams();
             return options;
         }
 
@@ -132,7 +132,7 @@
                 return;
             }
             vm.previousSelections = _.clone(facetSelections.constraint);
-            facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            facetUrlStateHandlerService2.updateUrlParams(facetSelections);
             return fetchResults(facetSelections);
         }
 

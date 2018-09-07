@@ -42,6 +42,7 @@
         */
         function updateUrlParams(facets) {
             facets = facets.facets || facets;
+
             var params = {};
             _(facets).forOwn(function(val, id) {
                 if (val && val.value && !(_.isObject(val.value) && _.isEmpty(val.value))) {
@@ -66,9 +67,10 @@
         * @return {Object} The facet states.
         */
         function getFacetValuesFromUrlParams() {
-            var res = {};
-
-            var params = ($location.search() || {}).facets;
+            var res = {}; 
+            
+            var params = ($location.search() || {})[this.urlparameter];
+            
             if (!params) {
                 return res;
             }
@@ -78,8 +80,10 @@
             catch(e) {
                 // $location.search('facets', null);
             	$location.search(this.urlparameter, null);
-                return res;
+            	
+                return res; 
             }
+            //console.log(params);
             _.forOwn(params, function(val, id) {
                 res[id] = val;
             });
