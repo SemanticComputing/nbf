@@ -59,7 +59,47 @@
             return fetchResults(facetSelections);
         }
 
+	// Biografioiden pituus vuosikymmenittäin
+        function drawChartLen(results) {
+            google.charts.setOnLoadCallback(function () {
+                var data = new google.visualization.DataTable();
+                var ticks = _.map(results, function(res) { return parseInt(res.year); });
+                var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
+                var options = {
+                    title: 'Biografiakohtainen keskimääräinen sanamääräjakauma vuosikymmenittäin',
+                    legend: { position: 'none' },
 
+                    tooltip: {format: 'none'},
+                    colors: ['blue'],
+
+                    hAxis: {
+                        slantedText: false,
+                        maxAlternation: 1,
+                        format: '',
+                        ticks: ticks
+                    },
+                    vAxis: {
+                        maxValue: 4
+                    },
+                    width: '95%',
+                    bar: {
+                        groupWidth: '88%'
+                    },
+                    height: 500
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('biography-len-chart'));
+
+                data.addColumn('string', 'Vuosikymmen');
+                data.addColumn('number', 'Biografiakohtainen keskimääräinen sanamäärä');
+
+                data.addRows(rows);
+                chart.draw(data, options);
+            });
+        }
+
+
+	// Biografiat vuosikymmenittäin
         function drawChart(results) {
             google.charts.setOnLoadCallback(function () {
                 var data = new google.visualization.DataTable();
@@ -113,6 +153,14 @@
                 }
                 drawChart(results);
             }).then(function() {
+                return nlpService.getLenStatistics(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+		console.log(results);
+                drawChartLen(results);
+                });
+	    }).then(function() {
                 return nlpService.getResults(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;

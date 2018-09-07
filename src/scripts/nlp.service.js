@@ -9,7 +9,7 @@
 
     /* @ngInject */
     function nlpService($q, _, AdvancedSparqlService, FacetResultHandler, SPARQL_ENDPOINT_URL,
-            facetService, objectMapperService) {
+            mapfacetService, objectMapperService) {
 
         /* Public API */
 
@@ -17,9 +17,10 @@
         // Return a promise.
         this.getResults = getResults;
         this.getStatistics = getStatistics;
+        this.getLenStatistics = getLenStatistics;
         // Get the facets.
         // Return a promise (because of translation).
-        this.getFacets = facetService.getFacets;
+        this.getFacets = mapfacetService.getFacets;
         // Get the facet options.
         // Return an object.
         this.getFacetOptions = getFacetOptions;
@@ -30,7 +31,7 @@
                 label: 'Verbi'
 
             },
-            {
+{
                 key: 'NOUN',
                 label: 'Substantiivi'
 
@@ -87,6 +88,18 @@
             ' } GROUP BY ?lemma ORDER BY DESC(?count) LIMIT 50';
 
 
+        var docCountByLenQry = prefixes +
+            ' SELECT DISTINCT ?year (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) { ' +
+            '  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+            '  ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+            '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id . ' +
+            '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ; ' +
+            '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt . ' +
+            '  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?year) ' +
+            ' } GROUP BY ?year ORDER BY ?year ';
+
         var docCountByDecadeQry = prefixes +
             ' SELECT DISTINCT ?year (COUNT(distinct ?id) AS ?count) { ' +
             '  { ' +
@@ -120,6 +133,11 @@
 
         function getStatistics(facetSelections) {
             var qry = docCountByDecadeQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            return nbfEndpoint.getObjectsNoGrouping(qry);
+        }
+
+	function getLenStatistics(facetSelections) {
+            var qry = docCountByLenQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             return nbfEndpoint.getObjectsNoGrouping(qry);
         }
 

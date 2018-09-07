@@ -90,6 +90,12 @@
             controller: 'PersonNetworkController',
             controllerAs: 'vm'
         })
+	.state('person.sentence', {
+            url: '/lauseet',
+            templateUrl: 'views/person.sentences.html',
+            controller: 'PersonSentencesController',
+            controllerAs: 'vm'
+        })
         .state('place', {
             url: '/place/:placeId',
             templateUrl: 'views/place.html',
