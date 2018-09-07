@@ -14,13 +14,19 @@
     */
     .controller('VisuController', VisuController);
 
+    angular.module('facetApp')
+    .controller('VisuControllerX', VisuController);
+    
     /* @ngInject */
     function VisuController($scope, $state, _, google, visuService, FacetHandler, facetUrlStateHandlerService, $uibModal) {
 
         var vm = this;
         
-        //console.log($state.current.name);
-        //console.log($state.current);
+        /*
+        console.log(this);
+        console.log($state.current.name);
+        console.log($state.current);
+        */
         
         vm.people = [];
         vm.data = {};
@@ -38,6 +44,8 @@
             }).result.then(function(){}, function(res){});
         };
 
+        vm.rightSize = function() { /* console.log('XXXXXXX'); */ } 
+        
         vm.removeFacetSelections = removeFacetSelections;
 
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
@@ -348,7 +356,6 @@
         }
 		*/
         function handleError(error) {
-            console.log(error)
             vm.isLoadingResults = false;
             vm.error = error;
         }

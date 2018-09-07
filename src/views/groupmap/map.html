@@ -2,7 +2,7 @@
 	<div class="col-sm-12 mapspinner" ng-show="vm.isLoadingResults" >
     		<img class="loading-img" src="images/loading-lg.gif"></img>
 	</div>
-	<ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom'>
+	<ui-gmap-google-map id="ui-gmap-google-map" center='vm.map.center' zoom='vm.map.zoom' events='vm.mapevents'>
   		
   		<ui-gmap-window 
   			id="ui-gmap-window" 
