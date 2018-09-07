@@ -216,10 +216,19 @@
             }
             
             vm.message = '';
-        	
+            vm.messagecolor = 'blue';
+            
             vm.cy = null;
             return personNetworkService.getNodes($stateParams.personId, vm.searchlimit.value)
             .then(function(res) {
+            	
+            	if (res.length<2) {
+            		vm.loading = false;
+                	vm.message = "Henkilölle ei löydy näytettävää verkostoa.";
+                	vm.messagecolor = 'red';
+                	return;
+            	}
+            	
             	vm.elems.nodes = res.map(function(ob) { return { data: ob }});
             	
             	var ids = res.map(function(ob) { return ob.id.replace('http://ldf.fi/nbf/','nbf:'); }).join(' ');
@@ -289,11 +298,11 @@
     	        {
     	            selector: 'edge',
     	            style: {
-    	            	'width': 2,
-    	                'line-color': '#666',
+    	            	'width': 1,
+    	                'line-color': '#999',
     	                'curve-style': 'bezier',
     	        		'target-arrow-shape': 'triangle',
-    	        		'target-arrow-color': '#666'
+    	        		'target-arrow-color': '#999'
     	            }
     	        }
     	        ];

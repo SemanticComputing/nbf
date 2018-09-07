@@ -18,7 +18,7 @@
 		    	</p>
 		    	
 		    	<div class="well well-sm">
-		    		<p>{{ vm.message }}</p>
+		    		<p style="color:{{vm.messagecolor}};">{{ vm.message }}</p>
 	     			<p>
 						Näytä verkostossa korkeintaan 
 						<select ng-model="vm.searchlimit" 
@@ -43,23 +43,31 @@
 				     	</select>
 				     </p>
 				</div>
-				<div class="well well-sm" ng-if="vm.showlegend">
+				
+			</div>
+		</div>
+		
+		
+		<div class="col-md-8 col-lg-9 text-center thumbnail">
+		
+			<div class="col-sm-12" ng-show="vm.loading">
+	      		<img class="loading-img" src="images/loading-lg.gif"></img>
+	    	</div>
+	    	
+   			<div id="personnetworkcontainer"></div>
+   			
+   			<div class="cytolegend">
+   				<div class="well well-sm" ng-if="vm.showlegend">
 					<br/>
 					<p ng-if="vm.legend" ng-repeat="item in vm.legend">
 						<span class="legenddot" style="background-color: {{item.color}};"></span>
 						{{item.label}}
 					</p>
 				</div>
-			</div>
-		</div>
-		
-		
-		<div class="col-md-8 col-lg-9 text-center thumbnail">
-			<div class="col-sm-12" ng-show="vm.loading">
-	      		<img class="loading-img" src="images/loading-lg.gif"></img>
-	    	</div>
-   			<div id="personnetworkcontainer"></div>
+			</div> 
+			
 	    </div>
+	    
       </div>
     </div>
   </div>

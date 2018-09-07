@@ -1,28 +1,29 @@
 (function() {
     'use strict';
 	angular.module('facetApp')
-	.directive('nbfIframe', function() {
+	.directive('nlpBiography', function() {
 		return {
 			restrict: 	'AE',
 			scope: 		{ url: '@', active: '@' },
 			
-			controller: ['$scope', '$sce', function($scope, $sce){
+			controller: ['$scope', 'biographyService', function($scope, biographyService){
 				
 				$scope.loadBio = function () {
 					if ($scope.active!='false') {
-						$scope.src = $sce.trustAsResourceUrl($scope.url);
-						// console.log('content loaded',$scope.url);
+						biographyService.getNlpBio( $scope.url ).then(function(data) {
+							$scope.data = data;
+				        });
 					}; // else { console.log('not loaded'); };
 				};
 			}],
 			
 			link: function($scope, element, attrs, controllers) {
 				$scope.$watch('active', function(newValue, old) {
-					// console.log('iframe.watch');
-	                $scope.loadBio();
+	                if (newValue)
+	                	$scope.loadBio();
 	                }, true);
 			    },
 			    
-			templateUrl: 'views/directive/nbf-iframe.directive.html'
+			templateUrl: 'views/directive/nlp-biography.directive.html'
 		}});
 })();

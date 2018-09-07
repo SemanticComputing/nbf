@@ -1,3 +1,5 @@
 <div class="col-sm-6 col-md-12" ng-if="!!src">
-	<iframe ng-src="{{src}}"> <!--content--> </iframe>
+	 <iframe ng-src="{{src}}" onload="loaded=true" onerror="console.log('on error')" error="console.log('error')">
+	 	<a href="{{src}}">{{src}}</a>
+	 </iframe>
 </div>

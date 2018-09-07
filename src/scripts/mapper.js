@@ -36,7 +36,14 @@
                 	person.norssi = person.norssi.replace('http://ldf.fi/norssit/','')
                 }
                 
-                
+                if (person.kirjasampo) {
+                	person.kirjasampo = person.kirjasampo.replace('http://','https://')
+                }
+                /*
+                if (person.kulsa) {
+                	person.kulsa = person.kulsa.replace('http://','https://')
+                }
+                */
                 if (person.fennica) {
                 	// couples might have several fennica links:
                 	if (person.fennica.constructor !== Array) {
@@ -55,10 +62,10 @@
                 }
                 
                 if (!person.givenName) {
-                	person.givenName = ""; 
+                	person.givenName = "";
                 }
-                if (!person.familyName) { 
-                	person.familyName = ""; 
+                if (!person.familyName) {
+                	person.familyName = "";
                 }
                 
                 //	join the names of couples ["Heikki", "Kaija"] - > "Heikki ja Kaija"

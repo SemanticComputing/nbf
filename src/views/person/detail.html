@@ -170,9 +170,13 @@
 		       	</li>
 	     	</ul>
 	     	
-	     	
-         	<nbf-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.bio}}" active="{{vm.isSet($index)}}">
+	     	<nbf-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.bio}}" active="{{vm.isSet($index)}}">
          	</nbf-biography>
+         	
+         	<!-- 
+         	<nlp-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.prs}}" active="{{vm.isSet($index)}}">
+         	</nlp-biography>
+         	 -->
 	        
 	        <nbf-iframe ng-repeat="link in vm.person.externalLinks | castArray" ng-show="vm.isSet(link.label)" url="{{link.url}}" active="{{vm.isSet(link.label)}}">
          	</nbf-iframe>

@@ -52,17 +52,18 @@
         ' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
 
-        
+        //	example query 
         var query = 'SELECT * WHERE { ' +
-    	'  { SELECT ?place__uri (COUNT(?url) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?person__ids) ?type WHERE {  ' +
-    	'    { SELECT ?id WHERE { <RESULT_SET> } LIMIT <LIMIT> } FILTER(BOUND(?id)) ' +
+    	'  { SELECT ?place__uri (COUNT(DISTINCT ?url) AS ?count) (GROUP_CONCAT(DISTINCT ?url; separator=",") AS ?person__ids) ?type WHERE {  ' +
+    	'    { SELECT ?id ?id2 WHERE { <RESULT_SET> ?id owl:sameAs* ?id2 . FILTER NOT EXISTS { ?id2 owl:sameAs [] }' +
+    	' } LIMIT <LIMIT> } FILTER(BOUND(?id)) ' +
     	' ' +
     	'    VALUES (?prop ?eclass ?type) { <VALUES> } ' +
     	'    ?id foaf:focus ?prs . ' +
     	'    ?evt__id ?prop ?prs ; ' +
     	'          a ?eclass ;  ' +
     	'          nbf:place ?place__uri . ' +
-    	'  BIND (replace(str(?id),"http://ldf.fi/nbf/","") AS ?url)' +
+    	'  BIND (replace(str(?id2),"http://ldf.fi/nbf/","") AS ?url)' +
     	'    } GROUP BY ?place__uri ?type ORDER BY DESC(?count) ' +
     	'  } ' +
     	'  FILTER (?count>0) ' +
@@ -71,9 +72,8 @@
     	'    		skos:prefLabel ?place__label . ' +
     	'  FILTER (lang(?place__label)="fi") ' +
     	'}  '
-        	
         
-        
+    	
         // http://yasgui.org/short/rkRBPKYU7
         var query2 = 
         	'SELECT * WHERE { ' +
@@ -144,7 +144,7 @@
         		q = prefixes + query.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
         		.replace("<VALUES>", values)
         		.replace("<LIMIT>", limit);
-
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         
@@ -153,7 +153,6 @@
         		query2
         			.replace("<RESULT_SET>", facetSelections.constraint.join(' '))
         			.replace("<LIMIT>", limit);
-        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         

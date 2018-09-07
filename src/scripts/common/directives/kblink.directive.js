@@ -1,33 +1,37 @@
 (function() {
     'use strict';
 	angular.module('facetApp')
-	.directive('nbfPerson', function() {
+	.directive('kblink', function() {
 		return {
-			restrict: 	'AE',
-			scope: 		{ url: '@' },
+			restrict: 	'EC',
+			scope: 		{ href: '@' },
+			transclude: true,
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
+				
+				if (!$scope.href) return;
 		        
-		        $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        
-		        popoverService.getPopover($scope.url).then(function(data) {
+		        popoverService.getHrefPopover($scope.href).then(function(data) {
 		        	if (data.length) data = data[0];
 		        	
 		        	$scope.label = data.label;
 		        	
-		        	//	lifespan is valid if contains any numeric char
+		        	$scope.link = '#!/'+ (data.id).replace(new RegExp('/', 'g'), '~2F');
+		        	
+		        	//	check if lifespan contains any numbers
 		        	if ((new RegExp(/\d/)).test(data.lifespan)) {
-		        		// (0800-0900) -> (800-900)
+		        		// remove leading zeros (0800-0900) -> (800-900)
 		        		data.lifespan = data.lifespan.replace(/(\D)0/g, "$1");
 		        		
 		        		$scope.lifespan = data.lifespan;
 		        	}
 		        	
 		        	if (data.hasOwnProperty('image')) $scope.image = data.image;
-		        	
 		        });
+		        
 			}],
-			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}">{{ label }}</a>'
+			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}" ng-transclude></a>'
 		}});
 })();
