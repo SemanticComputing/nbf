@@ -16,6 +16,8 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getResultsTop10 = getResultsTop10;
+        this.getResultsBottom10 = getResultsBottom10;
         this.getStatistics = getStatistics;
         this.getLenStatistics = getLenStatistics;
         // Get the facets.
@@ -87,6 +89,30 @@
             '  FILTER(STRLEN(STR(?lemma))>1) ' +
             ' } GROUP BY ?lemma ORDER BY DESC(?count) LIMIT 50';
 
+	var topTenResults = prefixes +
+	    ' SELECT DISTINCT ?id ?name ?cnt { ' +
+            '  VALUES ?id { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
+	    '  ?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?name . ' +
+            '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
+            '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
+            '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ;' +
+            '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt .' +
+            ' } ORDER BY DESC(xsd:integer(?cnt)) LIMIT 10' ;
+	var topBottomResults = prefixes +
+	    ' SELECT DISTINCT ?id ?name ?cnt { ' +
+            '  VALUES ?id { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
+	    '  ?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?name . ' +
+            '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
+            '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
+            '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ;' +
+            '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt .' +
+            ' } ORDER BY ASC(xsd:integer(?cnt)) LIMIT 10' ;
 
         var docCountByLenQry = prefixes +
             ' SELECT DISTINCT ?year (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) { ' +
@@ -158,6 +184,44 @@
                 });
 
                 return $q.all(promises);
+            });
+        }
+
+	 function getResultsTop10(facetSelections) {
+            var self = this;
+            var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
+                /*if (results.length > 10000) {
+                    return $q.reject({
+                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
+                    });
+                }*/
+                var promises = {};
+                var topQry = topTenResults.replace(/<RESULT_SET>/g, '<' + _.map(results, 'id').join('> <') + '>');
+
+                //self.upos.forEach(function() {
+                promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+                //});
+                return promises;
+            });
+        }
+
+	 function getResultsBottom10(facetSelections) {
+            var self = this;
+            var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
+                /*if (results.length > 10000) {
+                    return $q.reject({
+                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
+                    });
+                }*/
+                var promises = {};
+                var topQry = topBottomResults.replace(/<RESULT_SET>/g, '<' + _.map(results, 'id').join('> <') + '>');
+
+                //self.upos.forEach(function() {
+                promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+                //});
+                return promises;
             });
         }
 

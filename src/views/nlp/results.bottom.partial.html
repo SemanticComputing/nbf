@@ -1,0 +1,19 @@
+<div ng-show="vm.error" class="comparison-result-error alert alert-danger" role="alert">
+  {{ vm.error.statusText }}
+</div>
+
+<div ng-show="vm.hasResults()" class="col-md-3 col-sm-2">
+  <table class="comparison-results">
+    <colgroup>
+      <col class="name" />
+      <col class="count" />
+    </colgroup>
+    <th>Biografia</th>
+    <th>Sanamäärä</th>
+    <tr ng-repeat="obj in vm.resultsBottom10">
+      <td><span class="personlink" url="{{ obj.id }}">{{ obj.name }}</span></td>
+      <td>{{ obj.cnt }}</td>
+    </tr>
+  </table>
+</div>
+<img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>

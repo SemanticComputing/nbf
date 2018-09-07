@@ -161,6 +161,22 @@
                 drawChartLen(results);
                 });
 	    }).then(function() {
+                return nlpService.getResultsTop10(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsTop10 = results;
+                    vm.isLoadingResults = false;
+                });
+	    }).then(function() {
+                return nlpService.getResultsBottom10(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsBottom10 = results;
+                    vm.isLoadingResults = false;
+                });
+	    }).then(function() {
                 return nlpService.getResults(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
