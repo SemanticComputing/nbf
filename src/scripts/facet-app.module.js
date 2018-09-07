@@ -91,18 +91,13 @@
             controller: 'PersonNetworkController',
             controllerAs: 'vm'
         })
-<<<<<<< HEAD
 	.state('person.sentence', {
             url: '/lauseet',
             templateUrl: 'views/person.sentences.html',
             controller: 'PersonSentencesController',
             controllerAs: 'vm'
         })
-        .state('place', {
-=======
-        
         .state('place', { //	page not implemented
->>>>>>> 2e7af5a26703f45d06bce8247b24ef7304edfab9
             url: '/place/:placeId',
             templateUrl: 'views/place.html',
             controller: 'PlaceController',
