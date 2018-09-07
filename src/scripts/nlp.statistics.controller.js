@@ -66,7 +66,7 @@
                 var ticks = _.map(results, function(res) { return parseInt(res.year); });
                 var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
                 var options = {
-                    title: 'Biografiakohtainen keskimääräinen sanamääräjakauma vuosikymmenittäin',
+                    title: 'Biografioiden keskimääräinen sanamääräjakauma vuosikymmenittäin',
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},
@@ -91,7 +91,7 @@
                 var chart = new google.visualization.ColumnChart(document.getElementById('biography-len-chart'));
 
                 data.addColumn('string', 'Vuosikymmen');
-                data.addColumn('number', 'Biografiakohtainen keskimääräinen sanamäärä');
+                data.addColumn('number', 'Biografioiden keskimääräinen sanamäärä');
 
                 data.addRows(rows);
                 chart.draw(data, options);
