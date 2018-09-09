@@ -18,6 +18,8 @@
         this.getResults = getResults;
         this.getResultsTop10 = getResultsTop10;
         this.getResultsBottom10 = getResultsBottom10;
+        this.getResultsBottomCat = getResultsBottomCat;
+        this.getResultsTopCat = getResultsTopCat;
         this.getStatistics = getStatistics;
         this.getLenStatistics = getLenStatistics;
         // Get the facets.
@@ -113,6 +115,36 @@
             '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ;' +
             '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt .' +
             ' } ORDER BY ASC(xsd:integer(?cnt)) LIMIT 10' ;
+
+	var topTopCatsResults = prefixes +
+	    ' SELECT DISTINCT ?category (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) {' +
+            '  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
+	    '  ?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?name . ' +
+            '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
+	    '  ?id foaf:focus/nbf:has_category ?cat .' +
+	    '  ?cat skos:prefLabel ?category .' +
+            '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
+            '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ;' +
+            '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt .' +
+            ' } GROUP BY ?category ORDER BY DESC(?count) LIMIT 10' ;
+
+	var topBottomCatsResults = prefixes +
+	    ' SELECT DISTINCT ?category (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) {' +
+            '  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
+	    '  ?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?name . ' +
+            '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
+	    '  ?id foaf:focus/nbf:has_category ?cat .' +
+	    '  ?cat skos:prefLabel ?category .' +
+            '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
+            '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ;' +
+            '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt .' +
+            ' } GROUP BY ?category ORDER BY ASC(?count) LIMIT 10' ;
 
         var docCountByLenQry = prefixes +
             ' SELECT DISTINCT ?year (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) { ' +
@@ -225,6 +257,25 @@
                 //});
                 return promises;
             });
+        }
+
+	 function getResultsTopCat(facetSelections) {
+            var self = this;
+            var promises = {};
+            var topQry = topTopCatsResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+
+            promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+	    console.log(promises);
+            return promises;
+        }
+	 function getResultsBottomCat(facetSelections) {
+            var self = this;
+            var promises = {};
+            var topQry = topBottomCatsResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+
+            promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+	    console.log(promises);
+            return promises;
         }
 
         function getFacetOptions() {

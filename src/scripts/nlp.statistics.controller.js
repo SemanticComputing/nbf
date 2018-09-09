@@ -177,6 +177,23 @@
                     vm.isLoadingResults = false;
                 });
 	    }).then(function() {
+                return nlpService.getResultsBottomCat(facetSelections).then(function(results) {
+
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsBotCat = results;
+                    vm.isLoadingResults = false;
+                });
+            }).then(function() {
+                return nlpService.getResultsTopCat(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsTopCat = results;
+                    vm.isLoadingResults = false;
+                });
+            }).then(function() {
                 return nlpService.getResults(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
