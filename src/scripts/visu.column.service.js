@@ -5,10 +5,10 @@
     /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
 
-    .service('visuService', visuService);
+    .service('visuColumnService', visuColumnService);
 
     /* @ngInject */
-    function visuService($q, _, FacetResultHandler, AdvancedSparqlService, objectMapperService, mapfacetService, SPARQL_ENDPOINT_URL) {
+    function visuColumnService($q, _, FacetResultHandler, AdvancedSparqlService, objectMapperService, mapfacetService, SPARQL_ENDPOINT_URL) {
     	
         /* Public API */
 

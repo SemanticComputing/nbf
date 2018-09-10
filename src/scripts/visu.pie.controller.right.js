@@ -1,3 +1,4 @@
+// created with script createRightPageController.sh as a copy of file ../scripts/visu.pie.controller.js
 /*
  * Semantic faceted search
  *
@@ -12,10 +13,10 @@
     /*
     * Controller for the results view.
     */
-    .controller('VisuController2', VisuController2);
+    .controller('VisuPieControllerRight', VisuPieControllerRight);
 
     /* @ngInject */
-    function VisuController2($log, $scope, $state, _, google, visuService2, FacetHandler, facetUrlStateHandlerService, $uibModal) {
+    function VisuPieControllerRight($log, $scope, $state, _, google, visuPieService, FacetHandler, facetUrlStateHandlerService2, $uibModal) {
 
         var vm = this;
         
@@ -43,7 +44,7 @@
         });
         $scope.$on('sf-facet-constraints', updateResults);
         
-        visuService2.getFacets().then(function(facets) {
+        visuPieService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -55,8 +56,8 @@
         }
 
         function getFacetOptions() {
-            var options = visuService2.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            var options = visuPieService.getFacetOptions();
+            options.initialState = facetUrlStateHandlerService2.getFacetValuesFromUrlParams();
             return options;
         }
 
@@ -68,9 +69,9 @@
             }
             
             vm.previousSelections = _.clone(facetSelections.constraint);
-            facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            facetUrlStateHandlerService2.updateUrlParams(facetSelections);
             
-            visuService2.getGenders(facetSelections).then(function(data) {
+            visuPieService.getGenders(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawPieChart(data, 'Sukupuoli tai ryhmä', vm.chart_ids[0])
@@ -78,7 +79,7 @@
             	}
             });
             
-            visuService2.getCategories(facetSelections).then(function(data) {
+            visuPieService.getCategories(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawPieChart(data, 'Toimiala', vm.chart_ids[2])
@@ -86,7 +87,7 @@
             	}
             });
             
-            visuService2.getTitles(facetSelections).then(function(data) {
+            visuPieService.getTitles(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawPieChart(data, 'Arvo, ammatti tai toiminta', vm.chart_ids[3])
@@ -94,7 +95,7 @@
             	}
             });
 
-            visuService2.getDatabases(facetSelections).then(function(data) {
+            visuPieService.getDatabases(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawPieChart(data, 'Tietokanta', vm.chart_ids[1])
@@ -102,7 +103,7 @@
             	}
             });
             
-            visuService2.getCompanies(facetSelections).then(function(data) {
+            visuPieService.getCompanies(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawPieChart(data, 'Yritys tai yhteisö', vm.chart_ids[4])

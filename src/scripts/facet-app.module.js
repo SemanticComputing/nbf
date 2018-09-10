@@ -233,7 +233,7 @@
         .state('visu.statistics', {
             url: '/palkit',
             templateUrl: 'views/visu/statistics.html',
-            controller: 'VisuController',
+            controller: 'VisuColumnController',
             controllerAs: 'vm',
         })
         .state('visu.comparison', {
@@ -246,12 +246,12 @@
             views: {
                 'left@visu.comparison': {
                     templateUrl: 'views/visu/comparison.left.html',
-                    controller: 'VisuController',
+                    controller: 'VisuColumnController',
                     controllerAs: 'vm'
                 },
                 'right@visu.comparison': {
                     templateUrl: 'views/visu/comparison.right.html',
-                    controller: 'VisuController',
+                    controller: 'VisuColumnControllerRight',
                     controllerAs: 'vm'
                 }
             }
@@ -264,7 +264,7 @@
         .state('visu.statistics2', {
             url: '/piiraat',
             templateUrl: 'views/visu2/statistics.html',
-            controller: 'VisuController2',
+            controller: 'VisuPieController',
             controllerAs: 'vm',
         })
         .state('visu.comparison2', {
@@ -277,12 +277,12 @@
             views: {
                 'left@visu.comparison2': {
                     templateUrl: 'views/visu2/comparison.left.html',
-                    controller: 'VisuController2',
+                    controller: 'VisuPieController',
                     controllerAs: 'vm',
                 },
                 'right@visu.comparison2': {
                     templateUrl: 'views/visu2/comparison.right.html',
-                    controller: 'VisuController2',
+                    controller: 'VisuPieControllerRight',
                     controllerAs: 'vm',
                 }
             }
