@@ -44,6 +44,40 @@
             return _.keys(vm.results).length > 0;
         }
 
+	function calculatePercentage(data) {
+	    var obj;
+	    var word;
+	    console.log(vm.lemmaCount.count);
+	    for (obj in data) {
+		console.log(obj)
+		console.log(data[obj])
+		var class_sum = getPosTotal(obj); 
+		for (word in data[obj]) {
+		    console.log(data[obj][word].count);
+		    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
+		    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
+		}
+	    }
+	    console.log(data);	
+	    return data;
+	}
+
+	function getPosTotal(postag){
+	    if (postag == "VERB") {
+		return vm.lemmaCount.verbCount;
+	    } else if (postag == "ADJ") {
+		return vm.lemmaCount.adjCount;
+	    } else if (postag == "NOUN") {
+		return vm.lemmaCount.nounCount;
+	    } else if (postag == "PROPN") {
+		return vm.lemmaCount.pnounCount;
+	    } else {
+		console.log("Unidentifiable pos-tag", postag);
+		return vm.lemmaCount.count;
+	    }
+	    
+	}
+
         function getFacetOptions() {
             var options = nlpService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
@@ -194,11 +228,20 @@
                     vm.isLoadingResults = false;
                 });
             }).then(function() {
+                return nlpService.getWordCount(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.lemmaCount = results[0];
+                    vm.isLoadingResults = false;
+		    console.log(results[0]);
+                });
+            }).then(function() {
                 return nlpService.getResults(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
-                    vm.results = results;
+                    vm.results = calculatePercentage(results);
                     vm.isLoadingResults = false;
                 });
             }).catch(function(error) { return handleError(error, updateId); });

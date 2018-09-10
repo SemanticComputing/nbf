@@ -175,7 +175,10 @@ img.logo:hover {
 }
 
 .comparison-results .word {
-  width: 70%;
+  width: 40%;
+}
+.comparison-results .pos_count {
+  width: 30%;
 }
 
 .comparison-results .count {

@@ -7,12 +7,15 @@
     <colgroup>
       <col class="word" />
       <col class="count" />
+      <col class="pos_count" />
     </colgroup>
     <th>{{ upos.label }}</th>
-    <th>Lkm</th>
+    <th>Sanaluokka </th>
+    <th>Kaikki </th>
     <tr ng-repeat="word in vm.results[upos.key]">
       <td>{{ word.lemma }}</td>
-      <td>{{ word.count }}</td>
+      <td>{{ word.class_percentage }} %</td>
+      <td>{{ word.percentage }} %</td>
     </tr>
   </table>
 </div>

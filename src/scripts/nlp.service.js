@@ -16,6 +16,7 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getWordCount = getWordCount;
         this.getResultsTop10 = getResultsTop10;
         this.getResultsBottom10 = getResultsBottom10;
         this.getResultsBottomCat = getResultsBottomCat;
@@ -91,6 +92,22 @@
             '  FILTER(STRLEN(STR(?lemma))>1) ' +
             ' } GROUP BY ?lemma ORDER BY DESC(?count) LIMIT 50';
 
+	var lemmaCountQry = prefixes +
+            ' SELECT  (SUM(xsd:integer(?cnt)) AS ?count) (SUM(xsd:integer(?verb)) AS ?verbCount) (SUM(xsd:integer(?adj)) AS ?adjCount) (SUM(xsd:integer(?noun)) AS ?nounCount) (SUM(xsd:integer(?pnoun)) AS ?pnounCount) { ' +
+            '  { ' +
+            '    <RESULT_SET> ' +
+            '  } ' +
+	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
+            '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
+            '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id . ' +
+            '  ?ds <http://ldf.fi/nbf/biography/data#document> ?doc ;' +
+            '      <http://ldf.fi/nbf/biography/data#wordCount> ?cnt ;' +
+            '      <http://ldf.fi/nbf/biography/data#verbCount> ?verb ;' +
+            '      <http://ldf.fi/nbf/biography/data#adjCount> ?adj ;' +
+            '      <http://ldf.fi/nbf/biography/data#nounCount> ?noun ;' +
+            '      <http://ldf.fi/nbf/biography/data#propnCount> ?pnoun .' +
+            ' } ';
+
 	var topTenResults = prefixes +
 	    ' SELECT DISTINCT ?id ?name ?cnt { ' +
             '  { ' +
@@ -105,7 +122,7 @@
             ' } ORDER BY DESC(xsd:integer(?cnt)) LIMIT 10' ;
 	var topBottomResults = prefixes +
 	    ' SELECT DISTINCT ?id ?name ?cnt { ' +
-            '  VALUES ?id { ' +
+            '  { ' +
             '    <RESULT_SET> ' +
             '  } ' +
 	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
@@ -242,24 +259,33 @@
 
 	 function getResultsBottom10(facetSelections) {
             var self = this;
-            var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
+            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
                 /*if (results.length > 10000) {
                     return $q.reject({
                         statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });
                 }*/
                 var promises = {};
-                var topQry = topBottomResults.replace(/<RESULT_SET>/g, '<' + _.map(results, 'id').join('> <') + '>');
+                var topQry = topBottomResults.replace(/<RESULT_SET>/g,  facetSelections.constraint.join(' '));
 
                 //self.upos.forEach(function() {
                 promises = nbfEndpoint.getObjectsNoGrouping(topQry);
                 //});
                 return promises;
-            });
+            //});
         }
 
-	 function getResultsTopCat(facetSelections) {
+	 function getWordCount(facetSelections) {
+            var self = this;
+            var promises = {};
+            var qry = lemmaCountQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+
+            promises = nbfEndpoint.getObjectsNoGrouping(qry);
+	    console.log(promises);
+            return promises;
+        }
+	function getResultsTopCat(facetSelections) {
             var self = this;
             var promises = {};
             var topQry = topTopCatsResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
