@@ -224,7 +224,7 @@
         	'  { <RESULT_SET> } ' +
         	'  ?dst a nbf:Distance ; ' +
         	'        bioc:relates_to ?id, ?prs ; ' +
-        	'        bioc:value ?value . ' +
+        	'        nbf:value ?value . ' +
         	'  FILTER (?prs!=?id)  ' +
         	//'  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
         	//'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . }  ' +
