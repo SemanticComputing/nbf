@@ -65,17 +65,7 @@
         function removeFacetSelections() {
             $state.reload();
         }
-        /*
-        function openPageOLD(person) {
-            $uibModal.open({
-                component: 'registerPageModal',
-                size: 'lg',
-                resolve: {
-                    person: function() { return person; }
-                }
-            });
-        }
-		*/
+        
         function getFacetOptions() {
             var options = groupmapService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();

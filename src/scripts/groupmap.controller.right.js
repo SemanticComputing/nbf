@@ -1,3 +1,4 @@
+// created with script createRightPageController.sh as a copy of file ../scripts/groupmap.controller.js
 /*
  * Semantic faceted search
  *
@@ -14,15 +15,19 @@
     * Controller for the results view.
     */
     .controller('GroupmapControllerRight', GroupmapControllerRight);
-     
+    
     
     /* @ngInject */
     function GroupmapControllerRight($scope, $location, $state, $uibModal, _, groupmapService,
             FacetHandler, facetUrlStateHandlerService2, 
-            EVENT_FACET_CHANGED //, $httpParamSerializer
+            EVENT_FACET_CHANGED 
             ) {
 
-        var vm = this;
+    	var vm = this;
+    	
+    	// for comparison views
+        vm.right = true;
+        
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
         vm.window = { show: false,
@@ -30,8 +35,15 @@
         			lat: 60.192059,
         			lng: 24.945831}
         };
-        // $httpParamSerializer($scope.appForm.data)
-        var mapchange = function (map) { $location.search('map', $.param(vm.map)); };
+        var mapchange = function (map) {
+        	console.log(angular.toJson(vm.map));
+        	
+        	$location.search(
+        			vm.right ? 'map2':'map', 
+        			angular.toJson(vm.map)
+        		); 
+        	};
+        	
         vm.mapevents= { zoom_changed: mapchange, dragend: mapchange };
         
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
@@ -51,20 +63,19 @@
         		vm.EVENTTYPES[0].check = true;
         	}
         	
-        	$location.search('limit2', vm.searchlimit.value);
+        	$location.search(vm.right ? 'limit2' : 'limit', vm.searchlimit.value);
         	
         	var st = vm.EVENTTYPES.map(function(val) { return val.check ? 1 : 0; }).join(',');
-        	$location.search('events2', st);
+        	$location.search(vm.right ? 'events2' : 'events', st);
         	
         	fetchResults({ constraint: vm.previousSelections });
         }; 
         
-       
         
         // read url parameters:
         vm.readUrl = function() {
 	        var lc = $location.search(),
-	        	param = 'limit2';
+	        	param = vm.right ? 'limit2' : 'limit';
 	        
 	        if (lc[param]) {
 	        	var lim = parseInt(lc[param]);
@@ -73,9 +84,22 @@
 	        	});
 	        }
 	        
-	        param = 'events2';
+	        param = vm.right ? 'events2' : 'events';
 	        if (lc[param]) {
 	        	(lc[param].split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x!="0"); });
+	        }
+	        
+	        //	Update map view from url parameters
+	        param = vm.right ? 'map2' : 'map';
+	        if (lc[param]) {
+	        	try {
+	                var map = angular.fromJson(lc[param]);
+	                vm.map = map; 
+	            }
+	            catch(e) {
+	            	$location.search(param, null);
+	            	console.log('parameter '+param+' cleared')
+	            }
 	        }
         };
         
