@@ -1,4 +1,7 @@
-
+.list-row {
+margin: auto;
+width: 75%;
+}
 .facet-name {
   font-weight: bold;
 }
@@ -175,14 +178,14 @@ img.logo:hover {
 }
 
 .comparison-results .word {
-  width: 40%;
+  width: 50%;
 }
 .comparison-results .pos_count {
-  width: 30%;
+  width: 25%;
 }
 
 .comparison-results .count {
-  width: 30%;
+  width: 25%;
 }
 
 .comparison-result-error {

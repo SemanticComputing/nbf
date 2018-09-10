@@ -100,7 +100,7 @@
                 var ticks = _.map(results, function(res) { return parseInt(res.year); });
                 var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
                 var options = {
-                    title: 'Biografioiden keskimääräinen sanamääräjakauma vuosikymmenittäin',
+                    title: 'SKS:n Biografioiden keskimääräinen sanamääräjakauma vuosikymmenittäin',
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},
@@ -140,7 +140,7 @@
                 var ticks = _.map(results, function(res) { return parseInt(res.year); });
                 var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
                 var options = {
-                    title: 'Biografiajakauma vuosikymmenittäin',
+                    title: 'SKS:n Biografiajakauma vuosikymmenittäin',
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},

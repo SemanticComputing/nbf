@@ -2,18 +2,21 @@
   {{ vm.error.statusText }}
 </div>
 
-<div ng-show="vm.hasResults()" class="col-md-3 col-sm-2">
+<div ng-show="vm.hasResults()" class="col-md-3 col-sm-2" style="width:50%">
   <table class="comparison-results">
-    <caption>Lyhyimmät tekstit: keskimääräinen sanamäärä ammattikunnan mukaan</caption>
+    <caption>Lyhyimmät tekstit: keskimääräinen sanamäärä toimialan mukaan</caption>
     <colgroup>
       <col class="name" />
+      <col class="count" />
       <col class="count" />
     </colgroup>
     <th>Biografia</th>
     <th>Sanamäärä</th>
+    <th>Lkm</th>
     <tr ng-repeat="obj in vm.resultsBotCat">
       <td>{{ obj.category }}</td>
       <td>{{ obj.count }}</td>
+      <td>{{ obj.lkm }}</td>
     </tr>
   </table>
 </div>

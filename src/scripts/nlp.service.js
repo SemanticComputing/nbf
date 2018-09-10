@@ -134,7 +134,7 @@
             ' } ORDER BY ASC(xsd:integer(?cnt)) LIMIT 10' ;
 
 	var topTopCatsResults = prefixes +
-	    ' SELECT DISTINCT ?category (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) {' +
+	    ' SELECT DISTINCT ?category (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) (COUNT(xsd:integer(?cnt)) as ?lkm) {' +
             '  { ' +
             '    <RESULT_SET> ' +
             '  } ' +
@@ -149,7 +149,7 @@
             ' } GROUP BY ?category ORDER BY DESC(?count) LIMIT 10' ;
 
 	var topBottomCatsResults = prefixes +
-	    ' SELECT DISTINCT ?category (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) {' +
+	    ' SELECT DISTINCT ?category (ROUND(SUM(xsd:integer(?cnt)) / COUNT(xsd:integer(?cnt))) AS ?count) (COUNT(xsd:integer(?cnt)) as ?lkm){' +
             '  { ' +
             '    <RESULT_SET> ' +
             '  } ' +
