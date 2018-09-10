@@ -1,3 +1,4 @@
+// created with script createRightPageController.sh as a copy of file ../scripts/lifemap.controller.js
 /*
  * Semantic faceted search
  *
@@ -13,14 +14,18 @@
     /*
     * Controller for the results view.
     */
-    .controller('GroupmapController2', GroupmapController2);
+    .controller('LifemapControllerRight', LifemapControllerRight);
 
     /* @ngInject */
-    function GroupmapController2($scope, $location, $state, $uibModal, _, groupmapService,
-            FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
+    function LifemapControllerRight($scope, $location, $state, $uibModal, _, groupmapService,
+            FacetHandler, facetUrlStateHandlerService2, EVENT_FACET_CHANGED) {
 
     	
         var vm = this;
+        
+        // for comparison views
+        vm.right = true;
+        
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.window = { show: false, 
         		position: {
@@ -28,11 +33,22 @@
         			lng: 24.945831}
         };
         
+        var mapchange = function (map) {
+        	$location.search(
+        			vm.right ? 'map2':'map',
+        			angular.toJson(vm.map)
+        		);
+        };
+        
+        vm.mapevents= { zoom_changed: mapchange, dragend: mapchange };
+        
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
         vm.searchlimit = vm.LIMITOPTIONS[0];
         
         vm.change = function() {
-        	$location.search('limit', vm.searchlimit.value);
+        	$location.search(
+        			vm.right ? 'limit2' : 'limit', 
+        				vm.searchlimit.value);
         	fetchResults({ constraint: vm.previousSelections });
         };
         
@@ -67,8 +83,9 @@
         }
         
         function getFacetOptions() {
+        	vm.readUrl();
             var options = groupmapService.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            options.initialState = facetUrlStateHandlerService2.getFacetValuesFromUrlParams();
             return options;
         }
 
@@ -87,20 +104,37 @@
                 return;
             }
             vm.previousSelections = _.clone(facetSelections.constraint);
-            facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            facetUrlStateHandlerService2.updateUrlParams(facetSelections);
             return fetchResults(facetSelections);
         }
-
-        // set url parameters:
-        var lc = $location.search();
         
-        if (lc.limit) {
-        	var lim = parseInt(lc.limit);
-        	vm.LIMITOPTIONS.forEach(function(ob, i) {
-        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
-        	});
-        }
-           
+        // read url parameters:
+        vm.readUrl = function() {
+	        var lc = $location.search(),
+	        	param = vm.right ? 'limit2' : 'limit';
+	        
+	        if (lc[param]) {
+	        	var lim = parseInt(lc[param]);
+	        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+	        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+	        	});
+	        }
+	        
+	        //	Update map view from url parameters
+	        param = vm.right ? 'map2' : 'map';
+	        if (lc[param]) {
+	        	try {
+	                var map = angular.fromJson(lc[param]);
+	                vm.map = map; 
+	            }
+	            catch(e) {
+	            	$location.search(param, null);
+	            	// console.log('parameter '+param+' cleared')
+	            }
+	        }
+        };
+        
+        
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;

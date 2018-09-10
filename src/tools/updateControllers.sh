@@ -1,1 +1,2 @@
 bash createRightPageController.sh ../scripts/groupmap.controller.js ../scripts/groupmap.controller.right.js
+bash createRightPageController.sh ../scripts/lifemap.controller.js ../scripts/lifemap.controller.right.js

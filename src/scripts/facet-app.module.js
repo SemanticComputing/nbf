@@ -140,7 +140,7 @@
             controllerAs: 'vm',
         })
         .state('maps.comparison', {
-            url: '/vertaa',
+            url: '/vertaatapahtumat',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
@@ -160,13 +160,13 @@
             }
         })
         .state('maps.singleview2', {
-            url: '/liike',
+            url: '/elamat',
             templateUrl: 'views/groupmap/singleview2.html',
-            controller: 'GroupmapController2',
+            controller: 'LifemapController',
             controllerAs: 'vm',
         })
         .state('maps.comparison2', {
-            url: '/vertaaliike',
+            url: '/vertaaelamat',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
@@ -175,12 +175,12 @@
             views: {
                 'left@maps.comparison2': {
                     templateUrl: 'views/groupmap/comparison2.left.html',
-                    controller: 'GroupmapController2',
+                    controller: 'LifemapController',
                     controllerAs: 'vm',
                 },
                 'right@maps.comparison2': {
                     templateUrl: 'views/groupmap/comparison2.right.html',
-                    controller: 'GroupmapController2',
+                    controller: 'LifemapControllerRight',
                     controllerAs: 'vm',
                 }
             }

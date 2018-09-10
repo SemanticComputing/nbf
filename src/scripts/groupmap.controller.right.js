@@ -35,15 +35,14 @@
         			lat: 60.192059,
         			lng: 24.945831}
         };
+        
         var mapchange = function (map) {
-        	console.log(angular.toJson(vm.map));
-        	
         	$location.search(
-        			vm.right ? 'map2':'map', 
+        			vm.right ? 'map2':'map',
         			angular.toJson(vm.map)
-        		); 
-        	};
-        	
+        		);
+        };
+        
         vm.mapevents= { zoom_changed: mapchange, dragend: mapchange };
         
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
@@ -98,7 +97,7 @@
 	            }
 	            catch(e) {
 	            	$location.search(param, null);
-	            	console.log('parameter '+param+' cleared')
+	            	// console.log('parameter '+param+' cleared')
 	            }
 	        }
         };
