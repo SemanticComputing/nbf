@@ -1,0 +1,1 @@
+bash createRightPageController.sh ../scripts/groupmap.controller.js ../scripts/groupmap.controller.right.js
