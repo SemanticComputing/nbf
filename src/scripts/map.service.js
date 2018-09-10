@@ -128,7 +128,7 @@
                 if (events.length) {
                     return events;
                 }
-                return $q.reject('No events found');
+                return $q.reject('Henkilölle ei ole kartalla näytettäviä tapahtumia.');
             });
         }
         
