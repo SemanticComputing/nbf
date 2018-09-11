@@ -17,6 +17,8 @@
         this.getLinks = getLinks;
         this.getNodes = getNodes;
         this.getGroupNodes = getGroupNodes;
+        this.getGroupLinks = getGroupLinks;
+        this.getNodesForPeople = getNodesForPeople;
         
         this.getFacets = mapfacetService.getFacets;
         this.getFacetOptions = getFacetOptions;
@@ -96,6 +98,21 @@
         	'GROUP BY ?level ?id ?label ?gender ' +
         	'ORDER BY ?level LIMIT <LIMIT> ';
         
+        var queryNodesForPeople =
+        	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
+        	'WHERE {    ' +
+        	'  VALUES ?id { <RESULT_SET> } ' +
+        	'  ?id skosxl:prefLabel ?id__label . ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?label) ' +
+        	' ' +
+        	'  ?id foaf:focus ?prs .  ' +
+        	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
+        	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
+        	'}  ' +
+        	'GROUP BY ?id ?label ?gender ';
+        
         var queryNodesForGroup =
         	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
         	'WHERE { ' +
@@ -150,7 +167,6 @@
         			.replace("<LIMIT>", limit);
         	
         	return endpoint.getObjectsNoGrouping(q);
-        	
         }
         
         function getGroupLinks(facetSelections, limit) {
@@ -163,7 +179,15 @@
         			.replace("<LIMIT>", limit);
         	
         	return endpoint.getObjectsNoGrouping(q);
-        	
+        }
+        
+        function getNodesForPeople(ids) {
+        	console.log('getNodesForPeople');
+        	var 
+        		q = prefixes + queryNodesForPeople
+        			.replace(/<RESULT_SET>/g, ids);
+        	console.log(q);
+        	return endpoint.getObjectsNoGrouping(q);
         }
     }
 })();

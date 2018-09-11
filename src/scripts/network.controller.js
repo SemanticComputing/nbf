@@ -35,13 +35,13 @@
         	vm.window.show = false;
         }
         
-        vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
-    		'#990099', '#3B3EAC', '#0099C6', '#DD4477', 
-    		'#66AA00', '#B82E2E', '#316395', '#994499', 
-    		'#22AA99', '#AAAA11', '#6633CC', '#E67300', 
+        vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618',
+    		'#990099', '#3B3EAC', '#0099C6', '#DD4477',
+    		'#66AA00', '#B82E2E', '#316395', '#994499',
+    		'#22AA99', '#AAAA11', '#6633CC', '#E67300',
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
-        vm.LIMITOPTIONS = [{value:10},{value:20},{value:50},{value:100},{value:200},{value:500}];
+        vm.LIMITOPTIONS = [{value:10},{value:20},{value:50},{value:100},{value:200},{value:500},{value:1000}];
         vm.searchlimit = vm.LIMITOPTIONS[3];
         
         vm.changelimit = function() {
@@ -279,7 +279,51 @@
             
             var updateId = _.uniqueId();
             latestUpdate = updateId;
+            
+            //	Search links first
+            return networkService.getGroupLinks(facetSelections, vm.searchlimit.value)
+            .then(function(edges) {
+            	
+            	if (edges.length<1) {
+            		vm.loading = false;
+                	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
+                	vm.messagecolor = 'red';
+                	return;
+            	}
+            	
+            	vm.elems.edges = edges.map(function(ob) { return { data: ob }});
+            
+            	var dct = {}, ids = "";
+            	edges.forEach(function(ob) { 
+            		dct[ob.source.replace('http://ldf.fi/nbf/','nbf:')] = true; 
+            		dct[ob.target.replace('http://ldf.fi/nbf/','nbf:')] = true; });
+            	
+            	for (let id in dct) { ids += id + ' ';}
+            	
+            	return networkService.getNodesForPeople(ids)
+                .then(function(res) {
 
+                	vm.elems.nodes = res.map(function(ob) { return {data: ob};});
+                	
+                	processData(vm);
+                	
+                	vm.loading = false;
+                	
+                	if (vm.elems.edges.length==vm.searchlimit.value) {
+                		vm.message = "Näytetään {} ensimmäistä linkkiä ja {2} henkilöä"
+                			.replace('{}', vm.searchlimit.value)
+                			.replace('{2}', vm.elems.nodes.length);
+                	} else {
+                		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
+                			.replace('{}', vm.elems.edges.length)
+                			.replace('{2}', vm.elems.nodes.length);
+                	}
+                }).catch(handleError);
+            	
+            }).catch(handleError);
+            
+            /* Search people first
+             
             return networkService.getGroupNodes(facetSelections, vm.searchlimit.value)
             .then(function(res) {
             	
@@ -317,6 +361,8 @@
                 }).catch(handleError);
             	
             }).catch(handleError);
+             */ 
+             
         }
 
         function handleError(error) {
