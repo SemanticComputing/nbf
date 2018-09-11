@@ -60,6 +60,15 @@
         	' FILTER (?source!=?target) . ' +
         	'} ';
         
+        //	NOT TESTED YET, Petri
+        var queryLinksForGroup =
+        	'SELECT distinct (?id AS ?source) (?id2 AS ?target) ' +
+			'WHERE {    ' +
+			'  { <RESULT_SET> } ' +
+			'  { <RESULT_SET2> } ' +
+			'  ?id nbf:references ?id2 . ' +
+			'} LIMIT <LIMIT> ';
+        
         //	http://yasgui.org/short/rJmqP9Iv7
         var queryNodesForPerson =
         	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
@@ -136,6 +145,19 @@
         	var cons = facetSelections.constraint.join(' '),
         		cons2 = cons.replace('?id ','?id2 '),
         		q = prefixes + queryNodesForGroup
+        			.replace(/<RESULT_SET>/g, cons)
+        			.replace(/<RESULT_SET2>/g, cons2)
+        			.replace("<LIMIT>", limit);
+        	
+        	return endpoint.getObjectsNoGrouping(q);
+        	
+        }
+        
+        function getGroupLinks(facetSelections, limit) {
+        	
+        	var cons = facetSelections.constraint.join(' '),
+        		cons2 = cons.replace('?id ','?id2 '),
+        		q = prefixes + queryLinksForGroup
         			.replace(/<RESULT_SET>/g, cons)
         			.replace(/<RESULT_SET2>/g, cons2)
         			.replace("<LIMIT>", limit);

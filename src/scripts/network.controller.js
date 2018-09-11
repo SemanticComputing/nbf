@@ -42,8 +42,7 @@
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
         vm.LIMITOPTIONS = [{value:10},{value:20},{value:50},{value:100},{value:200},{value:500}];
-        vm.searchlimit = vm.LIMITOPTIONS[1];
-        
+        vm.searchlimit = vm.LIMITOPTIONS[3];
         
         vm.changelimit = function() {
         	$location.search('limit',vm.searchlimit.value);
@@ -191,6 +190,24 @@
             	.update();
         };
         
+//    	set url parameters:
+        var lc = $location.search();
+        
+        if (lc.limit) {
+        	var lim = parseInt(lc.limit);
+        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+        	});
+        }
+
+        if (lc.coloroption) {
+        	vm.coloroption = vm.COLOROPTIONS[parseInt(lc.coloroption)];
+        }
+        
+        if (lc.sizeoption) {
+        	vm.sizeoption = vm.SIZEOPTIONS[parseInt(lc.sizeoption)];
+        }
+        
         vm.isScrollDisabled = isScrollDisabled;
         vm.removeFacetSelections = removeFacetSelections;
         vm.getSortClass = networkService.getSortClass;
@@ -250,7 +267,7 @@
 
         var latestUpdate;
         function fetchResults(facetSelections) {
-            // vm.isLoadingResults = true;
+            
             vm.error = undefined;
             if (vm.cy) {
             	vm.cy.elements().remove();
@@ -258,20 +275,17 @@
             
             vm.cy = null;
             vm.message = "";
+            vm.loading = true;
             
             var updateId = _.uniqueId();
             latestUpdate = updateId;
 
             return networkService.getGroupNodes(facetSelections, vm.searchlimit.value)
             .then(function(res) {
-            	vm.message = '';
-            	//vm.chosenNode = null;
-            	if (res.length>999) {
-            		vm.message = "Tulosjoukko on hyvin suuri, joten verkosto on rajattu tuhanteen linkkiin."
-            	} 
+            	
             	if (res.length<2) {
             		vm.loading = false;
-                	vm.message = "Henkilölle ei löydy näytettävää verkostoa.";
+                	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
                 	vm.messagecolor = 'red';
                 	return;
             	}
