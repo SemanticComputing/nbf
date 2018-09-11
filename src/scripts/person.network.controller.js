@@ -24,9 +24,15 @@
         vm.elems = {};
         vm.message = "";
         vm.dict = {};
-        vm.chosenNode = null;
+        // vm.chosenNode = null;
         vm.loading = false;
         vm.showlegend = false;
+        
+        //	popover not used above the canvas element
+        vm.popover = false;
+		vm.popx = '200px';
+		vm.popy = '200py';
+		
         
         vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
     		'#990099', '#3B3EAC', '#0099C6', '#DD4477', 
@@ -44,12 +50,12 @@
         };
         
         vm.SIZEOPTIONS = [
-        	{value:'Vakio'},
-        	{value:'Etäisyys'},
-        	{value:'Asteluku'},
-        	{value:'Tuloaste (indegree)'},
-        	{value:'Lähtöaste (outdegree)'},
-        	{value:'Pagerank'}
+        	{value:'Vakio', tooltip:false},
+        	{value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
+        	{value:'Asteluku', tooltip:'Asteluku (degree) tarkoittaa henkilöstä lähtevien ja saapuvien linkkien kokonaismäärää.'},
+        	{value:'Tuloaste', tooltip:'Tuloaste (indegree) tarkoittaa henkilöön saapuvien linkkien lukumäärää.'},
+        	{value:'Lähtöaste', tooltip:'Lähtöaste (outdegree) tarkoittaa henkilöstä lähtevien linkkien lukumäärää.'},
+        	{value:'Pagerank', tooltip:'Pagerank-algoritmi mittaa henkilön keskeisyyttä verkostossa.'}
         	];
         //	tuloaste (indegree)
         vm.sizeoption = vm.SIZEOPTIONS[1];
@@ -126,7 +132,12 @@
             	.update();
         };
         
-        vm.COLOROPTIONS = [{value:'Vakio'},{value:'Sukupuoli'},{value:'Kategoria'},{value:'Etäisyys'}];
+        vm.COLOROPTIONS = [
+        	{value:'Vakio', tooltip:false},
+        	{value:'Sukupuoli', tooltip:'Henkilöt väritetään sukupuolen mukaan.'},
+        	{value:'Toimiala', tooltip:'Henkilöt väritetään tietokannassa ilmoitetun toimialan mukaan.'},
+        	{value:'Etäisyys', tooltip:'Solmujen väri määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'}];
+        
         vm.coloroption = vm.COLOROPTIONS[3];
         
         vm.changecolor = function() {
@@ -219,6 +230,7 @@
             vm.messagecolor = 'blue';
             
             vm.cy = null;
+            vm.personId = $stateParams.personId;
             return personNetworkService.getNodes($stateParams.personId, vm.searchlimit.value)
             .then(function(res) {
             	
@@ -317,15 +329,6 @@
 	        	style: style
 	            });
             
-            var changePerson = function(evt){
-
-            	document.body.style.cursor = "auto";
-            	var id = this.id(),
-            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/henkiloverkosto';
-            	
-            	$location.url(link);
-	          	$scope.$apply();
-	    	}
             /*
             layout: {
 	        		name: 'cose',
@@ -347,16 +350,36 @@
 	        	}
              */
             
-            vm.cy.on('click', 'node', changePerson);
+            vm.cy.on('click', 'node', function(evt){
+
+            	document.body.style.cursor = "auto";
+            	var id = this.id(),
+            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/verkosto';
+            	
+            	$location.url(link);
+	          	$scope.$apply();
+	    	});
             
             // vm.cy.on('drag', 'node', showNodeInfo);
             
             vm.cy.on('mouseover', 'node', function(evt){
-        		document.body.style.cursor = "pointer";
+            	document.body.style.cursor = "pointer";
+        		/*
+        		var x = evt.renderedPosition.x -40,
+        			y = evt.renderedPosition.y -40;
+        		
+        		vm.popx = x + 'px';
+        		vm.popy = y + 'px';
+        		vm.popover = true;
+        		vm.current = this.id();
+        		$scope.$apply();
+        		*/
          	});
         	
             vm.cy.on('mouseout', 'node', function(evt){
-        		document.body.style.cursor = "auto";
+            	document.body.style.cursor = "auto";
+            	/* vm.popover = false;
+        		$scope.$apply(); */
         	});
         	
             vm.changecolor();

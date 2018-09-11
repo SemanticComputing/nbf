@@ -4,7 +4,8 @@
     <div uib-alert ng-if="vm.error">
       {{ vm.error }}
     </div>
-    <div class="container-fluid text-center" >
+    
+    <div class="container-fluid text-center">
       <h1>{{ vm.label }}</h1>
     
     <div class="container-fluid thumbnail">
@@ -16,7 +17,11 @@
 		    	Sivulla näytetään havainnekuva henkilöön liittyvästä verkostosta.
 		    	Linkitys on luotu biografiakuvausten viittausten perusteella.
 		    	</p>
-		    	
+		    	<p>
+		    	Verkoston solmuja voidaan siirtää hiirellä. 
+		    	Solmuja klikkaamalla pääset tarkastelemaan verkostoa valitun henkilön ympärillä.
+		    	Alapuoleisilla valikoilla voidaan säätää verkoston laajuutta ja ulkoasua.
+		    	</p>
 		    	<div class="well well-sm">
 		    		<p style="color:{{vm.messagecolor}};">{{ vm.message }}</p>
 	     			<p>
@@ -24,7 +29,7 @@
 						<select ng-model="vm.searchlimit" 
 								ng-options="item.value for item in vm.LIMITOPTIONS"
 								ng-change="vm.changelimit()">
-				     	</select> linkkiä.
+				     	</select> henkilöä.
 				     </p>
 				     
 	     			<p>
@@ -33,6 +38,8 @@
 								ng-options="item.value for item in vm.SIZEOPTIONS"
 								ng-change="vm.changesize()">
 				     	</select>
+				     	<span ng-if="vm.sizeoption.tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true" style="color:#888;"
+								uib-tooltip="{{vm.sizeoption.tooltip}}" tooltip-placement="right"></span>
 				     </p>
 				     
 				     <p>
@@ -41,6 +48,8 @@
 								ng-options="item.value for item in vm.COLOROPTIONS"
 								ng-change="vm.changecolor()">
 				     	</select>
+				     	<span ng-if="vm.coloroption.tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true" style="color:#888;"
+								uib-tooltip="{{vm.coloroption.tooltip}}" tooltip-placement="right"></span>
 				     </p>
 				</div>
 				
@@ -49,13 +58,17 @@
 		
 		
 		<div class="col-md-8 col-lg-9 text-center thumbnail">
-		
+			
+	    	
+    	
 			<div class="col-sm-12" ng-show="vm.loading">
 	      		<img class="loading-img" src="images/loading-lg.gif"></img>
 	    	</div>
 	    	
    			<div id="personnetworkcontainer"></div>
    			
+   			
+    		
    			<div class="cytolegend">
    				<div class="well well-sm" ng-if="vm.showlegend">
 					<br/>
@@ -64,8 +77,14 @@
 						{{item.label}}
 					</p>
 				</div>
-			</div> 
+			</div>
 			
+			<!-- popover not used here because it prevents the nodes of being dragged
+			<span class="pop-availability personlink" ng-if="vm.popover" ng-style="{'top': vm.popy,'left': vm.popx}"  url="{{ vm.current }}">
+				<img src="images/empty80.png"></img>
+			</span>
+			 -->
+	    	
 	    </div>
 	    
       </div>

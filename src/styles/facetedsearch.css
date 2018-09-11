@@ -258,12 +258,3 @@ iframe {
 	min-height: 600px;
 }
 
-.cytolegend {
-	text-align:left ; 
-	min-width: 200px;
-	top: 10px;
-	right: 10px;
-	position:absolute;
-	z-index:1;
-}
-
