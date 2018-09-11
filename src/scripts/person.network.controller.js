@@ -16,7 +16,7 @@
     .controller('PersonNetworkController', PersonNetworkController);
 
     /* @ngInject */
-    function PersonNetworkController($scope, $location, $state, _, $stateParams, personNetworkService,
+    function PersonNetworkController($scope, $location, $state, _, $stateParams, networkService,
             FacetHandler) {
 
         var vm = this;
@@ -231,7 +231,7 @@
             
             vm.cy = null;
             vm.personId = $stateParams.personId;
-            return personNetworkService.getNodes($stateParams.personId, vm.searchlimit.value)
+            return networkService.getNodes($stateParams.personId, vm.searchlimit.value)
             .then(function(res) {
             	
             	if (res.length<2) {
@@ -248,15 +248,9 @@
             	vm.label = res[0].label;
             	vm.id = $stateParams.personId;
             	
-            	return personNetworkService.getLinks(ids)
+            	return networkService.getLinks(ids)
                 .then(function(edges) {
-
-                	/*	edges: [
-                    { data: { source: 'a', target: 'b' } },
-                    { data: { source: 'c', target: 'b' } },
-                    { data: { source: 'a', target: 'c' } },
-                    { data: { source: 'c', target: 'd' } }
-                    ]*/
+                	
                 	vm.elems.edges = edges.map(function(ob) { return {data: ob};});
                 	
                 	processData(vm);
@@ -329,27 +323,6 @@
 	        	style: style
 	            });
             
-            /*
-            layout: {
-	        		name: 'cose',
-	        		idealEdgeLength: 100,
-	        		nodeOverlap: 20,
-	        		refresh: 20,
-	        		fit: true,
-	        		padding: 30,
-	        		randomize: false,
-	        		componentSpacing: 100,
-	        		nodeRepulsion: 400000,
-	        		edgeElasticity: 100,
-	        		nestingFactor: 5,
-	        		gravity: 80,
-	        		numIter: 1000,
-	        		initialTemp: 200,
-	        		coolingFactor: 0.95,
-	        		minTemp: 1.0
-	        	}
-             */
-            
             vm.cy.on('click', 'node', function(evt){
 
             	document.body.style.cursor = "auto";
@@ -360,7 +333,6 @@
 	          	$scope.$apply();
 	    	});
             
-            // vm.cy.on('drag', 'node', showNodeInfo);
             
             vm.cy.on('mouseover', 'node', function(evt){
             	document.body.style.cursor = "pointer";

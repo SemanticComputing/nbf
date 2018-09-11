@@ -1,7 +1,42 @@
-<h1>Tutki verkostoja</h1>
-<p>
-Aineistosta luotuja verkostoja. 
-Esitykset luodaan alapuoleisissa suodattimissa tehtyjen valintojen perusteella. 
-<br/><span style="color: red">{{ vm.message }}</span>
-<a ui-sref="person.detail({ personId: vm.chosenNode.url })" ng-if="vm.chosenNode">{{ vm.chosenNode.label }}</a>
-</p>
+
+		    	<h1>Tutki ryhmiin liit&shy;tyvää verkostoa</h1>
+		    	<p>
+		    	Sivulla näytetään havainnekuva henkilöön liittyvästä verkostosta.
+		    	Linkitys on luotu biografiakuvausten viittausten perusteella.
+		    	</p>
+		    	<p>
+		    	Verkoston solmuja voidaan siirtää hiirellä. 
+		    	Solmuja klikkaamalla pääset tarkastelemaan verkostoa valitun henkilön ympärillä.
+		    	Alapuoleisilla valikoilla voidaan säätää verkoston laajuutta ja ulkoasua.
+		    	</p>
+		    	<div class="well well-sm">
+		    		<p style="color:{{vm.messagecolor}};">{{ vm.message }}</p>
+	     			<p>
+						Näytä verkostossa korkeintaan 
+						<select ng-model="vm.searchlimit" 
+								ng-options="item.value for item in vm.LIMITOPTIONS"
+								ng-change="vm.changelimit()">
+				     	</select> henkilöä.
+				     </p>
+				     
+	     			<p>
+		     			Solmujen koko: 
+						<select ng-model="vm.sizeoption" 
+								ng-options="item.value for item in vm.SIZEOPTIONS"
+								ng-change="vm.changesize()">
+				     	</select>
+				     	<span ng-if="vm.sizeoption.tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true" style="color:#888;"
+								uib-tooltip="{{vm.sizeoption.tooltip}}" tooltip-placement="right"></span>
+				     </p>
+				     
+				     <p>
+		     			Solmujen väri: 
+						<select ng-model="vm.coloroption" 
+								ng-options="item.value for item in vm.COLOROPTIONS"
+								ng-change="vm.changecolor()">
+				     	</select>
+				     	<span ng-if="vm.coloroption.tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true" style="color:#888;"
+								uib-tooltip="{{vm.coloroption.tooltip}}" tooltip-placement="right"></span>
+				     </p>
+				</div>
+
