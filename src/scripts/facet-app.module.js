@@ -140,7 +140,7 @@
             controllerAs: 'vm',
         })
         .state('maps.comparison', {
-            url: '/vertaa',
+            url: '/vertaatapahtumat',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
@@ -160,13 +160,13 @@
             }
         })
         .state('maps.singleview2', {
-            url: '/liike',
+            url: '/elamat',
             templateUrl: 'views/groupmap/singleview2.html',
-            controller: 'GroupmapController2',
+            controller: 'LifemapController',
             controllerAs: 'vm',
         })
         .state('maps.comparison2', {
-            url: '/vertaaliike',
+            url: '/vertaaelamat',
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
@@ -175,12 +175,12 @@
             views: {
                 'left@maps.comparison2': {
                     templateUrl: 'views/groupmap/comparison2.left.html',
-                    controller: 'GroupmapController2',
+                    controller: 'LifemapController',
                     controllerAs: 'vm',
                 },
                 'right@maps.comparison2': {
                     templateUrl: 'views/groupmap/comparison2.right.html',
-                    controller: 'GroupmapController2',
+                    controller: 'LifemapControllerRight',
                     controllerAs: 'vm',
                 }
             }
@@ -233,7 +233,7 @@
         .state('visu.statistics', {
             url: '/palkit',
             templateUrl: 'views/visu/statistics.html',
-            controller: 'VisuController',
+            controller: 'VisuColumnController',
             controllerAs: 'vm',
         })
         .state('visu.comparison', {
@@ -246,12 +246,12 @@
             views: {
                 'left@visu.comparison': {
                     templateUrl: 'views/visu/comparison.left.html',
-                    controller: 'VisuController',
+                    controller: 'VisuColumnController',
                     controllerAs: 'vm'
                 },
                 'right@visu.comparison': {
                     templateUrl: 'views/visu/comparison.right.html',
-                    controller: 'VisuController',
+                    controller: 'VisuColumnControllerRight',
                     controllerAs: 'vm'
                 }
             }
@@ -264,7 +264,7 @@
         .state('visu.statistics2', {
             url: '/piiraat',
             templateUrl: 'views/visu2/statistics.html',
-            controller: 'VisuController2',
+            controller: 'VisuPieController',
             controllerAs: 'vm',
         })
         .state('visu.comparison2', {
@@ -277,12 +277,12 @@
             views: {
                 'left@visu.comparison2': {
                     templateUrl: 'views/visu2/comparison.left.html',
-                    controller: 'VisuController2',
+                    controller: 'VisuPieController',
                     controllerAs: 'vm',
                 },
                 'right@visu.comparison2': {
                     templateUrl: 'views/visu2/comparison.right.html',
-                    controller: 'VisuController2',
+                    controller: 'VisuPieControllerRight',
                     controllerAs: 'vm',
                 }
             }

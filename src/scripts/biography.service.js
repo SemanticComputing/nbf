@@ -118,6 +118,7 @@
 	        	if (bio.description) bio.description = $sce.trustAsHtml(bio.description);
                 if (bio.source_paragraph) bio.source_paragraph = $sce.trustAsHtml(bio.source_paragraph);
                 if (bio.lead_paragraph) bio.lead_paragraph = $sce.trustAsHtml(bio.lead_paragraph);
+                if (bio.spouse_paragraph) bio.spouse_paragraph = $sce.trustAsHtml(bio.spouse_paragraph);
                 
                 return bio;
             });

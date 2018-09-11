@@ -1,3 +1,4 @@
+// created with script createRightPageController.sh as a copy of file ../scripts/visu.column.controller.js
 /*
  * Semantic faceted search
  *
@@ -12,13 +13,11 @@
     /*
     * Controller for the results view.
     */
-    .controller('VisuController', VisuController);
+    .controller('VisuColumnControllerRight', VisuColumnControllerRight);
 
-    angular.module('facetApp')
-    .controller('VisuControllerX', VisuController);
     
     /* @ngInject */
-    function VisuController($scope, $state, _, google, visuService, FacetHandler, facetUrlStateHandlerService, $uibModal) {
+    function VisuColumnControllerRight($scope, $state, _, google, visuColumnService, FacetHandler, facetUrlStateHandlerService2, $uibModal) {
 
         var vm = this;
         
@@ -54,7 +53,7 @@
         });
         $scope.$on('sf-facet-constraints', updateResults);
         
-        visuService.getFacets().then(function(facets) {
+        visuColumnService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -66,8 +65,8 @@
         }
 
         function getFacetOptions() {
-            var options = visuService.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            var options = visuColumnService.getFacetOptions();
+            options.initialState = facetUrlStateHandlerService2.getFacetValuesFromUrlParams();
             return options;
         }
 
@@ -79,9 +78,9 @@
             }
             
             vm.previousSelections = _.clone(facetSelections.constraint);
-            facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            facetUrlStateHandlerService2.updateUrlParams(facetSelections);
             
-            visuService.getYears(facetSelections).then(function(data) {
+            visuColumnService.getYears(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawYearChart(data, null, 'Henkilöjakauma vuosikymmenittäin', vm.chart_ids[0])
@@ -89,7 +88,7 @@
             	}
             });
             
-            visuService.getAge(facetSelections).then(function(data) {
+            visuColumnService.getAge(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawAgeChart(data, [0,120], 'Elinikä', vm.chart_ids[1], ' vuotta')
@@ -97,7 +96,7 @@
             	}
             });
             
-            visuService.getMarriageAge(facetSelections).then(function(data) {
+            visuColumnService.getMarriageAge(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawAgeChart(data, [0,120], 'Naimisiinmenoikä', vm.chart_ids[2], ' vuotta')
@@ -105,7 +104,7 @@
             	}
             });
 
-            visuService.getFirstChildAge(facetSelections).then(function(data) {
+            visuColumnService.getFirstChildAge(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawAgeChart(data, [0,120], 'Lapsensaanti-ikä', vm.chart_ids[3], ' vuotta')
@@ -113,7 +112,7 @@
             	}
             });
             
-            visuService.getNumberOfChildren(facetSelections).then(function(data) {
+            visuColumnService.getNumberOfChildren(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawAgeChart(data, [0,25], 'Lasten lukumäärä', vm.chart_ids[4], '')
@@ -121,7 +120,7 @@
             	}
             });
             
-            visuService.getNumberOfSpouses(facetSelections).then(function(data) {
+            visuColumnService.getNumberOfSpouses(facetSelections).then(function(data) {
             	if (data.length) {
             		google.charts.setOnLoadCallback(function () {
                         drawAgeChart(data, [0,10], 'Puolisoiden lukumäärä', vm.chart_ids[5], '')
@@ -129,37 +128,6 @@
             	}
             });
             
-            /*
-            this.getYears(facetSelections),
-            this.getAge(facetSelections),
-            this.getMarriageAge(facetSelections), 
-            this.getFirstChildAge(facetSelections),
-            this.getNumberOfChildren(facetSelections),
-            this.getNumberOfSpouses(facetSelections) 
-            
-            return fetchResults(facetSelections).then(function (res) {
-            	google.charts.setOnLoadCallback(function () {
-                    drawYearChart(res[0], null, 'Henkilöjakauma vuosikymmenittäin', vm.chart_ids[0])
-                });
-                google.charts.setOnLoadCallback(function () {
-                    drawAgeChart(res[1], [0,120], 'Elinikä', vm.chart_ids[1], ' vuotta')
-                });
-                google.charts.setOnLoadCallback(function () {
-                    drawAgeChart(res[2], [0,120], 'Naimisiinmenoikä', vm.chart_ids[2], ' vuotta')
-                });
-                google.charts.setOnLoadCallback(function () {
-                    drawAgeChart(res[3], [0,120], 'Lapsensaanti-ikä', vm.chart_ids[3], ' vuotta')
-                });
-                google.charts.setOnLoadCallback(function () {
-                    drawAgeChart(res[4], [0,25], 'Lasten lukumäärä', vm.chart_ids[4], '')
-                });
-                google.charts.setOnLoadCallback(function () {
-                    drawAgeChart(res[5], [0,10], 'Puolisoiden lukumäärä', vm.chart_ids[5], '')
-                });
-
-                return;
-            });
-            */
         }
 
         function drawYearChart(res, range, label, target) {
@@ -328,33 +296,6 @@
         
 
         var latestUpdate;
-        /*
-        function fetchResults(facetSelections) {
-            vm.isLoadingResults = true;
-            vm.error = undefined;
-
-            var updateId = _.uniqueId();
-            latestUpdate = updateId;
-            
-            this.getYears(facetSelections),
-                this.getAge(facetSelections),
-                this.getMarriageAge(facetSelections), 
-                this.getFirstChildAge(facetSelections),
-                this.getNumberOfChildren(facetSelections),
-                this.getNumberOfSpouses(facetSelections) 
-             
-            return visuService.getResults(facetSelections).then(function(res) {
-                if (latestUpdate !== updateId) {
-                    return;
-                }
-                vm.isLoadingResults = false;
-                
-                vm.data = {};
-                return res;
-            }).catch(handleError);
-            
-        }
-		*/
         function handleError(error) {
             vm.isLoadingResults = false;
             vm.error = error;

@@ -40,8 +40,8 @@
         			vm.right ? 'map2':'map',
         			angular.toJson(vm.map)
         		);
-        	};
-        	
+        };
+        
         vm.mapevents= { zoom_changed: mapchange, dragend: mapchange };
         
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
@@ -72,7 +72,6 @@
         
         // read url parameters:
         vm.readUrl = function() {
-        	console.log('read url parameters');
 	        var lc = $location.search(),
 	        	param = vm.right ? 'limit2' : 'limit';
 	        
@@ -97,7 +96,7 @@
 	            }
 	            catch(e) {
 	            	$location.search(param, null);
-	            	console.log('parameter '+param+' cleared')
+	            	// console.log('parameter '+param+' cleared')
 	            }
 	        }
         };
