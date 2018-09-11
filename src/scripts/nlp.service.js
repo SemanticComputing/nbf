@@ -90,6 +90,7 @@
             '  ?word conll:UPOS "<UPOS>" . ' +
             '  ?word conll:LEMMA ?lemma . ' +
             '  FILTER(STRLEN(STR(?lemma))>1) ' +
+            '  FILTER (regex(?lemma, ".*(?<![.])$")) . ' +
             ' } GROUP BY ?lemma ORDER BY DESC(?count) LIMIT 50';
 
 	var lemmaCountQry = prefixes +
