@@ -55,18 +55,18 @@
 
         
         var queryLinks = 
-        	'SELECT distinct * WHERE {    ' +
+        	'SELECT distinct * WHERE { ' +
         	' VALUES ?source { <RESULT_SET> } ' +
         	' VALUES ?target { <RESULT_SET> } ' +
-        	' ?source nbf:references ?target . ' +
+        	' ?source nbf:references ?target .' +
         	' FILTER (?source!=?target) . ' +
         	'} ';
         
         //	NOT TESTED YET, Petri
         var queryLinksForGroup =
         	'SELECT distinct (?id AS ?source) (?id2 AS ?target) ' +
-			'WHERE {    ' +
-			'  { <RESULT_SET> } ' +
+			'WHERE { ' +
+			'  { <RESULT_SET> }' +
 			'  { <RESULT_SET2> } ' +
 			'  ?id nbf:references ?id2 . ' +
 			'} LIMIT <LIMIT> ';
@@ -79,11 +79,11 @@
         	'  GRAPH nbf:links { ' +
         	'    {  VALUES ?id { <RESULT_SET> } ' +
         	'      BIND (0 AS ?level) } ' +
-        	'    UNION  ' +
-        	'    { ?source nbf:references  ?id . BIND (1 AS ?level) } ' +
-        	'    UNION  ' +
+        	'    UNION ' +
+        	'    { ?source nbf:references ?id . BIND (1 AS ?level) } ' +
+        	'    UNION ' +
         	'    { ?id nbf:references ?source . BIND (1 AS ?level) } ' +
-        	'    UNION  ' +
+        	'    UNION ' +
         	'    { ?source nbf:references/nbf:references ?id . BIND (2 AS ?level)} ' +
         	'  } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
@@ -94,13 +94,13 @@
         	'  ?id foaf:focus ?prs .  ' +
         	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
         	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
-        	'}  ' +
+        	'} ' +
         	'GROUP BY ?level ?id ?label ?gender ' +
         	'ORDER BY ?level LIMIT <LIMIT> ';
         
         var queryNodesForPeople =
         	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
-        	'WHERE {    ' +
+        	'WHERE { ' +
         	'  VALUES ?id { <RESULT_SET> } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
@@ -120,7 +120,7 @@
         	'  { <RESULT_SET2> } ' +
         	'  FILTER EXISTS { ?id nbf:references ?id2 }  ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
         	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?label) ' +
         	' ' +
@@ -182,11 +182,8 @@
         }
         
         function getNodesForPeople(ids) {
-        	console.log('getNodesForPeople');
-        	var 
-        		q = prefixes + queryNodesForPeople
+        	var q = prefixes + queryNodesForPeople
         			.replace(/<RESULT_SET>/g, ids);
-        	console.log(q);
         	return endpoint.getObjectsNoGrouping(q);
         }
     }

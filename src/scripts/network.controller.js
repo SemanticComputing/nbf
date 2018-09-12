@@ -41,7 +41,14 @@
     		'#22AA99', '#AAAA11', '#6633CC', '#E67300',
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
-        vm.LIMITOPTIONS = [{value:10},{value:20},{value:50},{value:100},{value:200},{value:500},{value:1000}];
+        vm.LIMITOPTIONS = [{value:10, label:'10'},
+        	{value:20, label:'20'},
+        	{value:50, label:'50'},
+        	{value:100, label:'100'},
+        	{value:200, label:'200'},
+        	{value:500, label:'500'},
+        	{value:1000, label:'1000'},
+        	{value:1e6, label:'ei rajaa'}];
         vm.searchlimit = vm.LIMITOPTIONS[3];
         
         vm.changelimit = function() {
@@ -380,7 +387,7 @@
 	    	      		"width": '20',
 		    			"text-valign": "center",
 		    			"text-halign": "right",
-		    			"content": '  data(label)',
+		    			"content": 'data(label)',
 		    			'background-color': vm.COLORS[0],
                         'color': '#888'
     	            }
@@ -405,7 +412,7 @@
     	        ];
     		
             vm.cy = cytoscape({
-                container: document.getElementById('personnetworkcontainer'),
+                container: document.getElementById('networkcontainer'),
                 elements: vm.elems,
                 wheelSensitivity: 0.2,
 	        	layout: {

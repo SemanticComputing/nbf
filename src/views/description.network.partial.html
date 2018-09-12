@@ -14,7 +14,7 @@
 	     			<p>
 						Näytä verkostossa korkeintaan 
 						<select ng-model="vm.searchlimit" 
-								ng-options="item.value for item in vm.LIMITOPTIONS"
+								ng-options="item.label for item in vm.LIMITOPTIONS"
 								ng-change="vm.changelimit()">
 				     	</select> linkkiä.
 				     </p>

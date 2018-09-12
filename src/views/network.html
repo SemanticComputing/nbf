@@ -1,8 +1,8 @@
 
-<div class="container-fluid">
-  <div class="row">
+<div class="container-fluid" >
+  <div class="row" style="height: 900px; display: flex;">
     <!-- DO NOT REMOVE THIS COMMENT, IT IS A HACK -->
-    <div class="col-md-4 pull-md-4 col-lg-3">
+    <div class="col-md-4 pull-md-4 col-lg-3" style="min-height: 100%; height: 100%; max-height: 100%; overflow-y: auto;" >
       <div ng-include="'views/description.network.partial.html'"></div>
       <div ng-include="'views/mapfacets.partial.html'"></div>
     </div>
@@ -13,8 +13,7 @@
 	      		<img class="loading-img" src="images/loading-lg.gif"></img>
 	    	</div>
 	    	
-   			<div id="personnetworkcontainer"></div>
-   			
+   			<div id="networkcontainer" class="container fill"></div>
    			
    			<div class="cytolegend">
    				<div class="well well-sm" ng-if="vm.showlegend">
