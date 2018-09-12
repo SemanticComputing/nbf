@@ -86,7 +86,9 @@
         	}
         	*/
         	
-        	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com'});
+        	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu'});
+
+        	if (p.genitree) arr.push({url:p.genitree, label:'Geni.com, sukupuu'});
         	
         	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo'});
         	

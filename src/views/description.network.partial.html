@@ -25,7 +25,7 @@
 								ng-options="item.value for item in vm.SIZEOPTIONS"
 								ng-change="vm.changesize()">
 				     	</select>
-				     	<span ng-if="vm.sizeoption.tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true" style="color:#888;"
+				     	<span ng-if="vm.sizeoption.tooltip" class="glyphicon glyphicon-info-sign tooltip-info" 
 								uib-tooltip="{{vm.sizeoption.tooltip}}" tooltip-placement="right"></span>
 				     </p>
 				     
@@ -35,7 +35,7 @@
 								ng-options="item.value for item in vm.COLOROPTIONS"
 								ng-change="vm.changecolor()">
 				     	</select>
-				     	<span ng-if="vm.coloroption.tooltip" class="glyphicon glyphicon-info-sign" aria-hidden="true" style="color:#888;"
+				     	<span ng-if="vm.coloroption.tooltip" class="glyphicon glyphicon-info-sign tooltip-info" 
 								uib-tooltip="{{vm.coloroption.tooltip}}" tooltip-placement="right"></span>
 				     </p>
 				</div>

@@ -23,13 +23,6 @@
         /* Implementation */
 
         var facets = {
-        		/*
-                entryText: {
-                    facetId: 'entryText',
-                    graph: '<http://ldf.fi/nbf/people>',
-                    name: 'Haku',
-                    enabled: true
-                }, */
                 dataset: {
                     facetId: 'dataset',
                     predicate: '<http://purl.org/dc/terms/source>',

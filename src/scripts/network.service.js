@@ -78,7 +78,7 @@
         	'  VALUES ?source { <RESULT_SET> } ' +
         	'  GRAPH nbf:links { ' +
         	'    {  VALUES ?id { <RESULT_SET> } ' +
-        	'      BIND (0 AS ?level) } ' +
+        	'       BIND (0 AS ?level) } ' +
         	'    UNION ' +
         	'    { ?source nbf:references ?id . BIND (1 AS ?level) } ' +
         	'    UNION ' +
@@ -89,7 +89,7 @@
         	'  ?id skosxl:prefLabel ?id__label . ' +
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?label) ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
         	' ' +
         	'  ?id foaf:focus ?prs .  ' +
         	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
@@ -105,7 +105,7 @@
         	'  ?id skosxl:prefLabel ?id__label . ' +
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?label) ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
         	' ' +
         	'  ?id foaf:focus ?prs .  ' +
         	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
@@ -122,7 +122,7 @@
         	'  ?id skosxl:prefLabel ?id__label . ' +
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
         	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?label) ' +
+        	'  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
         	' ' +
         	'  ?id foaf:focus ?prs .  ' +
         	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +

@@ -202,15 +202,6 @@ h1 {
 	margin-top: 0px;
 }
 
-.tooltipped {
-	color: black;
-}
-
-.tooltipped:hover {
-	color: #555;
-	text-decoration: none;
-}
-
 .eventForm label {
 	font-weight: 100;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -218,7 +209,7 @@ h1 {
 
 .chartcontainer {
 	margin-top: -10px;
-	margin-bottom: -50px;
+	margin-bottom: -30px;
 }
 
 .piecontainer {
@@ -231,4 +222,28 @@ iframe {
 	width: 100%;
 	min-height: 600px;
 }
+
+/* headlines 'Lahisukulaiset' etc on page person/detail.html	*/
+.relativeblock {
+	padding:15px 0 12px 0;
+}
+
+.relativeblock h3 {
+	display:inline; padding-right:8px;
+}
+
+/* info marker */
+.relativeblock span, .tooltip-info {
+	aria-hidden:true; 
+	color:#888;
+	tooltip-placement:top;
+	position: relative; 
+	top: -2px;
+}
+
+.relativeblock span:hover, .tooltip-info:hover {
+	color:#00C;
+}
+
+
 

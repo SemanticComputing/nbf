@@ -91,25 +91,24 @@
             controller: 'PersonNetworkController',
             controllerAs: 'vm'
         })
-	.state('person.sentence', {
+        .state('person.sentence', {
             url: '/lauseet',
             templateUrl: 'views/person.sentences.html',
             controller: 'PersonSentencesController',
             controllerAs: 'vm'
-        })
+        }) /*
         .state('place', { //	page not implemented
             url: '/place/:placeId',
             templateUrl: 'views/place.html',
             controller: 'PlaceController',
             controllerAs: 'vm'
-        })
+        }) */ /*
         .state('title', { //	page not implemented
             url: '/title/:titleId',
             templateUrl: 'views/title.html',
             controller: 'TitleController',
             controllerAs: 'vm'
-        })
-        
+        }) */
         .state('search', {
             url: '/haku',
             // abstract: true,

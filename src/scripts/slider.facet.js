@@ -103,9 +103,9 @@
             var defaultConfig = {
                 preferredLang: 'fi'
             };
-
+            
             this.config = angular.extend({}, defaultConfig, options);
-
+            
             this.name = this.config.name;
             this.facetId = this.config.facetId;
             this.predicate = this.config.predicate;

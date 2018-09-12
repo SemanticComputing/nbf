@@ -114,6 +114,7 @@
             endpointUrl: endpointConfig.endpointUrl,
             rdfClass: '<http://ldf.fi/nbf/PersonConcept>',
             constraint: '?id <http://ldf.fi/nbf/ordinal> ?ordinal . ',
+            			// + '[] (<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/^<http://xmlns.com/foaf/0.1/focus> ?id . ',
             preferredLang : 'fi',
             noSelectionString: '-- Ei valintaa --'
         };
