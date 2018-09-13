@@ -84,12 +84,15 @@
         var lemmaQry = prefixes +
             ' SELECT DISTINCT ?lemma (COUNT(?lemma) AS ?count) { ' +
             '  VALUES ?doc { <DOC> } ' +
-            '  ?s nif:structure/<http://ldf.fi/nbf/biography/data#bioId> ?doc . ' +
-            '  ?s a nif:Sentence . ' +
-            '  ?word nif:sentence ?s . ' +
+            '  ?word nif:structure/<http://ldf.fi/nbf/biography/data#docRef> ?doc . ' +
             '  ?word conll:UPOS "<UPOS>" . ' +
             '  ?word conll:LEMMA ?lemma . ' +
-            '  FILTER(STRLEN(STR(?lemma))>1) ' +
+            '  FILTER(STRLEN(STR(?lemma))>2) ' +
+            '  FILTER (regex(?lemma, "^[^\.]*$")) . ' +
+            '  FILTER (regex(?lemma, "^[^\:]*$")) . ' +
+            '  FILTER (regex(?lemma, "^[^\;]*$")) . ' +
+            '  FILTER (regex(?lemma, "^[^\&]*$")) . ' +
+            '  FILTER (regex(?lemma, "^[^\,]*$")) . ' +
             '  FILTER (regex(?lemma, ".*(?<![.])$")) . ' +
             ' } GROUP BY ?lemma ORDER BY DESC(?count) LIMIT 50';
 
@@ -221,7 +224,7 @@
             var self = this;
             var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-                if (results.length > 10000) {
+                if (results.length > 20000) {
                     return $q.reject({
                         statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });
