@@ -3,7 +3,11 @@
 
 <div ng-show="vm.hasResults()" class="col-md-3 col-sm-2" style="width:50%">
   <table class="comparison-results">
-    <caption>Pisimmät tekstit: keskimääräinen sanamäärä toimialan mukaan</caption>
+    <caption>Pisimmät tekstit: keskimääräinen sanamäärä toimialan mukaan
+	<span class="glyphicon glyphicon-info-sign"
+                uib-tooltip="Listalla esitetään toimialoittain keskimääräisesti pisimmät tekstit, jotka on laskettu keskimääräisen sanamäärän perusteella. Keskimääräinen sanamäärä esitetään Sanamäärä-sarakkeessa ja ryhmään kuuluvien biografioiden määrä on LKM-sarakkeessa.">
+          </span>
+	</caption>
     <colgroup>
       <col class="name" />
       <col class="count" />
