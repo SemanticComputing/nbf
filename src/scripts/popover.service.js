@@ -20,7 +20,7 @@
         this.getPopover = getPopover;
         this.getHrefPopover = getHrefPopover;
         this.getPopoverGroup = getPopoverGroup;
-        
+        this.getPlacePopover = getPlacePopover;
         /* Implementation */
 
         var prefixes =
@@ -40,6 +40,7 @@
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        ' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
 
         
@@ -103,7 +104,18 @@
         	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
         	'} ORDER BY UCASE(?fname) ?gname ';
         
-
+        
+    	var queryForPlacePopover =
+    		'SELECT * WHERE { ' +
+	    	'  <RESULT_SET> ' +
+	    	'  ?id skos:prefLabel ?label . ' +
+	    	'  FILTER (lang(?label)="fi") ' +
+	    	'  OPTIONAL { ' +
+	    	'    ?id geo:lat ?latitude . ' +
+	    	'    ?id geo:long ?longitude  ' +
+	    	'  } ' +
+	    	'} LIMIT 1 ';
+    	
         // The SPARQL endpoint URL
         var endpointConfig = {
             'endpointUrl': SPARQL_ENDPOINT_URL,
@@ -118,6 +130,16 @@
         	var qry = prefixes + queryForPopover;
             var constraint = 'VALUES ?id2 { <' + id + '> } . ';
             return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            .then(function(result) {
+            	return result[0];
+            });
+        }
+        
+        function getPlacePopover(id) {
+        	id = id.replace('/www.ldf.fi/', '/ldf.fi/');
+        	var constraint = 'VALUES ?id { <' + id + '> } . ';
+        	var qry = prefixes + queryForPlacePopover.replace('<RESULT_SET>', constraint);
+        	return endpoint.getObjectsNoGrouping(qry)
             .then(function(result) {
             	return result[0];
             });
