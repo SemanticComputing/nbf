@@ -1,0 +1,30 @@
+.ExpressionTime {
+    background: pink;
+}
+.AnonymEntity {
+    background: yellowgreen;
+}
+
+.OrganizationName {
+    background: grey;
+}
+.personlink {
+    background: burlywood;
+}
+.placelink {
+    background: aquamarine;
+}
+.AddressName {
+    background: yellow;
+}
+.PoliticalLocation {
+    background: lavender;
+}
+.GeographicalLocation {
+    background: gold;
+}
+.EducationalOrganization {
+    background: powderblue;
+}
+
+

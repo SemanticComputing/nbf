@@ -37,12 +37,16 @@
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
         
-        var prefixesNLP = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+        var prefixesNLP = 	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+    	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
     	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
     	'PREFIX dct: <http://purl.org/dc/terms/> ' +
     	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
     	'PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> ' +
-    	'PREFIX bd: <http://ldf.fi/nbf/biography/data#> ';
+    	'PREFIX bd: <http://ldf.fi/nbf/biography/data#> ' +
+    	'PREFIX ufal: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
+    	'PREFIX nbfbiodata: <http://ldf.fi/nbf/biography/data#>  ' +
+    	'PREFIX biog: <http://ldf.fi/nbf/biography/> ';
         
         // The query for the results.
         // ?id is bound to the person URI.
@@ -65,33 +69,36 @@
             '} ORDER BY str(?source)';
 
         var queryNLP = 
-        	'SELECT ?word ?x ?y ?z WHERE { ' +
-        	'  	?structure bd:bioId <RESULT_SET> . ' +
-        	'	?s nif:structure ?structure ; ' +
-        	'		rdf:type nif:Sentence ; ' +
-        	'		dct:isPartOf ?paragraph ; ' +
-        	'        nif:order ?seo . ' +
-        	'         ' +
-        	'  	?w nif:sentence ?s ; ' +
-        	'       <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#ID> ?k . ' +
-        	'	?paragraph bd:order ?i . ' +
-        	'    OPTIONAL { ' +
-        	'        ?w <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#WORD> ?word . ' +
-        	'	} OPTIONAL { ' +
-        	'            ?w dct:isPartOf ?ne . ' +
-        	'            ?ne bd:namedEntityType ?type ; ' +
-        	'                nif:isString ?string ; ' +
-        	'                nif:beginIndex ?begin ; ' +
-        	' ' +
-        	'                nif:endIndex ?end . ' +
-        	'            ?ne bd:usedNeMethod ?ned . ' +
-        	'            ?ne bd:primary 1 . ' +
-        	'            ?ned bd:score ?score . ' +
-        	'        } ' +
-        	'      BIND(xsd:integer(?i)-1 AS ?x) ' +
-        	'      BIND(xsd:integer(xsd:decimal(STR(?seo)))-1 AS ?y) ' +
-        	'      BIND(xsd:integer(?k)-1 AS ?z) ' +
-        	'} ORDER BY asc(?x) asc(?y) asc(?z) ';
+        	'SELECT DISTINCT ?x ?y ?z ?word ?ne ?ne__type ?ne__url WHERE { ' +
+        	'  VALUES ?id { <RESULT_SET> } ' +
+        	'  ?struc nbfbiodata:docRef ?id ;  ' +
+        	'  	dct:hasPart ?parag . ' +
+        	'   ' +
+        	'  ?parag nbfbiodata:order ?parag_str . ' +
+        	'  BIND (xsd:integer(xsd:decimal(?parag_str)) AS ?x) ' +
+        	'   ' +
+        	'  ?sent dct:isPartOf ?parag ; ' +
+        	'        nif:order ?sent_str . ' +
+        	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y) ' +
+        	'   ' +
+        	'  ?w nif:sentence ?sent ; ' +
+        	'  	ufal:ID ?w_str . ' +
+        	'  BIND (xsd:integer(?w_str) AS ?z) ' +
+        	'   ' +
+        	'  OPTIONAL { ' +
+        	'    ?sent nbfbiodata:hasNamedEntity ?ne .  ' +
+        	'    ?ne nif:beginIndex ?ne__begin ; ' +
+        	'        nif:endIndex ?ne__end . ' +
+        	'  	FILTER (?ne__begin<=?z && ?z<=?ne__end ) ' +
+        	'     ' +
+        	'    ?ne nbfbiodata:namedEntityType ?ne__typeurl ; ' +
+        	'   		skos:relatedMatch ?ne__url . ' +
+        	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__type) ' +
+        	'  } ' +
+        	'   ' +
+        	'  OPTIONAL { ?w ufal:WORD ?word } ' +
+        	'   ' +
+        	'} ORDER BY ?x ?y ?z ';
         	
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -127,12 +134,29 @@
         function getNlpBio(id) {
             var qry = prefixesNLP + queryNLP;
             var constraint = ' <' + id + '> ';
-
+            
+            var typeclasses =  {
+            		"PersonName": "personlink" ,
+            		"PlaceName": "placelink" ,
+		            "OrganizationName": false ,
+		            "VocationName": false ,
+		            "AnonymEntity": false ,
+		            "AddressName": false ,
+		            "CorporationsName": false ,
+		            "EducationalOrganization": false ,
+		            "ExpressionTime": false ,
+		            "GeographicalLocation": false ,
+		            "PoliticalLocation": false ,
+		            "PoliticalOrganization": false ,
+		            "MediaOrganization": false ,
+		            "CultureOrganization": false };
+            
             return endpoint2.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
             .then(function(res) {
             	
             	var data = [],
             		prev = "",
+            		prev_ob = null,
             		quoted = false;
             	
             	res.forEach(function(ob) {
@@ -145,6 +169,7 @@
             		if (!data[x][y]) {
             			data[x][y] = [];
             			prev="";
+            			prev_ob = null;
             			quoted = false;
             		}
             		
@@ -179,8 +204,23 @@
             		if (RegExp('[({\[]').test(prev)) ob.space = false;
             		
             		
-            		//	test different cases
+            		//	test if has a named entity link:
+            		ob.class = false;
+            		if (ob.ne && ob.ne.type && ob.ne.url) {
+            			if (typeclasses[ob.ne.type]!=false) {
+            				ob[typeclasses[ob.ne.type]] = ob.ne.url;
+            				ob.class = true;
+            				
+            				//	merge following object with same link: 'Lauri'+'Törni'='Lauri Törni'
+            				if (prev_ob && prev_ob[typeclasses[ob.ne.type]] == ob.ne.url) {
+            					prev_ob.word += (ob.space ? ' ' : '')+ob.word; 
+            					prev = (ob.word ? ob.word.slice(-1) : "");
+            					ob = null;
+            				}
+            			}
+            		}
             		
+            		//	test different cases
             		
             		//	todo word="&quot;"
             		
@@ -190,12 +230,14 @@
             		 Lauriksi <UNDEFINED> isä (ajatusviiva)
             		 15. <UNDEFINED> 16.1.1925
             		 */
+            		if (ob) {
+            			data[x][y].push(ob);
             		
-            		data[x][y].push(ob);
-            		
-            		prev= (ob.word ? ob.word.slice(-1) : "");
+            			prev = (ob.word ? ob.word.slice(-1) : "");
+            			prev_ob = ob;
+            		}
             	});
-
+            	
             	return data;
             });
         }
