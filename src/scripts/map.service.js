@@ -103,9 +103,9 @@
         	'   ' +
         	'  OPTIONAL { ' +
         	'    VALUES ?class { "Child"@en "Son"@en "Daughter"@en  } ' +
-        	'  	?relative foaf:focus/^crm:P98_brought_into_life/nbf:place ?place__uri .    	 ' +
-        	'    ?place__uri geo:lat ?place__latitude ;             ' +
-        	'                geo:long ?place__longitude  ;    		 ' +
+        	'  	?relative foaf:focus/^crm:P98_brought_into_life/nbf:place ?place__uri .' +
+        	'    ?place__uri geo:lat ?place__latitude ; ' +
+        	'                geo:long ?place__longitude  ; ' +
         	'                skos:prefLabel ?place__name .  } ' +
         	'  } ' +
         	'} ORDER BY ?time__start DESC(?time__end) ';
@@ -121,14 +121,17 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
         
         function getEvents(id) {
-            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ';
-            return endpoint.getObjects(prefixes + query.replace(/<RESULT_SET>/g, constraint))
+            var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ',
+            	qry = prefixes + query.replace(/<RESULT_SET>/g, constraint);
+            
+            return endpoint.getObjects(qry)
             .then(function(events) {
             	
                 if (events.length) {
                     return events;
                 }
-                return $q.reject('Henkilölle ei ole kartalla näytettäviä tapahtumia.');
+                
+                return $q.reject('Henkilöllä ei ole kartalla näytettäviä tapahtumia.');
             });
         }
         

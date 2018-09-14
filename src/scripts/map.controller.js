@@ -37,7 +37,6 @@
     		event.markers.forEach( function(m) {
         		m.options.icon.strokeWeight = 1;
         		m.options.zIndex -= 100;
-        		
         	});
         };
         
@@ -72,30 +71,18 @@
         	//	for counting all distinct place instances
         	var places = {};
         	
+        	var bounds = new google.maps.LatLngBounds();
+    		
         	events.forEach( function(event) {
         		if (event.place && event.place.uri) {
         			
         			//	convert these properties to arrays
-        			['uri', 'latitude', 'longitude'].forEach( function(prop) { 
+        			['uri', 'latitude', 'longitude', 'name'].forEach( function(prop) { 
         				if (event.place[prop] && (event.place[prop].constructor !== Array)) {
             				event.place[prop] = [event.place[prop]];
             			}
         			} );
         			
-        			/**
-        			if (event.place.latitude.constructor !== Array) {
-        				event.place.latitude = [event.place.latitude];
-        			}
-        			if (event.place.longitude.constructor !== Array) {
-        				event.place.longitude = [event.place.longitude];
-        			}
-        			if (event.place.uri.constructor !== Array) {
-        				event.place.uri = [event.place.uri];
-        			}
-        			**/
-        			
-        			//var keys = event.place.uri;
-        			// if (!(keys.constructor === Array)) keys = [keys];
         			
         			event.place.uri.forEach( function(key) {
 	        			if (!places.hasOwnProperty(key)) {
@@ -191,8 +178,6 @@
 	        			break;
 	        		
 	        		default:
-	        			//console.log(event);
-	        			//console.log(event.class);
 	        			event.y = 5;
 	        			event.class="event";
 	        			category = 1;
@@ -207,9 +192,10 @@
     					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 
     							15.*Math.sqrt(places[event.place.uri[j]]['count']): 
     							15.0 ;
-            			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r);
+            			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r, event.place.name[j]);
     					event.markers.push(m);
     					vm.markers.push(m);
+    					bounds.extend({lat: parseInt(event.place.latitude[j]), lng: parseInt(event.place.longitude[j])});
     				}
         		}
         	});
@@ -226,7 +212,6 @@
         	if (vm.max_time>vm.min_time+150) vm.max_time = vm.min_time+150;
         	if (vm.max_time>current_year) vm.max_time = current_year;
         	
-        	//var bounds = new google.maps.LatLngBounds();
         	
         	// scale the years to get a coordinate on the timeline:
         	// var i=0;
@@ -264,34 +249,49 @@
         		});
         		event.blobs = [];
         	});
-        	// console.log(vm.blobs);
         	
-        	// var map = document.getElementById('ui-gmap-google-map');
-        	// if (map && map.fitBounds) { map.fitBounds(bounds); }
+        	
+        	if (vm.markers.length<1) {
+        		//	no markers on the map
+        		vm.map = { center: { latitude: 64, longitude: 18 }, zoom: 4 };
+        	} else {
+	        	//	check the bounds on the map
+	        	var z = Math.max(bounds.f.b - bounds.b.b, 2*(bounds.f.f - bounds.b.f)), zoom;
+	        	
+	        	if(z<75) zoom = 5;
+	        	else if(z<100) zoom = 4;
+	        	else if(z<125) zoom = 3;
+	        	else zoom = 2;
+	        	
+	        	vm.map.center = {latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng() };
+	        	vm.map.zoom = zoom ;
+        	}
+        	
         	
         	return events;
         }
         
         
         var MARKERID = 1;
-        function generateMarker(lat, lon, id, type, r) {
+        function generateMarker(lat, lon, id, type, r, locname) {
         	if (!r) r=15.0;
         	var ICONCOLORS = {
-    				"death":	"#ff4141",
-    				"birth":	"#777fff",
-    				"spouse":	"#c3b981",
-    				"child":	"#7f6780",
-    				"career":	"#999999",
-    				"product":	"#83d236",
-    				"honour":	"#ce5c00",
-    				"event":	"#999999"
+    				death:	"#ff4141",
+    				birth:	"#777fff",
+    				spouse:	"#c3b981",
+    				child:	"#7f6780",
+    				career:	"#999999",
+    				product:"#83d236",
+    				honour:	"#ce5c00",
+    				event:	"#999999"
     		};
         	
         	var m = {
-        			"latitude": lat,
-        			"longitude": lon,
-        			"id": MARKERID++,
-        			"options": {
+        			latitude: lat,
+        			longitude: lon,
+        			id: MARKERID++,
+
+        			options: {
         				icon:{
 	        				path:"M-"+r+" 0 A "+r+","+r+", 0 ,1, 1,"+r+",0 A"+r+","+r+",0,1,1,-"+r+",0 Z",
 							scale: 1.0,
@@ -303,11 +303,12 @@
 							labelOrigin: new google.maps.Point(0, 0)
 							},
 						zIndex: id,
+	        			title: locname,
 						optimized: false,
 						label: {
 					        text: ''+id,
 					        fontSize: '14px',
-					        fontFamily: '"Courier New", Courier,Monospace',
+					        fontFamily: '"Courier New",Courier,Monospace',
 					        color: 'black'
 					      }
 						}

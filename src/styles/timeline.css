@@ -1,4 +1,5 @@
 .angular-google-map-container { width:100%; height: 900px; }
+.personmap .angular-google-map-container { height: 500px; }
 
 #labelcontainer { min-height: 100%; height: 100%; max-height: 100%; overflow-y: scroll; text-align: left; }
 

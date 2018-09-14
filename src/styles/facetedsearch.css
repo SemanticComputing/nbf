@@ -55,25 +55,29 @@ a.no-style {
 }
 
 .facetsidebar {
-	overflow-y: auto; 
-	-webkit-overflow-scrolling: touch; 
-	position: absolute; 
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	position: absolute;
 	top: 120px;
 	bottom: 0px;
 	left: 0px;
 }
 
-.mapcontent, .chartcontent {
+
+.mapcontent, .chartcontent, .personmapcontent {
 	overflow: hidden;
 	position: absolute;
 	top: 120px;
-	bottom: 0px;
 	right: 0px;
 }
-
+.mapcontent, .chartcontent {
+	bottom:0px;
+}
 .chartcontent {
 	overflow-y: auto;
 }
+
+
 
 @media (max-width: 1297px) {
   .navbar-header {
