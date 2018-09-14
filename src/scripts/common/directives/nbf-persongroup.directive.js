@@ -7,6 +7,8 @@
 			scope: 		{ url: '@' },
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
+				$scope.people = null;
+				
 				popoverService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
 		        	
 		        	data.forEach(function (person, i) {
