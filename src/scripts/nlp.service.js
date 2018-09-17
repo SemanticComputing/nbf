@@ -224,7 +224,7 @@
             var self = this;
             var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-                if (results.length > 20000) {
+                if (results.length > 10000) {
                     return $q.reject({
                         statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });

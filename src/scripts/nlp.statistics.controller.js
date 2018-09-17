@@ -181,35 +181,38 @@
             var updateId = _.uniqueId();
             latestUpdate = updateId;
 
-            nlpService.getStatistics(facetSelections).then(function(results) {
+            return nlpService.getStatistics(facetSelections).then(function(results) {
                 if (latestUpdate !== updateId) {
                     return;
                 }
                 drawChart(results);
-            })
+            }).then(function() {
 
-            nlpService.getLenStatistics(facetSelections).then(function(results) {
+             return nlpService.getLenStatistics(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
 		console.log(results);
                 drawChartLen(results);
                 });
-            nlpService.getResultsTop10(facetSelections).then(function(results) {
+            }).then(function() {
+            return nlpService.getResultsTop10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
                     vm.resultsTop10 = results;
                     vm.isLoadingResults = false;
                 });
-            nlpService.getResultsBottom10(facetSelections).then(function(results) {
+            }).then(function() {
+            return nlpService.getResultsBottom10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
                     vm.resultsBottom10 = results;
                     vm.isLoadingResults = false;
                 });
-            nlpService.getResultsBottomCat(facetSelections).then(function(results) {
+            }).then(function() {
+            return nlpService.getResultsBottomCat(facetSelections).then(function(results) {
 
                     if (latestUpdate !== updateId) {
                         return;
@@ -217,30 +220,33 @@
                     vm.resultsBotCat = results;
                     vm.isLoadingResults = false;
                 });
-            nlpService.getResultsTopCat(facetSelections).then(function(results) {
+            }).then(function() {
+            return nlpService.getResultsTopCat(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
                     vm.resultsTopCat = results;
                     vm.isLoadingResults = false;
                 });
-            nlpService.getWordCount(facetSelections).then(function(results) {
+            }).then(function() {
+            return nlpService.getWordCount(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
                     vm.lemmaCount = results[0];
                     vm.isLoadingResults = false;
 		    console.log(results[0]);
-            //}).then(function() {
                 });
-                nlpService.getResults(facetSelections).then(function(results) {
+            }).then(function() {
+                //});
+            return nlpService.getResults(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
                     vm.results = calculatePercentage(results);
                     vm.isLoadingResults = false;
                 });
-            //}).catch(function(error) { return handleError(error, updateId); });
+            }).catch(function(error) { return handleError(error, updateId); });
         }
 
         function handleError(error, updateId) {
