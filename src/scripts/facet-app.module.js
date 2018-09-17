@@ -204,15 +204,29 @@
             controllerAs: 'vm',
         })
         .state('nlp.comparison', {
-            url: '/vertaa',
+	    url: '/vertaa?facets&facets2',
+	    params: {
+        	facets: null, //angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}'),
+        	facets2: null //angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}')
+            },
+            //url: '/vertaa?facets={"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}&facets2={"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}',
             abstract: true,
             templateUrl: 'views/nlp/comparison.html',
         })
         .state('nlp.comparison.sides', {
-            url: '',
+            url: '?facets&facets2',
+	    params: {
+        	facets: null,//angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}'),
+        	facets2: null//angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}')
+            },
+
             views: {
                 'left@nlp.comparison': {
-                    templateUrl: 'views/nlp/comparison.left.html',
+                params: {
+        	    facets: null// angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}')
+                },
+
+	            templateUrl: 'views/nlp/comparison.left.html',
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',
                 },

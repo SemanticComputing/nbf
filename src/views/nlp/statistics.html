@@ -1,9 +1,14 @@
 <div class="col-md-3 pull-md-3 col-lg-2">
   <div ng-include="'views/description.npl.partial.html'"></div>
+  <div>
       <span><b>Näkymä:</b>
         <a ui-sref-active="active" ui-sref="nlp.statistics">Tilastoja</a> |
-        <a ui-sref-active="active" ui-sref="nlp.comparison.sides">Vertailu</a>
+        <a ui-sref-active="active" ui-sref="nlp.comparison.sides({facets: vm.facetParam1, facets2: vm.facetParam2})">Vertailu</a>
+        <a ui-sref-active="active" class="btn btn-primary"  ui-sref="nlp.comparison.sides({facets: vm.facetParam1Ex1, facets2: vm.facetParam2Ex1})">Vertailu</a>
+        <a ui-sref-active="active" class="btn btn-primary" ui-sref="nlp.comparison.sides({facets: vm.facetParam1Ex2, facets2: vm.facetParam2Ex2})">Vertailu</a>
+        <a ui-sref-active="active" class="btn btn-primary" ui-sref="nlp.comparison.sides({facets: vm.facetParam1Ex3, facets2: vm.facetParam2Ex3})">Vertailu</a>
       </span>
+   </div>
       <br/><br/>
   <!--div ng-include="'views/facets.partial.html'"></div-->
   <div ng-include="'views/mapfacets.partial.html'"></div>
