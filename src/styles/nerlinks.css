@@ -5,8 +5,8 @@
     background: yellowgreen;
 }
 
-.OrganizationName {
-    background: grey;
+.organizationlink {
+    background: lightgrey;
 }
 .personlink {
     background: burlywood;
@@ -14,7 +14,7 @@
 .placelink {
     background: aquamarine;
 }
-.AddressName {
+.vocationlink {
     background: yellow;
 }
 .PoliticalLocation {

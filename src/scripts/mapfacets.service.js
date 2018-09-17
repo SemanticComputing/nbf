@@ -133,7 +133,7 @@
                     name: 'Syntymäpaikka',
                     hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                     depth: 5, 
-                    enabled: true
+                    enabled: false
                 },
                 deathplace: {
                     facetId: 'deathplace',
@@ -141,7 +141,7 @@
                     name: 'Kuolinpaikka',
                     hierarchy: '<http://www.w3.org/2004/02/skos/core#broader>',
                     depth: 5, 
-                    enabled: true
+                    enabled: false
                 },
                 deathYear: {
                     facetId: 'birthYear',

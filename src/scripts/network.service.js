@@ -62,7 +62,6 @@
         	' FILTER (?source!=?target) . ' +
         	'} ';
         
-        //	NOT TESTED YET, Petri
         var queryLinksForGroup =
         	'SELECT distinct (?id AS ?source) (?id2 AS ?target) ' +
 			'WHERE { ' +

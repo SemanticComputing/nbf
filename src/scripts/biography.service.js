@@ -67,38 +67,33 @@
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
             '} ORDER BY str(?source)';
-
+        
         var queryNLP = 
-        	'SELECT DISTINCT ?x ?y ?z ?word ?ne ?ne__type ?ne__url WHERE { ' +
-        	'  VALUES ?id { <RESULT_SET> } ' +
+        	'SELECT DISTINCT ?x ?y ?z ?word  ' +
+        	'	(SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url)  ' +
+        	'WHERE {  ' +
+        	'  VALUES ?id { <RESULT_SET> }  ' +
         	'  ?struc nbfbiodata:docRef ?id ;  ' +
-        	'  	dct:hasPart ?parag . ' +
-        	'   ' +
-        	'  ?parag nbfbiodata:order ?parag_str . ' +
-        	'  BIND (xsd:integer(xsd:decimal(?parag_str)) AS ?x) ' +
-        	'   ' +
-        	'  ?sent dct:isPartOf ?parag ; ' +
-        	'        nif:order ?sent_str . ' +
-        	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y) ' +
-        	'   ' +
-        	'  ?w nif:sentence ?sent ; ' +
-        	'  	ufal:ID ?w_str . ' +
-        	'  BIND (xsd:integer(?w_str) AS ?z) ' +
-        	'   ' +
-        	'  OPTIONAL { ' +
-        	'    ?sent nbfbiodata:hasNamedEntity ?ne .  ' +
-        	'    ?ne nif:beginIndex ?ne__begin ; ' +
+        	'         dct:hasPart ?parag .  ' +
+        	'  ?parag nbfbiodata:order ?parag_str .  ' +
+        	'  BIND (xsd:integer(xsd:decimal(?parag_str)) AS ?x)  ' +
+        	'  ?sent dct:isPartOf ?parag ;  ' +
+        	'        nif:order ?sent_str .  ' +
+        	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y)  ' +
+        	'  ?w nif:sentence ?sent ;  ' +
+        	'     ufal:ID ?w_str .  ' +
+        	'  BIND (xsd:integer(?w_str) AS ?z)  ' +
+        	'  OPTIONAL { ?sent nbfbiodata:hasNamedEntity ?nes . ' +
+        	'    ?nes nif:beginIndex ?ne__begin ;  ' +
         	'        nif:endIndex ?ne__end . ' +
-        	'  	FILTER (?ne__begin<=?z && ?z<=?ne__end ) ' +
-        	'     ' +
-        	'    ?ne nbfbiodata:namedEntityType ?ne__typeurl ; ' +
-        	'   		skos:relatedMatch ?ne__url . ' +
-        	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__type) ' +
+        	'    FILTER (?ne__begin<=?z && ?z<=?ne__end ) ' +
+        	'    ?neg <http://ldf.fi/nbf/biography/data#member> ?nes . ' +
+        	'    ?nes nbfbiodata:namedEntityType ?ne__typeurl ;  ' +
+        	'        skos:relatedMatch ?ne__urls .  ' +
+        	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__types) ' +
         	'  } ' +
-        	'   ' +
         	'  OPTIONAL { ?w ufal:WORD ?word } ' +
-        	'   ' +
-        	'} ORDER BY ?x ?y ?z ';
+        	'} GROUP BY ?x ?y ?z ?word ORDER BY ?x ?y ?z ';
         	
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -132,14 +127,14 @@
         }
         
         function getNlpBio(id) {
-            var qry = prefixesNLP + queryNLP;
-            var constraint = ' <' + id + '> ';
+        	var constraint = ' <' + id + '> ';
+            var qry = prefixesNLP + queryNLP.replace('<RESULT_SET>', constraint);
             
             var typeclasses =  {
             		"PersonName": "personlink" ,
             		"PlaceName": "placelink" ,
-		            "OrganizationName": false ,
-		            "VocationName": false ,
+		            "OrganizationName": "organizationlink" ,
+		            "VocationName": "vocationlink" ,
 		            "AnonymEntity": false ,
 		            "AddressName": false ,
 		            "CorporationsName": false ,
@@ -151,7 +146,7 @@
 		            "MediaOrganization": false ,
 		            "CultureOrganization": false };
             
-            return endpoint2.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+            return endpoint2.getObjectsNoGrouping(qry)
             .then(function(res) {
             	
             	var data = [],
@@ -189,7 +184,9 @@
             			ob.space = quoted;
             		}
             			
-            		if (RegExp("[&']").test(ob.word)) console.log(ob); 
+            		if (RegExp("[&']").test(ob.word)) { 
+            			ob.word = ob.word.replace('&amp;nbsp;', ' ');
+            		}
             		
             		// no space in case –1942 or –VII
             		if (prev=="–" && RegExp('^[0-9IVXLCDM]').test(ob.word)) { ob.space = false; }

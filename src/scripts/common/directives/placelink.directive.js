@@ -23,6 +23,6 @@
 		        });
 		        
 			}],
-			template: '<a uib-popover-template="\'views/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}"><span ng-transclude></span></a>'
+			template: '<span uib-popover-template="\'views/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ><span ng-transclude></span></span>'
 		}});
 })();
