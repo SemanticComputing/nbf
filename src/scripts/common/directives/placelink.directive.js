@@ -11,6 +11,8 @@
 		        if (!$scope.url) return;
 		        $scope.url = ($scope.url).replace('/www.ldf.fi/', '/ldf.fi/');
 		        
+		        // http://www.yso.fi/onto/yso/p94351
+		        // https://finto.fi/yso-paikat/fi/page/p94351
 		        $scope.link = '#!/paikka/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
 		        $scope.image = false;
 		        $scope.lifespan = '';

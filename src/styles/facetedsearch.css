@@ -259,8 +259,6 @@ iframe {
 
 /* info marker */
 .relativeblock span, .tooltip-info {
-	
-	
 	aria-hidden:true; 
 	color:#888;
 	tooltip-placement:top;
@@ -271,6 +269,5 @@ iframe {
 .relativeblock span:hover, .tooltip-info:hover {
 	color:#00C;
 }
-
 
 
