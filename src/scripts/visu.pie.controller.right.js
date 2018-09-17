@@ -25,8 +25,9 @@
 
         // assign random ids to chart div so we can use same controller on comparison page
         vm.chart_ids = [0,1,2,3,4].map(function(i) {
-        	return(''+i+Math.random());
+        	return(_.uniqueId());
         });
+        
         // vm.chart_ids = ['chart_age', 'chart_marriageAge', 'chart_firstChildAge', 'chart_numberOfChildren', 'chart_numberOfSpouses'];
         
         vm.showForm = function () {

@@ -7,9 +7,11 @@
 			scope: 		{ url: '@' },
 			transclude: true,
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
+				
 		        if (!$scope.url) return;
+		        $scope.url = ($scope.url).replace('/www.ldf.fi/', '/ldf.fi/');
 		        
-		        $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
+		        $scope.link = '#!/paikka/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        
@@ -23,6 +25,6 @@
 		        });
 		        
 			}],
-			template: '<span uib-popover-template="\'views/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ><span ng-transclude></span></span>'
+			template: '<a uib-popover-template="\'views/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}"><span ng-transclude></span></a>'
 		}});
 })();

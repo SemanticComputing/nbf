@@ -162,7 +162,7 @@
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
             '  }' +
-            ' }'; 
+            ' }';
         
         //	http://yasgui.org/short/SJL3C8Iv7
         var relativeQuery =

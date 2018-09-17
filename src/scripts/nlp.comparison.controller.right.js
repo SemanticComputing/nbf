@@ -1,14 +1,15 @@
+// created with script createRightPageController.sh as a copy of file ../scripts/nlp.comparison.controller.js
 (function() {
 
     'use strict';
 
     angular.module('facetApp')
 
-    .controller('NlpComparisonController', NlpComparisonController);
+    .controller('NlpComparisonControllerRight', NlpComparisonControllerRight);
 
     /* @ngInject */
-    function NlpComparisonController($log, $scope, $state, _, nlpService, 
-    		FacetHandler, facetUrlStateHandlerService) {
+    function NlpComparisonControllerRight($log, $scope, $state, _, nlpService, 
+    		FacetHandler, facetUrlStateHandlerService2) {
 
         var vm = this;
 
@@ -81,7 +82,7 @@
 
 	function getFacetOptions() {
         var options = nlpService.getFacetOptions();
-        options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+        options.initialState = facetUrlStateHandlerService2.getFacetValuesFromUrlParams();
         return options;
     }
 
@@ -90,7 +91,7 @@
             return;
         }
         vm.previousSelections = _.clone(facetSelections.constraint);
-        facetUrlStateHandlerService.updateUrlParams(facetSelections);
+        facetUrlStateHandlerService2.updateUrlParams(facetSelections);
         return fetchResults(facetSelections);
     }
     

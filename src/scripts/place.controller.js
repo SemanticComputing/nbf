@@ -16,16 +16,16 @@
         
         vm.openPage = openPage;
         
-        init();
         
         function init() {
-        	placeService.getPlace($stateParams.placeId).then(function(events) {
-        		console.log(events);
-        		handleEvents(events, vm);
-        		console.log(vm.place);
+        	placeService.getPlace($stateParams.placeId).then(function(data) {
+        		console.log(data);
+        		vm.place = data[0];
                 return vm.place;
             }).catch(handleError);
         }
+        
+        init();
         
         function handleEvents(events, vm) {
         	var born = [],

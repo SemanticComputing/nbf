@@ -16,7 +16,6 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getPlace = getPlace;
-        
         this.getResults = getResults;
         
         
@@ -31,20 +30,40 @@
         	'PREFIX schema: <http://schema.org/>  ' +
         	'PREFIX skos:  <http://www.w3.org/2004/02/skos/core#>  ' +
         	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>  ' +
-        	'PREFIX	nbf:	<http://ldf.fi/nbf/>  ' +
+        	'PREFIX	nbf: <http://ldf.fi/nbf/>  ' +
         	'PREFIX	categories:	<http://ldf.fi/nbf/categories/>  ' +
-        	'PREFIX	gvp:	<http://vocab.getty.edu/ontology#>	 ' +
-        	'PREFIX crm:   <http://www.cidoc-crm.org/cidoc-crm/>  ' +
+        	'PREFIX	gvp: <http://vocab.getty.edu/ontology#>	 ' +
+        	'PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>  ' +
         	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  ' +
         	'PREFIX dcterms: <http://purl.org/dc/terms/>  ' +
         	'PREFIX foaf: <http://xmlns.com/foaf/0.1/>  ' +
         	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
-        	'PREFIX	relations:	<http://ldf.fi/nbf/relations/> ' +
-        	'PREFIX	sources:	<http://ldf.fi/nbf/sources/> ';
-
+        	'PREFIX	relations: <http://ldf.fi/nbf/relations/> ' +
+        	'PREFIX	sources: <http://ldf.fi/nbf/sources/> ' +
+        	'PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
+        	'PREFIX owl: <http://www.w3.org/2002/07/owl#> ';
+        
+        
+     // The query for the results.
+        var query = 
+    	'SELECT distinct * ' +
+    	'WHERE { ' +
+    	'  { <RESULT_SET> } ' +
+    	'  ?id a nbf:Place ; ' +
+    	'      skos:prefLabel ?label . ' +
+    	'  FILTER (lang(?label)="fi") ' +
+    	'  OPTIONAL { ?id owl:sameAs ?link } ' +
+    	'  OPTIONAL { ?id geo:lat ?coord__lat } ' +
+    	'  OPTIONAL { ?id geo:long ?coord__long } ' +
+    	'  OPTIONAL { ?id skos:altLabel ?alabel } ' +
+    	'  OPTIONAL { ?id nbf:yso ?yso } ' +
+    	'  OPTIONAL { ?id nbf:wikidata ?wikidata } ' +
+    	'  OPTIONAL { ?id skos:broader ?broad } ' +
+    	'  OPTIONAL { ?narrow skos:broader ?id } ' +
+    	'} ';
+        
         // The query for the results.
-        // ?id is bound to the place URI.
-        var query = prefixes +
+        var queryEvents = 
         ' SELECT distinct ?id ?label ?prs__event ?prs__eventLabel ?prs__id ?prs__label ' +
     	' WHERE { ' +
     	'   { <RESULT_SET> } ' +
@@ -75,8 +94,15 @@
         
         function getPlace(id) {
         	var cons = 'VALUES ?id { <' + id + '> } . ',
-        		q = query.replace("<RESULT_SET>", cons);
-        	// console.log(q);
+        		q = prefixes + query.replace("<RESULT_SET>", cons);
+        	var res = endpoint.getObjectsNoGrouping(q);
+        	return res ;
+        	
+        }
+        
+        function getEvents(id) {
+        	var cons = 'VALUES ?id { <' + id + '> } . ',
+        		q = queryEvents.replace("<RESULT_SET>", cons);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         

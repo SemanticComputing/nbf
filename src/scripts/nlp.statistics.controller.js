@@ -15,10 +15,11 @@
     .controller('NlpStatisticsController', NlpStatisticsController);
 
     /* @ngInject */
-    function NlpStatisticsController($log, $scope, $state, _, google, nlpService, FacetHandler, facetUrlStateHandlerService) {
+    function NlpStatisticsController($log, $scope, $state, _, google, nlpService, 
+    		FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
-
+        
         vm.hasResults = hasResults;
         vm.upos = nlpService.upos;
         vm.removeFacetSelections = removeFacetSelections;

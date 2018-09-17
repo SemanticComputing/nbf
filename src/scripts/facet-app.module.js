@@ -96,13 +96,13 @@
             templateUrl: 'views/person.sentences.html',
             controller: 'PersonSentencesController',
             controllerAs: 'vm'
-        }) /*
-        .state('place', { //	page not implemented
-            url: '/place/:placeId',
+        }) 
+        .state('place', { //	
+            url: '/paikka/:placeId',
             templateUrl: 'views/place.html',
             controller: 'PlaceController',
             controllerAs: 'vm'
-        }) */ /*
+        }) /*
         .state('title', { //	page not implemented
             url: '/title/:titleId',
             templateUrl: 'views/title.html',
@@ -218,7 +218,7 @@
                 },
                 'right@nlp.comparison': {
                     templateUrl: 'views/nlp/comparison.right.html',
-                    controller: 'NlpComparisonController',
+                    controller: 'NlpComparisonControllerRight',
                     controllerAs: 'vm',
                 }
             }

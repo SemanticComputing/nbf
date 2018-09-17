@@ -6,5 +6,6 @@ sed 's/\(LifemapController\)/\1Right/g' |
 sed 's/\(GroupmapController\)/\1Right/g' |
 sed 's/\(VisuColumnController\)/\1Right/g' |
 sed 's/\(VisuPieController\)/\1Right/g' |
+sed 's/\(NlpComparisonController\)/\1Right/g' |
 sed 's/\(facetUrlStateHandlerService\)/\12/' |
 sed 's/\(vm.right *= *\)false;/\1true;/' >> $2
