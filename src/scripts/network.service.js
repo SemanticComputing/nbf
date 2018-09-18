@@ -151,6 +151,9 @@
         }
         
         function getNodes(id, limit) {
+        	var regex = /^p[0-9]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
+        	
         	var constraint = '<{}>'.replace('{}',id),
         		q = prefixes + queryNodesForPerson.replace(/<RESULT_SET>/g, constraint).replace("<LIMIT>", ''+limit)
         	return endpoint.getObjectsNoGrouping(q);

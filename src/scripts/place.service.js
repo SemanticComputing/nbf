@@ -57,7 +57,7 @@
     	'  OPTIONAL { ?id owl:sameAs ?googleapi . '+
     	'	FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
     	'  } ' +
-    	'  OPTIONAL { ?id geo:lat ?coord__lat ; geo:long ?coord__long } ' +
+    	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
     	'  OPTIONAL { ?id skos:prefLabel|skos:altLabel ?alabel } ' +
     	'  OPTIONAL { ?id nbf:yso ?yso } ' +
     	'  OPTIONAL { ?id nbf:wikidata ?wikidata } ' +
@@ -66,7 +66,7 @@
     	'} ';
         
         var queryHierarchy =
-        	'SELECT distinct ?id ?level ?label ?coord__lat ?coord__long' +
+        	'SELECT distinct ?id ?level ?label ?lat ?lng ' +
         	'WHERE { ' +
         	'VALUES ?place { <RESULT_SET> } ' +
         	'  { ?place skos:broader+ ?id . ' +
@@ -75,10 +75,10 @@
         	'  UNION ' +
         	'  { ?id skos:broader ?place . ' +
         	'   BIND(-1 AS ?level) ' +
+        	'  	FILTER EXISTS { [] nbf:place ?id } ' +
         	'  } ' +
-        	'  FILTER EXISTS { [] nbf:place ?id } ' +
         	'  FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
-        	'  OPTIONAL { ?id geo:lat ?coord__lat . ?id geo:long ?coord__long } ' +
+        	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
         	'  ?id skos:prefLabel ?label ' +
         	'  FILTER (lang(?label)="fi") ' +
         	'} ORDER BY DESC(?level) ?label  LIMIT 50 ';

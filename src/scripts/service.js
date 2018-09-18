@@ -340,6 +340,10 @@
         }
         
         function getPerson(id) {
+        	
+        	var regex = /^p[0-9]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
+        	
             var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
             

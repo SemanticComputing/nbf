@@ -21,11 +21,11 @@
         	
         	placeService.getPlace($stateParams.placeId).then(function(data) {
         		vm.place = data[0];
-        		setMap();
+        		// setMap();
         		
         		placeService.getHierarchy($stateParams.placeId).then(function(data) {
         			console.log(data);
-        			if (data.length) vm.related = data;
+        			if (data.length) { vm.related = data; setMap(); }
         		}).catch(handleError);
         		
             }).catch(handleError);
@@ -37,30 +37,49 @@
         vm.markers = [];
         
         function setMap() {
-        	if (vm.place && vm.place.coord) {
+        	if (vm.place && vm.place.lat) {
         		
-	        	var lat = vm.place.coord.lat,
-	        		long = vm.place.coord.long;
+	        	var lat = vm.place.lat,
+	        		lng = vm.place.lng;
 	        	
 	        	vm.map = { 
 	        			center: {
 	        				latitude: lat,
-	        				longitude: long },
+	        				longitude: lng },
 	        				zoom: 6};
 	        	
 	        	vm.markers[0] = {
 	        			"latitude": lat,
-	        			"longitude": long,
+	        			"longitude": lng,
 	        			"id": '0',
 	        			"options": {
 	        				icon: {
 	        					scaledSize: new google.maps.Size(60, 60),
 	        					url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
-	        						},
+	        					},
 							optimized: true,
 							title: vm.place.label
 							}
-	        		}
+	        			};
+	        	if (vm.related) {
+	        		vm.related.forEach(function(ob, i) {
+	        			if (ob.lat && parseInt(ob.level)<1) {
+	        				vm.markers.push({
+		    	        			"latitude": ob.lat,
+		    	        			"longitude": ob.lng,
+		    	        			"id": i,
+		    	        			"options": {
+		    	        				icon: {
+		    	        					scaledSize: new google.maps.Size(30, 30),
+		    	        					url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+		    	        					},
+		    							optimized: true,
+		    							title: ob.label
+		    							}
+		    	        			});
+	        			}
+	        		});
+	        	}
         	}
         }
         
