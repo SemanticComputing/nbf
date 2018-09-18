@@ -22,7 +22,7 @@
         vm.facetParam2Ex1 = '{"link":{"value":["\"norssit\""],"constraint":"?id <http://ldf.fi/nbf/norssi> [] ."}}';
         vm.facetParam2Ex2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
         vm.facetParam2Ex3 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
-	console.log("Testing", vm.facetParam2);
+	console.log("Testing p1", vm.facetParam1);
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
 
