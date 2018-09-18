@@ -1,3 +1,8 @@
+.wordpinner{
+ position:absolute;
+ z-index:1;
+}
+
 .comparison-title-setup{
  margin:inherit; 
  display:inline-flex;
@@ -228,6 +233,10 @@ img.logo:hover {
 
 .comparison-results .count {
   width: 25%;
+}
+
+.comparison-result-info {
+  margin-top: 40px;
 }
 
 .comparison-result-error {

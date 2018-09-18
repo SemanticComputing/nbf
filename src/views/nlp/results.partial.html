@@ -1,3 +1,9 @@
+<div class="col-sm-12 wordpinner" class="col-md-3 col-sm-2" ng-show="vm.isLoadingWordResults && !vm.error" >
+<div class="comparison-result-info alert alert-warning" role="alert">
+	HUOM! Tulosten latautuminen voi kestää hetken.
+</div>
+      <img class="loading-img" src="images/loading-lg.gif"></img>
+</div>
 <div ng-show="vm.error" class="comparison-result-error alert alert-danger" role="alert">
   {{ vm.error.statusText }}
 </div>
@@ -6,6 +12,7 @@
                 uib-tooltip="Listalla esitetään yleisimmät sanat biografioista suhteessa kokonaissanamäärään (Kaikki) ja sanaluokan sanamäärään (Sanaluokka). Sanaluokista esitykseen on valittu verbit, adjektiivit, substantiivit, sekä erillisnimet. Biografiajoukosta on filtteröity pois järjestysnumerot ja joitakin mahdollisia virheellisesti luokiteltuja sanoja.">
           </span></h2>
 <div ng-show="vm.hasResults()" class="col-md-3 col-sm-2" ng-repeat="upos in vm.upos">
+
   <table class="comparison-results">
     <colgroup>
       <col class="word" />

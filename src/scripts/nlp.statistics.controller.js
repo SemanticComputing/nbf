@@ -178,6 +178,7 @@
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
+            vm.isLoadingWordResults = true;
             vm.results = [];
             vm.error = undefined;
 
@@ -197,6 +198,7 @@
                     }
 		console.log(results);
                 drawChartLen(results);
+                vm.isLoadingResults = false;
                 });
             }).then(function() {
             return nlpService.getResultsTop10(facetSelections).then(function(results) {
@@ -204,7 +206,7 @@
                         return;
                     }
                     vm.resultsTop10 = results;
-                    vm.isLoadingResults = false;
+                    //vm.isLoadingResults = false;
                 });
             }).then(function() {
             return nlpService.getResultsBottom10(facetSelections).then(function(results) {
@@ -212,7 +214,7 @@
                         return;
                     }
                     vm.resultsBottom10 = results;
-                    vm.isLoadingResults = false;
+                    //vm.isLoadingResults = false;
                 });
             }).then(function() {
             return nlpService.getResultsBottomCat(facetSelections).then(function(results) {
@@ -221,7 +223,7 @@
                         return;
                     }
                     vm.resultsBotCat = results;
-                    vm.isLoadingResults = false;
+                    //vm.isLoadingResults = false;
                 });
             }).then(function() {
             return nlpService.getResultsTopCat(facetSelections).then(function(results) {
@@ -229,7 +231,7 @@
                         return;
                     }
                     vm.resultsTopCat = results;
-                    vm.isLoadingResults = false;
+                    //vm.isLoadingResults = false;
                 });
             }).then(function() {
             return nlpService.getWordCount(facetSelections).then(function(results) {
@@ -237,8 +239,8 @@
                         return;
                     }
                     vm.lemmaCount = results[0];
-                    vm.isLoadingResults = false;
-		    console.log(results[0]);
+                    //vm.isLoadingResults = false;
+		    //console.log(results[0]);
                 });
             }).then(function() {
                 //});
@@ -247,7 +249,7 @@
                         return;
                     }
                     vm.results = calculatePercentage(results);
-                    vm.isLoadingResults = false;
+                    vm.isLoadingWordResults = false;
                 });
             }).catch(function(error) { return handleError(error, updateId); });
         }

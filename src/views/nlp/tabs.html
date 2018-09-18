@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+	    <ul class="nav nav-tabs">
+	      <li ui-sref="nlp.statistics" ui-sref-active="active">
+	        <a href=""><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Kielellisiä tilastoja</a>
+	      </li>
+	      <li ui-sref="nlp.comparison.sides({facets: vm.facetParam1, facets2: vm.facetParam2})" ui-sref-active="active">
+	        <a href=""><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+	        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Vertailu</a>
+	      </li>
+	    </ul>
+	  </div>
+  </div>
+  <div class="row">
+  	<br />
+    <div ui-view></div>
+  </div>
+</div>

@@ -195,7 +195,10 @@
         .state('nlp', {
             url: '/nlp',
             abstract: true,
-            templateUrl: 'views/nlp/nlp.html',
+            //templateUrl: 'views/nlp/nlp.html',
+            templateUrl: 'views/nlp/tabs.html',
+            controller: 'NlpStatisticsController',
+            controllerAs: 'vm',
         })
         .state('nlp.statistics', {
             url: '',
