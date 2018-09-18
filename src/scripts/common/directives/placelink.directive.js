@@ -22,7 +22,7 @@
 		        $scope.url = ($scope.url).replace('/www.ldf.fi/', '/ldf.fi/');
 		        
 		        
-		        $scope.link = '#!/paikka/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
+		        $scope.link = '#!/paikka/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F').replace(new RegExp('%', 'g'), '%25');
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        

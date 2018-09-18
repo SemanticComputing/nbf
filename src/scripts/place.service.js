@@ -17,9 +17,10 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getPlace = getPlace;
+        this.getHierarchy = getHierarchy;
         this.getResults = getResults;
-        // this.getFacets = getFacets;
         this.getFacets = mapfacetService.getFacets;
+        this.getFacetOptions = getFacetOptions;
         /* Implementation */
 
         var prefixes =
@@ -43,25 +44,44 @@
         	'PREFIX	sources: <http://ldf.fi/nbf/sources/> ' +
         	'PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         	'PREFIX owl: <http://www.w3.org/2002/07/owl#> ';
-        
-        
+     
+     
      // The query for the results.
         var query = 
     	'SELECT distinct * ' +
     	'WHERE { ' +
-    	'  { <RESULT_SET> } ' +
+    	'  VALUES ?id { <RESULT_SET> } ' +
     	'  ?id a nbf:Place ; ' +
     	'      skos:prefLabel ?label . ' +
     	'  FILTER (lang(?label)="fi") ' +
-    	'  OPTIONAL { ?id owl:sameAs ?link } ' +
-    	'  OPTIONAL { ?id geo:lat ?coord__lat } ' +
-    	'  OPTIONAL { ?id geo:long ?coord__long } ' +
-    	'  OPTIONAL { ?id skos:altLabel ?alabel } ' +
+    	'  OPTIONAL { ?id owl:sameAs ?googleapi . '+
+    	'	FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
+    	'  } ' +
+    	'  OPTIONAL { ?id geo:lat ?coord__lat ; geo:long ?coord__long } ' +
+    	'  OPTIONAL { ?id skos:prefLabel|skos:altLabel ?alabel } ' +
     	'  OPTIONAL { ?id nbf:yso ?yso } ' +
     	'  OPTIONAL { ?id nbf:wikidata ?wikidata } ' +
-    	'  OPTIONAL { ?id skos:broader ?broad } ' +
-    	'  OPTIONAL { ?narrow skos:broader ?id } ' +
+    	//'  OPTIONAL { ?id skos:broader ?broad } ' +
+    	//'  OPTIONAL { ?narrow skos:broader ?id } ' +
     	'} ';
+        
+        var queryHierarchy =
+        	'SELECT distinct ?id ?level ?label ?coord__lat ?coord__long' +
+        	'WHERE { ' +
+        	'VALUES ?place { <RESULT_SET> } ' +
+        	'  { ?place skos:broader+ ?id . ' +
+        	'    BIND(1 AS ?level) ' +
+        	'  } ' +
+        	'  UNION ' +
+        	'  { ?id skos:broader ?place . ' +
+        	'   BIND(-1 AS ?level) ' +
+        	'  } ' +
+        	'  FILTER EXISTS { [] nbf:place ?id } ' +
+        	'  FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
+        	'  OPTIONAL { ?id geo:lat ?coord__lat . ?id geo:long ?coord__long } ' +
+        	'  ?id skos:prefLabel ?label ' +
+        	'  FILTER (lang(?label)="fi") ' +
+        	'} ORDER BY DESC(?level) ?label  LIMIT 50 ';
         
         // The query for the results.
         var queryEvents = 
@@ -94,16 +114,18 @@
         var endpoint = new AdvancedSparqlService(endpointUrl, objectMapperService);
         
         function getPlace(id) {
-        	var cons = 'VALUES ?id { <' + id + '> } . ',
-        		q = prefixes + query.replace("<RESULT_SET>", cons);
-        	var res = endpoint.getObjectsNoGrouping(q);
-        	return res ;
-        	
+        	var q = prefixes + query.replace("RESULT_SET", id);
+        	return endpoint.getObjects(q);
+        }
+        
+        function getHierarchy(id) {
+        	var q = prefixes + queryHierarchy.replace("RESULT_SET", id);
+        	console.log(id,q);
+	    	return endpoint.getObjectsNoGrouping(q);
         }
         
         function getEvents(id) {
-        	var cons = 'VALUES ?id { <' + id + '> } . ',
-        		q = queryEvents.replace("<RESULT_SET>", cons);
+        	var q = queryEvents.replace("RESULT_SET", id);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         

@@ -184,7 +184,7 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getFacets() {
+        function getFacetsOLD() {
             var facetsCopy = angular.copy(facets);
             return $q.when(facetsCopy);
         }

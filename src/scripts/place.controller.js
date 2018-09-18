@@ -10,22 +10,61 @@
     .controller('PlaceController', PlaceController);
 
     /* @ngInject */
-    function PlaceController($stateParams, $uibModal, _, placeService,
-    		FacetHandler, facetUrlStateHandlerService) {
+    function PlaceController($stateParams, $uibModal, _, $location, $scope,
+    		placeService, FacetHandler, facetUrlStateHandlerService) {
     	
         var vm = this;
         
         // vm.openPage = openPage;
         
         function init() {
+        	
         	placeService.getPlace($stateParams.placeId).then(function(data) {
-        		console.log(data);
         		vm.place = data[0];
-                return vm.place;
+        		setMap();
+        		
+        		placeService.getHierarchy($stateParams.placeId).then(function(data) {
+        			console.log(data);
+        			if (data.length) vm.related = data;
+        		}).catch(handleError);
+        		
             }).catch(handleError);
         }
         
         init();
+        
+        vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
+        vm.markers = [];
+        
+        function setMap() {
+        	if (vm.place && vm.place.coord) {
+        		
+	        	var lat = vm.place.coord.lat,
+	        		long = vm.place.coord.long;
+	        	
+	        	vm.map = { 
+	        			center: {
+	        				latitude: lat,
+	        				longitude: long },
+	        				zoom: 6};
+	        	
+	        	vm.markers[0] = {
+	        			"latitude": lat,
+	        			"longitude": long,
+	        			"id": '0',
+	        			"options": {
+	        				icon: {
+	        					scaledSize: new google.maps.Size(60, 60),
+	        					url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+	        						},
+							optimized: true,
+							title: vm.place.label
+							}
+	        		}
+        	}
+        }
+        
+        
         
         placeService.getFacets().then(function(facets) {
             vm.facets = facets;
@@ -33,6 +72,13 @@
             vm.facetOptions.scope = $scope;
             vm.handler = new FacetHandler(vm.facetOptions);
         });
+        
+        function getFacetOptions() {
+        	vm.readUrl();
+            var options = placeService.getFacetOptions();
+            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            return options;
+        }
         
         function handleEvents(events, vm) {
         	var born = [],
@@ -76,5 +122,36 @@
             vm.isLoadingResults = false;
             vm.error = error;
         }
+        
+        // read url parameters:
+        vm.readUrl = function() {
+	        var lc = $location.search(),
+	        	param = vm.right ? 'limit2' : 'limit';
+	        /*
+	        if (lc[param]) {
+	        	var lim = parseInt(lc[param]);
+	        	vm.LIMITOPTIONS.forEach(function(ob, i) {
+	        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
+	        	});
+	        }
+	        
+	        param = vm.right ? 'events2' : 'events';
+	        if (lc[param]) {
+	        	(lc[param].split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x!="0"); });
+	        }
+	        */
+	        //	Update map view from url parameters
+	        param = vm.right ? 'map2' : 'map';
+	        if (lc[param]) {
+	        	try {
+	                var map = angular.fromJson(lc[param]);
+	                vm.map = map; 
+	            }
+	            catch(e) {
+	            	$location.search(param, null);
+	            	// console.log('parameter '+param+' cleared')
+	            }
+	        }
+        };
     }
 })();
