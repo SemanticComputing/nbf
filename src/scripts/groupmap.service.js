@@ -8,7 +8,8 @@
     .service('groupmapService', groupmapService);
 
     /* @ngInject */
-    function groupmapService($q, $location, _, FacetResultHandler, SPARQL_ENDPOINT_URL, mapfacetService,
+    function groupmapService($q, $location, _, FacetResultHandler, 
+    		SPARQL_ENDPOINT_URL, mapfacetService,
             AdvancedSparqlService, personMapperService) {
 
         /* Public API */

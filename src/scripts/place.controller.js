@@ -10,12 +10,12 @@
     .controller('PlaceController', PlaceController);
 
     /* @ngInject */
-    function PlaceController($stateParams, $uibModal, _, placeService) {
+    function PlaceController($stateParams, $uibModal, _, placeService,
+    		FacetHandler, facetUrlStateHandlerService) {
     	
         var vm = this;
         
-        vm.openPage = openPage;
-        
+        // vm.openPage = openPage;
         
         function init() {
         	placeService.getPlace($stateParams.placeId).then(function(data) {
@@ -26,6 +26,13 @@
         }
         
         init();
+        
+        placeService.getFacets().then(function(facets) {
+            vm.facets = facets;
+            vm.facetOptions = getFacetOptions();
+            vm.facetOptions.scope = $scope;
+            vm.handler = new FacetHandler(vm.facetOptions);
+        });
         
         function handleEvents(events, vm) {
         	var born = [],

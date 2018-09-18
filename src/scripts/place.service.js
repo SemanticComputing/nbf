@@ -9,7 +9,8 @@
 
     /* @ngInject */
     function placeService($q, $location, _, AdvancedSparqlService,
-    		FacetResultHandler, objectMapperService, SPARQL_ENDPOINT_URL) {
+    		FacetResultHandler, objectMapperService, mapfacetService, 
+    		SPARQL_ENDPOINT_URL) {
 
         /* Public API */
 
@@ -17,8 +18,8 @@
         // Return a promise.
         this.getPlace = getPlace;
         this.getResults = getResults;
-        
-        
+        // this.getFacets = getFacets;
+        this.getFacets = mapfacetService.getFacets;
         /* Implementation */
 
         var prefixes =
@@ -114,7 +115,7 @@
         	return $q.all(promises);
         }
         
-        /**
+        
         function getFacets() {
             var facetsCopy = angular.copy(facets);
             return $q.when(facetsCopy);
@@ -123,6 +124,6 @@
         function getFacetOptions() {
             return facetOptions;
         }
-		*/
+		
     }
 })();
