@@ -212,11 +212,18 @@ img.logo:hover {
 .comparison-results {
   width: 100%;
   table-layout: fixed;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .comparison-results td {
   word-wrap: break-word;
+  font-size: 14px;
 }
+.comparison-results th {
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
 
 .comparison-results tr {
   border-bottom-style: dashed;

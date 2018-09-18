@@ -1,3 +1,4 @@
+docs/*
 .tmp/
 bower_components/
 node_modules/
