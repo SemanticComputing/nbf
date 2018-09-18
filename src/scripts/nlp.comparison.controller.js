@@ -13,6 +13,8 @@
         var vm = this;
 
         vm.hasResults = hasResults;
+
+	// Setup parameters for example queries to be rendered to json later. Make sure json is valid: https://jsonlint.com/
         vm.facetParam1 ='{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
 	vm.facetParam1Ex1 = '{"link":{"value":["yo1853"],"constraint":"?id <http://ldf.fi/nbf/yo1853> [] ."}}';
 	vm.facetParam1Ex2 = '{"slider":{"value":{"min":200,"max":2020},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_89 . FILTER (200<=year(?slider_89) && year(?slider_89)<=2020) "},"category":{"value":"kirjallisuus@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>/<http://www.w3.org/2004/02/skos/core#prefLabel> \"kirjallisuus\"@fi . "}}';
@@ -23,9 +25,7 @@
         vm.facetParam2Ex2 = '{"slider":{"value":{"min":200,"max":2020},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_76 . FILTER (200<=year(?slider_76) && year(?slider_76)<=2020) "},"category":{"value":"kuvataiteet, valokuvaus@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>/<http://www.w3.org/2004/02/skos/core#prefLabel> \"kuvataiteet, valokuvaus\"@fi . "}}';
         vm.facetParam2Ex3 = '{"slider":{"value":{"min":1800,"max":1900},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_89 . FILTER (1800<=year(?slider_89) && year(?slider_89)<=1900) "},"gender":{"value":"\"nainen\"@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli> \"nainen\"@fi . "}}';
         vm.facetParam2Ex4 = '{"place":{"value":"<http://ldf.fi/nbf/places/Ven%C3%A4j%C3%A4>","constraint":" ?seco_v_place (<http://www.w3.org/2004/02/skos/core#broader>)* <http://ldf.fi/nbf/places/Ven%C3%A4j%C3%A4> .  ?id <http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/<http://ldf.fi/nbf/place> ?seco_v_place . "}}';
-	console.log("Testing p1", vm.facetParam1);
-	console.log("Testing p1 EX1", vm.facetParam1Ex1);
-	console.log("Testing p2 EX1", vm.facetParam2Ex1);
+
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
 

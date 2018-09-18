@@ -206,33 +206,19 @@
         .state('nlp.comparison', {
 	    url: '/vertaa?facets&facets2',
 	    params: {
-        	facets: null, //angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}'),
-        	facets2: null //angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}')
+        	facets: null, 
+        	facets2: null 
             },
             abstract: true,
             templateUrl: 'views/nlp/comparison.html',
         })
         .state('nlp.comparison.sides', {
-            //url: '?facets&facets2',
             url: '',
-	    //params: {
-        	//facets: null,//angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}'),
-        	//facets2: null//angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}')
-            //},
-
             views: {
                 'left@nlp.comparison': {
-                    //params: {
-        	//	facets: null// angular.toJson('{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}')
-                  //  },
 	            templateUrl: 'views/nlp/comparison.left.html',
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',
-                },
-                'buttons@nlp.comparison': {
-                	templateUrl: 'views/description.npl.comparison.partial.html',
-                    controller: 'NlpComparisonController',
-                    controllerAs: 'vm'
                 },
                 'right@nlp.comparison': {
                     templateUrl: 'views/nlp/comparison.right.html',
