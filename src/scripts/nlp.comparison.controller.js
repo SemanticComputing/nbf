@@ -13,16 +13,17 @@
         var vm = this;
 
         vm.hasResults = hasResults;
-        vm.facetParam1 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
+        vm.facetParam1 ='{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
 	vm.facetParam1Ex1 = '{"link":{"value":["\"yo1853\""],"constraint":"?id <http://ldf.fi/nbf/yo1853> [] ."}}';
         vm.facetParam1Ex2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
         vm.facetParam1Ex3 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
-        vm.facetParam1 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
-        vm.facetParam2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
+        vm.facetParam2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}';
         vm.facetParam2Ex1 = '{"link":{"value":["\"norssit\""],"constraint":"?id <http://ldf.fi/nbf/norssi> [] ."}}';
         vm.facetParam2Ex2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
         vm.facetParam2Ex3 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
 	console.log("Testing p1", vm.facetParam1);
+	console.log("Testing p1 EX1", vm.facetParam1Ex1);
+	console.log("Testing p2 EX1", vm.facetParam2Ex1);
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
 

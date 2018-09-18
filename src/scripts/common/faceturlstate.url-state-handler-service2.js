@@ -80,7 +80,7 @@
             catch(e) {
                 // $location.search('facets', null);
             	$location.search(this.urlparameter, null);
-            	
+            	console.log("Error handling params: cannot transform to JSON format", params)	
                 return res; 
             }
             //console.log(params);
