@@ -228,6 +228,11 @@
                     controller: 'NlpComparisonController',
                     controllerAs: 'vm',
                 },
+                'buttons@nlp.comparison': {
+                	templateUrl: 'views/description.npl.comparison.partial.html',
+                    controller: 'NlpComparisonController',
+                    controllerAs: 'vm'
+                },
                 'right@nlp.comparison': {
                     templateUrl: 'views/nlp/comparison.right.html',
                     controller: 'NlpComparisonControllerRight',
