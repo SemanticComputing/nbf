@@ -1,3 +1,20 @@
+.comparison-title-setup{
+ margin:inherit; 
+ display:inline-flex;
+}
+
+.comparison-title-desc{
+ width:20%;
+}
+
+.comparison-title-space{
+ width:5%
+}
+
+.comparison-title-examples{
+ width:85%
+}
+
 .list-row {
 margin: auto;
 width: 75%;
