@@ -13,10 +13,6 @@
 
         var vm = this;
 
-	vm.facetParam1="höpö";
-	vm.facetParam2Ex1="pöpö";
-	vm.facetParam2="pöpö";
-	vm.facetParam2Ex1="pöpö";
         vm.hasResults = hasResults;
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
