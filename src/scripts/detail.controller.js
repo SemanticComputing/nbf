@@ -86,6 +86,8 @@
         		if (p.fennica.length>1) arr.push({url:p.fennica[1], label:"Fennica (2)"});
         	}
         	*/
+        	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
+        	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu', tab:'genikotisivu'});
 
@@ -93,9 +95,7 @@
         	
         	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo', tab:'kirjasampo'});
         	
-        	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	
-        	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	
         	if (p.norssi) arr.push({url:'https://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit", tab:'norssit'});
         	
