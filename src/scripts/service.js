@@ -336,7 +336,9 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
         function getResults(facetSelections) {
-            return resultHandler.getResults(facetSelections, getSortBy());
+        	var res = resultHandler.getResults(facetSelections, getSortBy());
+        	console.log(res);
+            return res;
         }
         
         function getPerson(id) {

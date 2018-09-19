@@ -10,7 +10,7 @@
     .controller('DetailController', DetailController);
 
     /* @ngInject */
-    function DetailController($stateParams, $uibModal, _, nbfService, $sce) {
+    function DetailController($location, $stateParams, $uibModal, _, nbfService, $sce) {
     	
         var vm = this;
         
@@ -20,6 +20,7 @@
         
         vm.setTab = function(newTab) {
         	vm.tab = newTab;
+        	$location.search('tab', newTab);
         };
         
         vm.isSet = function(tabNum){
@@ -86,23 +87,26 @@
         	}
         	*/
         	
-        	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu'});
+        	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu', tab:'genikotisivu'});
 
-        	if (p.genitree) arr.push({url:p.genitree, label:'Geni.com, sukupuu'});
+        	if (p.genitree) arr.push({url:p.genitree, label:'Geni.com, sukupuu', tab:'genisukupuu'});
         	
-        	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo'});
+        	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo', tab:'kirjasampo'});
         	
         	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	
         	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	
-        	if (p.norssi) arr.push({url:'https://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit"});
+        	if (p.norssi) arr.push({url:'https://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit", tab:'norssit'});
         	
-        	if (p.warsampo) arr.push({url:'https://www.sotasampo.fi/fi/persons/?uri='+p.warsampo, label:"Sotasampo"});
+        	if (p.warsampo) arr.push({url:'https://www.sotasampo.fi/fi/persons/?uri='+p.warsampo, label:"Sotasampo", tab:'warsampo'});
         	
-        	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia"});
+        	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia", tab:'wikipedia'});
         	
-        	if (p.yo1853) arr.push({url:'https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id='+p.yo1853, label:"Ylioppilasmatrikkeli 1853–1899"});
+        	if (p.yo1853) arr.push({
+        		url:'https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id='+p.yo1853, 
+        		label:"Ylioppilasmatrikkeli 1853–1899", 
+        		tab:'yo1853'});
         	
         	arr = arr.map(function(ob) {
         		ob.url = ob.url.replace(/^http[s]*:/,'');
