@@ -21,17 +21,25 @@
         	
         	placeService.getPlace($stateParams.placeId).then(function(data) {
         		vm.place = data[0];
-        		// setMap();
         		
         		placeService.getHierarchy($stateParams.placeId).then(function(data) {
-        			console.log(data);
         			if (data.length) { vm.related = data; setMap(); }
+        		}).catch(handleError);
+        		
+        		placeService.getEvents($stateParams.placeId).then(function(data) {
+        			data.forEach(function (ob) {
+        				vm[ob.class] = {people: ob.prslist, count: ob.count};
+        			});
         		}).catch(handleError);
         		
             }).catch(handleError);
         }
         
         init();
+        
+        vm.currentPage = 1;
+        vm.numPerPage = 14;
+        vm.maxSize = 5;
         
         vm.map = { center: { latitude: 62, longitude: 24 }, zoom: 6 };
         vm.markers = [];
@@ -61,26 +69,36 @@
 							title: vm.place.label
 							}
 	        			};
-	        	if (vm.related) {
-	        		vm.related.forEach(function(ob, i) {
-	        			if (ob.lat && parseInt(ob.level)<1) {
-	        				vm.markers.push({
-		    	        			"latitude": ob.lat,
-		    	        			"longitude": ob.lng,
-		    	        			"id": i,
-		    	        			"options": {
-		    	        				icon: {
-		    	        					scaledSize: new google.maps.Size(30, 30),
-		    	        					url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-		    	        					},
-		    							optimized: true,
-		    							title: ob.label
-		    							}
-		    	        			});
-	        			}
-	        		});
-	        	}
         	}
+        	
+        	if (vm.related) {
+        		
+        		vm.related.forEach(function(ob, i) {
+        			if (ob.lat && parseInt(ob.level)<1) {
+        				vm.markers.push({
+	    	        			"latitude": ob.lat,
+	    	        			"longitude": ob.lng,
+	    	        			"id": i,
+	    	        			"options": {
+	    	        				icon: {
+	    	        					scaledSize: new google.maps.Size(30, 30),
+	    	        					url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+	    	        					},
+	    							optimized: true,
+	    							title: ob.label
+	    							}
+	    	        			});
+        			}
+        		});
+        		
+        		$scope.$watch('vm.currentPage + numPerPage', function() {
+                    var begin = ((vm.currentPage - 1) * vm.numPerPage)
+                    , end = begin + vm.numPerPage;
+                    vm.filteredRelated = vm.related.slice(begin, end);
+                });
+        		
+        	}
+        	
         }
         
         
@@ -168,7 +186,6 @@
 	            }
 	            catch(e) {
 	            	$location.search(param, null);
-	            	// console.log('parameter '+param+' cleared')
 	            }
 	        }
         };

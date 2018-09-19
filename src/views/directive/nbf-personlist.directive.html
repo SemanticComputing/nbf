@@ -1,0 +1,23 @@
+<img ng-if="!data" class="loading-img" src="images/loading-lg.gif"></img>
+
+<div class="col-sm-6" ng-repeat="person in filteredData">
+	<a uib-popover-template="'views/persongroupTooltipTemplate.html'" 
+		popover-trigger="'mouseenter'"
+		ng-href="{{ person.link }}">
+		<p class="personlist">{{ person.label }}</p>
+	</a>
+</div>
+
+<ul uib-pagination ng_show="show"
+     ng-model="currentPage"
+     total-items="data.length"
+	 items-per-page="numPerPage"
+     max-size="maxSize"
+     boundary-links="true"
+     first-text="<<"
+     previous-text="<"
+     next-text=">"
+     last-text=">>">
+</ul>
+
+<span ng_show="!show" style="color:white;">.</span>

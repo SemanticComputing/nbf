@@ -1,19 +1,17 @@
 (function() {
     'use strict';
 	angular.module('facetApp')
-	.directive('nbfPersongroup', function() {
+	.directive('nbfPersonlist', function() {
 		return {
 			restrict: 	'AE',
 			scope: 		{ url: '@' },
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
-				$scope.people = null;
-				// console.log(($scope.url).constructor, ($scope.url).constructor === Array, $scope.url);
+				$scope.data = null;
 				
 				popoverService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
 		        	
 		        	data.forEach(function (person, i) {
-		        		// person.link = '#!/'+ (person.id).replace(new RegExp('/', 'g'), '~2F');
 		        		person.link = '#!/'+ (person.id).replace(/^.+?(p[0-9]+)$/, '$1');
 				        
 		        		//	(0800-0900) -> (800-900)
@@ -23,10 +21,22 @@
 		        		
 		        		person.placement = i>7 ? "top" : "bottom";
 		        	});
-		        	$scope.people = data;
 		        	
+		        	$scope.data = data;
+		        	$scope.currentPage = 1;
+        			$scope.numPerPage = 14;
+        			$scope.maxSize = 5;
+        			$scope.show = data.length>$scope.numPerPage;
+        			
+        			if ($scope.show) {
+			        	$scope.$watch('currentPage + numPerPage', function() {
+		                    var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+		                    , end = begin + $scope.numPerPage;
+		                    $scope.filteredData = $scope.data.slice(begin, end);
+		                });
+		            } else $scope.filteredData = $scope.data;
 		        });
 			}],
-			templateUrl: 'views/directive/nbf-persongroup.directive.html'
+			templateUrl: 'views/directive/nbf-personlist.directive.html'
 		}});
 })();

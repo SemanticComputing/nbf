@@ -199,7 +199,6 @@
 	    		uib-tooltip="Henkilöt on määritelty samankaltaisiksi vertaamalla laskennallisesti heidän biografiakuvauksien sanastoa.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.similar"> 
       	<nbf-person url="{{ person.prs }}"></nbf-person>
       </div>
@@ -213,7 +212,6 @@
 	    		uib-tooltip="Henkilöitä joiden biografioista viitataan tälle sivulle.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.referenced" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.referenced">
       	<nbf-person url="{{ person.id.url }}"></nbf-person>
       </div>
@@ -226,7 +224,6 @@
 	    		uib-tooltip="Tutustu biografiakuvauksen laatijoihin.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.authors" class="loading-img" src="images/loading-lg.gif"></img>
       <div class="col-sm-6" ng-repeat="person in vm.person.authors">
       	<nbf-person url="{{ person.author.url }}"></nbf-person>
       </div>

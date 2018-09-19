@@ -19,12 +19,12 @@
         init();
         
         vm.setTab = function(newTab) {
-        	vm.tab = newTab;
+        	vm.tab = ''+newTab;
         	$location.search('tab', newTab);
         };
         
         vm.isSet = function(tabNum){
-            return vm.tab === tabNum;
+            return vm.tab === ''+tabNum;
         };
         
         
@@ -37,7 +37,12 @@
                 nbfService.getBios(vm.person.id).then(function(data) {
                 	if (data.length) {
                 		vm.person.bios = data;
-                		vm.setTab(0);
+                		
+                		var lc = $location.search();
+                		if (lc && lc.tab) {
+                			vm.setTab(lc.tab);
+                		} else vm.setTab(0);
+                		
                 	}
                 });
                 
