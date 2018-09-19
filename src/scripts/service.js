@@ -26,17 +26,19 @@
         this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
         this.getSortClass = getSortClass;
-        // Get the details of a single person.
-        this.getPerson = getPerson;
-        this.getRelatives = getRelatives;
-        this.getSimilar = getSimilar;
+        
         this.getAuthors = getAuthors;
         this.getByAuthor = getByAuthor;
         this.getAuthoredBios = getAuthoredBios;
-        this.getByReferences = getByReferences;
         this.getBios = getBios;
+        this.getByReferences = getByReferences;
+        this.getPerson = getPerson;
+        this.getRelatives = getRelatives;
+        this.getSimilar = getSimilar;
         
+        //	init login
         this.getPortal = getPortal;
+        
         /* Implementation */
 
         var prefixes =
