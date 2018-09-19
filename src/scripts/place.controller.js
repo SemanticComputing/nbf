@@ -101,8 +101,6 @@
         	
         }
         
-        
-        
         placeService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();

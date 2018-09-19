@@ -4,10 +4,12 @@
 	.directive('nbfPersonlist', function() {
 		return {
 			restrict: 	'AE',
-			scope: 		{ url: '@' },
+			scope: 		{ url: '@', numPerPage: '@' },
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
 				$scope.data = null;
+				
+				if (!$scope.numPerPage) $scope.numPerPage = 16;
 				
 				popoverService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
 		        	
@@ -24,7 +26,6 @@
 		        	
 		        	$scope.data = data;
 		        	$scope.currentPage = 1;
-        			$scope.numPerPage = 14;
         			$scope.maxSize = 5;
         			$scope.show = data.length>$scope.numPerPage;
         			

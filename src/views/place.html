@@ -8,7 +8,7 @@
 		Sivulla näytetään yksittäisen paikan tietoja, kuten listat siellä eläneistä ja vaikuttaneista henkilöistä.
 		</p>
 		<div ng-if="!vm.place" style="color:red;">Haettua paikkaa ei löydy tietokannasta.</div>
-		<div class="well" ng-if="vm.place">
+		<div class="well nbfwell" ng-if="vm.place">
 			<div class="relativeblock">
 			      <h3>Paikan tiedot</h3>
 			      <span class="glyphicon glyphicon-info-sign"
@@ -29,7 +29,7 @@
             </div>
 		</div>
 		
-        <div class="well" ng-if="vm.related">
+        <div class="well nbfwell" ng-if="vm.related">
             <div class="relativeblock">
 			      <h3>Liittyviä paikkoja ({{vm.related.length}})</h3>
 			      <span class="glyphicon glyphicon-info-sign"
@@ -55,7 +55,7 @@
 		   
 		 </div>
 		 
-		 <div class="well" ng-if="vm.Birth">
+		 <div class="well nbfwell" ng-if="vm.Birth">
 	    	<div class="relativeblock">
 	    		<h3>Syntyneet ({{ ::vm.Birth.count }})</h3>
 		    	<span class="glyphicon glyphicon-info-sign" 
@@ -65,7 +65,7 @@
 	      <nbf-personlist url="{{ vm.Birth.people }}"></nbf-personlist>
     	</div>
     	
-    	<div class="well" ng-if="vm.Death">
+    	<div class="well nbfwell" ng-if="vm.Death">
 	    	<div class="relativeblock">
 	    		<h3>Kuolleet ({{ ::vm.Death.count }})</h3>
 		    	<span class="glyphicon glyphicon-info-sign" 
@@ -75,7 +75,7 @@
 	      <nbf-personlist url="{{ vm.Death.people }}"></nbf-personlist>
     	</div>
     	
-    	<div class="well" ng-if="vm.Career">
+    	<div class="well nbfwell" ng-if="vm.Career">
 	    	<div class="relativeblock">
 	    		<h3>Ura ({{ ::vm.Career.count }})</h3>
 		    	<span class="glyphicon glyphicon-info-sign" 
@@ -85,7 +85,7 @@
 	      <nbf-personlist url="{{ vm.Career.people }}"></nbf-personlist>
     	</div>
     	
-    	<div class="well" ng-if="vm.Product">
+    	<div class="well nbfwell" ng-if="vm.Product">
 	    	<div class="relativeblock">
 	    		<h3>Teokset ({{ ::vm.Product.count }})</h3>
 		    	<span class="glyphicon glyphicon-info-sign" 
@@ -95,7 +95,7 @@
 	      <nbf-personlist url="{{ vm.Product.people }}"></nbf-personlist>
     	</div>
     	
-    	<div class="well" ng-if="vm.Honour">
+    	<div class="well nbfwell" ng-if="vm.Honour">
 	    	<div class="relativeblock">
 	    		<h3>Kunniamaininnat ({{ ::vm.Honour.count }})</h3>
 		    	<span class="glyphicon glyphicon-info-sign" 

@@ -221,7 +221,7 @@
 
         //	http://yasgui.org/short/HyNJegbGQ
         var querySimilar = 
-            'SELECT DISTINCT ?prs ?label ' +
+            'SELECT DISTINCT (GROUP_CONCAT(DISTINCT(?prs); separator=",") as ?people) (COUNT(DISTINCT ?prs) AS ?count) ' +
         	'WHERE { ' +
         	'  { <RESULT_SET> } ' +
         	'  ?dst a nbf:Distance ; ' +
@@ -235,19 +235,15 @@
         
         //	
         var queryAuthors = 
-        	'SELECT DISTINCT (?author AS ?author__url) ?author__name WHERE { ' +
-        	'  { <RESULT_SET> } ' +
+        	'SELECT DISTINCT (GROUP_CONCAT(DISTINCT(?author); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE {' +
+        	'  <RESULT_SET>' +
         	'  ?id owl:sameAs*|^owl:sameAs ?prs . ' +
         	'  ?prs foaf:focus/nbf:has_biography/schema:author ?author . ' +
-        	'  ?author skosxl:prefLabel ?author__label . ' +
-        	'  OPTIONAL { ?author__label schema:familyName ?author__fname } ' +
-        	'  OPTIONAL { ?author__label schema:givenName ?author__gname } ' +
-        	'  BIND (CONCAT(COALESCE(?author__gname, "")," ",COALESCE(?author__fname, "")) AS ?author__name) ' +
-        	'} ORDER BY ?author__fname ?author__gname ';
+        	'}  ';
         
         //	http://yasgui.org/short/ByvETV0xm
         var queryByAuthor =
-        	'SELECT DISTINCT (?id as ?id__url) ?id__name WHERE { ' +
+        	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE {' +
         	'  { ' +
         	'  SELECT DISTINCT ?author ?id2 ?prs2 ' +
         	'    WHERE { ' +
@@ -260,26 +256,17 @@
         	'  ?prs owl:sameAs* ?id . ' +
         	'  FILTER NOT EXISTS {?id owl:sameAs []} ' +
         	'  FILTER (?id != ?prs2 && ?id != ?id2) ' +
-        	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
+        	'} ';
         
         var queryAuthoredBios =
-        	'SELECT DISTINCT  (?id as ?id__url) ?id__name WHERE { ' +
-        	'  { <RESULT_SET> } ' +
+        	'SELECT DISTINCT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE ' +
+        	'  { <RESULT_SET> ' +
         	'  ?id foaf:focus/nbf:has_biography/schema:author ?author . ' +
-        	'   ' +
-        	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
+        	'  } ' ;
         
         //	http://yasgui.org/short/BJu_EPUwQ
         var queryReferences = 
-        	'SELECT distinct (?id as ?id__url) ?id__name WHERE { ' +
+        	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
         	' <RESULT_SET> ' +
         	'   ?id2 nbf:formatted_link ?target . ' +
         	'  BIND (URI(CONCAT("file:///tmp/data/",?target)) AS ?target_link) ' +
@@ -287,17 +274,13 @@
         	'   ?par <http://purl.org/dc/elements/1.1/source>/<http://ldf.fi/nbf/biography/data#link> ?target_link ; ' +
         	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#bioId> ?id . ' +
         	' } ' +
-        	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
+        	'} ';
         
         //	NOTE this queries for persons references in current biography
         //	not used on the person page
         //	http://yasgui.org/short/SkYYOLRxm
         var queryByReferences =
-        	'SELECT distinct (?id as ?id__url) ?id__name WHERE { ' +
+        	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
         	' <RESULT_SET> ' +
         	' SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
         	'   ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#bioId> ?id2 ; ' +
@@ -305,15 +288,9 @@
         	'    BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target)  ' +
         	' } ' +
         	'  ' +
-        	'  ?id nbf:formatted_link ?target ;  ' +
-        	'  		skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname, "")," ",COALESCE(?id__fname, "")) AS ?id__name) ' +
-        	'} ORDER BY UCASE(?id__fname) ?id__gname ';
+        	'  ?id nbf:formatted_link ?target . ' +
+        	'} ';
         
-        
-
         var queryPortal = 'SELECT * WHERE { ?x ?y ?z } LIMIT 1 ';
         
         // The SPARQL endpoint URL
@@ -339,7 +316,6 @@
 
         function getResults(facetSelections) {
         	var res = resultHandler.getResults(facetSelections, getSortBy());
-        	console.log(res);
             return res;
         }
         
@@ -372,12 +348,7 @@
         function getRelatives(id) {
         	var qry = prefixes + relativeQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
-            
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
-            .then(function(person) {
-            	return person;
-                // return $q.reject('Not found');
-            });
+            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint));
         }
         
         function getSimilar(id) {
@@ -390,31 +361,27 @@
         }
 
         function getAuthors(id) {
-            var qry = prefixes + queryAuthors;
-            var constraint = 'VALUES ?id { <' + id + '> } . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        	var constraint = 'VALUES ?id { <' + id + '> } . ';
+            var qry = prefixes + queryAuthors.replace('<RESULT_SET>', constraint);
+            return endpoint.getObjectsNoGrouping(qry);
         }
         
         function getByAuthor(id) {
-            var qry = prefixes + queryByAuthor;
-            var constraint = 'VALUES ?id2 { <' + id + '> } . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        	var constraint = 'VALUES ?id2 { <' + id + '> } . ';
+            var qry = prefixes + queryByAuthor.replace('<RESULT_SET>', constraint);
+            return endpoint.getObjectsNoGrouping(qry);
         }
 
         function getAuthoredBios(id) {
-            var qry = prefixes + queryAuthoredBios;
-            //	'VALUES ?prs { <' + id + '> } . ?prs (owl:sameAs*|^owl:sameAs*) ?id . '
-            var constraint = 'VALUES ?prs { <' + id + '> } . ?prs (owl:sameAs*|^owl:sameAs*) ?author . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        	var constraint = 'VALUES ?prs { <' + id + '> } . ?prs (owl:sameAs*|^owl:sameAs*) ?author . ';
+            var qry = prefixes + queryAuthoredBios.replace('<RESULT_SET>', constraint);
+            return endpoint.getObjectsNoGrouping(qry);
         }
         
         function getByReferences(id) {
-            var qry = prefixes + queryReferences;
-            var constraint = 'VALUES ?id2 { <' + id + '> } . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
-            .then(function(result) {
-            	return result;
-            });
+        	var constraint = 'VALUES ?id2 { <' + id + '> } . ';
+            var qry = prefixes + queryReferences.replace('<RESULT_SET>', constraint);
+            return endpoint.getObjectsNoGrouping(qry);
         }
         
         function getPortal() {
