@@ -5,6 +5,7 @@
     background: yellowgreen;
 }
 
+
 .nlp .organizationlink {
     background: lightgrey;
 }
@@ -13,6 +14,10 @@
 }
 .nlp .placelink {
     background: aquamarine;
+}
+
+.nlp .titlelink {
+    background: yellow;
 }
 .nlp .vocationlink {
     background: yellow;
