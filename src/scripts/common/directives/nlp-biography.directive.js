@@ -13,7 +13,7 @@
 						biographyService.getNlpBio( $scope.url ).then(function(data) {
 							$scope.data = data;
 				        });
-					}; // else { console.log('not loaded'); };
+					}; 
 				};
 			}],
 			

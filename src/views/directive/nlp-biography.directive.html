@@ -1,6 +1,6 @@
 <div class="col-sm-6 col-md-12" ng-if="!!data">
-	<p ng-repeat="parag in data track by $index">
-<span ng-repeat="sentence in parag track by $index"><span ng-repeat="x in sentence track by $index"><span ng-if="x.space"> </span><span ng-if="x.placelink" class="placelink" url="{{x.placelink}}">{{x.word}}</span><span ng-if="x.organizationlink" class="organizationlink">{{x.word}}</span><span ng-if="x.vocationlink" class="vocationlink">{{x.word}}</span><span ng-if="x.personlink" class="personlink" url="{{x.personlink}}">{{x.word}}</span><span ng-if="!x.class">{{x.word}}</span></span>
+	<p ng-repeat="parag in data track by $index" >
+<span ng-repeat="sentence in parag track by $index" ><span ng-repeat="x in sentence track by $index" class="nlp"><span ng-if="x.space"> </span><span ng-if="x.placelink" class="placelink" url="{{x.placelink}}">{{x.word}}</span><span ng-if="x.organizationlink" class="organizationlink">{{x.word}}</span><span ng-if="x.vocationlink" class="vocationlink">{{x.word}}</span><span ng-if="x.personlink" class="personlink" url="{{x.personlink}}">{{x.word}}</span><span ng-if="!x.class">{{x.word}}</span></span>
 </span>
 		<hr />
 	</p>

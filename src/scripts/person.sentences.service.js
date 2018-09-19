@@ -21,13 +21,13 @@
         /* Implementation */
 
         var prefixes =
-        	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         	'PREFIX nbf: <http://ldf.fi/nbf/> ' +
         	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         	'PREFIX schema: <http://schema.org/> ' +
+        	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
 
         
@@ -72,6 +72,9 @@
         }
         
         function getNodes(id, limit) {
+        	var regex = /^p[0-9]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
+        	
         	var constraint = '<{}>'.replace('{}',id),
         		q = prefixes + querynodes.replace(/<RESULT_SET>/g, constraint).replace("<LIMIT>", ''+limit)
         	return endpoint.getObjectsNoGrouping(q);

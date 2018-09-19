@@ -26,17 +26,19 @@
         this.updateSortBy = updateSortBy;
         // Get the CSS class for the sort icon.
         this.getSortClass = getSortClass;
-        // Get the details of a single person.
-        this.getPerson = getPerson;
-        this.getRelatives = getRelatives;
-        this.getSimilar = getSimilar;
+        
         this.getAuthors = getAuthors;
         this.getByAuthor = getByAuthor;
         this.getAuthoredBios = getAuthoredBios;
-        this.getByReferences = getByReferences;
         this.getBios = getBios;
+        this.getByReferences = getByReferences;
+        this.getPerson = getPerson;
+        this.getRelatives = getRelatives;
+        this.getSimilar = getSimilar;
         
+        //	init login
         this.getPortal = getPortal;
+        
         /* Implementation */
 
         var prefixes =
@@ -45,12 +47,12 @@
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX schema: <http://schema.org/> ' +
         ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
-        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
-        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
+        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
@@ -336,10 +338,16 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
 
         function getResults(facetSelections) {
-            return resultHandler.getResults(facetSelections, getSortBy());
+        	var res = resultHandler.getResults(facetSelections, getSortBy());
+        	console.log(res);
+            return res;
         }
         
         function getPerson(id) {
+        	
+        	var regex = /^p[0-9]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
+        	
             var qry = prefixes + detailQuery;
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
             

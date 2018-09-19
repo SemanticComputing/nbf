@@ -7,7 +7,8 @@
 			scope: 		{ url: '@' },
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
-		        $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
+		        // $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
+		        $scope.link = '#!/'+ ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1');
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        

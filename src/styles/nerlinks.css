@@ -1,29 +1,34 @@
-.ExpressionTime {
+.nlp .ExpressionTime {
     background: pink;
 }
-.AnonymEntity {
+.nlp .AnonymEntity {
     background: yellowgreen;
 }
 
-.organizationlink {
+
+.nlp .organizationlink {
     background: lightgrey;
 }
-.personlink {
+.nlp .personlink {
     background: burlywood;
 }
-.placelink {
+.nlp .placelink {
     background: aquamarine;
 }
-.vocationlink {
+
+.nlp .titlelink {
     background: yellow;
 }
-.PoliticalLocation {
+.nlp .vocationlink {
+    background: yellow;
+}
+.nlp .PoliticalLocation {
     background: lavender;
 }
-.GeographicalLocation {
+.nlp .GeographicalLocation {
     background: gold;
 }
-.EducationalOrganization {
+.nlp .EducationalOrganization {
     background: powderblue;
 }
 
