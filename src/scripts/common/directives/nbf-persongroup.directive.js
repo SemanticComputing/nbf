@@ -8,6 +8,7 @@
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
 				$scope.people = null;
+				// console.log(($scope.url).constructor, ($scope.url).constructor === Array, $scope.url);
 				
 				popoverService.getPopoverGroup( ($scope.url).split(',') ).then(function(data) {
 		        	

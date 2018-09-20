@@ -8,3 +8,11 @@
 	-webkit-box-shadow: 0 0 10px #aaa;
 	box-shadow: 0 0 10px #aaa;
 }
+
+p.personlist {
+	width:160px; 
+	margin: 0px; 
+	white-space: nowrap; 
+	text-overflow: ellipsis; 
+	overflow: hidden;
+}

@@ -303,4 +303,10 @@ iframe {
 	color:#00C;
 }
 
-
+.nbfwell {
+	background-color: white;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 5px;
+	padding-bottom: 22px;
+}

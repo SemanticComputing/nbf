@@ -18,6 +18,7 @@
         // Return a promise.
         this.getPlace = getPlace;
         this.getHierarchy = getHierarchy;
+        this.getEvents = getEvents;
         this.getResults = getResults;
         this.getFacets = mapfacetService.getFacets;
         this.getFacetOptions = getFacetOptions;
@@ -55,14 +56,12 @@
     	'      skos:prefLabel ?label . ' +
     	'  FILTER (lang(?label)="fi") ' +
     	'  OPTIONAL { ?id owl:sameAs ?googleapi . '+
-    	'	FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
+    	'  FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
     	'  } ' +
     	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
     	'  OPTIONAL { ?id skos:prefLabel|skos:altLabel ?alabel } ' +
     	'  OPTIONAL { ?id nbf:yso ?yso } ' +
     	'  OPTIONAL { ?id nbf:wikidata ?wikidata } ' +
-    	//'  OPTIONAL { ?id skos:broader ?broad } ' +
-    	//'  OPTIONAL { ?narrow skos:broader ?id } ' +
     	'} ';
         
         var queryHierarchy =
@@ -70,37 +69,33 @@
         	'WHERE { ' +
         	'VALUES ?place { <RESULT_SET> } ' +
         	'  { ?place skos:broader+ ?id . ' +
-        	'    BIND(1 AS ?level) ' +
+        	'   BIND(1 AS ?level) ' +
         	'  } ' +
         	'  UNION ' +
         	'  { ?id skos:broader ?place . ' +
         	'   BIND(-1 AS ?level) ' +
         	'  	FILTER EXISTS { [] nbf:place ?id } ' +
+        	' } ' +
+        	'  UNION ' +
+        	'  { ?id skos:broader ?place . ' +
+        	'   BIND(-1 AS ?level) ' +
+        	'  	FILTER EXISTS { [] nbf:place ?id } ' +
         	'  } ' +
-        	'  FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
-        	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
-        	'  ?id skos:prefLabel ?label ' +
-        	'  FILTER (lang(?label)="fi") ' +
-        	'} ORDER BY DESC(?level) ?label  LIMIT 50 ';
+        	' FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
+        	' OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
+        	' ?id skos:prefLabel ?label ' +
+        	' FILTER (lang(?label)="fi") ' +
+        	'} ORDER BY DESC(?level) ?label ';
         
         // The query for the results.
         var queryEvents = 
-        ' SELECT distinct ?id ?label ?prs__event ?prs__eventLabel ?prs__id ?prs__label ' +
-    	' WHERE { ' +
-    	'   { <RESULT_SET> } ' +
-    	'   ?id a nbf:Place ; ' +
-    	'       skos:prefLabel ?label . FILTER (lang(?label)="fi") ' +
-    	'   { OPTIONAL { ?prs__id foaf:focus/^crm:P98_brought_into_life [ nbf:place ?id ; a ?prs__event ] } ' +
-    	'   } UNION { ' +
-    	'   OPTIONAL { ?prs__id foaf:focus/^crm:P100_was_death_of [ nbf:place ?id ; a ?prs__event ] } ' +
-    	'   } UNION { ' +
-    	'    OPTIONAL { ?prs__id foaf:focus/^bioc:inheres_in  [ nbf:place ?id ; a ?prs__event ; skos:prefLabel ?prs__eventLabel ] } ' +
-    	'   } ' +
-    	'   ?prs__id skosxl:prefLabel ?prs__lab . ' +
-    	'     OPTIONAL { ?prs__lab schema:familyName ?prs__fname } ' +
-    	'     OPTIONAL { ?prs__lab schema:givenName ?prs__gname } ' +
-    	'     BIND (CONCAT(COALESCE(?prs__gname, "")," ",COALESCE(?prs__fname, "")) AS ?prs__label ) ' +
-    	' } ';
+        	'SELECT DISTINCT ?class (GROUP_CONCAT(DISTINCT(?prs); separator=",") as ?prslist) (COUNT(DISTINCT ?prs) AS ?count) WHERE { ' +
+        	' VALUES ?id { <RESULT_SET> } ' +
+        	'  ?evt nbf:place ?id ; ' +
+        	'      (crm:P100_was_death_of|crm:P98_brought_into_life|bioc:inheres_in)/^foaf:focus ?prs ; ' +
+        	'      a/skos:prefLabel ?class . ' +
+        	' FILTER (lang(?class)="en") ' +
+        	'} GROUP BY ?class ';
        
         // The SPARQL endpoint URL
         var endpointUrl = SPARQL_ENDPOINT_URL;
@@ -120,12 +115,11 @@
         
         function getHierarchy(id) {
         	var q = prefixes + queryHierarchy.replace("RESULT_SET", id);
-        	console.log(id,q);
 	    	return endpoint.getObjectsNoGrouping(q);
         }
         
         function getEvents(id) {
-        	var q = queryEvents.replace("RESULT_SET", id);
+        	var q = prefixes + queryEvents.replace("RESULT_SET", id);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         

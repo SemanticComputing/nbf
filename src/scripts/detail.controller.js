@@ -19,12 +19,12 @@
         init();
         
         vm.setTab = function(newTab) {
-        	vm.tab = newTab;
+        	vm.tab = ''+newTab;
         	$location.search('tab', newTab);
         };
         
         vm.isSet = function(tabNum){
-            return vm.tab === tabNum;
+            return vm.tab === ''+tabNum;
         };
         
         
@@ -37,7 +37,12 @@
                 nbfService.getBios(vm.person.id).then(function(data) {
                 	if (data.length) {
                 		vm.person.bios = data;
-                		vm.setTab(0);
+                		
+                		var lc = $location.search();
+                		if (lc && lc.tab) {
+                			vm.setTab(lc.tab);
+                		} else vm.setTab(0);
+                		
                 	}
                 });
                 
@@ -46,23 +51,23 @@
                 });
                 
                 nbfService.getAuthoredBios(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.authoredBios = data;
+                	if (data.length && data[0].people) vm.authoredBios = {people: data[0].people, count: data[0].count};
                 });
-                
+
                 nbfService.getSimilar(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.similar = data;
+                	if (data.length && data[0].people) vm.similar = {people: data[0].people, count: data[0].count};
                 });
                 
                 nbfService.getAuthors(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.authors = data;
+                	if (data.length && data[0].people) vm.authors = {people: data[0].people, count: data[0].count};
                 });
                 
                 nbfService.getByAuthor(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.sameAuthor = data;
+                	if (data.length && data[0].people) vm.sameAuthor = {people: data[0].people, count: data[0].count};
                 });
                 
                 nbfService.getByReferences(vm.person.id).then(function(data) {
-                	if (data.length) vm.person.referenced = data;
+                	if (data.length && data[0].people) vm.referenced = {people: data[0].people, count: data[0].count};
                 });
                 
                 return person;

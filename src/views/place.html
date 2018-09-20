@@ -1,22 +1,122 @@
 <div class="container-fluid">
+  
   <div class="row">
-    <div class="col-sm-12 text-center">
-    	<h1>{{ vm.place.label }}</h1>
-  	</div>
-  </div>
-  <div class="row">
-  <div class="col-md-3 pull-md-3 col-lg-3" >
-  		Leftbar
-    	<!-- 
-    	 <div ng-include="'views/groupmap/description.partial.html'"></div>
-    	<div ng-include="'views/groupmap/controls.partial.html'"></div>
-    	 <div ng-include="'views/mapfacets.partial.html'"></div>
-    	 -->
+  
+	<div class="col-md-3 pull-md-3 col-lg-3 facetsidebar" style="top: 60px;" >
+		<h1>Paikkasivu</h1>
+		<p>
+		Sivulla näytetään yksittäisen paikan tietoja, kuten listat siellä eläneistä ja vaikuttaneista henkilöistä.
+		</p>
+		<div ng-if="!vm.isLoadingResults && !vm.place;" style="color:red;">Haettua paikkaa ei löydy tietokannasta.</div>
+		<div class="well nbfwell" ng-if="vm.place">
+			<div class="relativeblock">
+			      <h3>Paikan tiedot</h3>
+			      <span class="glyphicon glyphicon-info-sign"
+						uib-tooltip="Tässä näytetään paikan muita nimiä, sekä linkkejä muihin tietokantoihin."
+						tooltip-placement="bottom"
+						>
+				  </span>
+			</div>
+			<div ng-if="vm.place.alabel">{{ vm.place.alabel | join:', ' }}</div>
+			<div ng-if="vm.place.yso">
+                <a ng-href="{{ vm.place.yso }}">kohde Finton tietokannassa YSO-paikat</a>
+            </div>
+            <div ng-if="vm.place.googleapi">
+                <a ng-href="{{ vm.place.googleapi }}">kohde Googlen koordinaattihaussa</a>
+            </div> 
+            <div ng-if="vm.place.wikidata">
+                <a ng-href="{{ vm.place.wikidata }}">kohde Wikidata-tietokannassa</a>
+            </div>
+		</div>
+		
+        <div class="well nbfwell" ng-if="vm.related">
+            <div class="relativeblock">
+			      <h3>Liittyviä paikkoja ({{vm.related.length}})</h3>
+			      <span class="glyphicon glyphicon-info-sign"
+						uib-tooltip="Tässä listassa näytetään hierarkiassa ylempiä (maakunta, valtio, maanosa) sekä alempia (kylä, kaupunginosa) paikkoja.">
+				  </span>
+			</div>
+            <div class="col-sm-6" ng-repeat="place in vm.filteredRelated">
+		      	<span class="placelink" url="{{place.id}}">{{place.label}}</span>
+		    </div>
+			<ul uib-pagination
+			 ng-if="vm.related.length>vm.numPerPage"
+		     ng-model="vm.currentPage"
+		     total-items="vm.related.length"
+		     max-size="vm.maxSize"
+		     items-per-page="vm.numPerPage"
+		     boundary-links="true"
+		     first-text="<<"
+		     previous-text="<"
+		     next-text=">"
+		     last-text=">>">
+		   </ul>
+		   <span ng-if="vm.related.length<=vm.numPerPage">.</span>
+		   
+		 </div>
+		 
+		 <div class="well nbfwell" ng-if="vm.Birth">
+	    	<div class="relativeblock">
+	    		<h3>Syntyneet ({{ ::vm.Birth.count }})</h3>
+		    	<span class="glyphicon glyphicon-info-sign" 
+		    		uib-tooltip="Tässä näytetään lista paikassa syntyneistä henkilöistä.">
+		    	</span>
+	      	</div>
+	      <nbf-personlist url="{{ vm.Birth.people }}"></nbf-personlist>
+    	</div>
+    	
+    	<div class="well nbfwell" ng-if="vm.Death">
+	    	<div class="relativeblock">
+	    		<h3>Kuolleet ({{ ::vm.Death.count }})</h3>
+		    	<span class="glyphicon glyphicon-info-sign" 
+		    		uib-tooltip="Tässä näytetään lista paikassa kuolleista henkilöistä.">
+		    	</span>
+	      	</div>
+	      <nbf-personlist url="{{ vm.Death.people }}"></nbf-personlist>
+    	</div>
+    	
+    	<div class="well nbfwell" ng-if="vm.Career">
+	    	<div class="relativeblock">
+	    		<h3>Ura ({{ ::vm.Career.count }})</h3>
+		    	<span class="glyphicon glyphicon-info-sign" 
+		    		uib-tooltip="Tässä näytetään henkilöt, jotka ovat opiskelleet tai olleet työssä paikkakunnalla.">
+		    	</span>
+	      	</div>
+	      <nbf-personlist url="{{ vm.Career.people }}"></nbf-personlist>
+    	</div>
+    	
+    	<div class="well nbfwell" ng-if="vm.Product">
+	    	<div class="relativeblock">
+	    		<h3>Teokset ({{ ::vm.Product.count }})</h3>
+		    	<span class="glyphicon glyphicon-info-sign" 
+		    		uib-tooltip="Henkilöillä on paikkaan liittyviä teoksia.">
+		    	</span>
+	      	</div>
+	      <nbf-personlist url="{{ vm.Product.people }}"></nbf-personlist>
+    	</div>
+    	
+    	<div class="well nbfwell" ng-if="vm.Honour">
+	    	<div class="relativeblock">
+	    		<h3>Kunniamaininnat ({{ ::vm.Honour.count }})</h3>
+		    	<span class="glyphicon glyphicon-info-sign" 
+		    		uib-tooltip="Henkilöillä on paikkaan liittyviä kunniamainintoja.">
+		    	</span>
+	      	</div>
+	      <nbf-personlist url="{{ vm.Honour.people }}"></nbf-personlist>
+    	</div>
+    	 
 	</div>
-	<div class="col-md-6 col-lg-6" >
+	
+	<div class="col-md-9 col-lg-9 mapcontent" style="top: 60px;" >
+		
+	    <div class="col-sm-12 text-center">
+	    	<h1>{{ vm.place.label }}</h1>
+	  	</div>
+	  	
 		<div class="col-sm-12 mapspinner" ng-show="vm.isLoadingResults" >
 		    <img class="loading-img" src="images/loading-lg.gif"></img>
 		</div>
+		
 		<div class="row">
 		
 			<ui-gmap-google-map 
@@ -44,38 +144,6 @@
 			</ui-gmap-google-map>
 		</div>
 		
-	</div>
-	<div class="col-md-3 pull-md-3 col-lg-3" >
-			<div class="relativeblock">
-			      <h3>Paikan tiedot</h3>
-			      <span class="glyphicon glyphicon-info-sign"
-						uib-tooltip="Tässä näytetään paikan muita nimiä, sekä linkkejä muihin tietokantoihin.">
-				  </span>
-			</div>
-			<div ng-if="vm.place.alabel">{{ vm.place.alabel | join:', ' }}</div>
-			<div ng-if="vm.place.yso">
-                <a ng-href="{{ vm.place.yso }}">kohde Finton tietokannassa YSO-paikat</a>
-            </div>
-            <div ng-if="vm.place.googleapi">
-                <a ng-href="{{ vm.place.googleapi }}">kohde Googlen koordinaattihaussa</a>
-            </div> 
-            <div ng-if="vm.place.wikidata">
-                <a ng-href="{{ vm.place.wikidata }}">kohde Wikidata-tietokannassa</a>
-            </div>
-            <div class="relativeblock">
-			      <h3>Liittyviä paikkoja</h3>
-			      <span class="glyphicon glyphicon-info-sign"
-						uib-tooltip="Henkilön sukulaisissa näytetään vanhemmat, puolisot ja lapset, ei kaukaisempia sukulaisia.">
-				  </span>
-			</div>
-            <div class="col-sm-6" ng-repeat="place in vm.related">
-		      	<span class="placelink" url="{{place.id}}">{{place.label}}</span>
-		    </div>
-	    	<!-- 
-	    	 <div ng-include="'views/groupmap/description.partial.html'"></div>
-	    	<div ng-include="'views/groupmap/controls.partial.html'"></div>
-	    	 <div ng-include="'views/mapfacets.partial.html'"></div>
-	    	 -->
 	</div>
 </div>
 </div>

@@ -179,8 +179,9 @@
     </div>
      
     
-    
-    <div class="col-md-4 text-left" ng-if="vm.person.relative && vm.person.relative.length">
+    <br />
+    <br />
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.person.relative && vm.person.relative.length">
       <div class="relativeblock">
 	      <h3>Lähisukulaiset</h3>
 	      <span class="glyphicon glyphicon-info-sign"
@@ -192,71 +193,58 @@
       </div> 
     </div>
     
-    <div class="col-md-4 text-left" ng-if="vm.person.similar">
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.similar">
     	<div class="relativeblock">
     		<h3>Samankaltaisia henkilöitä</h3>
 	    	<span class="glyphicon glyphicon-info-sign" 
 	    		uib-tooltip="Henkilöt on määritelty samankaltaisiksi vertaamalla laskennallisesti heidän biografiakuvauksien sanastoa.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.similar" class="loading-img" src="images/loading-lg.gif"></img>
-      <div class="col-sm-6" ng-repeat="person in vm.person.similar"> 
-      	<nbf-person url="{{ person.prs }}"></nbf-person>
-      </div>
+      <nbf-personlist num="18" url="{{ vm.similar.people }}" ></nbf-personlist>
     </div>
     
     
-    <div class="col-md-4 text-left" ng-if="vm.person.referenced">
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.referenced">
     	<div class="relativeblock">
-    		<h3>T&auml;nne viittaavat sivut</h3>
+    		<h3>T&auml;nne viittaavat sivut ({{ ::vm.referenced.count }})</h3>
 	    	<span class="glyphicon glyphicon-info-sign" 
 	    		uib-tooltip="Henkilöitä joiden biografioista viitataan tälle sivulle.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.referenced" class="loading-img" src="images/loading-lg.gif"></img>
-      <div class="col-sm-6" ng-repeat="person in vm.person.referenced">
-      	<nbf-person url="{{ person.id.url }}"></nbf-person>
-      </div>
+      <nbf-personlist url="{{ vm.referenced.people }}"></nbf-personlist>
     </div>
     
-    <div class="col-md-4 text-left" ng-if="vm.person.authors">
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.authors">
     	<div class="relativeblock">
-    		<h3>Kirjoittajat</h3>
+    		<h3>{{ vm.authors.count==1 ? 'Kirjoittaja' : 'Kirjoittajat' }}</h3>
 	    	<span class="glyphicon glyphicon-info-sign" 
 	    		uib-tooltip="Tutustu biografiakuvauksen laatijoihin.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.authors" class="loading-img" src="images/loading-lg.gif"></img>
-      <div class="col-sm-6" ng-repeat="person in vm.person.authors">
-      	<nbf-person url="{{ person.author.url }}"></nbf-person>
-      </div>
+      <nbf-personlist url="{{ vm.authors.people }}"></nbf-personlist>
     </div>
     
-    <div class="col-md-4 text-left" ng-if="vm.person.sameAuthor">
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.sameAuthor">
     	<div class="relativeblock">
-    		<h3>Samoilta kirjoittajilta</h3>
+    		<h3>Samoilta kirjoittajilta ({{ ::vm.sameAuthor.count }})</h3>
     		<span class="glyphicon glyphicon-info-sign" 
 	    		uib-tooltip="Lue muita biografia-artikkeleja samoilta kirjoittajilta.">
 	    	</span>
       	</div>
-      <img ng-if="!vm.person.sameAuthor" class="loading-img" src="images/loading-lg.gif"></img>
-      <div class="col-sm-6" ng-repeat="person in vm.person.sameAuthor">
-      	<nbf-person url="{{ person.id.url }}"></nbf-person>
-      </div>
+      <nbf-personlist url="{{ vm.sameAuthor.people }}"></nbf-personlist>
     </div>
     
-    <div class="col-md-4 text-left" ng-if="vm.person.authoredBios">
-    	<div class="relativeblock">
-    		<h3>Kirjoitettuja artikkeleja</h3>
-    		<span class="glyphicon glyphicon-info-sign" 
-	    		uib-tooltip="Lue tämän henkilön laatimia biografia-artikkeleja.">
-	    	</span>
-      	</div>
-      <img ng-if="!vm.person.authoredBios" class="loading-img" src="images/loading-lg.gif"></img>
-      <div class="col-sm-6" ng-repeat="person in vm.person.authoredBios">
-      	<nbf-person url="{{ person.id.url }}"></nbf-person>
-      </div>
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.authoredBios">
+	    <div class="relativeblock">
+	    		<h3>Kirjoitettuja artikkeleja ({{ ::vm.authoredBios.count }})</h3>
+		    	<span class="glyphicon glyphicon-info-sign" 
+		    		uib-tooltip="Lue tämän henkilön laatimia biografia-artikkeleja.">
+		    	</span>
+	    </div>
+	    <nbf-personlist url="{{ vm.authoredBios.people }}"></nbf-personlist>
     </div>
+    	
+    	
     
   </div>
 </div>
