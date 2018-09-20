@@ -10,7 +10,7 @@
     .controller('PlaceController', PlaceController);
 
     /* @ngInject */
-    function PlaceController($stateParams, $uibModal, _, $location, $scope,
+    function PlaceController($state, $stateParams, $uibModal, _, $location, $scope,
     		placeService) {
     	
         var vm = this;
@@ -90,8 +90,7 @@
 	    							title: ob.label
 	    							},
     							"onClick": function () {
-        			        		console.log(ob.label);
-        			        		console.log(ob);
+        			        		$state.go('place',{ placeId: ob.id });
         	        			}
 	    	        			});
         			}
