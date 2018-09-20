@@ -4,15 +4,21 @@ The application provides a faceted search of Semantic National Biography of Finl
 Installation
 ------------
 
-npm install
+`npm install`
 
-bower install
+`bower install`
 
 Run
 ------------
-grunt serve
+`grunt serve`
 
 Build
 ------------
-grunt build
-# nbf
+`grunt build`
+
+Docker
+------------
+
+Build: `docker build -t nbf .`
+
+Run: `docker run -it --rm -p 9000:9000 --name nbf nbf`

@@ -152,12 +152,12 @@
             */
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
-            '  			OPTIONAL { ?bir nbf:place/skos:prefLabel ?birthPlace } ' +
+            '  			OPTIONAL { ?bir nbf:place ?birth__id . ?birth__id skos:prefLabel ?birth__label } ' +
             '  			OPTIONAL { ?bir nbf:time/skos:prefLabel ?birthDate }' +
             '		} ' +
             '  		OPTIONAL { ?prs ^crm:P100_was_death_of ?dea . ' +
             '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate }' +
-            '  			OPTIONAL { ?dea nbf:place/skos:prefLabel ?deathPlace }' +
+            '  			OPTIONAL { ?dea nbf:place ?death__id . ?death__id skos:prefLabel ?death__label }' +
             '		} ' +
             '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source/skos:prefLabel ?imagesources ] }' +
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
@@ -264,15 +264,15 @@
         	'  ?id foaf:focus/nbf:has_biography/schema:author ?author . ' +
         	'  } ' ;
         
-        //	http://yasgui.org/short/BJu_EPUwQ
+        //	http://yasgui.org/short/BJ4f20xYX
         var queryReferences = 
         	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
         	' <RESULT_SET> ' +
         	'   ?id2 nbf:formatted_link ?target . ' +
-        	'  BIND (URI(CONCAT("file:///tmp/data/",?target)) AS ?target_link) ' +
+        	'  BIND (URI(CONCAT("file:///tmp/data/nlp/",?target)) AS ?target_link) ' +
         	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
-        	'   ?par <http://purl.org/dc/elements/1.1/source>/<http://ldf.fi/nbf/biography/data#link> ?target_link ; ' +
-        	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#bioId> ?id . ' +
+        	'   ?par <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link ; ' +
+        	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#docRef> ?id . ' +
         	' } ' +
         	'} ';
         

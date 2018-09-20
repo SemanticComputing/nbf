@@ -10,7 +10,10 @@
 		        if (!$scope.url) return;
 		        
 		        // $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
-		        $scope.link = '#!/'+ ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1');
+		        // $scope.url = ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1');
+		        // $scope.link = '#!/'+ ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1');
+		        
+		        $scope.personId = { personId: ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1') };
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        
@@ -31,6 +34,6 @@
 		        });
 		        
 			}],
-			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}"><span ng-transclude></span></a>'
+			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><span ng-transclude></span></a>'
 		}});
 })();
