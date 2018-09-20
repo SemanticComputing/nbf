@@ -30,9 +30,9 @@
     "angular-google-maps": "^2.4.1",
     "angularjs-slider": "^6.4.0",
     "cytoscape": "^3.2.14",
-    "cytoscape-panzoom": "^2.5.2" 
+    "cytoscape-panzoom": "^2.5.2"
   },
   "resolutions": {
-    "angular": "1.7.0"
+    "angular": ">=1.4.0"
   }
 }
