@@ -15,16 +15,15 @@
     .controller('PersonSentencesController', PersonSentencesController);
 
     /* @ngInject */
-    function PersonSentencesController($log, $scope, $state, _, google, sentenceService, 
+    function PersonSentencesController($log, $scope, $state, $stateParams, _, google, sentenceService, 
     		FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
-        
+        vm.test="Toimii" 
         vm.hasResults = hasResults;
-        vm.upos = nlpService.upos;
         vm.removeFacetSelections = removeFacetSelections;
 
-        nlpService.getFacets().then(function(facets) {
+        sentenceService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
             vm.facetOptions.scope = $scope;
@@ -80,7 +79,7 @@
 	}
 
         function getFacetOptions() {
-            var options = nlpService.getFacetOptions();
+            var options = sentenceService.getFacetOptions();
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
         }
@@ -173,24 +172,35 @@
             });
         }
 
+
+
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
             vm.isLoadingWordResults = true;
             vm.results = [];
             vm.error = undefined;
+	    vm.test="Joo";
 
             var updateId = _.uniqueId();
             latestUpdate = updateId;
+	    var id = $stateParams.personId;
 
-            return nlpService.getStatistics(facetSelections).then(function(results) {
+            return sentenceService.getResults(facetSelections, id).then(function(results) {
                 if (latestUpdate !== updateId) {
                     return;
                 }
-                drawChart(results);
-            }).then(function() {
+                //drawChart(results);
+		console.log("loading results", results)
+		vm.results = results.$$state;//calculatePercentage(results);
+                vm.isLoadingWordResults = false;
+                vm.isLoadingResults = false;
+	        vm.test="töttöröö";
+		//console.log("loading vm.results", vm.results.$$state.value)
 
-             return nlpService.getLenStatistics(facetSelections).then(function(results) {
+            })//.then(function() {
+	    /*
+             return sentenceService.getLenStatistics(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
@@ -199,7 +209,7 @@
                 vm.isLoadingResults = false;
                 });
             }).then(function() {
-            return nlpService.getResultsTop10(facetSelections).then(function(results) {
+            return sentenceService.getResultsTop10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
@@ -207,7 +217,7 @@
                     //vm.isLoadingResults = false;
                 });
             }).then(function() {
-            return nlpService.getResultsBottom10(facetSelections).then(function(results) {
+            return sentenceService.getResultsBottom10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
@@ -215,7 +225,7 @@
                     //vm.isLoadingResults = false;
                 });
             }).then(function() {
-            return nlpService.getResultsBottomCat(facetSelections).then(function(results) {
+            return sentenceService.getResultsBottomCat(facetSelections).then(function(results) {
 
                     if (latestUpdate !== updateId) {
                         return;
@@ -224,7 +234,7 @@
                     //vm.isLoadingResults = false;
                 });
             }).then(function() {
-            return nlpService.getResultsTopCat(facetSelections).then(function(results) {
+            return sentenceService.getResultsTopCat(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
@@ -232,7 +242,7 @@
                     //vm.isLoadingResults = false;
                 });
             }).then(function() {
-            return nlpService.getWordCount(facetSelections).then(function(results) {
+            return sentenceService.getWordCount(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
@@ -242,14 +252,14 @@
                 });
             }).then(function() {
                 //});
-            return nlpService.getResults(facetSelections).then(function(results) {
+            return sentenceService.getResults(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
                     vm.results = calculatePercentage(results);
                     vm.isLoadingWordResults = false;
                 });
-            }).catch(function(error) { return handleError(error, updateId); });
+            }).catch(function(error) { return handleError(error, updateId); });*/
         }
 
         function handleError(error, updateId) {

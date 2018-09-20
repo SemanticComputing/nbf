@@ -16,6 +16,17 @@
 		    </div>
 	    	</div>
 	    	<div class="col-md-8 col-lg-9 text-center thumbnail">
+		    <div>
+			<div> 
+    			    <div ng-repeat="words in vm.results">
+    			        <span ng-repeat="word in words">
+				
+      				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
+				    {{ word.string }}
+			    	</span>
+			    </div>
+  			</div>
+		    </div>
 		    <div class="col-sm-12" ng-show="vm.loading">
 	      	    	<!--<img class="loading-img" src="images/loading-lg.gif"></img>-->
 	    	    </div>
