@@ -11,15 +11,15 @@
 
     /* @ngInject */
     function PlaceController($stateParams, $uibModal, _, $location, $scope,
-    		placeService, FacetHandler, facetUrlStateHandlerService) {
+    		placeService) {
     	
         var vm = this;
         
-        // vm.openPage = openPage;
-        
         function init() {
-        	
+        	vm.isLoadingResults = true;
         	placeService.getPlace($stateParams.placeId).then(function(data) {
+        		
+        		vm.isLoadingResults = false;
         		vm.place = data[0];
         		
         		placeService.getHierarchy($stateParams.placeId).then(function(data) {
@@ -31,6 +31,8 @@
         				vm[ob.class] = {people: ob.prslist, count: ob.count};
         			});
         		}).catch(handleError);
+        		
+        		
         		
             }).catch(handleError);
         }
@@ -86,7 +88,11 @@
 	    	        					},
 	    							optimized: true,
 	    							title: ob.label
-	    							}
+	    							},
+    							"onClick": function () {
+        			        		console.log(ob.label);
+        			        		console.log(ob);
+        	        			}
 	    	        			});
         			}
         		});
@@ -101,6 +107,7 @@
         	
         }
         
+        /*
         placeService.getFacets().then(function(facets) {
             vm.facets = facets;
             vm.facetOptions = getFacetOptions();
@@ -114,7 +121,6 @@
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
         }
-        
         function handleEvents(events, vm) {
         	var born = [],
         		died = [],
@@ -140,9 +146,8 @@
         	vm.place.born = born;
         	vm.place.died = died;
         	vm.place.event = evented;
-        	
         }
-        
+        */
         function openPage() {
             $uibModal.open({
                 component: 'registerPageModal',
@@ -157,26 +162,12 @@
             vm.isLoadingResults = false;
             vm.error = error;
         }
-        
+        /*
         // read url parameters:
         vm.readUrl = function() {
 	        var lc = $location.search(),
-	        	param = vm.right ? 'limit2' : 'limit';
-	        /*
-	        if (lc[param]) {
-	        	var lim = parseInt(lc[param]);
-	        	vm.LIMITOPTIONS.forEach(function(ob, i) {
-	        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
-	        	});
-	        }
+	        	param = 'map';
 	        
-	        param = vm.right ? 'events2' : 'events';
-	        if (lc[param]) {
-	        	(lc[param].split(',')).forEach(function(x, i) { vm.EVENTTYPES[i].check = (x!="0"); });
-	        }
-	        */
-	        //	Update map view from url parameters
-	        param = vm.right ? 'map2' : 'map';
 	        if (lc[param]) {
 	        	try {
 	                var map = angular.fromJson(lc[param]);
@@ -187,5 +178,6 @@
 	            }
 	        }
         };
+        */
     }
 })();

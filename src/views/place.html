@@ -7,7 +7,7 @@
 		<p>
 		Sivulla näytetään yksittäisen paikan tietoja, kuten listat siellä eläneistä ja vaikuttaneista henkilöistä.
 		</p>
-		<div ng-if="!vm.place" style="color:red;">Haettua paikkaa ei löydy tietokannasta.</div>
+		<div ng-if="!vm.isLoadingResults && !vm.place;" style="color:red;">Haettua paikkaa ei löydy tietokannasta.</div>
 		<div class="well nbfwell" ng-if="vm.place">
 			<div class="relativeblock">
 			      <h3>Paikan tiedot</h3>

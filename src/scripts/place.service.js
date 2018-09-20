@@ -56,14 +56,12 @@
     	'      skos:prefLabel ?label . ' +
     	'  FILTER (lang(?label)="fi") ' +
     	'  OPTIONAL { ?id owl:sameAs ?googleapi . '+
-    	'	FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
+    	'  FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
     	'  } ' +
     	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
     	'  OPTIONAL { ?id skos:prefLabel|skos:altLabel ?alabel } ' +
     	'  OPTIONAL { ?id nbf:yso ?yso } ' +
     	'  OPTIONAL { ?id nbf:wikidata ?wikidata } ' +
-    	//'  OPTIONAL { ?id skos:broader ?broad } ' +
-    	//'  OPTIONAL { ?narrow skos:broader ?id } ' +
     	'} ';
         
         var queryHierarchy =
@@ -71,28 +69,32 @@
         	'WHERE { ' +
         	'VALUES ?place { <RESULT_SET> } ' +
         	'  { ?place skos:broader+ ?id . ' +
-        	'    BIND(1 AS ?level) ' +
+        	'   BIND(1 AS ?level) ' +
         	'  } ' +
         	'  UNION ' +
         	'  { ?id skos:broader ?place . ' +
         	'   BIND(-1 AS ?level) ' +
         	'  	FILTER EXISTS { [] nbf:place ?id } ' +
+        	' } ' +
+        	'  UNION ' +
+        	'  { ?id skos:broader ?place . ' +
+        	'   BIND(-1 AS ?level) ' +
+        	'  	FILTER EXISTS { [] nbf:place ?id } ' +
         	'  } ' +
-        	'  FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
-        	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
-        	'  ?id skos:prefLabel ?label ' +
-        	'  FILTER (lang(?label)="fi") ' +
+        	' FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
+        	' OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
+        	' ?id skos:prefLabel ?label ' +
+        	' FILTER (lang(?label)="fi") ' +
         	'} ORDER BY DESC(?level) ?label ';
         
         // The query for the results.
         var queryEvents = 
         	'SELECT DISTINCT ?class (GROUP_CONCAT(DISTINCT(?prs); separator=",") as ?prslist) (COUNT(DISTINCT ?prs) AS ?count) WHERE { ' +
-        	'  VALUES ?id { <RESULT_SET> } ' +
+        	' VALUES ?id { <RESULT_SET> } ' +
         	'  ?evt nbf:place ?id ; ' +
-        	'       (crm:P100_was_death_of|crm:P98_brought_into_life|bioc:inheres_in)/^foaf:focus ?prs ; ' +
-        	// '       crm:P98_brought_into_life/^foaf:focus ?prs ; ' +
-        	'       a/skos:prefLabel ?class . ' +
-        	'  FILTER (lang(?class)="en") ' +
+        	'      (crm:P100_was_death_of|crm:P98_brought_into_life|bioc:inheres_in)/^foaf:focus ?prs ; ' +
+        	'      a/skos:prefLabel ?class . ' +
+        	' FILTER (lang(?class)="en") ' +
         	'} GROUP BY ?class ';
        
         // The SPARQL endpoint URL

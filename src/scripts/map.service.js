@@ -88,7 +88,7 @@
         	'   ' +
         	'  ?id a/skos:prefLabel ?class .  ' +
         	'  FILTER (lang(?class)="en") ' +
-        	'   ' +
+        	'  ' +
         	'  ?id nbf:time ?time . 		 ' +
         	'  OPTIONAL { ?time gvp:estStart ?time__start. }   		 ' +
         	'  OPTIONAL { ?time gvp:estEnd ?time__end. }   		 ' +
@@ -98,9 +98,9 @@
         	'      "-", ' +
         	'      IF(bound(?time__end),str(year(?time__end)),"") ' +
         	'    ) AS ?time__span) ' +
-        	'   ' +
+        	'  ' +
         	'  OPTIONAL { ?id skos:prefLabel ?label } ' +
-        	'   ' +
+        	'  ' +
         	'  OPTIONAL { ' +
         	'    VALUES ?class { "Child"@en "Son"@en "Daughter"@en  } ' +
         	'  	?relative foaf:focus/^crm:P98_brought_into_life/nbf:place ?place__uri .' +
