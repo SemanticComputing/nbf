@@ -76,11 +76,6 @@
         	'   BIND(-1 AS ?level) ' +
         	'  	FILTER EXISTS { [] nbf:place ?id } ' +
         	' } ' +
-        	'  UNION ' +
-        	'  { ?id skos:broader ?place . ' +
-        	'   BIND(-1 AS ?level) ' +
-        	'  	FILTER EXISTS { [] nbf:place ?id } ' +
-        	'  } ' +
         	' FILTER NOT EXISTS { ?id owl:sameAs/a nbf:Place } ' +
         	' OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
         	' ?id skos:prefLabel ?label ' +
