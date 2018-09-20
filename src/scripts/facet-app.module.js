@@ -93,7 +93,7 @@
         })
         .state('person.sentence', {
             url: '/lauseet',
-            templateUrl: 'views/person.sentences.html',
+            templateUrl: 'views/person/sentences.html',
             controller: 'PersonSentencesController',
             controllerAs: 'vm'
         }) 

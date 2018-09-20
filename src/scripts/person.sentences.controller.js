@@ -7,438 +7,257 @@
 
     'use strict';
 
-    /* eslint-disable angular/no-service-method */
     angular.module('facetApp')
-    
+
     /*
     * Controller for the results view.
     */
-    .controller('PersonNetworkController', PersonNetworkController);
+    .controller('PersonSentencesController', PersonSentencesController);
 
     /* @ngInject */
-    function PersonNetworkController($scope, $location, $state, _, $stateParams, personNetworkService,
-            FacetHandler) {
+    function PersonSentencesController($log, $scope, $state, _, google, sentenceService, 
+    		FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
-        vm.cy = null;
-        vm.elems = {};
-        vm.message = "";
-        vm.dict = {};
-        vm.chosenNode = null;
-        vm.loading = false;
-        vm.showlegend = false;
         
-        vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
-    		'#990099', '#3B3EAC', '#0099C6', '#DD4477', 
-    		'#66AA00', '#B82E2E', '#316395', '#994499', 
-    		'#22AA99', '#AAAA11', '#6633CC', '#E67300', 
-    		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
-    	
-        vm.LIMITOPTIONS = [{value:10},{value:20},{value:50},{value:100},{value:200},{value:500}];
-        vm.searchlimit = vm.LIMITOPTIONS[1];
-        
-        
-        vm.changelimit = function() {
-        	$location.search('limit',vm.searchlimit.value);
-        	fetchResults({ constraint: vm.previousSelections });
-        };
-        
-        vm.SIZEOPTIONS = [
-        	{value:'Vakio'},
-        	{value:'Etäisyys'},
-        	{value:'Asteluku'},
-        	{value:'Tuloaste (indegree)'},
-        	{value:'Lähtöaste (outdegree)'},
-        	{value:'Pagerank'}
-        	];
-        //	tuloaste (indegree)
-        vm.sizeoption = vm.SIZEOPTIONS[1];
-        
-        vm.changesize = function() {
-        	var i = vm.SIZEOPTIONS.indexOf(vm.sizeoption);
-        	if (i>-1) {
-        		$location.search('sizeoption', i);
-        	}
-        	
-        	var str = '20 px';
-        	
-        	switch(vm.sizeoption) {
-	            case vm.SIZEOPTIONS[1]:
-	            	//	DIJKSTRA
-	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.dijkstra = -dj.distanceTo(node);
-	            	});
-	            	numeric2Size(vm.elems, 'dijkstra', 'size', 10, 50);
-	            	str = 'data(size)';
-	            	break;
-	            case vm.SIZEOPTIONS[2]:
-	            	//	DEGREE
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.degree = node.degree();
-	            	});
+        vm.hasResults = hasResults;
+        vm.upos = nlpService.upos;
+        vm.removeFacetSelections = removeFacetSelections;
 
-            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            case vm.SIZEOPTIONS[3]:
-	            	//	INDEGREE
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.degree = node.indegree();
-	            	});
+        nlpService.getFacets().then(function(facets) {
+            vm.facets = facets;
+            vm.facetOptions = getFacetOptions();
+            vm.facetOptions.scope = $scope;
+            vm.handler = new FacetHandler(vm.facetOptions);
+        });
 
-            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            case vm.SIZEOPTIONS[4]:
-	            	//	OUTDEGREE
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.degree = node.outdegree();
-	            	});
-
-            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            case vm.SIZEOPTIONS[5]:
-	            	//	PAGERANK
-	            	var pr = vm.cy.elements().pageRank();
-		            vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		var rank = pr.rank(node);
-	            		n.data.pagerank = rank;
-	            	});
-            		numeric2Size(vm.elems, 'pagerank', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            default:
-	                break;
-	            
-	        }
-        	
-        	vm.cy.style()
-        		.selector('node')
-      	    		.style("height", str)
-            		.style("width", str)
-            	.update();
-        };
-        
-        vm.COLOROPTIONS = [{value:'Vakio'},{value:'Sukupuoli'},{value:'Kategoria'},{value:'Etäisyys'}];
-        vm.coloroption = vm.COLOROPTIONS[3];
-        
-        vm.changecolor = function() {
-        	var i = vm.COLOROPTIONS.indexOf(vm.coloroption);
-        	if (i>-1) {
-        		$location.search('coloroption', i);
-        	}
-        	
-        	vm.showlegend = false;
-        	var str;
-        	
-        	switch(vm.coloroption) {
-	            case vm.COLOROPTIONS[1]:
-	            	//	GENDER
-	            	category2Color(vm.elems, "gender", "color");
-	            	str = 'data(color)';
-	            	vm.showlegend = true;
-	            	break;
-	            	
-	            case vm.COLOROPTIONS[2]:
-	            	//	CATEGORY
-	            	category2Color(vm.elems, "category", "color");
-            		str = 'data(color)';
-            		vm.showlegend = true;
-            		break;
-            		
-	            case vm.COLOROPTIONS[3]:
-	            	//	DIJKSTRA
-	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.dijkstra = dj.distanceTo(node);
-	            	});
-	            	category2Color(vm.elems, 'dijkstra', 'color');
-	            	str = 'data(color)';
-	                break;
-	                
-	            default:
-	            	str = vm.COLORS[0]
-	                break;
-	            
-	        }
-        	
-        	vm.cy.style()
-        		.selector('node')
-      	    		.style('background-color', str )
-            	.update();
-        };
-        
-        //	set url parameters:
-        var lc = $location.search();
-        
-        if (lc.limit) {
-        	var lim = parseInt(lc.limit);
-        	vm.LIMITOPTIONS.forEach(function(ob, i) {
-        		if (lim==ob.value) vm.searchlimit=vm.LIMITOPTIONS[i];
-        	});
-        }
-
-        if (lc.coloroption) {
-        	vm.coloroption = vm.COLOROPTIONS[parseInt(lc.coloroption)];
-        }
-        
-        if (lc.sizeoption) {
-        	vm.sizeoption = vm.SIZEOPTIONS[parseInt(lc.sizeoption)];
-        }
-        
-        
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-        	fetchResults(event, config);
+            updateResults(event, config);
             initListener();
         });
-        
-        $scope.$on('sf-facet-constraints', fetchResults);
-        
-        vm.handler = new FacetHandler({scope : $scope});
-        
-        
-        var latestUpdate;
-        function fetchResults() {
-            
-            vm.error = undefined;
-            vm.loading = true;
-            
-            if (vm.cy) {
-            	vm.cy.elements().remove();
+        $scope.$on('sf-facet-constraints', updateResults);
+
+        function removeFacetSelections() {
+            $state.reload();
+        }
+
+        function hasResults() {
+            return _.keys(vm.results).length > 0;
+        }
+
+	function calculatePercentage(data) {
+	    var obj;
+	    var word;
+	    console.log(vm.lemmaCount.count);
+	    for (obj in data) {
+		console.log(obj)
+		console.log(data[obj])
+		var class_sum = getPosTotal(obj); 
+		for (word in data[obj]) {
+		    console.log(data[obj][word].count);
+		    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
+		    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
+		}
+	    }
+	    console.log(data);	
+	    return data;
+	}
+
+	function getPosTotal(postag){
+	    if (postag == "VERB") {
+		return vm.lemmaCount.verbCount;
+	    } else if (postag == "ADJ") {
+		return vm.lemmaCount.adjCount;
+	    } else if (postag == "NOUN") {
+		return vm.lemmaCount.nounCount;
+	    } else if (postag == "PROPN") {
+		return vm.lemmaCount.pnounCount;
+	    } else {
+		console.log("Unidentifiable pos-tag", postag);
+		return vm.lemmaCount.count;
+	    }
+	    
+	}
+
+        function getFacetOptions() {
+            var options = nlpService.getFacetOptions();
+            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
+            return options;
+        }
+
+        function updateResults(event, facetSelections) {
+            if (vm.previousSelections && _.isEqual(facetSelections.constraint, vm.previousSelections)) {
+                return;
             }
-            
-            vm.message = '';
-        	
-            vm.cy = null;
-            return personNetworkService.getNodes($stateParams.personId, vm.searchlimit.value)
-            .then(function(res) {
-            	vm.elems.nodes = res.map(function(ob) { return { data: ob }});
-            	
-            	var ids = res.map(function(ob) { return ob.id.replace('http://ldf.fi/nbf/','nbf:'); }).join(' ');
-            	
-            	vm.label = res[0].label;
-            	vm.id = $stateParams.personId;
-            	
-            	return personNetworkService.getLinks(ids)
-                .then(function(edges) {
-
-                	/*	edges: [
-                    { data: { source: 'a', target: 'b' } },
-                    { data: { source: 'c', target: 'b' } },
-                    { data: { source: 'a', target: 'c' } },
-                    { data: { source: 'c', target: 'd' } }
-                    ]*/
-                	vm.elems.edges = edges.map(function(ob) { return {data: ob};});
-                	
-                	processData(vm);
-                	
-                	vm.loading = false;
-                	
-                	if (vm.elems.edges.length==vm.searchlimit.value) {
-                		vm.message = "Näytetään {} ensimmäistä linkkiä ja {2} henkilöä"
-                			.replace('{}', vm.searchlimit.value)
-                			.replace('{2}', vm.elems.nodes.length);
-                	} else {
-                		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
-                			.replace('{}', vm.elems.edges.length)
-                			.replace('{2}', vm.elems.nodes.length);
-                	}
-                }).catch(handleError);
-            	
-            }).catch(handleError);
-            
+            vm.previousSelections = _.clone(facetSelections.constraint);
+            facetUrlStateHandlerService.updateUrlParams(facetSelections);
+            return fetchResults(facetSelections);
         }
 
-        function handleError(error) {
-            vm.isLoadingResults = false;
-            vm.error = error;
+	// Biografioiden pituus vuosikymmenittäin
+        function drawChartLen(results) {
+            google.charts.setOnLoadCallback(function () {
+                var data = new google.visualization.DataTable();
+                var ticks = _.map(results, function(res) { return parseInt(res.year); });
+                var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
+                var options = {
+                    title: 'SKS:n Biografioiden keskimääräinen sanamääräjakauma vuosikymmenittäin',
+                    legend: { position: 'none' },
+
+                    tooltip: {format: 'none'},
+                    colors: ['blue'],
+
+                    hAxis: {
+                        slantedText: false,
+                        maxAlternation: 1,
+                        format: '',
+                        ticks: ticks
+                    },
+                    vAxis: {
+                        maxValue: 4
+                    },
+                    width: '95%',
+                    bar: {
+                        groupWidth: '88%'
+                    },
+                    height: 500
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('biography-len-chart'));
+
+                data.addColumn('string', 'Vuosikymmen');
+                data.addColumn('number', 'Biografioiden keskimääräinen sanamäärä');
+
+                data.addRows(rows);
+                chart.draw(data, options);
+            });
         }
-        
-        
-        function processData(vm) {
-        	
-    		var style = [
-    	        {
-    	            selector: 'node',
-    	            style: {
-    	                "shape": 'ellipse',
-	    				"height": '20',
-	    	      		"width": '20',
-		    			"text-valign": "center",
-		    			"text-halign": "right",
-		    			"content": '  data(label)',
-		    			'background-color': vm.COLORS[0],
-                        'color': '#888'
-    	            }
-    	        },
-                {
-                    selector: ':active',
-                    style: {
-                        'background-color': '#800',
-                        'color': '#000'
+
+
+	// Biografiat vuosikymmenittäin
+        function drawChart(results) {
+            google.charts.setOnLoadCallback(function () {
+                var data = new google.visualization.DataTable();
+                var ticks = _.map(results, function(res) { return parseInt(res.year); });
+                var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
+                var options = {
+                    title: 'SKS:n Biografiajakauma vuosikymmenittäin',
+                    legend: { position: 'none' },
+
+                    tooltip: {format: 'none'},
+                    colors: ['blue'],
+
+                    hAxis: {
+                        slantedText: false,
+                        maxAlternation: 1,
+                        format: '',
+                        ticks: ticks
+                    },
+                    vAxis: {
+                        maxValue: 4
+                    },
+                    width: '95%',
+                    bar: {
+                        groupWidth: '88%'
+                    },
+                    height: 500
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('biography-chart'));
+
+                data.addColumn('string', 'Vuosikymmen');
+                data.addColumn('number', 'Biografioita');
+
+                data.addRows(rows);
+                chart.draw(data, options);
+            });
+        }
+
+        var latestUpdate;
+        function fetchResults(facetSelections) {
+            vm.isLoadingResults = true;
+            vm.isLoadingWordResults = true;
+            vm.results = [];
+            vm.error = undefined;
+
+            var updateId = _.uniqueId();
+            latestUpdate = updateId;
+
+            return nlpService.getStatistics(facetSelections).then(function(results) {
+                if (latestUpdate !== updateId) {
+                    return;
+                }
+                drawChart(results);
+            }).then(function() {
+
+             return nlpService.getLenStatistics(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
                     }
-                },
-    	        {
-    	            selector: 'edge',
-    	            style: {
-    	            	'width': 2,
-    	                'line-color': '#666',
-    	                'curve-style': 'bezier',
-    	        		'target-arrow-shape': 'triangle',
-    	        		'target-arrow-color': '#666'
-    	            }
-    	        }
-    	        ];
-    		
-            vm.cy = cytoscape({
-                container: document.getElementById('personnetworkcontainer'),
-                elements: vm.elems,
-                wheelSensitivity: 0.2,
-	        	layout: {
-	        		name: 'circle'
-	        	},
-	        	style: style
-	            });
-            
-            var changePerson = function(evt){
+		console.log(results);
+                drawChartLen(results);
+                vm.isLoadingResults = false;
+                });
+            }).then(function() {
+            return nlpService.getResultsTop10(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsTop10 = results;
+                    //vm.isLoadingResults = false;
+                });
+            }).then(function() {
+            return nlpService.getResultsBottom10(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsBottom10 = results;
+                    //vm.isLoadingResults = false;
+                });
+            }).then(function() {
+            return nlpService.getResultsBottomCat(facetSelections).then(function(results) {
 
-            	document.body.style.cursor = "auto";
-            	var id = this.id(),
-            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/henkiloverkosto';
-            	
-            	$location.url(link);
-	          	$scope.$apply();
-	    	}
-            /*
-            layout: {
-	        		name: 'cose',
-	        		idealEdgeLength: 100,
-	        		nodeOverlap: 20,
-	        		refresh: 20,
-	        		fit: true,
-	        		padding: 30,
-	        		randomize: false,
-	        		componentSpacing: 100,
-	        		nodeRepulsion: 400000,
-	        		edgeElasticity: 100,
-	        		nestingFactor: 5,
-	        		gravity: 80,
-	        		numIter: 1000,
-	        		initialTemp: 200,
-	        		coolingFactor: 0.95,
-	        		minTemp: 1.0
-	        	}
-             */
-            
-            vm.cy.on('click', 'node', changePerson);
-            
-            // vm.cy.on('drag', 'node', showNodeInfo);
-            
-            vm.cy.on('mouseover', 'node', function(evt){
-        		document.body.style.cursor = "pointer";
-         	});
-        	
-            vm.cy.on('mouseout', 'node', function(evt){
-        		document.body.style.cursor = "auto";
-        	});
-        	
-            vm.changecolor();
-            vm.changesize();
-            
-            vm.cy.layout({
-        		name: 'cose',
-        		idealEdgeLength: 100,
-        		nodeOverlap: 20,
-        		refresh: 20,
-        		fit: true,
-        		padding: 30,
-        		randomize: false,
-        		componentSpacing: 100,
-        		nodeRepulsion: 400000,
-        		edgeElasticity: 100,
-        		nestingFactor: 5,
-        		gravity: 80,
-        		numIter: 1000,
-        		initialTemp: 200,
-        		coolingFactor: 0.95,
-        		minTemp: 1.0
-	        }).run();
-            
-            if (vm.cy.panzoom) {
-            	vm.cy.panzoom({}); 
-            };
-            
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsBotCat = results;
+                    //vm.isLoadingResults = false;
+                });
+            }).then(function() {
+            return nlpService.getResultsTopCat(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.resultsTopCat = results;
+                    //vm.isLoadingResults = false;
+                });
+            }).then(function() {
+            return nlpService.getWordCount(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.lemmaCount = results[0];
+                    //vm.isLoadingResults = false;
+		    //console.log(results[0]);
+                });
+            }).then(function() {
+                //});
+            return nlpService.getResults(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.results = calculatePercentage(results);
+                    vm.isLoadingWordResults = false;
+                });
+            }).catch(function(error) { return handleError(error, updateId); });
         }
-        
-        var category2Color = function (elems, prop, newprop) {
-    		var dct = {};
-    		
-    		elems.nodes.forEach(function(ob) {
-    			var val = ''+ob.data[prop];
-    			if (!dct.hasOwnProperty(val)) dct[val]=0;
-    			dct[val]++;
-    		});
-    		
-    		var arr = [];
-    		for (var val in dct) {
-    			arr.push({count: dct[val], label:val});
-    		}
-    		arr.sort(function(a, b) { return b.count - a.count; });
-    		
-    			
-    		dct = {};
-    		arr.forEach(function (ob, i) {
-    			dct[ob.label] = i<vm.COLORS.length ? vm.COLORS[i] : vm.COLORS[vm.COLORS.length-1] ;
-    		});
-    		
-    		vm.legend = arr.map(function(ob,i) { 
-    			return {
-    				label: (''+ob.label=='undefined' ? 'ei tiedossa' : ob.label), 
-    				color:vm.COLORS[i]}; });
-    		
-    		var n = vm.COLORS.length;
-    		if (vm.legend.length>n) {
-    			vm.legend = vm.legend.slice(0,n);
-    			vm.legend[n-1].label = 'muut';
-    		}
-    		
-    		elems.nodes.forEach(function(ob) {
-    			var val = ob.data[prop];
-    			ob.data[newprop] = dct[val];
-    		});
-    	};
-    	
-    	var numeric2Size = function (elems, prop, newprop, min, max) {
-    		if (elems.nodes.length<1) return;
-    		
-    		var minval = elems.nodes[0].data[prop], 
-    			maxval = minval;
-    		
-    		elems.nodes.forEach(function(ob) {
-    			var val = ob.data[prop];
-    			if (val<minval) minval=val;
-    			if (maxval<val) maxval=val;
-    		});
-    		
-    		if (minval==maxval) maxval += 1;
-    		
-    		var a = (max-min)/(maxval-minval),
-    			b = min - minval/(maxval-minval)*(max-min);
-    			
-    		elems.nodes.forEach(function(ob) {
-    			var val = ob.data[prop];
-    			ob.data[newprop] = val*a + b; 
-    		});
 
-    	};
-        
+        function handleError(error, updateId) {
+            if (updateId === latestUpdate) {
+                vm.isLoadingResults = false;
+                vm.error = error;
+                $log.error(error);
+            }
+        }
     }
 })();
