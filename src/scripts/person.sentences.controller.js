@@ -15,7 +15,7 @@
     .controller('PersonSentencesController', PersonSentencesController);
 
     /* @ngInject */
-    function PersonSentencesController($log, $scope, $state, $stateParams, _, google, sentenceService, 
+    function PersonSentencesController($log, $scope, $state, $stateParams, $sce, _, google, sentenceService, 
     		FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
@@ -61,8 +61,8 @@
 		//for (word in data[obj]) {
 		prev_sentence = s;
 		s=data[obj].sentence;
-		if (s != prev_sentence && prev_sentence != 0) { var words_obj = {sentence: prev_sentence, words: words}; console.log("instance",words_obj); sentences['data'].push(words_obj); words =""; }
-		else { words += data[obj].string  + " "; } 
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(data[obj].target_string,'<b>'+data[obj].target_string+'</b>'))}; console.log("instance",words_obj); sentences['data'].push(words_obj); words =""; }
+		else { words += data[obj].string != "PUNCT" ? " "+ data[obj].string : data[obj].string; } 
 		    //data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
 		    //data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
 		//}
@@ -207,9 +207,6 @@
 		vm.results = organizeSentences(results);//calculatePercentage(results);
                 vm.isLoadingWordResults = false;
                 vm.isLoadingResults = false;
-	        vm.test="töttöröö";
-		organizeSentences(results);
-		//console.log("loading vm.results", vm.results.$$state.value)
 
             })//.then(function() {
 	    /*
