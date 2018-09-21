@@ -52,17 +52,10 @@
 		};
 	    var s;
 	    var prev_sentence =0;
-	    //console.log(vm.lemmaCount.count);
-	    console.log("FOOFOO",$sce.trustAsHtml('<b>Foo</b>')); 
 	    for (obj in data) {
-		//console.log("sentence comp",s, prev_sentence);
-		//console.log("obj",obj);
-		//console.log("obj value",data[obj]);
-		//var class_sum = getPosTotal(obj); 
-		//for (word in data[obj]) {
 		prev_sentence = s;
 		s=data[obj].sentence;
-		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; console.log("instance",words, data[obj].target_string); sentences['data'].push(words_obj); words = data[obj].string.trim();}
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = data[obj].string.trim();}
 		else { 
 		    var str = "";
 		    if (data[obj].upos != "PUNCT") {
@@ -74,14 +67,9 @@
 		    words += str; 
 		} 
 		var target_string = data[obj].target_string.trim()
-		    //data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
-		    //data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
-		//}
 	    }
 	    var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; 
-	    console.log("instance",words_obj); 
 	    sentences['data'].push(words_obj); words ="";
-	    console.log("sen",sentences);
 	    return sentences;
 	}
 
@@ -214,7 +202,6 @@
                     return;
                 }
                 //drawChart(results);
-		console.log("loading results", results)
 		vm.results = organizeSentences(results);//calculatePercentage(results);
                 vm.isLoadingWordResults = false;
                 vm.isLoadingResults = false;

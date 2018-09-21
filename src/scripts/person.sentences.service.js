@@ -240,26 +240,15 @@
             return nbfEndpoint.getObjectsNoGrouping(qry);
         }
 
+	// Returns list of sentences where the person is mentioned
         function getResults(facetSelections, id) {
             var self = this;
-            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             return nbfEndpoint.getObjectsNoGrouping(formattedLinkQuery.replace('$personId',id)).then(function(results) {
-                //if (results.length > 10000) {
-                //    return $q.reject({
-                //        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
-                //    });
-                //}
 		if(results.length > 0) {
-		console.log(results[0].href);
-                var promises = {};
-                var uposQry = sentenceQuery.replace('$person_formatted_link', results[0].href);
-		console.log(uposQry);
-                //self.upos.forEach(function(upos) {
-                promises = endpoint.getObjectsNoGrouping(uposQry);
-                //});
-		console.log("query",uposQry);
-		console.log("results",promises);
-                return promises;
+                    var promises = {};
+                    var uposQry = sentenceQuery.replace('$person_formatted_link', results[0].href);
+                    promises = endpoint.getObjectsNoGrouping(uposQry);
+                    return promises;
 		} else { return {}; }
             });
         }
