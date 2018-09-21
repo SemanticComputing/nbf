@@ -20,7 +20,7 @@
 			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
     			    <div ng-repeat="sentences in vm.results">
 				
-				<li  ng-repeat="sentence in sentences" styles="align: left;">
+				<li  ng-repeat="sentence in sentences" ng-bind-html="sentence.words">
 				
       				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
 				    {{ sentence.words }}
