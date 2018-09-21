@@ -233,13 +233,16 @@ img.logo:hover {
 
 .comparison-results .word {
   width: 50%;
+  text-align: left;
 }
 .comparison-results .pos_count {
   width: 25%;
+  text-align: left;
 }
 
 .comparison-results .count {
-  width: 25%;
+  width: 15%;
+  text-align: left;
 }
 
 .comparison-result-info {
