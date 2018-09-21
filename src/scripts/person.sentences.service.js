@@ -252,11 +252,12 @@
                 var promises = {};
                 var uposQry = sentenceQuery.replace('$person_formatted_link', results[0].href);
 		console.log(uposQry);
-                self.upos.forEach(function(upos) {
-                    promises = endpoint.getObjectsNoGrouping(uposQry);
-                });
-		console.log(promises);
-                return $q.all(promises);
+                //self.upos.forEach(function(upos) {
+                promises = endpoint.getObjects(uposQry);
+                //});
+		console.log("query",uposQry);
+		console.log("results",promises);
+                return promises;
             });
         }
 
@@ -274,7 +275,7 @@
 
                 //self.upos.forEach(function() {
 		//console.log("results", promises)
-                promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+                promises = nbfEndpoint.getObjects(topQry);
 		console.log("results", promises)
                 //});
                 return promises;

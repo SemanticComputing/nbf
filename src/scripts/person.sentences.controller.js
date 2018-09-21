@@ -44,22 +44,34 @@
             return _.keys(vm.results).length > 0;
         }
 
-	function calculatePercentage(data) {
+	function organizeSentences(data) {
 	    var obj;
-	    var word;
-	    console.log(vm.lemmaCount.count);
+	    var words = "";
+	    var sentences = {
+			data: []
+		};
+	    var s;
+	    var prev_sentence =0;
+	    //console.log(vm.lemmaCount.count);
 	    for (obj in data) {
-		console.log(obj)
-		console.log(data[obj])
-		var class_sum = getPosTotal(obj); 
-		for (word in data[obj]) {
-		    console.log(data[obj][word].count);
-		    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
-		    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
-		}
+		console.log("sentence comp",s, prev_sentence);
+		console.log("obj",obj);
+		console.log("obj value",data[obj]);
+		//var class_sum = getPosTotal(obj); 
+		//for (word in data[obj]) {
+		prev_sentence = s;
+		s=data[obj].sentence;
+		if (s != prev_sentence && prev_sentence != 0) { var words_obj = {sentence: prev_sentence, words: words}; console.log("instance",words_obj); sentences['data'].push(words_obj); words =""; }
+		else { words += data[obj].string  + " "; } 
+		    //data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
+		    //data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
+		//}
 	    }
-	    console.log(data);	
-	    return data;
+	    var words_obj = {sentence: prev_sentence, words: words}; 
+	    console.log("instance",words_obj); 
+	    sentences['data'].push(words_obj); words ="";
+	    console.log("sen",sentences);
+	    return sentences;
 	}
 
 	function getPosTotal(postag){
@@ -192,10 +204,11 @@
                 }
                 //drawChart(results);
 		console.log("loading results", results)
-		vm.results = results.$$state;//calculatePercentage(results);
+		vm.results = organizeSentences(results);//calculatePercentage(results);
                 vm.isLoadingWordResults = false;
                 vm.isLoadingResults = false;
 	        vm.test="töttöröö";
+		organizeSentences(results);
 		//console.log("loading vm.results", vm.results.$$state.value)
 
             })//.then(function() {

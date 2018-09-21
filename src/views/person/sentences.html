@@ -17,14 +17,15 @@
 	    	</div>
 	    	<div class="col-md-8 col-lg-9 text-center thumbnail">
 		    <div>
-			<div> 
-    			    <div ng-repeat="words in vm.results">
-    			        <span ng-repeat="word in words">
+			<div> <ul> 
+    			    <div ng-repeat="sentences in vm.results">
+				
+				<li><span>
 				
       				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
-				    {{ word.string }}
-			    	</span>
-			    </div>
+				    {{ sentences }}
+				</span></li>
+			    </div></ul>
   			</div>
 		    </div>
 		    <div class="col-sm-12" ng-show="vm.loading">
