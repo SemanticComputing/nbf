@@ -72,13 +72,14 @@
  -->
     <!--  JUMBO -->
     
-      <div id="jumbo" class="jumbotron" >
+<div id="jumbo" class="jumbotron" >
         <div class="row">
           <div class="col-md-10">
             <noscript>
-              <h1>Suomen suku</h1>
-              <p>Semanttinen kansallisbiografia</p>
+              <h1>Biografiasampo</h1>
+              <p>Suomalaisten elämäkertojen verkosto semanttisessa webissä</p>
             </noscript>
+            <br />
             <h1 id="jumboTitle">{{ ::vm.strings["jumboTitle"] }}</h1>
             <p id="jumboSubtitle" >{{ ::vm.strings["jumboSubtitle"] }}</p>
           </div>
@@ -87,15 +88,13 @@
       <div class="row">
         <div class="col-md-12">
 
-          <p id="generalDesc">
-          {{ ::vm.strings["generalDesc"] }}
-           (<a data-toggle='modal' data-target='#myModal' href='#'>{{ ::vm.strings["ins"] }}</a>)</p>
+          <p id="generalDesc">{{ ::vm.strings["generalDesc"] }} (<a data-toggle='modal' data-target='#myModal' href='#'>ohje</a>).</p>
           <noscript>
             <p>Portaalilla voi hakea, selata ja visualisoida laajoja tietoaineistoja Suomen historiallisista henkilöistä.</p>
             <p><b>Salli JavaScript käyttääksesi Suomen sukua. Please enable JavaScript to use Semantic Biography of Finland.</b></p>
           </noscript>
-          <p><a href="https://www.facebook.com/groups/sotasampo/"><img src="images/FB-f-Logo__blue_29.png" />
-          <span id="followFacebook">{{ ::vm.strings["followFacebook"] }}</span></a></p>
+          <p><a href="https://www.facebook.com/groups/514385075640669/">
+          <img src="images/FB-f-Logo__blue_29.png" /> <span id="followFacebook">{{ ::vm.strings["followFacebook"] }}</span></a></p>
         </div>
       </div>
 
@@ -120,6 +119,13 @@
               </div>
             </a>
 
+			<a id="places" class="col-md-4 pers-link">
+              <div class="persbox" id="nav-places">
+                <h4 id="placesH">{{ ::vm.strings["placesH"] }}</h4>
+                <p  id="placesP">{{ ::vm.strings["placesP"] }}</p>
+              </div>
+            </a>
+            
             <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
               <div class="persbox" id="nav-statistics">
                 <h4 id="statisticsH">{{ ::vm.strings["statisticsH"] }}</h4>
@@ -156,31 +162,36 @@
      
     </div> <!-- container -->
     	 
-    
-    
-    
+<hr/>
+<h3>Esimerkkejä Biografiasammon käytöstä</h3>
+<div style = "line-height:38px">
+<a class="btn btn-primary" role="button"
+ui-sref="person.detail({ personId: 'p992', tab:'0' })">
+Elämäkerta: Jean Sibeliuksen kotisivu ja Kansallisbiografia</a>
+
+<a class="btn btn-primary" role="button"
+ui-sref="person.detail({ personId: 'p828', tab:'genisukupuu'})">
+Suku ja verkosto: Minna Canthin kotisivu ja sukupuunäkymä</a>
+
+<a class="btn btn-primary" role="button"
+ui-sref="person.map({ personId: 'p987'})">
+Elämä kartalla ja aikajanalla: Eliel Saarisen kansainvälinen ura</a>
+ 
+<a class="btn btn-primary" role="button"
+ui-sref="person.network({ personId: 'p522', coloroption:3, sizeoption:1 })">
+Verkostot: Tapio Rautavaaran egosentrinen verkosto</a>
+
+<a class="btn btn-primary" role="button"
+ui-sref="maps.comparison2.sides({facets: vm.admiralFacet, facets2: vm.clergyFacet, map:vm.mapParam, map2:mapParam2 })">
+Ryhmät: Suomen suuriruhtinaskunnan kenraalien ja amiraalien (1809-1917) ja papiston (1800-1920) elämäkarttojen vertailu</a> 
+
+<div/> <!--  Esimerkit  -->
+   
   </div> <!-- wrapper -->
 
-  <!--   FOOTER     -->
-  <div id="footer">
-  <footer class="footer">
-	<div class="container-fluid" height="100px" >
-		<hr />
-		<a href="https://seco.cs.aalto.fi" style="border:0px">
-			<img id="seco" alt="Semantic Computing Research Group" src="https://www.ldf.fi/img/seco-logo.png"
-											style="height:50px;padding-right:30px; border:none" ></img></a>
-		<a href="https://www.aalto.fi/en/">
-			<img id="aalto" alt="Aalto University" src="https://www.ldf.fi/img/aalto-logo.png"
-											style="height:50px; padding-right:30px; padding-bottom:5px; border:none"></img></a>
-		<a href="http://www.heldig.fi/">
-			<img id="heldig" alt="HELDIG - Helsinki Centre for Digital Humanities" src="http://www.ldf.fi/img/bio/heldig-text.jpg"
-											style="height:50px; padding-right:30px; border:none"></img></a>
-		<a href="https://www.finlit.fi/">
-			<img id="sks" alt="Finnish Literature Society" src="https://www.ldf.fi/img/sks.jpg"
-											style="height:50px; padding-right:30px; border:none"></img></a>
-	</div>
-</footer>
-</div>
+
+<!--   FOOTER     -->
+<div ng-include="'views/footer.html'"></div>
 
 </body>
 </html>
