@@ -30,6 +30,7 @@
         			data.forEach(function (ob) {
         				vm[ob.class] = {people: ob.prslist, count: ob.count};
         			});
+        		
         		}).catch(handleError);
         		
         		
