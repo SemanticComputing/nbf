@@ -154,6 +154,8 @@
             		prev_ob = null,
             		quoted = false;
             	
+            	var strings = [], string="";
+            	
             	res.forEach(function(ob) {
             		var x=parseInt(ob.x), y=parseInt(ob.y), z=parseInt(ob.z);
             		
@@ -166,12 +168,14 @@
             			prev="";
             			prev_ob = null;
             			quoted = false;
+            			if (string) strings.push(string);
+            			string = "";
             		}
             		
             		//	by default a space before word
             		ob.space = true;
             		
-            		//	assume undefined is embash
+            		//	assume undefined is emdash
             		if (!ob.word) { ob.word="–"; 
 	            		// no space in case 1883– or IV–
 	            		if (RegExp('[0-9IVXLCDM.]').test(prev)) ob.space = false;
@@ -229,12 +233,14 @@
             		 */
             		if (ob) {
             			data[x][y].push(ob);
-            		
+            			
+            			string += (prev_ob && ob.space ? ' ' : '')+ob.word;
+            			
             			prev = (ob.word ? ob.word.slice(-1) : "");
             			prev_ob = ob;
             		}
             	});
-            	
+            	console.log(strings);
             	return data;
             });
         }

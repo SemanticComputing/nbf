@@ -17,15 +17,21 @@
           <div class="visible-caption">
             <div class="row">
               <div class="col-xs-12">
-                <p ng-if="(vm.person.birthPlace || vm.person.birthDate || vm.person.deathPlace || vm.person.deathDate)">
-                <span ng-if="(vm.person.birth || vm.person.birthDate)">&#8727;&nbsp;
-                	<span ng-repeat="p in vm.person.birth" >
-                		<span class="placelink" url="{{ ::p.id }}">{{ ::p.label }}</span>
-                	</span>
-                	{{ vm.person.birthDate }}
-                </span>
-                <span ng-if="(vm.person.deathPlace || vm.person.deathDate)">&dagger;&nbsp;{{ vm.person.deathPlace | castArray | join:', ' }}</span>
-                <span ng-if=vm.person.deathDate>{{ vm.person.deathDate }}</span>
+                <p ng-if="(vm.person.birth || vm.person.birthDate || vm.person.death || vm.person.deathDate)">
+	                <span ng-if="(vm.person.birth || vm.person.birthDate)">&#8727;&nbsp;
+	                	<span ng-repeat="p in vm.person.birth" 
+	                		><span ng-if="!$first">, </span
+	                		><span class="placelink" url="{{ ::p.id }}">{{ ::p.label }}</span
+	                	></span>
+	                	<span ng-if="vm.person.birthDate">{{ vm.person.birthDate }}</span>
+	                </span>
+	                <span ng-if="(vm.person.death || vm.person.deathDate)">&dagger;&nbsp;
+	                	<span ng-repeat="p in vm.person.death" 
+	                		><span ng-if="!$first">, </span
+	                		><span class="placelink" url="{{ ::p.id }}">{{ ::p.label }}</span
+	                	></span>
+	                	<span ng-if="vm.person.deathDate">{{ vm.person.deathDate }}</span>
+	                </span>
                 </p>
               </div>
               <div ng-if="vm.person.occupation" class="col-xs-12">
