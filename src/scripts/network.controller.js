@@ -328,47 +328,6 @@
                 }).catch(handleError);
             	
             }).catch(handleError);
-            
-            /* Search people first
-             
-            return networkService.getGroupNodes(facetSelections, vm.searchlimit.value)
-            .then(function(res) {
-            	
-            	if (res.length<2) {
-            		vm.loading = false;
-                	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
-                	vm.messagecolor = 'red';
-                	return;
-            	}
-            	
-            	vm.elems.nodes = res.map(function(ob) { return { data: ob }});
-            	
-            	var ids = res.map(function(ob) { return ob.id.replace('http://ldf.fi/nbf/','nbf:'); }).join(' ');
-            	
-            	// vm.label = res[0].label;
-            	// vm.id = $stateParams.personId;
-            	
-            	return networkService.getLinks(ids)
-                .then(function(edges) {
-                	vm.elems.edges = edges.map(function(ob) { return {data: ob};});
-                	
-                	processData(vm);
-                	
-                	vm.loading = false;
-                	
-                	if (vm.elems.edges.length==vm.searchlimit.value) {
-                		vm.message = "Näytetään {} ensimmäistä linkkiä ja {2} henkilöä"
-                			.replace('{}', vm.searchlimit.value)
-                			.replace('{2}', vm.elems.nodes.length);
-                	} else {
-                		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
-                			.replace('{}', vm.elems.edges.length)
-                			.replace('{2}', vm.elems.nodes.length);
-                	}
-                }).catch(handleError);
-            	
-            }).catch(handleError);
-             */ 
              
         }
 
@@ -424,32 +383,19 @@
             vm.cy.on('click', 'node', function(evt){
 
             	document.body.style.cursor = "auto";
-            	var id = this.id(),
-            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/verkosto';
             	
-            	$location.url(link);
-	          	$scope.$apply();
+            	$state.go('person.network',{ personId: (this.id()).replace(/^.+?(p[0-9]+)$/, '$1') });
+            	
 	    	});
             
             vm.cy.on('mouseover', 'node', function(evt){
             	document.body.style.cursor = "pointer";
-        		/*
-        		var x = evt.renderedPosition.x -40,
-        			y = evt.renderedPosition.y -40;
-        		
-        		vm.popx = x + 'px';
-        		vm.popy = y + 'px';
-        		vm.popover = true;
-        		vm.current = this.id();
-        		$scope.$apply();
-        		*/
          	});
         	
             vm.cy.on('mouseout', 'node', function(evt){
             	document.body.style.cursor = "auto";
-            	/* vm.popover = false;
-        		$scope.$apply(); */
         	});
+            
             vm.changecolor();
             vm.changesize();
             

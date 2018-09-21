@@ -337,9 +337,12 @@
         }
 
         function getBios(id) {
-            var qry = prefixes + bioQuery;
-            var constraint = 'VALUES ?id { <' + id + '> } . ';
-            return endpoint.getObjectsNoGrouping(qry.replace('<RESULT_SET>', constraint))
+        	
+        	var constraint = 'VALUES ?id { <' + id + '> } . ';
+        	
+            var qry = prefixes + bioQuery.replace('<RESULT_SET>', constraint);
+            
+            return endpoint.getObjectsNoGrouping(qry)
             .then(function(result) {
                 return result;
             });

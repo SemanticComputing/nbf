@@ -331,34 +331,20 @@
 	            });
             
             vm.cy.on('click', 'node', function(evt){
-
-            	document.body.style.cursor = "auto";
-            	var id = this.id(),
-            		link = '/'+ (id).replace(new RegExp('/', 'g'), '~2F')+'/verkosto';
             	
-            	$location.url(link);
-	          	$scope.$apply();
+            	document.body.style.cursor = "auto";
+            	
+            	$state.go('person.network',{ personId: (this.id()).replace(/^.+?(p[0-9]+)$/, '$1') });
+            	
 	    	});
             
             
             vm.cy.on('mouseover', 'node', function(evt){
             	document.body.style.cursor = "pointer";
-        		/*
-        		var x = evt.renderedPosition.x -40,
-        			y = evt.renderedPosition.y -40;
-        		
-        		vm.popx = x + 'px';
-        		vm.popy = y + 'px';
-        		vm.popover = true;
-        		vm.current = this.id();
-        		$scope.$apply();
-        		*/
          	});
         	
             vm.cy.on('mouseout', 'node', function(evt){
             	document.body.style.cursor = "auto";
-            	/* vm.popover = false;
-        		$scope.$apply(); */
         	});
         	
             vm.changecolor();

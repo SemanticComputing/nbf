@@ -3,11 +3,10 @@
 <div class="col-sm-6" ng-repeat="person in filteredData">
 	<a uib-popover-template="'views/persongroupTooltipTemplate.html'" 
 		popover-trigger="'mouseenter'"
-		ng-href="{{ person.link }}">
+		ui-sref="person.detail({{ person.link }})">
 		<p class="personlist">{{ person.label }}</p>
 	</a>
 </div>
-
 <ul uib-pagination ng_show="show"
      ng-model="currentPage"
      total-items="data.length"

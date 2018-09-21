@@ -25,9 +25,10 @@
         	
             objects.forEach(function(person) {
                 
+            	person.id = (person.id).replace(/^.+?(p[0-9]+)$/, '$1');
+            	
             	person.birth = person.birth ? _.castArray(person.birth) : null;
             	person.death = person.death ? _.castArray(person.death) : null;
-            	if (person.birth) console.log(person.birth);
             	
                 person.images = person.images ? _.castArray(person.images) : ['images/person_placeholder.svg'];
                 person.imagesources = person.imagesources ? _.castArray(person.imagesources) : [ false ];

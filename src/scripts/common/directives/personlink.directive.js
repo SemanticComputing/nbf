@@ -9,10 +9,6 @@
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        if (!$scope.url) return;
 		        
-		        // $scope.link = '#!/'+ ($scope.url).replace(new RegExp('/', 'g'), '~2F');
-		        // $scope.url = ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1');
-		        // $scope.link = '#!/'+ ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1');
-		        
 		        $scope.personId = { personId: ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1') };
 		        $scope.image = false;
 		        $scope.lifespan = '';
