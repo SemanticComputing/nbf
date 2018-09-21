@@ -18,7 +18,7 @@
 	    	<div class="col-md-8 col-lg-9 text-center thumbnail">
 		    <div>
 			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
-    			    <div ng-repeat="sentences in vm.results">
+    			    <div ng-repeat="sentences in vm.sentenceResults">
 				
 				<li  ng-repeat="sentence in sentences" ng-bind-html="sentence.words">
 				
@@ -31,6 +31,9 @@
 		    <div class="col-sm-12" ng-show="vm.loading">
 	      	    	<!--<img class="loading-img" src="images/loading-lg.gif"></img>-->
 	    	    </div>
+		</div>
+		<div class="row" style="margin-top: 20px;"/>
+		    <div class="row mt-3"><div ng-include="'views/nlp/results.partial.html'"></div>
 		</div>
 	    </div>
 	</div>

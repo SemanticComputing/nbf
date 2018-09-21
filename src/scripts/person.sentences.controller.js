@@ -22,6 +22,7 @@
         vm.test="Toimii" 
         vm.hasResults = hasResults;
         vm.removeFacetSelections = removeFacetSelections;
+        vm.upos = sentenceService.upos;
 
         sentenceService.getFacets().then(function(facets) {
             vm.facets = facets;
@@ -43,6 +44,26 @@
         function hasResults() {
             return _.keys(vm.results).length > 0;
         }
+
+	function calculatePercentage(data) {
+            var obj;
+            var word;
+            console.log("lemmas",vm.lemmaCount.count);
+            for (obj in data) {
+                console.log(obj)
+                console.log(data[obj])
+                var class_sum = getPosTotal(obj);
+            	console.log("lemma in class",class_sum);
+                for (word in data[obj]) {
+                    console.log(data[obj][word].count);
+                    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
+                    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
+                }
+            }
+            console.log(data);
+            return data;
+        }
+
 
 	function organizeSentences(data) {
 	    var obj;
@@ -202,12 +223,28 @@
                     return;
                 }
                 //drawChart(results);
-		vm.results = organizeSentences(results);//calculatePercentage(results);
-                vm.isLoadingWordResults = false;
+		vm.sentenceResults = organizeSentences(results);//calculatePercentage(results);
                 vm.isLoadingResults = false;
 
-            })//.then(function() {
-	    /*
+            }).then(function() {
+            return sentenceService.getWordCount(facetSelections).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.lemmaCount = results[0];
+                    //vm.isLoadingResults = false;
+		    //console.log(results[0]);
+                });
+            }).then(function() {
+                //});
+            return sentenceService.getWordUsageResults(facetSelections, id).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                    vm.results = calculatePercentage(results);
+                    vm.isLoadingWordResults = false;
+                });
+            });/*.then(function() {
              return sentenceService.getLenStatistics(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;

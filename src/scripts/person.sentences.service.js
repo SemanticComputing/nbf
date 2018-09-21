@@ -16,6 +16,8 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getWordUsageResults = getWordUsageResults;
+        this.getWordCount = getWordCount;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = mapfacetService.getFacets;
@@ -103,7 +105,7 @@
 
         var lemmaQry = prefixes +
             ' SELECT DISTINCT ?lemma (COUNT(?lemma) AS ?count) { ' +
-            '  VALUES ?doc { <DOC> } ' +
+            '  VALUES ?doc { <http://ldf.fi/nbf/$personId> } ' +
             '  ?word nif:structure/<http://ldf.fi/nbf/biography/data#docRef> ?doc . ' +
             '  ?word conll:UPOS "<UPOS>" . ' +
             '  ?word conll:LEMMA ?lemma . ' +
@@ -253,24 +255,31 @@
             });
         }
 
-	 function getResultsTop10(facetSelections) {
+	 function getWordUsageResults(facetSelections, id) {
             var self = this;
+	    console.log("getWordUsageResults");
             //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
+            //return nbfEndpoint.getObjectsNoGrouping(formattedLinkQuery.replace('$personId',id)).then(function(results) {
                 /*if (results.length > 10000) {
                     return $q.reject({
                         statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                     });
                 }*/
                 var promises = {};
-                var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+                //var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+                var uposQry = lemmaQry.replace('$personId', id);
+		console.log(uposQry);
+		console.log(self.upos);
 
-                //self.upos.forEach(function() {
-		//console.log("results", promises)
-                promises = nbfEndpoint.getObjects(topQry);
+                self.upos.forEach(function(upos) {
+		console.log("upos", upos.key);
+                    promises[upos.key] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos.key));
+                //promises = endpoint.getObjects(uposQry);
+		console.log("results", promises);
+                });
 		console.log("results", promises)
-                //});
-                return promises;
+                return $q.all(promises);
            // });
         }
 
@@ -288,6 +297,7 @@
 
                 //self.upos.forEach(function() {
                 promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+		console.log("lemmaStats", promises);
                 //});
                 return promises;
             //});
@@ -299,7 +309,7 @@
             var qry = lemmaCountQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
 
             promises = nbfEndpoint.getObjectsNoGrouping(qry);
-	    console.log(promises);
+	    console.log("lemmaStats",promises);
             return promises;
         }
 	function getResultsTopCat(facetSelections) {
