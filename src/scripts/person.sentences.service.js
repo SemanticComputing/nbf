@@ -69,7 +69,7 @@
 
 	var formattedLinkQuery = prefixes +
 	    'SELECT ?href {' +
-	    '  BIND( <$personId> as ?person)' +
+	    '  BIND( <http://ldf.fi/nbf/$personId> as ?person)' +
 	    '  ?person  nbf:formatted_link ?href .'+
 	    '}';
 
@@ -249,6 +249,7 @@
                 //        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
                 //    });
                 //}
+		if(results.length > 0) {
 		console.log(results[0].href);
                 var promises = {};
                 var uposQry = sentenceQuery.replace('$person_formatted_link', results[0].href);
@@ -259,6 +260,7 @@
 		console.log("query",uposQry);
 		console.log("results",promises);
                 return promises;
+		} else { return {}; }
             });
         }
 
