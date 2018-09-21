@@ -37,7 +37,7 @@
     })
 
     .config(function($urlRouterProvider){
-        $urlRouterProvider.when('', '/portal');
+        $urlRouterProvider.when('', '/');
     })
 
     .service('authInterceptor', function ($q, $state) {
@@ -62,7 +62,7 @@
             controllerAs: 'vm'
         })
         .state('portal', {
-            url: '/portal',
+            url: '/',
             templateUrl: 'views/portal.html',
             controller: 'PortalController',
             controllerAs: 'vm'
@@ -70,7 +70,7 @@
         
         .state('person', {
             abstract: true,
-            url: '/:personId',
+            url: '/henkilo/:personId',
             templateUrl: 'views/person/tabs.html'
         })
         .state('person.detail', {
@@ -80,7 +80,7 @@
             controllerAs: 'vm'
         })
         .state('person.map', {
-            url: '/kartta',
+            url: '/kartat',
             templateUrl: 'views/person/map.html',
             controller: 'MapController',
             controllerAs: 'vm'
@@ -128,7 +128,7 @@
         })
         
         .state('maps', {
-            url: '/kartta',
+            url: '/kartat',
             // abstract: true,
             templateUrl: 'views/groupmap/tabs.html'
         })
@@ -186,14 +186,14 @@
         }) 
         
         .state('network', {
-            url: '/verkosto',
+            url: '/verkostot',
             templateUrl: 'views/network.html',
             controller: 'NetworkController',
             controllerAs: 'vm',
         })
         
         .state('nlp', {
-            url: '/nlp',
+            url: '/kielianalyysi',
             abstract: true,
             //templateUrl: 'views/nlp/nlp.html',
             templateUrl: 'views/nlp/tabs.html',
@@ -238,7 +238,7 @@
         })
         
         .state('visu', {
-            url: '/visu',
+            url: '/tilastot',
             // abstract: true,
             templateUrl: 'views/visu/tabs.html'
         })
@@ -269,7 +269,7 @@
             }
         })
         .state('visu2', {
-            url: '/visu2',
+            url: '/tilastot2',
             abstract: true,
             templateUrl: 'views/visu2/visu.html',
         })

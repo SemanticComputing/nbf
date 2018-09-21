@@ -240,7 +240,7 @@
             			prev_ob = ob;
             		}
             	});
-            	console.log(strings);
+            	// console.log(strings);
             	return data;
             });
         }

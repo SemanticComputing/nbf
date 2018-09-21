@@ -20,7 +20,7 @@
         
         vm.setTab = function(newTab) {
         	vm.tab = ''+newTab;
-        	$location.search('tab', newTab);
+        	if (vm.tab!="0") $location.search('tab', newTab);
         };
         
         vm.isSet = function(tabNum){
@@ -29,12 +29,17 @@
         
         
         function init() {
-            nbfService.getPerson($stateParams.personId).then(function(person) {
+        	
+        	var id = $stateParams.personId,
+        		regex = /^p[0-9]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
+        	
+            nbfService.getPerson(id).then(function(person) {
                 vm.person = person;
                 vm.person.externalLinks = getExternalLinks(person);
-                // vm.person.externalLinks = [] ; // NOTE TEMP DISABLED
                 
-                nbfService.getBios(vm.person.id).then(function(data) {
+            	
+                nbfService.getBios(id).then(function(data) {
                 	if (data.length) {
                 		vm.person.bios = data;
                 		
@@ -46,27 +51,27 @@
                 	}
                 });
                 
-                nbfService.getRelatives(vm.person.id).then(function(data) {
+                nbfService.getRelatives(id).then(function(data) {
                 	if (data.length) vm.person.relative = data;
                 });
                 
-                nbfService.getAuthoredBios(vm.person.id).then(function(data) {
+                nbfService.getAuthoredBios(id).then(function(data) {
                 	if (data.length && data[0].people) vm.authoredBios = {people: data[0].people, count: data[0].count};
                 });
 
-                nbfService.getSimilar(vm.person.id).then(function(data) {
+                nbfService.getSimilar(id).then(function(data) {
                 	if (data.length && data[0].people) vm.similar = {people: data[0].people, count: data[0].count};
                 });
                 
-                nbfService.getAuthors(vm.person.id).then(function(data) {
+                nbfService.getAuthors(id).then(function(data) {
                 	if (data.length && data[0].people) vm.authors = {people: data[0].people, count: data[0].count};
                 });
                 
-                nbfService.getByAuthor(vm.person.id).then(function(data) {
+                nbfService.getByAuthor(id).then(function(data) {
                 	if (data.length && data[0].people) vm.sameAuthor = {people: data[0].people, count: data[0].count};
                 });
                 
-                nbfService.getByReferences(vm.person.id).then(function(data) {
+                nbfService.getByReferences(id).then(function(data) {
                 	if (data.length && data[0].people) vm.referenced = {people: data[0].people, count: data[0].count};
                 });
                 
