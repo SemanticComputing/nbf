@@ -54,9 +54,9 @@
 	    var prev_sentence =0;
 	    //console.log(vm.lemmaCount.count);
 	    for (obj in data) {
-		console.log("sentence comp",s, prev_sentence);
-		console.log("obj",obj);
-		console.log("obj value",data[obj]);
+		//console.log("sentence comp",s, prev_sentence);
+		//console.log("obj",obj);
+		//console.log("obj value",data[obj]);
 		//var class_sum = getPosTotal(obj); 
 		//for (word in data[obj]) {
 		prev_sentence = s;

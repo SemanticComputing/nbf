@@ -20,10 +20,10 @@
 			<div> <ul> 
     			    <div ng-repeat="sentences in vm.results">
 				
-				<li><span>
+				<li  ng-repeat="sentence in sentences">
 				
       				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
-				    {{ sentences }}
+				    {{ sentence.words }}
 				</span></li>
 			    </div></ul>
   			</div>

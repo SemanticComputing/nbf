@@ -77,6 +77,7 @@
 	    'SELECT * {' +
 	    '  BIND( <file:///tmp/data/nlp/$person_formatted_link> as ?person)' +
 	    '  ?target  <http://ldf.fi/nbf/biography/data#anchor_link> ?person .' +
+	    '  ?target  nif:isString ?target_string .' +
 	    '  ?target dct:isPartOf ?sentence .' +
 	    '  ?word <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#sentence> ?sentence ;' +
 	    '        <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#WORD> ?string ;' +
@@ -253,7 +254,7 @@
                 var uposQry = sentenceQuery.replace('$person_formatted_link', results[0].href);
 		console.log(uposQry);
                 //self.upos.forEach(function(upos) {
-                promises = endpoint.getObjects(uposQry);
+                promises = endpoint.getObjectsNoGrouping(uposQry);
                 //});
 		console.log("query",uposQry);
 		console.log("results",promises);
