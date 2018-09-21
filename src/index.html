@@ -55,8 +55,8 @@
 
 <body>
 
-  <ws-navbar></ws-navbar>
-
+   <!-- <ws-navbar></ws-navbar> -->
+  <div ng-include="'views/navbar-fi.html'"></div>
   <div ui-view></div>
 
   <script type="text/javascript" src="//www.gstatic.com/charts/loader.js"></script>
@@ -152,10 +152,6 @@
   <script src="scripts/common/faceturlstate.url-state-handler-service2.js"></script>
   <script src="scripts/biography.service.js"></script>
   <!-- endbuild --> 
-  
-  <!-- 
-  <script src="scripts/common/directives/ws-related-links.directive.js"></script>
-  <script src="scripts/common/directives/ws-related-links-paged.directive.js"></script>  
-  -->
+
 </body>
 </html>

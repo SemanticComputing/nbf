@@ -13,19 +13,23 @@
     function PortalController($stateParams, $uibModal, _, nbfService, $sce) {
     	
         var vm = this;
+        vm.admiralFacet = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":"?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4>."}}';
+        vm.clergyFacet = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":"?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5>."}}';
+        vm.mapParam =  '{"center":{"latitude":62.64298263801266,"longitude":19.358826890587807},"zoom":4}';
+        vm.mapParam2 = '{"center":{"latitude":64.02327764081613,"longitude":23.53710973262787},"zoom":5}';
         
         var finnishStrings = {
-                pageTitle: "Semanttinen kansallisbiografia",
-                jumboTitle: "Semanttinen kansallisbiografia",
+                pageTitle: "Biografiasampo",
+                jumboTitle: "Biografiasampo",
                 jumboSubtitle: "Suomalaisten elämäkertojen verkosto semanttisessa webissä",
                 generalDesc: "Sovellus mahdollistaa suomalaisten historiallisten henkilöiden elämäkertojen ja henkilöryhmien tutkimisen " +
                 		"toisiinsa linkitettyjen laajojen tietoaineistojen avulla.",
                 ins: "ohje",
-                followFacebook: "Liity Semanttinen kansallisbiografia -ryhmään Facebookissa",
+                followFacebook: "Liity avoimeen Semantic Biographies -ryhmään Facebookissa",
                 localeLinkText: "In English",
                 choosePerspective: "Valitse sovellusnäkymä aineistoihin",
                 perspectiveTooltip: "Klikkaa käynnistääksesi sovellus",
-                searchH: "Hae ja selaa",
+                searchH: "Haku",
                 searchP: "Etsi elämäkertoja joustavasti eri näkökulmista",
                 mapsH: "Kartat",
                 mapsP: "Elämäkerrat kartalla",
@@ -36,7 +40,10 @@
                 relationsH: "Yhteyshaku",
                 relationsP: "Hae henkilöiden ja paikkojen välisisä yhteyksiä",
                 casultiesH: "Kielianalyysi",
-                casultiesP: "Tutki elämäkerroissa käytetttyä kieltä",
+                casultiesP: "Tutki elämäkerroissa käytettyä kieltä",
+                placesH: "Paikat",
+                placesP: "Tutustu elämäkertoihin paikkojen kautta",	
+                
                 /*
                 photographsH: "Valokuvat",
                 photographsP: "SA-kuva-arkiston valokuvien selaus fasettihaun avulla",

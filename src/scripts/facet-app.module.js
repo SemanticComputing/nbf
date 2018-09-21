@@ -36,9 +36,7 @@
         $urlMatcherFactoryProvider.strictMode(false);
     })
 
-    .config(function($urlRouterProvider){
-        $urlRouterProvider.when('', '/');
-    })
+    
 
     .service('authInterceptor', function ($q, $state) {
         this.responseError = function(response) {
@@ -62,7 +60,7 @@
             controllerAs: 'vm'
         })
         .state('portal', {
-            url: '/',
+            url: '',
             templateUrl: 'views/portal.html',
             controller: 'PortalController',
             controllerAs: 'vm'
@@ -70,7 +68,7 @@
         
         .state('person', {
             abstract: true,
-            url: '/henkilo/:personId',
+            url: '/henkilo/:personId?tab',
             templateUrl: 'views/person/tabs.html'
         })
         .state('person.detail', {
@@ -86,7 +84,7 @@
             controllerAs: 'vm'
         })
         .state('person.network', {
-            url: '/verkosto',
+            url: '/verkosto?coloroption&sizeoption',
             templateUrl: 'views/person/network.html',
             controller: 'PersonNetworkController',
             controllerAs: 'vm'
@@ -170,7 +168,7 @@
             templateUrl: 'views/comparison.html',
         })
         .state('maps.comparison2.sides', { 
-            url: '',
+            url: '?facets&facets2&map&map2',
             views: {
                 'left@maps.comparison2': {
                     templateUrl: 'views/groupmap/comparison2.left.html',
@@ -304,6 +302,10 @@
             templateUrl: 'views/testing.html',
             controller: 'CardsController',
             controllerAs: 'vm'
+        })
+        .state('feedback', {
+            url: '/palaute',
+            templateUrl: 'views/palaute.html'
         })
         ;
     });

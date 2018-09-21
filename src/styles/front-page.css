@@ -3,6 +3,9 @@
    Different application perspectives have CSS files of their own. .
    ========================================================================== */
 
+.modal-content {
+	width: 650px;
+}
 .navbartitle {
   color: white !important;
   font-family: "Courier new";
@@ -21,7 +24,6 @@ html, body {
     height: 100%;
     margin: 0 auto -100px; /* the bottom margin is the negative value of the footer's height */
 }
-
 .footer, .push {
     height: 100px; /* .push must be the same height as .footer */
 }
@@ -45,7 +47,6 @@ html, body {
     min-height: 300px;
 }
 
-
 .pers-link, .ex-link {
     text-decoration: none !important;
 }
@@ -62,48 +63,57 @@ html, body {
 }
 
 .persbox#nav-events {
-	/*
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('bios-4-6.png');
-    background-position: top, middle;
-    */
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/search.png');
+
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.8) ), url('../images/search.png');
     background-size: cover;
 }
 
 .persbox#nav-maps {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('../images/map.png');
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.5) ), url('../images/map.png');
     background-size: cover;
 }
 
-
-.persbox#nav-statistics {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3) ), url('../images/histo.png');
-    background-position: top, middle;
+.persbox#nav-places {
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.8) ), url('../images/places.png');
     background-size: cover;
 }
 
 /* 2. rivi */
 
+.persbox#nav-statistics {
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.5) ), url('../images/histo.png');
+    background-position: top, middle;
+    background-size: cover;
+}
+
+
 .persbox#nav-networks {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/network.png');
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.8) ), url('../images/network.png');
     background-size: cover;
 }
 
 .persbox#nav-relations {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/bios-4-6.png');
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.8) ), url('../images/bios-4-6.png');
     background-position: top, middle;
 }
 
+/* 3. rivi */
+
 .persbox#nav-language {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/language.png');
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/language.png');
     background-size: cover;
 }
 
+.koli-color {
+	color:rgb(210, 186, 13);
+}
+
+/* **********************************************
 
 
 
 .persbox#nav-photographs {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/bios.png');
+    background: linear-gradient( rgba(177, 113, 26, 0.6), rgba(0, 0, 0, 0.6) ), url('../images/places.png');
     background-position: 20% 0%;
 }
 
@@ -112,13 +122,16 @@ html, body {
     background-position: top;
 }
 
+books1.jpg
+*/
+
 .img-copyright {
   padding: 20px;
   text-align: right;
 }
 
 #jumbo {
-	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6) ), url('../images/parchment.jpg');
+	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.0) ), url('../images/books1.jpg'); 
     background-size: cover;
     background-repeat: no-repeat, repeat;
     /* background-blend-mode: lighten; */

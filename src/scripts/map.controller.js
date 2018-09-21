@@ -192,7 +192,13 @@
     					var r = event.place.uri[j] && places[event.place.uri[j]] && places[event.place.uri[j]]['count'] ? 
     							15.*Math.sqrt(places[event.place.uri[j]]['count']): 
     							15.0 ;
-            			var m = generateMarker(event.place.latitude[j], event.place.longitude[j], event.id, event.class, r, event.place.name[j]);
+            			var m = generateMarker(event.place.latitude[j], 
+            					event.place.longitude[j], 
+            					event.id, 
+            					event.class, 
+            					r, 
+            					event.place.name[j],
+            					event.place.uri[j]);
     					event.markers.push(m);
     					vm.markers.push(m);
     					bounds.extend({lat: parseInt(event.place.latitude[j]), lng: parseInt(event.place.longitude[j])});
@@ -273,7 +279,7 @@
         
         
         var MARKERID = 1;
-        function generateMarker(lat, lon, id, type, r, locname) {
+        function generateMarker(lat, lon, id, type, r, locname, uri) {
         	if (!r) r=15.0;
         	var ICONCOLORS = {
     				death:	"#ff4141",
@@ -287,6 +293,7 @@
     		};
         	
         	var m = {
+        			uri: uri,
         			latitude: lat,
         			longitude: lon,
         			id: MARKERID++,

@@ -1,0 +1,154 @@
+<nav id="nav" class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!--  HEADER -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" ui-sref="portal" style="padding:0px 0px 10px 0px">
+        <span>
+        	<img width="90" height="50" src="images/agricola.jpg" >
+        </span>
+      </a>
+      <!-- 
+      <a class="navbar-brand" href="http://www.aalto.fi/fi/" target="_self" style="padding:0px 0px 10px 0px">
+        <span>
+          <img src="images/aalto_uni_logo.png" class="logo" >
+        </span>
+      </a>
+      
+      <a class="navbar-brand" href="https://www.finlit.fi/" target="_self" style="padding:0px 0px 10px 0px">
+        <span>
+          <img src="images/sks_logo.png" class="logo" >
+        </span>
+      </a>
+      
+      <a class="navbar-brand" href="https://semanticcomputing.github.io/nbf" target="_self" style="padding:14px 0px 10px 0px">
+        <span>
+        Semanttinen kansallisbiografia
+        </span>
+      </a>
+       -->
+       
+    </div>
+
+    <!--  NAVBAR CONTENT -->
+    <div class="collapse navbar-collapse" id="navbar-collapse-1">
+	
+      <div ng-include="'views/subnavbar.html'"></div>
+      
+      <!-- 
+      <ul class="nav navbar-nav">
+      	<li><a><span class='glyphicon glyphicon-globe' aria-hidden='true'></span> Suomeksi</a></li>
+        <li><a onclick = "alert('English not upported yet')"><span class='glyphicon glyphicon-globe' aria-hidden='true'></span> In English</a></li>
+	  </ul>
+       -->
+	  
+      <ul class="nav navbar-nav navbar-right">
+      <li>
+      	<a ui-sref="feedback"><span class ="koli-color">
+      		<span class="glyphicon glyphicon-pencil koli-color" aria-hidden="true">
+      		</span> Palaute</span></a>
+      	</li>
+		
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class ="koli-color">
+          <span class='glyphicon glyphicon-info-sign' aria-hidden='true'></span> Tietoja<span class="caret"></span></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://seco.cs.aalto.fi/projects/biografiasampo#aineistot">Aineistot</a></li>
+            <li><a href="https://www.ldf.fi/">Datapalvelu LDF.fi</a></li>
+            <li><a href="https://seco.cs.aalto.fi/projects/biografiasampo/">Biografiasampo-projektin kotisivu</a></li>
+            <li><a href="https://seco.cs.aalto.fi/projects/biografiasampo#yhteystiedot">Yhteystiedot</a></li>
+            <li><a href="https://www.facebook.com/groups/514385075640669/"><img src="images/FB-f-Logo__blue_29.png" /> Facebook-ryhmä </a></li>
+          </ul>
+        </li>
+		<li><a data-toggle="modal" data-target="#myModal" href="#"><span class ="koli-color">
+				<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span>
+				 Ohje</span></a></li>
+		</ul>
+		
+		</div>
+	</div>
+  </div>
+</nav>
+
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h1 class="modal-title">Biografiasammon käyttöohje</h1>
+			</div>
+			<div class="modal-body">
+				<p>Biografiasammon käyttäjiä ovat 1) ihmiset ja 2) tietokoneet.</p>
+				<h2>Käyttö elämäkertojen tutkimiseen</h2>
+				<p>
+				Semanttinen kansallisbiografia tarjoaa sisältöjään loppukäyttäjälle erilaisten sovellusnäkymien kautta, joita ovat:
+				</p>
+				<ol class="demo-desc">
+		<li>
+          <div>
+            <span><b>Haku</b>-näkymän kautta voit hakea joustavasti elämäkertoja fasettihaun avulla.</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span><b>Kartat</b>-näkymän kautta voit tarkastella ja vertailla ryhmien elämäkertoja kartoilla.</span>
+          </div>
+        </li>
+        <li>
+         <div>
+            <span><b>Paikat</b>-näkymässä voit hakea ja katsoa biografioiden tapahtumia zoomautuvilla kartoilla ml. historialliset kartat. Paikan markkeria klikkaamalla
+            aukeaa paikan kotisivu, josta löytyy kaikki paikkaan liittyvä informaatio.</span>
+         </div>
+        </li>
+        <li>
+          <div>
+            <span><b>Tilastot</b>-näkymän avulla voi rajata henkilöryhmiä ja tutkia ja vertailla niitä proposopografisesti tilastojen avulla.</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span><b>Verkostot</b>-näkymä tarjoaa työkaluja henkilöiden välisten verkostojen tutkimiseen.</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span><b>Yhteyshaussa</b> voi etsiä henkilöiden ja paikkojen välisiä yhteyksiä.</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span><b>Kielialanalyysi</b>-näkymän avulla voi rajata elämäkertoja ja tutkia niissä käytettyä kieltä.</span>
+          </div>
+        </li>
+ 		</ol>
+		<p>
+		Sovellusnäkymän voi valita portaalin aloitussivulta ja aina eri näkymien sovellussivujen yläpalkista.
+		</p>
+		<p>Biografiasammon sisältöjä on esitelty hankken <a href="http://seco.cs.aalto.fi/projects/biografiasampo#aineistot">kotisivulla</a>.
+		</p>
+		<h2>Käyttö datapalveluna</h2>
+		<p>
+		Elämäkertoihin liittyvää metadataa on toistaiseksi saatavilla linkitettynä avoimena datana (Linked Open Data) tekijänoikeuksista johtuen vain erikseen sopimalla. 
+		Lisätietoja saa hankkeen <a href="http://seco.cs.aalto.fi/projects/biografiasampo#yhteystiedot">yhteyshenkilöiltä</a>.
+	    Dataa voidaan periaatteessa ottaa käyttöön sovelluksissa joko lähdedataa lataamalla,
+		toiminnallisen SPARQL-rajapinnan kautta tai viittaamalla suoraan sisältökohteiden kotisivuihin.
+		</p>
+		<p>Aineistot on muunnettu ja harmonisoitu semanttisesti yhteentoimivaksi tietämysverkoksi (knowledge graph)
+		semanttisen webin teknologioiden avulla Aalto-yliopiston johtamassa
+		<a href="https://seco.cs.aalto.fi/projects/severi/">Severi-projektissa</a> osana laajempaa
+		<a href="https://seco.cs.aalto.fi/projects/biographies/">semanttisiin elämäkertoihin</a> liittyvää tutkimustyötä.
+		</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+			</div>
+		</div>
+</div>
+
