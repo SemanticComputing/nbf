@@ -17,16 +17,21 @@
         
         function init() {
         	vm.isLoadingResults = true;
-        	placeService.getPlace($stateParams.placeId).then(function(data) {
+        	
+        	var id = $stateParams.placeId,
+    			regex = /^[^/]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/places/'+id; }
+        	
+        	placeService.getPlace(id).then(function(data) {
         		
         		vm.isLoadingResults = false;
         		vm.place = data[0];
         		
-        		placeService.getHierarchy($stateParams.placeId).then(function(data) {
+        		placeService.getHierarchy(id).then(function(data) {
         			if (data.length) { vm.related = data; setMap(); }
         		}).catch(handleError);
         		
-        		placeService.getEvents($stateParams.placeId).then(function(data) {
+        		placeService.getEvents(id).then(function(data) {
         			data.forEach(function (ob) {
         				vm[ob.class] = {people: ob.prslist, count: ob.count};
         			});
@@ -91,7 +96,7 @@
 	    							title: ob.label
 	    							},
     							"onClick": function () {
-        			        		$state.go('place',{ placeId: ob.id });
+        			        		$state.go('place',{ placeId: (ob.id).replace(/^.+?([^/]+)$/, '$1') });
         	        			}
 	    	        			});
         			}
@@ -107,47 +112,6 @@
         	
         }
         
-        /*
-        placeService.getFacets().then(function(facets) {
-            vm.facets = facets;
-            vm.facetOptions = getFacetOptions();
-            vm.facetOptions.scope = $scope;
-            vm.handler = new FacetHandler(vm.facetOptions);
-        });
-        
-        function getFacetOptions() {
-        	vm.readUrl();
-            var options = placeService.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
-            return options;
-        }
-        function handleEvents(events, vm) {
-        	var born = [],
-        		died = [],
-        		evented = [];
-        	
-        	events.forEach(function(event) {
-        		var prs = event.prs;
-        	    
-        		switch(prs.event) {
-	        	    case "http://ldf.fi/nbf/Birth":
-	        	    	born.push(prs);
-	        	        break;
-	        	    case "http://ldf.fi/nbf/Death":
-	        	    	died.push(prs);
-	        	        break;
-	        	    default:
-	        	    	prs.label = prs.label + ': ' + prs.eventLabel;
-	        	    evented.push(prs);
-        		}
-        	});
-        	
-        	vm.place = { id: events[0].id, label: events[0].label };
-        	vm.place.born = born;
-        	vm.place.died = died;
-        	vm.place.event = evented;
-        }
-        */
         function openPage() {
             $uibModal.open({
                 component: 'registerPageModal',

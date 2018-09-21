@@ -19,7 +19,7 @@
 		        	return;
 		        }
 		        
-		        $scope.url = ($scope.url).replace('/www.ldf.fi/', '/ldf.fi/');
+		        $scope.url = ($scope.url).replace(/^.+?([^/]+)$/, '$1');
 		        $scope.placeid = { placeId: $scope.url };
 		        
 		        $scope.image = false;
@@ -31,7 +31,6 @@
 		        	if (data.length) data = data[0];
 		        	$scope.label = data.label;
 		        	
-		        	// if (data.hasOwnProperty('image')) $scope.image = data.image;
 		        });
 		        
 			}],

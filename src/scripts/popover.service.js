@@ -136,6 +136,9 @@
         }
         
         function getPlacePopover(id) {
+        	var regex = /^[^/]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/places/'+id; }
+    	
         	id = id.replace('/www.ldf.fi/', '/ldf.fi/');
         	var constraint = 'VALUES ?id { <' + id + '> } . ';
         	var qry = prefixes + queryForPlacePopover.replace('<RESULT_SET>', constraint);
