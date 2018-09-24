@@ -12,6 +12,7 @@ USER node
 
 COPY *.json ./
 
+
 RUN npm install
 RUN bower install
 
@@ -21,5 +22,7 @@ COPY Gruntfile.js ./
 COPY src ./src
 
 RUN grunt build
+
+COPY serve.json docs
 
 CMD serve -l 9000 docs

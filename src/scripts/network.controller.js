@@ -57,7 +57,7 @@
         };
         
         vm.SIZEOPTIONS = [
-        	{value:'Vakio', tooltip:false},
+        	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
         	// {value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
         	{value:'Asteluku', tooltip:'Asteluku (degree) tarkoittaa henkilöstä lähtevien ja saapuvien linkkien kokonaismäärää.'},
         	{value:'Tuloaste', tooltip:'Tuloaste (indegree) tarkoittaa henkilöön saapuvien linkkien lukumäärää.'},
@@ -142,7 +142,7 @@
         };
         
         vm.COLOROPTIONS = [
-        	{value:'Vakio', tooltip:false},
+        	{value:'Vakio', tooltip:'Tästä voit valita miten solmun väri määräytyy'},
         	{value:'Sukupuoli', tooltip:'Henkilöt väritetään sukupuolen mukaan.'},
         	{value:'Toimiala', tooltip:'Henkilöt väritetään tietokannassa ilmoitetun toimialan mukaan.'}
         	//, {value:'Etäisyys', tooltip:'Solmujen väri määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'}

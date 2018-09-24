@@ -35,9 +35,9 @@
 		
         
         vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
-    		'#990099', '#3B3EAC', '#0099C6', '#DD4477', 
-    		'#66AA00', '#B82E2E', '#316395', '#994499', 
-    		'#22AA99', '#AAAA11', '#6633CC', '#E67300', 
+    		'#990099', '#3B3EAC', '#0099C6', '#DD4477',
+    		'#66AA00', '#B82E2E', '#316395', '#994499',
+    		'#22AA99', '#AAAA11', '#6633CC', '#E67300',
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
         vm.LIMITOPTIONS = [{value:10, label:'10'},
@@ -57,7 +57,7 @@
         };
         
         vm.SIZEOPTIONS = [
-        	{value:'Vakio', tooltip:false},
+        	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
         	{value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
         	{value:'Asteluku', tooltip:'Asteluku (degree) tarkoittaa henkilöstä lähtevien ja saapuvien linkkien kokonaismäärää.'},
         	{value:'Tuloaste', tooltip:'Tuloaste (indegree) tarkoittaa henkilöön saapuvien linkkien lukumäärää.'},
@@ -143,7 +143,7 @@
         };
         
         vm.COLOROPTIONS = [
-        	{value:'Vakio', tooltip:false},
+        	{value:'Vakio', tooltip:'Tästä voit valita miten solmun väri määräytyy'},
         	{value:'Sukupuoli', tooltip:'Henkilöt väritetään sukupuolen mukaan.'},
         	{value:'Toimiala', tooltip:'Henkilöt väritetään tietokannassa ilmoitetun toimialan mukaan.'},
         	{value:'Etäisyys', tooltip:'Solmujen väri määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'}];
