@@ -78,12 +78,15 @@
         	switch(vm.sizeoption) {
 	            case vm.SIZEOPTIONS[1]:
 	            	//	DIJKSTRA
-	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
+	            	var root = vm.cy.getElementById('http://ldf.fi/nbf/'+vm.id);
+	            	
+	            	var dj = vm.cy.elements().dijkstra( {root:root} );
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
 	            		n.data.dijkstra = -dj.distanceTo(node);
 	            	});
 	            	numeric2Size(vm.elems, 'dijkstra', 'size', 10, 50);
+	            
 	            	str = 'data(size)';
 	            	break;
 	            case vm.SIZEOPTIONS[2]:
@@ -204,11 +207,11 @@
         	});
         }
 
-        if (lc.coloroption) {
+        if (lc.hasOwnProperty('coloroption')) {
         	vm.coloroption = vm.COLOROPTIONS[parseInt(lc.coloroption)];
         }
         
-        if (lc.sizeoption) {
+        if (lc.hasOwnProperty('sizeoption')) {
         	vm.sizeoption = vm.SIZEOPTIONS[parseInt(lc.sizeoption)];
         }
         
