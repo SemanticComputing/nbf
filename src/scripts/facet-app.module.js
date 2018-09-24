@@ -68,12 +68,18 @@
         
         .state('person', {
             abstract: true,
-            url: '/henkilo/:personId?tab',
+            url: '/henkilo/:personId',
             templateUrl: 'views/person/tabs.html'
         })
         .state('person.detail', {
-            url: '',
+            url: '?tab',
             templateUrl: 'views/person/detail.html',
+            params: { 
+            	   'tab': {
+            	      value: '0',
+            	      squash: true
+            	   }
+            	},
             controller: 'DetailController',
             controllerAs: 'vm'
         })
@@ -85,6 +91,16 @@
         })
         .state('person.network', {
             url: '/verkosto?coloroption&sizeoption',
+            params: { 
+            	coloroption: {
+         	      value: '0',
+         	      squash: true
+         	   },
+         	    sizeoption: {
+         	      value: '0',
+         	      squash: true
+         	   }
+         	},
             templateUrl: 'views/person/network.html',
             controller: 'PersonNetworkController',
             controllerAs: 'vm'

@@ -20,7 +20,7 @@
         
         vm.setTab = function(newTab) {
         	vm.tab = ''+newTab;
-        	$location.search('tab', newTab);
+        	if (newTab!='0') $location.search('tab', newTab);
         };
         
         vm.isSet = function(tabNum){
