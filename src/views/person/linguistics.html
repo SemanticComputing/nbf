@@ -1,0 +1,25 @@
+<div class="container-fluid">
+    <div class="row">
+	<div uib-alert ng-if="vm.error">
+	    {{ vm.error }}
+	</div>
+	<div class="container-fluid text-center" >
+	    <h1>Kielianalyysi</h1>
+	    <div class="container-fluid thumbnail">
+	    	<div>
+		    <div class="col-md-4 pull-md-4 col-lg-3 text-left" style="width:20%" >
+		    	<h1>Tutki henki&shy;lön elämänkerran sanastoa.</h1>
+		    	<p>
+		    	    Sivulla esitetään listoja sanoista, joita ilmenee henkilön elämän kerrassa.
+			    Sanat on luokiteltu sanaluokkiin käyttäen automaattista tekstin luokittelijaa.
+		    	</p>
+		    </div>
+	    	</div>
+		<div class="col-md-8 col-lg-9 text-center thumbnail" style="width:80%">
+		<!--div class="row" style="margin-top: 20px;"/-->
+		    <div class="row mt-3"><div ng-include="'views/nlp/results.partial.html'"></div>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
