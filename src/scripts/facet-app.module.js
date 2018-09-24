@@ -94,6 +94,12 @@
             templateUrl: 'views/person/sentences.html',
             controller: 'PersonSentencesController',
             controllerAs: 'vm'
+        })
+	.state('person.linguistics', {
+            url: '/kielianalyysi',
+            templateUrl: 'views/person/linguistics.html',
+            controller: 'PersonLinguisticsController',
+            controllerAs: 'vm'
         }) 
         .state('place', { //	
             url: '/paikka/:placeId',
