@@ -2,9 +2,9 @@
 <html lang="fi">
 
 <head>
-  <!-- 
+  <!--
   //	NOTE: this functionality moved to scripts/portal.controller.js
-  
+
   <script src="../scripts/front-page.js"></script>
   <title></title>
   <meta charset="utf-8" />
@@ -12,10 +12,10 @@
    <meta name="google-site-verification" content="yC4ofDhxNJ_sXh8xCtC7RxpxGtbTdTxavHmkx9aaTJ4" />
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-   
+
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
@@ -44,11 +44,11 @@
 <script>
   	$(document).ready(function(){
   		$("#nav").load("page-templates/navbar-fi.html.partial");
-    	$("#footer").load("views/footer.html.partial") 
-		}) 
+    	$("#footer").load("views/footer.html.partial")
+		})
 </script>
   -->
-  
+
 </head>
 
 <body>
@@ -59,19 +59,19 @@
           <h3>Sovellus vaatii toimiakseen JavaScriptin. The application requires JavaScript to function.</h3>
         </div>
     </noscript>
-	
+
      <!--  CONTAINER -->
-     
+
     <div class="container">
 
-<!--  HEADER -->  
- 
-<!-- 
+<!--  HEADER -->
+
+<!--
 <div id="nav"></div>
-<img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px"> <img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px">      
+<img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px"> <img src = "css/bios.png" height="50px"><img src = "css/bios.png" height="50px">
  -->
     <!--  JUMBO -->
-    
+
 <div id="jumbo" class="jumbotron" >
         <div class="row">
           <div class="col-md-10">
@@ -119,13 +119,13 @@
               </div>
             </a>
 
-			<a id="places" class="col-md-4 pers-link">
+	          <a id="places" class="col-md-4 pers-link" href="http://biografiasampo.fi/paikat/">
               <div class="persbox" id="nav-places">
                 <h4 id="placesH">{{ ::vm.strings["placesH"] }}</h4>
                 <p  id="placesP">{{ ::vm.strings["placesP"] }}</p>
               </div>
             </a>
-            
+
             <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
               <div class="persbox" id="nav-statistics">
                 <h4 id="statisticsH">{{ ::vm.strings["statisticsH"] }}</h4>
@@ -139,7 +139,7 @@
                 <p  id="networksP">{{ ::vm.strings["networksP"] }}</p>
               </div>
             </a>
-			
+
             <a id="relations" class="col-md-4 pers-link">
               <div class="persbox" id="nav-relations">
                 <h4 id="relationsH">{{ ::vm.strings["relationsH"] }}</h4>
@@ -153,15 +153,15 @@
                 <p  id="casultiesP">{{ ::vm.strings["casultiesP"] }}</p>
               </div>
             </a>
-            
+
           </div>
         </div>
-       
+
 
       <div class="push"></div>
-     
+
     </div> <!-- container -->
-    	 
+
 <hr/>
 <h3>Esimerkkejä Biografiasammon käytöstä</h3>
 <div style = "line-height:38px">
@@ -176,17 +176,17 @@ Suku ja verkosto: Minna Canthin kotisivu ja sukupuunäkymä</a>
 <a class="btn btn-primary" role="button"
 ui-sref="person.map({ personId: 'p987'})">
 Elämä kartalla ja aikajanalla: Eliel Saarisen kansainvälinen ura</a>
- 
+
 <a class="btn btn-primary" role="button"
 ui-sref="person.network({ personId: 'p522', coloroption: 3, sizeoption: 1 })">
 Verkostot: Tapio Rautavaaran egosentrinen verkosto</a>
 
 <a class="btn btn-primary" role="button"
 ui-sref="maps.comparison2.sides({facets: vm.admiralFacet, facets2: vm.clergyFacet, map:vm.mapParam, map2:mapParam2 })">
-Ryhmät: Suomen suuriruhtinaskunnan kenraalien ja amiraalien (1809-1917) ja papiston (1800-1920) elämäkarttojen vertailu</a> 
+Ryhmät: Suomen suuriruhtinaskunnan kenraalien ja amiraalien (1809-1917) ja papiston (1800-1920) elämäkarttojen vertailu</a>
 
 <div/> <!--  Esimerkit  -->
-   
+
   </div> <!-- wrapper -->
 
 
