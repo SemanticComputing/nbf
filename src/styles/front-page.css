@@ -131,7 +131,7 @@ books1.jpg
 }
 
 #jumbo {
-	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.0) ), url('../images/books1.jpg'); 
+	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.0) ), url('../images/books2.jpg'); 
     background-size: cover;
     background-repeat: no-repeat, repeat;
     /* background-blend-mode: lighten; */
