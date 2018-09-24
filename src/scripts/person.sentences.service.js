@@ -16,6 +16,7 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getReferences = getReferences;
         this.getPersonName = getPersonName;
         this.getWordUsageResults = getWordUsageResults;
         this.getWordCount = getWordCount;
@@ -87,6 +88,31 @@
             '}';
 
 
+	var referencesQuery = prefixes +
+	    'SELECT * {' +
+	    '  BIND( <http://ldf.fi/nbf/$personId> as ?person)' +
+	    '  ?source <http://ldf.fi/nbf/biography/data#docRef> ?person .' +
+	    '  ?source dct:hasPart/dct:references ?target .' +
+	    '  ?target  nif:isString ?target_string .' +
+	    '  ?target <http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .' +
+	    '  ?target dct:isPartOf ?sentence .' +
+	    '  ?word <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#sentence> ?sentence ;' +
+	    '        <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#WORD> ?string ;' +
+	    '        <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#UPOS> ?upos ;' +
+	    '        <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#ID> ?id ;' +
+	    '        <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#structure> ?structure ;' +
+	    '        <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#sentenceOrder> ?sID .' +
+	    '  ?sentence dct:isPartOf ?paragraph .' +
+	    '  ?paragraph <http://ldf.fi/nbf/biography/data#order> ?i .' +
+	    '  BIND(xsd:integer(?id) as ?x)' +
+	    '  BIND(xsd:decimal(STR(?sID)) as ?y)' +
+	    '  BIND(xsd:integer(?i) as ?z)' +
+	    '  BIND(REPLACE(STR(?target_link), "file:///tmp/data/nlp/", "") AS ?link)' +
+	    '  SERVICE <http://ldf.fi/nbf/sparql> {' +
+	    '    ?personUri nbf:formatted_link ?link .' +
+	    '  }' +
+	    '} ORDER BY ASC(?structure) ASC(?z) ASC(?y) ASC(?x)' ;
+
 	var sentenceQuery = prefixes +
 	    'SELECT * {' +
 	    '  BIND( <file:///tmp/data/nlp/$person_formatted_link> as ?person)' +
@@ -100,10 +126,15 @@
 	    '        <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#structure> ?structure ;' +
 	    '        <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#sentenceOrder> ?sID .' +
 	    '  ?sentence dct:isPartOf ?paragraph .' +
+	    '  ?paragraph dct:isPartOf/<http://ldf.fi/nbf/biography/data#docRef> ?personUri .' +
 	    '  ?paragraph <http://ldf.fi/nbf/biography/data#order> ?i .' +
 	    '  BIND(xsd:integer(?id) as ?x)' +
 	    '  BIND(xsd:decimal(STR(?sID)) as ?y)' +
 	    '  BIND(xsd:integer(?i) as ?z)' +
+	    '  SERVICE <http://ldf.fi/nbf/sparql> {' +
+	    '     ?personUri <http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://www.w3.org/2004/02/skos/core#prefLabel> ?label_lang . '+
+	    '     BIND (str(?label_lang) AS ?label)' +
+	    '  }' +
 	    '} ORDER BY ASC(?structure) ASC(?z) ASC(?y) ASC(?x)' ;
 
         // The query for the results.
@@ -305,24 +336,12 @@
             return promises;
         }
 
-	 function getResultsBottom10(facetSelections) {
-            var self = this;
-            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-                /*if (results.length > 10000) {
-                    return $q.reject({
-                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
-                    });
-                }*/
-                var promises = {};
-                var topQry = topBottomResults.replace(/<RESULT_SET>/g,  facetSelections.constraint.join(' '));
-
-                //self.upos.forEach(function() {
-                promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-		console.log("lemmaStats", promises);
-                //});
-                return promises;
-            //});
+	 function getReferences(facetSelections, id) {
+ 	    var self = this;
+            var promises = {};
+            var uposQry = referencesQuery.replace('$personId', id);
+            promises = endpoint.getObjectsNoGrouping(uposQry);
+            return promises;
         }
 
 	 function getWordCount(facetSelections) {

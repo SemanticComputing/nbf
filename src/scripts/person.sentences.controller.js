@@ -65,18 +65,98 @@
         }
 
 
-	function organizeSentences(data) {
+	function organizeReferences(data) {
 	    var obj;
 	    var words = "";
 	    var sentences = {
 			data: []
 		};
+	    var targets = {
+		data: []
+	    };
+	    var s;
+	    var wordId;
+	    var prev_sentence =0;
+	    var prev_wordId =0;
+	    for (obj in data) {
+		prev_sentence = s;
+		prev_wordId = wordId;
+		s=data[obj].sentence;
+		wordId=data[obj].word;
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { 
+		    var words_obj = { 
+			sentence: prev_sentence, 
+			words: $sce.trustAsHtml(render_targets(words, targets['data'])) 
+		    }; 
+                    sentences['data'].push(words_obj); 
+		    words = data[obj].string.trim();
+		    targets = {
+                	data: []
+            	    };  
+		}
+		else { 
+		    var str = "";
+		    if (data[obj].upos != "PUNCT") {
+			str= " "+data[obj].string.trim()
+		    } else { 
+			str=data[obj].string.trim();
+		    }
+		    if(wordId != prev_wordId){
+		    	words += str; 
+		    }
+		} 
+		var target_string = data[obj].target_string.trim();
+		var target_link = data[obj].personUri.trim();
+		var target_elem = {target_string: target_string, target_link: target_link};
+		if (find_item(targets['data'], target_string, target_link) == false ) { 
+		    targets['data'].push({target_string: target_string, target_link: target_link});
+		}
+	    }
+	    var words_obj = { 
+		sentence: prev_sentence, 
+		words: $sce.trustAsHtml(render_targets(words, targets['data']))
+	    }; 
+	    sentences['data'].push(words_obj); words ="";
+	    return sentences;
+	}
+
+	function find_item(vendors, target_string, target_link){
+	var found = false;
+	for(var i = 0; i < vendors.length; i++) {
+	    if (vendors[i].target_string === target_string && vendors[i].target_link === target_link) {
+	        found = true;
+	        return true;
+	    }
+	}
+	return false;
+	}
+
+	function render_targets(words, targets) {
+	    var obj;
+	    console.log(targets);
+	    for (obj in targets) {
+		var target = targets[obj];
+		words = words.replace(target.target_string, '<span class="personlink" url="'+target.target_link+'">'+target.target_string+'</span>')
+	    }
+	    console.log(words);
+	    return words;
+	}
+
+	function organizeSentences(data) {
+	    console.log("data len",data.length);
+	    var obj;
+	    var words = ""; // = '<span class="personlink" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
+	    var sentences = {
+			data: []
+		};
 	    var s;
 	    var prev_sentence =0;
+	    if (data.length > 0) {
 	    for (obj in data) {
 		prev_sentence = s;
 		s=data[obj].sentence;
-		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = data[obj].string.trim();}
+		console.log("if", s, prev_sentence, words.length );
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { console.log("save", words); var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
 		else { 
 		    var str = "";
 		    if (data[obj].upos != "PUNCT") {
@@ -85,12 +165,19 @@
 			
 			str=data[obj].string.trim();
 		    }
+
+		    if (obj == 0){
+        	        words = '<span class="personlink" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
+                    }
+	
 		    words += str; 
 		} 
 		var target_string = data[obj].target_string.trim()
 	    }
 	    var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; 
-	    sentences['data'].push(words_obj); words ="";
+	    sentences['data'].push(words_obj); 
+	    words ="";
+	    }
 	    return sentences;
 	}
 
@@ -212,7 +299,6 @@
             vm.isLoadingWordResults = true;
             vm.results = [];
             vm.error = undefined;
-	    vm.test="Joo";
 
             var updateId = _.uniqueId();
             latestUpdate = updateId;
@@ -237,11 +323,11 @@
                 });
             }).then(function() {
                 //});
-            return sentenceService.getWordUsageResults(facetSelections, id).then(function(results) {
+            return sentenceService.getReferences(facetSelections, id).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
-                    vm.results = calculatePercentage(results);
+		    vm.referenceResults = organizeReferences(results);//calculatePercentage(results);
                     vm.isLoadingWordResults = false;
                 });
             }).then(function() {

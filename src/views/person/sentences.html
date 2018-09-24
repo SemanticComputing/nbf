@@ -15,10 +15,22 @@
 		    	</p>
 		    </div>
 	    	</div>
-	    	<div class="col-md-8 col-lg-9 text-center thumbnail">
-		    <div>
+	    	<div class="col-md-8 col-lg-9 text-center thumbnail" style="text-align:left">
+		    <div> <h4> Viittaukset muista biografioista henkilöön </h4>
 			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
     			    <div ng-repeat="sentences in vm.sentenceResults">
+				
+				<li  ng-repeat="sentence in sentences" ng-bind-html="sentence.words">
+				
+      				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
+				    {{ sentence.words }}
+				</span></li>
+			    </div></ul>
+  			</div>
+		    </div>
+		    <div> <h4> Viittaukset muihin biografioihin </h4>
+			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
+    			    <div ng-repeat="sentences in vm.referenceResults">
 				
 				<li  ng-repeat="sentence in sentences" ng-bind-html="sentence.words">
 				
