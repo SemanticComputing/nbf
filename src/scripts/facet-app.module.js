@@ -36,11 +36,11 @@
         $urlMatcherFactoryProvider.strictMode(false);
     })
 
-    
+
 
     .service('authInterceptor', function ($q, $state) {
         this.responseError = function(response) {
-            if (response.status == 401) { 
+            if (response.status == 401) {
                 $state.go('login');
             }
             return $q.reject(response);
@@ -49,6 +49,10 @@
 
     .config(function($httpProvider) {
         $httpProvider.interceptors.push('authInterceptor');
+    })
+
+    .config(function($locationProvider) {
+        $locationProvider.html5Mode(true);
     })
 
     .config(function($stateProvider) {
@@ -65,7 +69,7 @@
             controller: 'PortalController',
             controllerAs: 'vm'
         })
-        
+
         .state('person', {
             abstract: true,
             url: '/henkilo/:personId',
@@ -74,7 +78,7 @@
         .state('person.detail', {
             url: '?tab',
             templateUrl: 'views/person/detail.html',
-            params: { 
+            params: {
             	   'tab': {
             	      value: '0',
             	      squash: true
@@ -91,7 +95,7 @@
         })
         .state('person.network', {
             url: '/verkosto?coloroption&sizeoption',
-            params: { 
+            params: {
             	coloroption: {
          	      value: '0',
          	      squash: true
@@ -116,8 +120,8 @@
             templateUrl: 'views/person/linguistics.html',
             controller: 'PersonLinguisticsController',
             controllerAs: 'vm'
-        }) 
-        .state('place', { //	
+        })
+        .state('place', { //
             url: '/paikka/:placeId',
             templateUrl: 'views/place.html',
             controller: 'PlaceController',
@@ -146,7 +150,7 @@
             controller: 'CardsController',
             controllerAs: 'vm',
         })
-        
+
         .state('maps', {
             url: '/kartat',
             // abstract: true,
@@ -189,7 +193,7 @@
             abstract: true,
             templateUrl: 'views/comparison.html',
         })
-        .state('maps.comparison2.sides', { 
+        .state('maps.comparison2.sides', {
             url: '?facets&facets2&map&map2',
             views: {
                 'left@maps.comparison2': {
@@ -203,15 +207,15 @@
                     controllerAs: 'vm',
                 }
             }
-        }) 
-        
+        })
+
         .state('network', {
             url: '/verkostot',
             templateUrl: 'views/network.html',
             controller: 'NetworkController',
             controllerAs: 'vm',
         })
-        
+
         .state('nlp', {
             url: '/kielianalyysi',
             abstract: true,
@@ -229,8 +233,8 @@
         .state('nlp.comparison', {
 	    url: '/vertaa?facets&facets2',
 	    params: {
-        	facets: null, 
-        	facets2: null 
+        	facets: null,
+        	facets2: null
             },
             abstract: true,
             templateUrl: 'views/nlp/comparison.html',
@@ -256,7 +260,7 @@
                }
             }
         })
-        
+
         .state('visu', {
             url: '/tilastot',
             // abstract: true,
