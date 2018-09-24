@@ -244,6 +244,15 @@
                     vm.results = calculatePercentage(results);
                     vm.isLoadingWordResults = false;
                 });
+            }).then(function() {
+             return sentenceService.getPersonName(facetSelections, id).then(function(results) {
+                    if (latestUpdate !== updateId) {
+                        return;
+                    }
+                console.log(results);
+                vm.label=results[0].label;
+                vm.isLoadingResults = false;
+                });
             });/*.then(function() {
              return sentenceService.getLenStatistics(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {

@@ -56,8 +56,8 @@
             	console.log("lemma in class",class_sum);
                 for (word in data[obj]) {
                     console.log(data[obj][word].count);
-                    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(4);
-                    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(4);
+                    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
+                    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
                 }
             }
             console.log(data);
@@ -244,16 +244,16 @@
                     vm.results = calculatePercentage(results);
                     vm.isLoadingWordResults = false;
                 });
-            });/*.then(function() {
-             return linguisticsService.getLenStatistics(facetSelections).then(function(results) {
+            }).then(function() {
+             return linguisticsService.getPersonName(facetSelections, id).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
 		console.log(results);
-                drawChartLen(results);
+		vm.label=results[0].label;
                 vm.isLoadingResults = false;
                 });
-            }).then(function() {
+            });/*.then(function() {
             return linguisticsService.getResultsTop10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;

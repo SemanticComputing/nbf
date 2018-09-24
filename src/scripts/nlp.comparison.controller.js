@@ -111,6 +111,7 @@
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
+	    vm.isLoadingWordResults = true;
             vm.results = [];
             vm.error = undefined;
 
@@ -130,7 +131,7 @@
                     return;
                 }
                 vm.results = calculatePercentage(results);
-                vm.isLoadingResults = false;
+                vm.isLoadingWordResults = false;
                 });
             }).catch(function(error) { return handleError(error, updateId); });
         }

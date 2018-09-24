@@ -100,6 +100,7 @@
             vm.isLoadingResults = true;
             vm.results = [];
             vm.error = undefined;
+	    vm.isLoadingWordResults = true;
 
             var updateId = _.uniqueId();
             latestUpdate = updateId;
@@ -117,7 +118,7 @@
                     return;
                 }
                 vm.results = calculatePercentage(results);
-                vm.isLoadingResults = false;
+                vm.isLoadingWordResults = false;
                 });
             }).catch(function(error) { return handleError(error, updateId); });
         }

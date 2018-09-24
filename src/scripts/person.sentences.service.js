@@ -16,6 +16,7 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getPersonName = getPersonName;
         this.getWordUsageResults = getWordUsageResults;
         this.getWordCount = getWordCount;
         // Get the facets.
@@ -66,6 +67,7 @@
             ' PREFIX conll: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
             ' PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> ' +
             ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+            ' PREFIX schema: <http://schema.org/> ' +
             ' PREFIX text: <http://jena.apache.org/text#> ';
 
 
@@ -74,6 +76,16 @@
 	    '  BIND( <http://ldf.fi/nbf/$personId> as ?person)' +
 	    '  ?person  nbf:formatted_link ?href .'+
 	    '}';
+
+        var personQuery = prefixes +
+            'SELECT ?label {' +
+            '  BIND( <http://ldf.fi/nbf/$personId> as ?id)' +
+            '  ?id skosxl:prefLabel ?id__label . ' +
+            '  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
+            '  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
+            '  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
+            '}';
+
 
 	var sentenceQuery = prefixes +
 	    'SELECT * {' +
@@ -281,6 +293,16 @@
 		console.log("results", promises)
                 return $q.all(promises);
            // });
+        }
+
+	function getPersonName(facetSelections, id) {
+            var self = this;
+            var promises = {};
+            var topQry = personQuery.replace('$personId', id);
+
+            promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+            console.log("person", promises);
+            return promises;
         }
 
 	 function getResultsBottom10(facetSelections) {

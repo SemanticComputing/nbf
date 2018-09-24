@@ -16,6 +16,7 @@
         // Get the results based on facet selections.
         // Return a promise.
         this.getResults = getResults;
+        this.getPersonName = getPersonName;
         this.getWordUsageResults = getWordUsageResults;
         this.getWordCount = getWordCount;
         // Get the facets.
@@ -66,6 +67,7 @@
             ' PREFIX conll: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
             ' PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> ' +
             ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+	    ' PREFIX schema: <http://schema.org/> ' +
             ' PREFIX text: <http://jena.apache.org/text#> ';
 
 
@@ -73,6 +75,15 @@
 	    'SELECT ?href {' +
 	    '  BIND( <http://ldf.fi/nbf/$personId> as ?person)' +
 	    '  ?person  nbf:formatted_link ?href .'+
+	    '}';
+
+	var personQuery = prefixes +
+	    'SELECT ?label {' +
+	    '  BIND( <http://ldf.fi/nbf/$personId> as ?id)' +
+            '  ?id skosxl:prefLabel ?id__label . ' +
+            '  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
+            '  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
+            '  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
 	    '}';
 
 	var sentenceQuery = prefixes +
@@ -255,52 +266,28 @@
             });
         }
 
-	 function getWordUsageResults(facetSelections, id) {
+	function getWordUsageResults(facetSelections, id) {
             var self = this;
 	    console.log("getWordUsageResults");
-            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-            //return nbfEndpoint.getObjectsNoGrouping(formattedLinkQuery.replace('$personId',id)).then(function(results) {
-                /*if (results.length > 10000) {
-                    return $q.reject({
-                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
-                    });
-                }*/
-                var promises = {};
-                //var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-                var uposQry = lemmaQry.replace('$personId', id);
-		console.log(uposQry);
-		console.log(self.upos);
+            var promises = {};
+            var uposQry = lemmaQry.replace('$personId', id);
 
-                self.upos.forEach(function(upos) {
-		console.log("upos", upos.key);
-                    promises[upos.key] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos.key));
-                //promises = endpoint.getObjects(uposQry);
+            self.upos.forEach(function(upos) {
+                promises[upos.key] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos.key));
 		console.log("results", promises);
-                });
-		console.log("results", promises)
-                return $q.all(promises);
-           // });
+            });
+	    console.log("results", promises)
+            return $q.all(promises);
         }
 
-	 function getResultsBottom10(facetSelections) {
+	function getPersonName(facetSelections, id) {
             var self = this;
-            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-                /*if (results.length > 10000) {
-                    return $q.reject({
-                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
-                    });
-                }*/
-                var promises = {};
-                var topQry = topBottomResults.replace(/<RESULT_SET>/g,  facetSelections.constraint.join(' '));
+            var promises = {};
+            var topQry = personQuery.replace('$personId', id);
 
-                //self.upos.forEach(function() {
-                promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-		console.log("lemmaStats", promises);
-                //});
-                return promises;
-            //});
+            promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+	    console.log("person", promises);
+            return promises;
         }
 
 	 function getWordCount(facetSelections) {
