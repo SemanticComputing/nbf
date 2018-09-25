@@ -45,6 +45,15 @@
             return _.keys(vm.results).length > 0;
         }
 
+
+	function replacer(match, p1, p2, p3, offset, string) {
+            // p1 is nondigits, p2 digits, and p3 non-alphanumerics
+	    console.log(p1, "-", p2, "-", p3);
+            return [p1, p2].join('-');
+        }
+
+
+
 	function calculatePercentage(data) {
             var obj;
             var word;
@@ -55,6 +64,13 @@
                 var class_sum = getPosTotal(obj);
             	console.log("lemma in class",class_sum);
                 for (word in data[obj]) {
+		    var lemma = data[obj][word].lemma;
+                    console.log("lemma:", lemma);
+                    if(lemma.match(/^\d/) && lemma.match(/[a-zäöåA-ZÄÖÅ]$/)) {
+                        console.log("check",lemma.replace(/([0-9]+)([a-zäöåA-ZÄÖÅ]+)/), replacer);
+                        data[obj][word].lemma = lemma.replace(/([0-9]+)([a-zäöåA-ZÄÖÅ]+)/, replacer);
+                    }
+
                     console.log(data[obj][word].count);
                     data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
                     data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
