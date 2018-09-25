@@ -56,14 +56,17 @@
              -->
             
 			<div class="btn-group" role="group" ng-if="vm.person.hasExtLinks">
-			  <a ng-if="vm.person.wikipedia" 
-			  	ng-href="{{ vm.person.wikipedia }}" 
-			  	class="btn btn-default btn-sm">Wikipedia
-			  </a>
-			  <a ng-if="vm.person.wikidata" 
-			  	ng-href="{{ vm.person.wikidata }}" 
-			  	class="btn btn-default btn-sm">Wikidata
-			  </a>
+			  
+              <a ng-if="vm.person.blf"
+                 ng-href="{{ vm.person.blf }}"
+                 class="btn btn-default btn-sm">
+                 Biografiskt lexikon för Finland</a>
+                 
+			  <a ng-if="vm.person.eduskunta"
+                 ng-href="{{ vm.person.eduskunta }}"
+                 class="btn btn-default btn-sm">
+                 Eduskunta</a>
+                 
 			  <a ng-if="vm.person.fennica.length>1"
                 	ng-href="{{ vm.person.fennica[0] }}"
                 	class="btn btn-default btn-sm">
@@ -79,43 +82,6 @@
                		ng-href="{{ vm.person.fennica[0] }}" class="btn btn-default btn-sm">
                		Fennica
               </a>
-              
-              <a ng-if="vm.person.warsampo"
-                 ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}"
-                 class="btn btn-default btn-sm">
-                 Sotasampo</a>
-              <a ng-if="vm.person.kirjasampo"
-                 ng-href="{{ vm.person.kirjasampo }}" 
-                 class="btn btn-default btn-sm">
-                 Kirjasampo</a>
-              <a ng-if="vm.person.kulttuurisampo"
-                 ng-href="{{ vm.person.kulttuurisampo }}"
-                 class="btn btn-default btn-sm">
-                 Kulttuurisampo</a>
-              <a ng-if="vm.person.blf"
-                 ng-href="{{ vm.person.blf }}"
-                 class="btn btn-default btn-sm">
-                 Biografiskt lexikon för Finland</a>
-              <a ng-if="vm.person.ulan"
-                 ng-href="{{ vm.person.ulan }}"
-                 class="btn btn-default btn-sm">
-                 ULAN</a>
-              <a ng-if="vm.person.viaf"
-                 ng-href="{{ vm.person.viaf }}"
-                 class="btn btn-default btn-sm">
-                 VIAF</a>
-              <a ng-if="vm.person.eduskunta"
-                 ng-href="{{ vm.person.eduskunta }}"
-                 class="btn btn-default btn-sm">
-                 Eduskunta</a>
-              <a ng-if="vm.person.norssi"
-                  ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}"
-                  class="btn btn-default btn-sm">
-                  Norssit</a>
-              <a ng-if="vm.person.website"
-                 ng-href="{{ vm.person.website }}"
-                 class="btn btn-default btn-sm">
-                 Kotisivu</a>
               <a ng-if="vm.person.genicom"
                 	ng-href="{{ vm.person.genicom }}"
                  class="btn btn-default btn-sm">
@@ -124,6 +90,50 @@
                 	ng-href="{{ vm.person.genitree }}"
                  class="btn btn-default btn-sm">
                  Geni.com: Sukupuu</a>
+              
+              <a ng-if="vm.person.kirjasampo"
+                 ng-href="{{ vm.person.kirjasampo }}" 
+                 class="btn btn-default btn-sm">
+                 Kirjasampo</a>
+                 
+              <a ng-if="vm.person.website"
+                 ng-href="{{ vm.person.website }}"
+                 class="btn btn-default btn-sm">
+                 Kotisivu</a>
+                 
+              <a ng-if="vm.person.kulttuurisampo"
+                 ng-href="{{ vm.person.kulttuurisampo }}"
+                 class="btn btn-default btn-sm">
+                 Kulttuurisampo</a>
+                 
+              <a ng-if="vm.person.norssi"
+                  ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}"
+                  class="btn btn-default btn-sm">
+                  Norssit</a>
+                  
+              <a ng-if="vm.person.warsampo"
+                 ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}"
+                 class="btn btn-default btn-sm">
+                 Sotasampo</a>
+                 
+              <a ng-if="vm.person.ulan"
+                 ng-href="{{ vm.person.ulan }}"
+                 class="btn btn-default btn-sm">
+                 ULAN</a>
+                 
+              <a ng-if="vm.person.viaf"
+                 ng-href="{{ vm.person.viaf }}"
+                 class="btn btn-default btn-sm">
+                 VIAF</a>
+                 
+              <a ng-if="vm.person.wikipedia" 
+			  	ng-href="{{ vm.person.wikipedia }}" 
+			  	class="btn btn-default btn-sm">Wikipedia
+			  </a>
+			  <a ng-if="vm.person.wikidata" 
+			  	ng-href="{{ vm.person.wikidata }}" 
+			  	class="btn btn-default btn-sm">Wikidata
+			  </a>
               <a ng-if="vm.person.yo1853"
                  ng-href="https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id={{ vm.person.yo1853 }}"
                  class="btn btn-default btn-sm">

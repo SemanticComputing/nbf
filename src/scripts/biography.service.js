@@ -196,14 +196,14 @@
             		// no space in case –1942 or –VII
             		if (prev=="–" && RegExp('^[0-9IVXLCDM]').test(ob.word)) { ob.space = false; }
             		
-            		// no space before . , : ; ! ? ) ] } "
-            		if (ob.word && RegExp('^[.,:;=!?)}%]').test(ob.word)) ob.space = false;
+            		// no space before . , : ; ! ? / ) ] } "
+            		if (ob.word && RegExp('^[.,:;=!?/)}%]').test(ob.word)) ob.space = false;
             		else {
             			// no space after "
                 		if (RegExp('"').test(prev)) ob.space = !quoted;
             		}
-            		// no space after ( [ { 
-            		if (RegExp('[({\[]').test(prev)) ob.space = false;
+            		// no space after ( [ { /
+            		if (RegExp('[/({\[]').test(prev)) ob.space = false;
             		
             		
             		//	test if has a named entity link:

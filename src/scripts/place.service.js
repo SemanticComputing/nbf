@@ -55,9 +55,6 @@
     	'  ?id a nbf:Place ; ' +
     	'      skos:prefLabel ?label . ' +
     	'  FILTER (lang(?label)="fi") ' +
-    	'  OPTIONAL { ?id owl:sameAs ?googleapi . '+
-    	'  FILTER (REGEX(str(?googleapi),"googleapis")) ' + // googleapis.com/maps/api/geocode/json?address=Pietari"
-    	'  } ' +
     	'  OPTIONAL { ?id geo:lat ?lat ; geo:long ?lng } ' +
     	'  OPTIONAL { ?id skos:prefLabel|skos:altLabel ?alabel } ' +
     	'  OPTIONAL { ?id nbf:yso ?yso } ' +

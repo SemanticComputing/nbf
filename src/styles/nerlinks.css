@@ -1,54 +1,89 @@
+.nlp .personlink a {
+	color: blue;
+}
+.nlp .placelink a {
+	color: green;
+}
+.nlp .ExpressionTime {
+    color: pink;
+}
+.nlp .AnonymEntity {
+    color: yellowgreen;
+}
+
+.nlp .organizationlink {
+    color: lightgrey;
+}
+
+.nlp .titlelink {
+    color: #880;
+}
+.nlp .vocationlink {
+    color: #880;
+}
+.nlp .PoliticalLocation {
+    color: lavender;
+}
+.nlp .GeographicalLocation {
+    color: gold;
+}
+.nlp .EducationalOrganization {
+    color: powderblue;
+}
+
+
 .nlp .personlink {
 	border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: burlywood;
 }
 .nlp .placelink {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: aquamarine;
 }
 
+
 .nlp .ExpressionTime {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: pink;
 }
 .nlp .AnonymEntity {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: yellowgreen;
 }
 
 .nlp .organizationlink {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: lightgrey;
 }
 
 .nlp .titlelink {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: #bb0;
 }
 .nlp .vocationlink {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: #bb0;
 }
 .nlp .PoliticalLocation {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: lavender;
 }
 .nlp .GeographicalLocation {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: gold;
 }
 .nlp .EducationalOrganization {
     border: 2px;
-	border-style: solid;
+	border-style: none;
 	border-color: powderblue;
 }
 
