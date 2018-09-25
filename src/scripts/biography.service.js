@@ -49,7 +49,6 @@
     	'PREFIX biog: <http://ldf.fi/nbf/biography/> ';
         
         // The query for the results.
-        // ?id is bound to the person URI.
         var query =
             'SELECT DISTINCT * WHERE {' +
             ' { <RESULT_SET> }' +
@@ -127,6 +126,8 @@
         }
         
         function getNlpBio(id) {
+        	
+        	id = id.replace('nbf/bio','nbf/p');
         	var constraint = ' <' + id + '> ';
             var qry = prefixesNLP + queryNLP.replace('<RESULT_SET>', constraint);
             

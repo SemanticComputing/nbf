@@ -1,35 +1,55 @@
-.nlp .ExpressionTime {
-    background: pink;
-}
-.nlp .AnonymEntity {
-    background: yellowgreen;
-}
-
-
-.nlp .organizationlink {
-    background: lightgrey;
-}
 .nlp .personlink {
-    background: burlywood;
+	border: 1px;
+	border-style: solid;
+	border-color: burlywood;
 }
 .nlp .placelink {
-    background: aquamarine;
+    border: 1px;
+	border-style: solid;
+	border-color: aquamarine;
+}
+
+.nlp .ExpressionTime {
+    border: 1px;
+	border-style: solid;
+	border-color: pink;
+}
+.nlp .AnonymEntity {
+    border: 1px;
+	border-style: solid;
+	border-color: yellowgreen;
+}
+
+.nlp .organizationlink {
+    border: 1px;
+	border-style: solid;
+	border-color: lightgrey;
 }
 
 .nlp .titlelink {
-    background: yellow;
+    border: 1px;
+	border-style: solid;
+	border-color: #bb0;
 }
 .nlp .vocationlink {
-    background: yellow;
+    border: 1px;
+	border-style: solid;
+	border-color: #bb0;
 }
 .nlp .PoliticalLocation {
-    background: lavender;
+    border: 1px;
+	border-style: solid;
+	border-color: lavender;
 }
 .nlp .GeographicalLocation {
-    background: gold;
+    border: 1px;
+	border-style: solid;
+	border-color: gold;
 }
 .nlp .EducationalOrganization {
-    background: powderblue;
+    border: 1px;
+	border-style: solid;
+	border-color: powderblue;
 }
 
 

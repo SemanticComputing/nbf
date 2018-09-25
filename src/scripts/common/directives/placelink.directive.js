@@ -22,7 +22,7 @@
 		        $scope.url = ($scope.url).replace(/^.+?([^/]+)$/, '$1');
 		        $scope.placeid = { placeId: $scope.url };
 		        
-		        $scope.image = false;
+		        $scope.image = false; // https://maps.googleapis.com/maps/api/staticmap?center=Pohja,Finland&zoom=5&size=400x300
 		        $scope.lifespan = '';
 		        
 		        popoverService.getPlacePopover($scope.url).then(function(data) {
