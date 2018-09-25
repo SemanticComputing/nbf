@@ -79,6 +79,33 @@
             return data;
         }
 
+	function trim_string(data, obj){
+	    var str;
+	    if (data[obj].upos != "PUNCT") {
+		var next = parseInt(obj) + 1;
+            	if(obj == 0){
+                    str= data[obj].string.trim()
+               	} else if (obj == data.length-1){
+                    str= " "+data[obj].string.trim()
+               	} else if (data[obj-1].string.contains("(")){
+		    console.log("special (");
+                    if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4){
+	            	str=data[obj].string.trim()+" -"
+		    } else {
+                        str=data[obj].string.trim()
+		    }
+                }else {
+                    str= " "+data[obj].string.trim()
+                }
+            } else if (data[obj].string.contains("(")) {
+                str= " "+data[obj].string.trim();
+                //console.log(str, words);
+            } else {
+                str=data[obj].string.trim();
+            }
+
+	    return str;
+	}
 
 	function organizeReferences(data) {
 	    var obj;
@@ -110,13 +137,23 @@
                 	data: []
             	    };  
 		}
-		else { 
-		    var str = "";
-		    if (data[obj].upos != "PUNCT") {
-			str= " "+data[obj].string.trim()
-		    } else { 
+		else {
+		    var str = trim_string(data, obj);
+		    /*if (data[obj].upos != "PUNCT") {
+			if(obj == 0){
+			    str= data[obj].string.trim()
+			} else if (data[obj-1].string.contains("(")){
+			    str=data[obj].string.trim()
+			}else {
+			    str= " "+data[obj].string.trim()
+			}
+		    } else if (data[obj].string.contains("(")) {
+			str= " "+data[obj].string.trim();
+			console.log(str, words);
+		    } else {
+			console.log("else"); 
 			str=data[obj].string.trim();
-		    }
+		    }-*/
 		    if(wordId != prev_wordId){
 		    	words += str; 
 		    }
@@ -176,13 +213,13 @@
 		console.log("if", s, prev_sentence, words.length );
 		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { console.log("save", words); var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
 		else { 
-		    var str = "";
-		    if (data[obj].upos != "PUNCT") {
+		    var str = trim_string(data, obj);
+		    /*if (data[obj].upos != "PUNCT") {
 			str= " "+data[obj].string.trim()
 		    } else { 
 			
 			str=data[obj].string.trim();
-		    }
+		    }*/
 
 		    if (obj == 0){
         	        words = '<span class="personlink" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
