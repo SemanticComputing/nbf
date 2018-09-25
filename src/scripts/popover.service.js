@@ -91,9 +91,9 @@
         	'  <RESULT_SET> ' +
         	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
         	'  ?id foaf:focus ?prs . ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source ?s ] FILTER ISLITERAL(?s) } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
         	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
         	' ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }' +

@@ -42,7 +42,9 @@
               </div>
               
               <div class="col-xs-12 icon-menu">
-                <a title="Data ldf.fi-palvelussa" class="" ng-href="{{ vm.person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
+                <a title="Data ldf.fi-palvelussa" class="" ng-href="http://ldf.fi/nbf/{{ vm.person.id }}">
+                	<span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
+                </a>
               </div>
             </div>
             <div class="row">
@@ -93,67 +95,6 @@
               </div>
             </div>
             
-            
-			<!-- 
-            <div class="col-sm-6 col-md-12" ng-if="false && vm.person.bios && vm.person.bios.length" ng-repeat="bio in vm.person.bios | castArray">
-            	<div ng-if="bio.database" class="entry-text text-left icon-menu">
-	              <hr />
-	              
-	              	<h4>{{ bio.database }} <a ng-if="bio.link" title="Artikkeli Biografiakeskuksen sivulla" ng-href="{{ bio.link }}">
-	              	<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-	              	</a></h4>
-	              
-	            </div>
-            	<div ng-if="bio.lead_paragraph" class="entry-text text-left">
-	              <hr />
-	              <p ng-bind-html="bio.lead_paragraph"></p>
-	            </div>
-	            <div ng-if="bio.description" class="entry-text text-left">
-	              <hr />
-	              <p ng-bind-html="bio.description"></p>
-	            </div>
-	            
-	            <div ng-if="bio.family_paragraph" class="entry-text text-left">
-	              <hr />
-	              <p>{{ bio.family_paragraph }}</p>
-	            </div>
-	            
-	             <div ng-if="bio.parent_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Vanhemmat</h4>
-	              <p>{{ bio.parent_paragraph }}</p>
-	            </div>
-	            <div ng-if="bio.spouse_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Puoliso(t) vanhempineen</h4>
-	              <p>{{ bio.spouse_paragraph }}</p>
-	            </div>
-	            <div ng-if="bio.child_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Lapset</h4>
-	              <p>{{ bio.child_paragraph }}</p>
-	            </div>
-	            
-	            <div ng-if="bio.medal_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Kunniamerkit</h4>
-	              <p>{{ bio.medal_paragraph }}</p>
-	            </div>
-	            
-	            <div ng-if="bio.source_paragraph" class="entry-text text-left">
-	              <hr />
-	              <p ng-bind-html="bio.source_paragraph"></p>
-	            </div>
-	            
-	            <div class="entry-text text-left">
-	            	<hr />
-	            	<span ng-if="bio.author_text">Kirjoittaja(t): {{ bio.author_text }}</span>
-	            	<span ng-if="bio.created">Julkaistu {{ bio.created | date:'dd.MM.yyyy' }}</span>
-	            	<span ng-if="bio.modified">(päivitetty {{ bio.modified | date:'dd.MM.yyyy' }})</span>
-	            </div>
-	            <hr />
-            </div>
-            -->
             
           </div>
         </div>
