@@ -97,7 +97,12 @@
         	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
         	
-        	
+        	if (p.kansallisbiografia) {
+        		arr.push({url:p.kansallisbiografia, label:'Biografiakeskuksen artikkeli', tab:'sks'});
+        	}
+        	if (p.id) { // " class="" ng-href="http://ldf.fi/nbf/
+        		arr.push({url:'http://ldf.fi/nbf/'+p.id, label:'Data ldf.fi-palvelussa', tab:'ldffi'});
+        	}
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu', tab:'genikotisivu'});
 
         	if (p.genitree) arr.push({url:p.genitree, label:'Geni.com, sukupuu', tab:'genisukupuu'});
