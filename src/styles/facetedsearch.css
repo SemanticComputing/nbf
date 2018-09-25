@@ -235,8 +235,13 @@ img.logo:hover {
   width: 50%;
   text-align: left;
 }
+.comparison-results .word-mini {
+  width: 50%;
+  text-align: left;
+  font-family: 12px;
+}
 .comparison-results .pos_count {
-  width: 25%;
+  width: 30%;
   text-align: left;
 }
 
@@ -244,6 +249,13 @@ img.logo:hover {
   width: 15%;
   text-align: left;
 }
+
+.comparison-results .count-mini {
+  width: 30%;
+  text-align: left;
+  font-family: 12px;
+}
+
 
 .comparison-result-info {
   margin-top: 40px;

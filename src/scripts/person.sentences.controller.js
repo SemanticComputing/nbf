@@ -93,6 +93,7 @@
 	    var wordId;
 	    var prev_sentence =0;
 	    var prev_wordId =0;
+	    if (data.length > 0) {
 	    for (obj in data) {
 		prev_sentence = s;
 		prev_wordId = wordId;
@@ -131,7 +132,9 @@
 		sentence: prev_sentence, 
 		words: $sce.trustAsHtml(render_targets(words, targets['data']))
 	    }; 
-	    sentences['data'].push(words_obj); words ="";
+	    sentences['data'].push(words_obj); 
+	    words ="";
+	    }
 	    return sentences;
 	}
 

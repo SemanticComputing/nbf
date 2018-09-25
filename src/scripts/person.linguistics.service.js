@@ -131,9 +131,7 @@
 
 	var lemmaCountQry = prefixes +
             ' SELECT  (SUM(xsd:integer(?cnt)) AS ?count) (SUM(xsd:integer(?verb)) AS ?verbCount) (SUM(xsd:integer(?adj)) AS ?adjCount) (SUM(xsd:integer(?noun)) AS ?nounCount) (SUM(xsd:integer(?pnoun)) AS ?pnounCount) { ' +
-            '  { ' +
-            '    <RESULT_SET> ' +
-            '  } ' +
+	    '  BIND(<http://ldf.fi/nbf/$personId> as ?id)' +
 	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
             '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
             '  ?doc <http://ldf.fi/nbf/biography/data#docRef> ?id . ' +
@@ -147,9 +145,6 @@
 
 	var topTenResults = prefixes +
 	    ' SELECT DISTINCT ?id ?name ?cnt { ' +
-            '  { ' +
-            '    <RESULT_SET> ' +
-            '  } ' +
 	    '  ?id a <http://ldf.fi/nbf/PersonConcept> .' +
 	    '  ?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?name . ' +
             '  ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_biography> [] . ' +
@@ -290,10 +285,10 @@
             return promises;
         }
 
-	 function getWordCount(facetSelections) {
+	 function getWordCount(facetSelections, id) {
             var self = this;
             var promises = {};
-            var qry = lemmaCountQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            var qry = lemmaCountQry.replace('$personId',id);
 
             promises = nbfEndpoint.getObjectsNoGrouping(qry);
 	    console.log("lemmaStats",promises);

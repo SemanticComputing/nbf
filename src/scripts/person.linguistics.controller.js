@@ -227,7 +227,7 @@
                 vm.isLoadingResults = false;
 
             }).then(function() {
-            return linguisticsService.getWordCount(facetSelections).then(function(results) {
+            return linguisticsService.getWordCount(facetSelections, id).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
