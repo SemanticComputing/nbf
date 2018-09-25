@@ -130,60 +130,6 @@
               
 			  
 			</div>
-			<!-- 
-            <div class="row">
-            	<span>
-            		<a title="Data ldf.fi-palvelussa" class="" ng-href="http://ldf.fi/nbf/{{ vm.person.id }}">
-                		<span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
-                	</a>
-            	</span>
-              <span ng-if="vm.person.wikipedia">
-                <a ng-href="{{ vm.person.wikipedia }}">Wikipedia</a>
-              </span>
-              <span ng-if="vm.person.wikidata">
-                <a ng-href="{{ vm.person.wikidata }}">Wikidata</a>
-              </span>
-              <span ng-if="vm.person.fennica.length>1">
-                Fennica <a ng-repeat="f in vm.person.fennica" ng-href="{{ f }}">[{{$index+1}}] </a> 
-              </span>
-              <span ng-if="vm.person.fennica.length<2">
-                <a ng-href="{{ vm.person.fennica[0] }}">Fennica</a>
-              </span>
-              <span ng-if="vm.person.warsampo">
-                <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}">Sotasampo</a>
-              </span>
-              <span ng-if="vm.person.kirjasampo">
-                <a ng-href="{{ vm.person.kirjasampo }}">Kirjasampo</a>
-              </span>
-              <span ng-if="vm.person.kulttuurisampo">
-                <a ng-href="{{ vm.person.kulttuurisampo }}">Kulttuurisampo</a>
-              </span>
-              <span ng-if="vm.person.blf">
-                <a ng-href="{{ vm.person.blf }}">Biografiskt lexikon för Finland</a>
-              </span>
-              <span ng-if="vm.person.ulan">
-                <a ng-href="{{ vm.person.ulan }}">ULAN</a>
-              </span>
-              <span ng-if="vm.person.viaf">
-                <a ng-href="{{ vm.person.viaf }}">VIAF</a>
-              </span>
-              <span ng-if="vm.person.eduskunta">
-                <a ng-href="{{ vm.person.eduskunta }}">Eduskunta</a>
-              </span>
-              <span ng-if="vm.person.norssi">
-                  <a ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}">Norssi</a>
-              </span>
-              <span ng-if="vm.person.website">
-                <a ng-href="{{ vm.person.website }}">Kotisivu</a>
-              </span>
-              <span ng-if="vm.person.genicom || vm.person.genitree">
-                <span>Geni.com: </span><a ng-href="{{ vm.person.genicom }}">Kotisivu</a> <a ng-href="{{ vm.person.genitree }}">Sukupuu</a>
-              </span>
-              <span ng-if="vm.person.yo1853">
-                <a ng-href="https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id={{ vm.person.yo1853 }}">Ylioppilasmatrikkeli 1853–1899</a>
-              </span>
-            </div>
-            -->
             
           </div>
         </div>
@@ -211,8 +157,8 @@
 		       	</li>
 	     	</ul>
 	     	
-	     	<nbf-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.bio}}" active="{{vm.isSet($index)}}">
-         	</nbf-biography>
+	     	<nlp-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.bio}}" active="{{vm.isSet($index)}}">
+         	</nlp-biography>
          	
 	        <nbf-iframe ng-repeat="link in vm.person.externalLinks | castArray" ng-show="vm.isSet(link.tab)" url="{{link.url}}" active="{{vm.isSet(link.tab)}}">
          	</nbf-iframe>
