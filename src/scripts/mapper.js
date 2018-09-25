@@ -30,7 +30,9 @@
             	person.birth = person.birth ? _.castArray(person.birth) : null;
             	person.death = person.death ? _.castArray(person.death) : null;
             	
-                person.images = person.images ? _.castArray(person.images) : ['images/person_placeholder.svg'];
+                person.images = person.images ? 
+                		_.castArray(person.images) : 
+                			['images/person_placeholder.svg'];
                 person.imagesources = person.imagesources ? _.castArray(person.imagesources) : [ false ];
                 
                 if (person.description) person.description = $sce.trustAsHtml(person.description);
@@ -77,6 +79,8 @@
                 if (person.givenName.constructor === Array && person.givenName.length==2) {
                 	person.givenName = person.givenName[0] +' ja '+person.givenName[1];
                 }
+                
+                person.hasExtLinks = ( person.viaf || person.ulan || person.wikidata || person.wikipedia || person.fennica || person.blf || person.website || person.eduskunta || person.warsampo || person.norssi || person.kirjasampo || person.website || person.genicom || person.genitree || person.yo1853 ) ;
             });
             
             return objects;

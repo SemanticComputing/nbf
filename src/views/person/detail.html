@@ -42,116 +42,146 @@
               </div>
               
               <div class="col-xs-12 icon-menu">
-                <a title="Data ldf.fi-palvelussa" class="" ng-href="{{ vm.person.id }}"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
+                
               </div>
             </div>
+            
             <div class="row">
-              <div ng-if="vm.person.wikipedia" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.wikipedia }}">Wikipedia</a>
-              </div>
-              <div ng-if="vm.person.wikidata" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.wikidata }}">Wikidata</a>
-              </div>
-              <div ng-if="vm.person.fennica.length>1" class="col-xs-6 col-xs-offset-3">
-                Fennica <a ng-repeat="f in vm.person.fennica" ng-href="{{ f }}">[{{$index+1}}] </a> 
-              </div>
-              <div ng-if="vm.person.fennica.length<2" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.fennica[0] }}">Fennica</a>
-              </div>
-              <div ng-if="vm.person.warsampo" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}">Sotasampo</a>
-              </div>
-              <div ng-if="vm.person.kirjasampo" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.kirjasampo }}">Kirjasampo</a>
-              </div>
-              <div ng-if="vm.person.kulttuurisampo" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.kulttuurisampo }}">Kulttuurisampo</a>
-              </div>
-              <div ng-if="vm.person.blf" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.blf }}">Biografiskt lexikon för Finland</a>
-              </div>
-              <div ng-if="vm.person.ulan" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.ulan }}">ULAN</a>
-              </div>
-              <div ng-if="vm.person.viaf" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.viaf }}">VIAF</a>
-              </div>
-              <div ng-if="vm.person.eduskunta" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.eduskunta }}">Eduskunta</a>
-              </div>
-              <div ng-if="vm.person.norssi" class="col-xs-6 col-xs-offset-3">
-                  <a ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}">Norssi</a>
-              </div>
-              <div ng-if="vm.person.website" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="{{ vm.person.website }}">Kotisivu</a>
-              </div>
-              <div ng-if="vm.person.genicom || vm.person.genitree" class="col-xs-6 col-xs-offset-3">
-                <span>Geni.com: </span><a ng-href="{{ vm.person.genicom }}">Kotisivu</a> <a ng-href="{{ vm.person.genitree }}">Sukupuu</a>
-              </div>
-              <div ng-if="vm.person.yo1853" class="col-xs-6 col-xs-offset-3">
-                <a ng-href="https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id={{ vm.person.yo1853 }}">Ylioppilasmatrikkeli 1853–1899</a>
-              </div>
+	           	<a title="Data ldf.fi-palvelussa" class="" ng-href="http://ldf.fi/nbf/{{ vm.person.id }}">
+	            	<span class="glyphicon glyphicon-hdd" aria-hidden="true"> </span>
+	            </a>
             </div>
+            <br />
             
-            
+			<div class="btn-group" role="group" ng-if="vm.person.hasExtLinks">
+			  <a ng-if="vm.person.wikipedia" 
+			  	ng-href="{{ vm.person.wikipedia }}" 
+			  	class="btn btn-default btn-sm">Wikipedia
+			  </a>
+			  <a ng-if="vm.person.wikidata" 
+			  	ng-href="{{ vm.person.wikidata }}" 
+			  	class="btn btn-default btn-sm">Wikidata
+			  </a>
+			  <a ng-if="vm.person.fennica.length>1"
+                	ng-href="{{ vm.person.fennica[0] }}"
+                	class="btn btn-default btn-sm">
+                	Fennica 1
+               </a> 
+              
+              <a ng-if="vm.person.fennica.length>1"
+                	ng-href="{{ vm.person.fennica[1] }}" class="btn btn-default btn-sm">
+                	2
+               </a> 
+              
+              <a ng-if="vm.person.fennica.length<2"
+               		ng-href="{{ vm.person.fennica[0] }}" class="btn btn-default btn-sm">
+               		Fennica
+              </a>
+              
+              <a ng-if="vm.person.warsampo"
+                 ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}"
+                 class="btn btn-default btn-sm">
+                 Sotasampo</a>
+              <a ng-if="vm.person.kirjasampo"
+                 ng-href="{{ vm.person.kirjasampo }}" 
+                 class="btn btn-default btn-sm">
+                 Kirjasampo</a>
+              <a ng-if="vm.person.kulttuurisampo"
+                 ng-href="{{ vm.person.kulttuurisampo }}"
+                 class="btn btn-default btn-sm">
+                 Kulttuurisampo</a>
+              <a ng-if="vm.person.blf"
+                 ng-href="{{ vm.person.blf }}"
+                 class="btn btn-default btn-sm">
+                 Biografiskt lexikon för Finland</a>
+              <a ng-if="vm.person.ulan"
+                 ng-href="{{ vm.person.ulan }}"
+                 class="btn btn-default btn-sm">
+                 ULAN</a>
+              <a ng-if="vm.person.viaf"
+                 ng-href="{{ vm.person.viaf }}"
+                 class="btn btn-default btn-sm">
+                 VIAF</a>
+              <a ng-if="vm.person.eduskunta"
+                 ng-href="{{ vm.person.eduskunta }}"
+                 class="btn btn-default btn-sm">
+                 Eduskunta</a>
+              <a ng-if="vm.person.norssi"
+                  ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}"
+                  class="btn btn-default btn-sm">
+                  Norssit</a>
+              <a ng-if="vm.person.website"
+                 ng-href="{{ vm.person.website }}"
+                 class="btn btn-default btn-sm">
+                 Kotisivu</a>
+              <a ng-if="vm.person.genicom"
+                	ng-href="{{ vm.person.genicom }}"
+                 class="btn btn-default btn-sm">
+                 Geni.com: Kotisivu</a>
+              <a ng-if="vm.person.genitree"
+                	ng-href="{{ vm.person.genitree }}"
+                 class="btn btn-default btn-sm">
+                 Geni.com: Sukupuu</a>
+              <a ng-if="vm.person.yo1853"
+                 ng-href="https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id={{ vm.person.yo1853 }}"
+                 class="btn btn-default btn-sm">
+                 Ylioppilasmatrikkeli 1853–1899
+              </a>
+              
+			  
+			</div>
 			<!-- 
-            <div class="col-sm-6 col-md-12" ng-if="false && vm.person.bios && vm.person.bios.length" ng-repeat="bio in vm.person.bios | castArray">
-            	<div ng-if="bio.database" class="entry-text text-left icon-menu">
-	              <hr />
-	              
-	              	<h4>{{ bio.database }} <a ng-if="bio.link" title="Artikkeli Biografiakeskuksen sivulla" ng-href="{{ bio.link }}">
-	              	<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-	              	</a></h4>
-	              
-	            </div>
-            	<div ng-if="bio.lead_paragraph" class="entry-text text-left">
-	              <hr />
-	              <p ng-bind-html="bio.lead_paragraph"></p>
-	            </div>
-	            <div ng-if="bio.description" class="entry-text text-left">
-	              <hr />
-	              <p ng-bind-html="bio.description"></p>
-	            </div>
-	            
-	            <div ng-if="bio.family_paragraph" class="entry-text text-left">
-	              <hr />
-	              <p>{{ bio.family_paragraph }}</p>
-	            </div>
-	            
-	             <div ng-if="bio.parent_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Vanhemmat</h4>
-	              <p>{{ bio.parent_paragraph }}</p>
-	            </div>
-	            <div ng-if="bio.spouse_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Puoliso(t) vanhempineen</h4>
-	              <p>{{ bio.spouse_paragraph }}</p>
-	            </div>
-	            <div ng-if="bio.child_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Lapset</h4>
-	              <p>{{ bio.child_paragraph }}</p>
-	            </div>
-	            
-	            <div ng-if="bio.medal_paragraph" class="entry-text text-left">
-	              <hr />
-	              <h4>Kunniamerkit</h4>
-	              <p>{{ bio.medal_paragraph }}</p>
-	            </div>
-	            
-	            <div ng-if="bio.source_paragraph" class="entry-text text-left">
-	              <hr />
-	              <p ng-bind-html="bio.source_paragraph"></p>
-	            </div>
-	            
-	            <div class="entry-text text-left">
-	            	<hr />
-	            	<span ng-if="bio.author_text">Kirjoittaja(t): {{ bio.author_text }}</span>
-	            	<span ng-if="bio.created">Julkaistu {{ bio.created | date:'dd.MM.yyyy' }}</span>
-	            	<span ng-if="bio.modified">(päivitetty {{ bio.modified | date:'dd.MM.yyyy' }})</span>
-	            </div>
-	            <hr />
+            <div class="row">
+            	<span>
+            		<a title="Data ldf.fi-palvelussa" class="" ng-href="http://ldf.fi/nbf/{{ vm.person.id }}">
+                		<span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
+                	</a>
+            	</span>
+              <span ng-if="vm.person.wikipedia">
+                <a ng-href="{{ vm.person.wikipedia }}">Wikipedia</a>
+              </span>
+              <span ng-if="vm.person.wikidata">
+                <a ng-href="{{ vm.person.wikidata }}">Wikidata</a>
+              </span>
+              <span ng-if="vm.person.fennica.length>1">
+                Fennica <a ng-repeat="f in vm.person.fennica" ng-href="{{ f }}">[{{$index+1}}] </a> 
+              </span>
+              <span ng-if="vm.person.fennica.length<2">
+                <a ng-href="{{ vm.person.fennica[0] }}">Fennica</a>
+              </span>
+              <span ng-if="vm.person.warsampo">
+                <a ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}">Sotasampo</a>
+              </span>
+              <span ng-if="vm.person.kirjasampo">
+                <a ng-href="{{ vm.person.kirjasampo }}">Kirjasampo</a>
+              </span>
+              <span ng-if="vm.person.kulttuurisampo">
+                <a ng-href="{{ vm.person.kulttuurisampo }}">Kulttuurisampo</a>
+              </span>
+              <span ng-if="vm.person.blf">
+                <a ng-href="{{ vm.person.blf }}">Biografiskt lexikon för Finland</a>
+              </span>
+              <span ng-if="vm.person.ulan">
+                <a ng-href="{{ vm.person.ulan }}">ULAN</a>
+              </span>
+              <span ng-if="vm.person.viaf">
+                <a ng-href="{{ vm.person.viaf }}">VIAF</a>
+              </span>
+              <span ng-if="vm.person.eduskunta">
+                <a ng-href="{{ vm.person.eduskunta }}">Eduskunta</a>
+              </span>
+              <span ng-if="vm.person.norssi">
+                  <a ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ vm.person.norssi }}">Norssi</a>
+              </span>
+              <span ng-if="vm.person.website">
+                <a ng-href="{{ vm.person.website }}">Kotisivu</a>
+              </span>
+              <span ng-if="vm.person.genicom || vm.person.genitree">
+                <span>Geni.com: </span><a ng-href="{{ vm.person.genicom }}">Kotisivu</a> <a ng-href="{{ vm.person.genitree }}">Sukupuu</a>
+              </span>
+              <span ng-if="vm.person.yo1853">
+                <a ng-href="https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id={{ vm.person.yo1853 }}">Ylioppilasmatrikkeli 1853–1899</a>
+              </span>
             </div>
             -->
             

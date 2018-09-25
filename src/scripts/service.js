@@ -94,7 +94,7 @@
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
-        '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ] }' +
+        '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
         '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
         '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation ' +
         '  			OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
@@ -126,7 +126,6 @@
             '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
-            // '  OPTIONAL { ?id nbf:kulsa ?kulsa . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
@@ -159,7 +158,10 @@
             '			OPTIONAL { ?dea nbf:time/skos:prefLabel ?deathDate }' +
             '  			OPTIONAL { ?dea nbf:place ?death__id . ?death__id skos:prefLabel ?death__label }' +
             '		} ' +
-            '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source/skos:prefLabel ?imagesources ] }' +
+            '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?is ] ' +
+            '			OPTIONAL { ?is skos:prefLabel ?il } ' +
+            '			BIND (COALESCE(?il, ?is) AS ?imagesources ) ' +
+            '			}' +
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +

@@ -313,3 +313,7 @@ iframe {
 	padding-top: 5px;
 	padding-bottom: 22px;
 }
+
+.btn-group .btn-sm {
+	color: #337ab7;
+}
