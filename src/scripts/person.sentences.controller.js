@@ -9,6 +9,21 @@
 
     angular.module('facetApp')
 
+    /**/
+    /*myapp.directive('sentenceList', function() {
+    	var directive = {};
+
+    	directive.restrict = 'E';
+
+    	directive.template = '<div ng-repeat="sentences in vm.sentenceResults"><li ng-repeat="sentence in sentences" ng-bind-html="sentence.words">{{ sentence.words }}</li></div>';
+
+    	directive.scope = {
+            user : "=user"
+    	}
+
+    	return directive;
+    });*/
+
     /*
     * Controller for the results view.
     */
@@ -133,12 +148,12 @@
 
 	function render_targets(words, targets) {
 	    var obj;
-	    console.log(targets);
+	    //console.log(targets);
 	    for (obj in targets) {
 		var target = targets[obj];
 		words = words.replace(target.target_string, '<span class="personlink" url="'+target.target_link+'">'+target.target_string+'</span>')
 	    }
-	    console.log(words);
+	    //console.log(words);
 	    return words;
 	}
 
@@ -180,6 +195,7 @@
 	    }
 	    return sentences;
 	}
+
 
 	function getPosTotal(postag){
 	    if (postag == "VERB") {

@@ -16,19 +16,26 @@
 		    </div>
 	    	</div>
 	    	<div class="col-md-8 col-lg-9 text-center thumbnail" style="text-align:left">
-		    <div> <h4> Viittaukset muista biografioista henkilöön </h4>
-			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
-    			    <div ng-repeat="sentences in vm.sentenceResults">
+		    <div> <h4> Viittaukset muista biografioista henkilöön 
+			<span class="glyphicon glyphicon-info-sign" tooltip-placement="bottom"
+                		uib-tooltip="Listassa näkyy alla lauseet, joihin on alun perin manuaalisesti mennyt linkki Kansallisbiografian sivustolle. Lauseet eivät kata kaikkia joissa henkilö on mainittu vaan usein biografian ensimmäinen lause, jossa henkilö on mainittu.">
+	                </span></h4>
+
+			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;" ng-include="'views/directive/nbf-sentence-list.directive.html'"> <list-sentences >
+    			    <!--<div ng-repeat="sentences in vm.sentenceResults">
 				
 				<li  ng-repeat="sentence in sentences" ng-bind-html="sentence.words">
 				
-      				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
 				    {{ sentence.words }}
-				</span></li>
-			    </div></ul>
+				</li>
+			    </div>--></list-sentences></ul>
   			</div>
 		    </div>
-		    <div> <h4> Viittaukset muihin biografioihin </h4>
+		    <div> <h4> Viittaukset muihin biografioihin 
+			<span class="glyphicon glyphicon-info-sign" tooltip-placement="bottom"
+                		uib-tooltip="Listassa on lauseet henkilön biografiasta, joissa viitataan muihin henkilöihin. Linkit ovat manuaalisesti tuotettuja alkuperäisaineistoon ja koneellisesti irroitettu ja sijoitettu takaisin ensimmäiseen mainintaan henkilöstä tekstissä.">
+	                </span></h4>
+
 			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
     			    <div ng-repeat="sentences in vm.referenceResults">
 				
@@ -36,7 +43,7 @@
 				
       				<!--{{word.upos!="PUNCT" ? word.string+" " : word.string }}-->
 				    {{ sentence.words }}
-				</span></li>
+				</li>
 			    </div></ul>
   			</div>
 		    </div>
