@@ -126,7 +126,6 @@
             '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
-            // '  OPTIONAL { ?id nbf:kulsa ?kulsa . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +

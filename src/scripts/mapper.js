@@ -79,6 +79,8 @@
                 if (person.givenName.constructor === Array && person.givenName.length==2) {
                 	person.givenName = person.givenName[0] +' ja '+person.givenName[1];
                 }
+                
+                person.hasExtLinks = ( person.viaf || person.ulan || person.wikidata || person.wikipedia || person.fennica || person.blf || person.website || person.eduskunta || person.warsampo || person.norssi || person.kirjasampo || person.website || person.genicom || person.genitree || person.yo1853 ) ;
             });
             
             return objects;
