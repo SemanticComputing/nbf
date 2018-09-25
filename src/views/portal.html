@@ -26,13 +26,13 @@
       <div class="row">
         <div class="col-md-12">
 
-          <p id="generalDesc">{{ ::vm.strings["generalDesc"] }} (<a data-toggle='modal' data-target='#myModal' href='#'>ohje</a>).</p>
+          <p><a href="http://seco.cs.aalto.fi/projects/biografiasampo/">Biografiasampo</a> mahdollistaa suomalaisten elämäkertojen, henkilöiden ja henkilöryhmien tutkimisen 
+          digitaalisten ihmistieteiden menetelmillä. Valitse alla sovellusnäkymä aineistoihin. Lisätietoa <a data-toggle='modal' data-target='#myModal' href='#'> ohjeessa</a>.</p>
+          
           <noscript>
             <p>Portaalilla voi hakea, selata ja visualisoida laajoja tietoaineistoja Suomen historiallisista henkilöistä.</p>
             <p><b>Salli JavaScript käyttääksesi Suomen sukua. Please enable JavaScript to use Semantic Biography of Finland.</b></p>
           </noscript>
-          <p><a href="https://www.facebook.com/groups/514385075640669/">
-          <img src="images/FB-f-Logo__blue_29.png" /> <span id="followFacebook">{{ ::vm.strings["followFacebook"] }}</span></a></p>
         </div>
       </div>
 
@@ -50,6 +50,13 @@
               </div>
             </a>
 
+			<a id="places" class="col-md-4 pers-link" target="_self" href="http://biografiasampo.fi/paikat/">
+              <div class="persbox" id="nav-places">
+                <h4 id="placesH">{{ ::vm.strings["placesH"] }}</h4>
+                <p  id="placesP">{{ ::vm.strings["placesP"] }}</p>
+              </div>
+            </a>
+            
             <a id="maps" class="col-md-4 pers-link" ui-sref="maps.singleview">
               <div class="persbox" id="nav-maps" >
                 <h4 id="mapsH">{{ ::vm.strings["mapsH"] }}</h4>
@@ -57,12 +64,7 @@
               </div>
             </a>
 
-	          <a id="places" class="col-md-4 pers-link" target="_self" href="http://biografiasampo.fi/paikat/">
-              <div class="persbox" id="nav-places">
-                <h4 id="placesH">{{ ::vm.strings["placesH"] }}</h4>
-                <p  id="placesP">{{ ::vm.strings["placesP"] }}</p>
-              </div>
-            </a>
+	          
 
             <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
               <div class="persbox" id="nav-statistics">
@@ -127,6 +129,12 @@ Ryhmät: Suomen suuriruhtinaskunnan kenraalien ja amiraalien (1809-1917) ja papi
 ui-sref="place({ placeId: 'Hvittr%C3%A4sk'})">
 Tapahtumia paikassa Hvitträsk</a>
 </div>
+<p></p>
+<p>
+	<a href="https://www.facebook.com/groups/514385075640669/">
+          <img src="images/FB-f-Logo__blue_29.png" /> <span id="followFacebook">{{ ::vm.strings["followFacebook"] }}</span>
+    </a>
+</p>
 </div>
 
 <!--   FOOTER     -->

@@ -18,31 +18,35 @@
         vm.mapParam =  '{"center":{"latitude":62.64298263801266,"longitude":19.358826890587807},"zoom":4}';
         vm.mapParam2 = '{"center":{"latitude":64.02327764081613,"longitude":23.53710973262787},"zoom":5}';
         
+        var googleTranslateElementInit = function() {
+        	new google.translate.TranslateElement({pageLanguage: 'fi',layout: google.translate.TranslateElement.InlineLayout.VERTICAL}, 'google_translate_element');
+        	}
+        
         var finnishStrings = {
-                pageTitle: "Biografiasampo",
+        		pageTitle: "Biografiasampo",
                 jumboTitle: "Biografiasampo",
                 jumboSubtitle: "Suomalaisten elämäkertojen verkosto semanttisessa webissä",
-                generalDesc: "Sovellus mahdollistaa suomalaisten historiallisten henkilöiden elämäkertojen ja henkilöryhmien tutkimisen " +
+                generalDesc: '<a href="http://seco.cs.aalto.fi/projects/biografiasampo/">Biografiasampo</a> mahdollistaa suomalaisten historiallisten henkilöiden elämäkertojen ja henkilöryhmien tutkimisen ' +
                 		"toisiinsa linkitettyjen laajojen tietoaineistojen avulla.",
-                ins: "ohje",
+                ins: "Ks. ohje",
                 followFacebook: "Liity avoimeen Semantic Biographies -ryhmään Facebookissa",
                 localeLinkText: "In English",
                 choosePerspective: "Valitse sovellusnäkymä aineistoihin",
                 perspectiveTooltip: "Klikkaa käynnistääksesi sovellus",
-                searchH: "Haku",
+                searchH: "Henkilöt (haku)",
                 searchP: "Etsi elämäkertoja joustavasti eri näkökulmista",
-                mapsH: "Kartat",
-                mapsP: "Elämäkerrat kartalla",
+                placesH: "Paikat (haku)",
+                placesP: "Hae ja tutustu elämäkertoihin paikkojen kautta",	
+                mapsH: "Elämäkerrat kartalla",
+                mapsP: "Visualisoi elämäkertoja kartalla",
                 statisticsH: "Tilastot",
                 statisticsP: "Ryhmien elämäntarinat tilastojen kautta",
                 networksH: "Verkostot",
                 networksP: "Tutki historiallisten henkilöiden verkostoja",
                 relationsH: "Yhteyshaku",
                 relationsP: "Hae henkilöiden ja paikkojen välisisä yhteyksiä",
-                casultiesH: "Kielianalyysi",
-                casultiesP: "Tutki elämäkerroissa käytettyä kieltä",
-                placesH: "Paikat",
-                placesP: "Tutustu elämäkertoihin paikkojen kautta",	
+                casultiesH: "Kielianayysi",
+                casultiesP: "Tutki elämäkerroissa käytettyä kieltä",	
                 
                 /*
                 photographsH: "Valokuvat",
@@ -112,6 +116,7 @@
         
         function init() {
             nbfService.getPortal().then(function(test) {
+            	// googleTranslateElementInit(); 
                 return test;
             }).catch(handleError);
         }
