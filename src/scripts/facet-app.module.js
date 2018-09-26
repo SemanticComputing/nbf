@@ -217,7 +217,10 @@
         })
 
         .state('nlp', {
-            url: '/kielianalyysi',
+            url: '/kielianalyysi?facets',
+	    params: {
+                facets: null
+            },
             abstract: true,
             //templateUrl: 'views/nlp/nlp.html',
             templateUrl: 'views/nlp/tabs.html',

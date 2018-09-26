@@ -63,19 +63,13 @@
 	function calculatePercentage(data) {
             var obj;
             var word;
-            console.log("lemmas",vm.lemmaCount.count);
             for (obj in data) {
-                console.log(obj)
-                console.log(data[obj])
                 var class_sum = getPosTotal(obj);
-            	console.log("lemma in class",class_sum);
                 for (word in data[obj]) {
-                    console.log(data[obj][word].count);
                     data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(4);
                     data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(4);
                 }
             }
-            console.log(data);
             return data;
         }
 
@@ -88,18 +82,18 @@
                	} else if (obj == data.length-1){
                     str= " "+data[obj].string.trim()
                	} else if (data[obj-1].string.contains("(")){
-		    console.log("special (");
                     if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4){
 	            	str=data[obj].string.trim()+" -"
 		    } else {
                         str=data[obj].string.trim()
 		    }
+		}else if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4){
+	            	str=data[obj].string.trim()+" -"
                 }else {
                     str= " "+data[obj].string.trim()
                 }
             } else if (data[obj].string.contains("(")) {
                 str= " "+data[obj].string.trim();
-                //console.log(str, words);
             } else {
                 str=data[obj].string.trim();
             }
@@ -139,21 +133,6 @@
 		}
 		else {
 		    var str = trim_string(data, obj);
-		    /*if (data[obj].upos != "PUNCT") {
-			if(obj == 0){
-			    str= data[obj].string.trim()
-			} else if (data[obj-1].string.contains("(")){
-			    str=data[obj].string.trim()
-			}else {
-			    str= " "+data[obj].string.trim()
-			}
-		    } else if (data[obj].string.contains("(")) {
-			str= " "+data[obj].string.trim();
-			console.log(str, words);
-		    } else {
-			console.log("else"); 
-			str=data[obj].string.trim();
-		    }-*/
 		    if(wordId != prev_wordId){
 		    	words += str; 
 		    }
@@ -193,12 +172,10 @@
 		var target = targets[obj];
 		words = words.replace(target.target_string, '<span class="personlink" url="'+target.target_link+'">'+target.target_string+'</span>')
 	    }
-	    //console.log(words);
 	    return words;
 	}
 
 	function organizeSentences(data) {
-	    console.log("data len",data.length);
 	    var obj;
 	    var words = ""; // = '<span class="personlink" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
 	    var sentences = {
@@ -210,8 +187,7 @@
 	    for (obj in data) {
 		prev_sentence = s;
 		s=data[obj].sentence;
-		console.log("if", s, prev_sentence, words.length );
-		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { console.log("save", words); var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
 		else { 
 		    var str = trim_string(data, obj);
 		    /*if (data[obj].upos != "PUNCT") {
@@ -247,7 +223,6 @@
 	    } else if (postag == "PROPN") {
 		return vm.lemmaCount.pnounCount;
 	    } else {
-		console.log("Unidentifiable pos-tag", postag);
 		return vm.lemmaCount.count;
 	    }
 	    
@@ -383,7 +358,6 @@
                     if (latestUpdate !== updateId) {
                         return;
                     }
-                console.log(results);
                 vm.label=results[0].label;
                 vm.isLoadingResults = false;
                 });
@@ -392,7 +366,6 @@
                     if (latestUpdate !== updateId) {
                         return;
                     }
-		console.log("results",results, results.length);
                 if (results.length == 1) {
                         if(results[0].count != 0) {
                             drawChart(results);

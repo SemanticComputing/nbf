@@ -311,7 +311,6 @@
 		if(results.length > 0) {
             	    var qry = referencedByDecadeQuery.replace('$person_formatted_link', results[0].href);
             	    var promises = endpoint.getObjectsNoGrouping(qry);
-		    console.log("promises",promises);
 		    return promises;
 		} else { return {}; }
             });
@@ -321,7 +320,6 @@
             var self = this;
             var qry = referencingByDecadeQuery.replace('$personId', id);
             var promises = endpoint.getObjectsNoGrouping(qry);
-	    console.log("promises",promises);
 	    return promises;
         }
 
@@ -345,7 +343,6 @@
 
 	 function getWordUsageResults(facetSelections, id) {
             var self = this;
-	    console.log("getWordUsageResults");
             //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
             //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
             //return nbfEndpoint.getObjectsNoGrouping(formattedLinkQuery.replace('$personId',id)).then(function(results) {
@@ -357,16 +354,11 @@
                 var promises = {};
                 //var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
                 var uposQry = lemmaQry.replace('$personId', id);
-		console.log(uposQry);
-		console.log(self.upos);
 
                 self.upos.forEach(function(upos) {
-		console.log("upos", upos.key);
                     promises[upos.key] = endpoint.getObjectsNoGrouping(uposQry.replace(/<UPOS>/g, upos.key));
                 //promises = endpoint.getObjects(uposQry);
-		console.log("results", promises);
                 });
-		console.log("results", promises)
                 return $q.all(promises);
            // });
         }
@@ -377,7 +369,6 @@
             var topQry = personQuery.replace('$personId', id);
 
             promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-            console.log("person", promises);
             return promises;
         }
 
@@ -395,7 +386,6 @@
             var qry = lemmaCountQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
 
             promises = nbfEndpoint.getObjectsNoGrouping(qry);
-	    console.log("lemmaStats",promises);
             return promises;
         }
 	function getResultsTopCat(facetSelections) {
@@ -404,7 +394,6 @@
             var topQry = topTopCatsResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
 
             promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-	    console.log(promises);
             return promises;
         }
 	 function getResultsBottomCat(facetSelections) {
@@ -413,7 +402,6 @@
             var topQry = topBottomCatsResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
 
             promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-	    console.log(promises);
             return promises;
         }
 
