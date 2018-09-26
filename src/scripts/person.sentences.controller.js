@@ -315,7 +315,7 @@
                 var ticks = _.map(results, function(res) { return parseInt(res.year); });
                 var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
                 var options = {
-                    title: 'SKS:n Biografiajakauma vuosikymmenittäin',
+                    title: 'Henkilöön tehdyt viittaukset vuosikymmenittäin',
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},
@@ -337,7 +337,7 @@
                     height: 500
                 };
 
-                var chart = new google.visualization.ColumnChart(document.getElementById('biography-chart'));
+                var chart = new google.visualization.ColumnChart(document.getElementById('referenced-time'));
 
                 data.addColumn('string', 'Vuosikymmen');
                 data.addColumn('number', 'Biografioita');
@@ -395,16 +395,16 @@
                 vm.label=results[0].label;
                 vm.isLoadingResults = false;
                 });
-            });/*.then(function() {
-             return sentenceService.getLenStatistics(facetSelections).then(function(results) {
+            }).then(function() {
+             return sentenceService.getReferencesByDecade(facetSelections, id).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
-		console.log(results);
-                drawChartLen(results);
+		console.log("results",results);
+                drawChart(results);
                 vm.isLoadingResults = false;
                 });
-            }).then(function() {
+            });/*.then(function() {
             return sentenceService.getResultsTop10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;

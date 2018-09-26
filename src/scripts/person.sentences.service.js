@@ -20,6 +20,7 @@
         this.getPersonName = getPersonName;
         this.getWordUsageResults = getWordUsageResults;
         this.getWordCount = getWordCount;
+	this.getReferencesByDecade = getReferencesByDecade;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = mapfacetService.getFacets;
@@ -136,6 +137,20 @@
 	    '     BIND (str(?label_lang) AS ?label)' +
 	    '  }' +
 	    '} ORDER BY ASC(?structure) ASC(?z) ASC(?y) ASC(?x)' ;
+
+	var referencedByDecadeQuery = prefixes +
+            ' SELECT DISTINCT ?year (COUNT(distinct ?id) AS ?count) { ' +
+	    '  BIND( <file:///tmp/data/nlp/$person_formatted_link> as ?person)' +
+	    '  ?target  <http://ldf.fi/nbf/biography/data#anchor_link> ?person .' +
+	    '  ?target  nif:isString ?target_string .' +
+	    '  ?target dct:isPartOf ?sentence .' +
+	    '  ?source dct:hasPart/dct:references ?target .' +
+	    '  ?source <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
+	    '  SERVICE <http://ldf.fi/nbf/sparql> { ' +
+	    '    ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+  	    '  }' +
+            '  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?year) ' +
+            ' } GROUP BY ?year ORDER BY ?year ';
 
         // The query for the results.
         // ?id is bound to the person URI.
@@ -275,9 +290,16 @@
         var endpoint = new AdvancedSparqlService(nlpEndpointConfig, objectMapperService);
         var nbfEndpoint = new AdvancedSparqlService(nbfEndpointConfig, objectMapperService);
 
-        function getStatistics(facetSelections) {
-            var qry = docCountByDecadeQry.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            return nbfEndpoint.getObjectsNoGrouping(qry);
+        function getReferencesByDecade(facetSelections, id) {
+            var self = this;
+            return nbfEndpoint.getObjectsNoGrouping(formattedLinkQuery.replace('$personId',id)).then(function(results) {
+		if(results.length > 0) {
+            	    var qry = referencedByDecadeQuery.replace('$person_formatted_link', results[0].href);
+            	    var promises = endpoint.getObjectsNoGrouping(qry);
+		    console.log("promises",promises);
+		    return promises;
+		} else { return {}; }
+            });
         }
 
 	function getLenStatistics(facetSelections) {
