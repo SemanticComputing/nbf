@@ -213,6 +213,16 @@
       <nbf-personlist url="{{ vm.referenced.people }}"></nbf-personlist>
     </div>
     
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.references">
+    	<div class="relativeblock">
+    		<h3>Täältä viitatut sivut ({{ ::vm.references.count }})</h3>
+	    	<span class="glyphicon glyphicon-info-sign" 
+	    		uib-tooltip="Henkilöt joiden biografioihin viitataan tältä sivulta.">
+	    	</span>
+      	</div>
+      <nbf-personlist url="{{ vm.references.people }}"></nbf-personlist>
+    </div>
+    
     <div class="col-md-4 text-left well nbfwell" ng-if="vm.authors">
     	<div class="relativeblock">
     		<h3>{{ vm.authors.count==1 ? 'Kirjoittaja' : 'Kirjoittajat' }}</h3>

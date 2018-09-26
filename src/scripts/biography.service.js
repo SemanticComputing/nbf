@@ -244,18 +244,10 @@
             			prev_ob = ob;
             		}
             	});
-            	// console.log(strings);
+            	
             	return data;
             });
         }
-        /*
-        function updateSortBy(sortBy) {
-            var sort = $location.search().sortBy || '?ordinal';
-            if (sort === sortBy) {
-                $location.search('desc', $location.search().desc ? null : true);
-            }
-            $location.search('sortBy', sortBy);
-        }
-        */
+        
     }
 })();

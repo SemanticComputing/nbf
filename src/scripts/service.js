@@ -31,6 +31,7 @@
         this.getByAuthor = getByAuthor;
         this.getAuthoredBios = getAuthoredBios;
         this.getBios = getBios;
+        this.getReferences = getReferences;
         this.getByReferences = getByReferences;
         this.getPerson = getPerson;
         this.getRelatives = getRelatives;
@@ -280,17 +281,16 @@
         
         //	NOTE this queries for persons references in current biography
         //	not used on the person page
-        //	http://yasgui.org/short/SkYYOLRxm
+        //	http://yasgui.org/short/ByNkfgYK7
         var queryByReferences =
-        	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
+        	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE {   ' +
         	' <RESULT_SET> ' +
-        	' SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
-        	'   ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#bioId> ?id2 ; ' +
-        	'     	<http://purl.org/dc/elements/1.1/source>/<http://ldf.fi/nbf/biography/data#link> ?target_link . ' +
-        	'    BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target)  ' +
-        	' } ' +
-        	'  ' +
-        	'  ?id nbf:formatted_link ?target . ' +
+        	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> {     ' +
+        	'    ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#docRef> ?id2 ;      			 ' +
+        	'         <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .      ' +
+        	'    BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target) ' +
+        	'  } ' +
+        	'  ?id nbf:formatted_link ?target .  ' +
         	'} ';
         
         var queryPortal = 'SELECT * WHERE { ?x ?y ?z } LIMIT 1 ';
@@ -385,8 +385,14 @@
         
         function getByReferences(id) {
         	var constraint = 'VALUES ?id2 { <' + id + '> } . ';
-            var qry = prefixes + queryReferences.replace('<RESULT_SET>', constraint);
+        	var qry = prefixes + queryByReferences.replace('<RESULT_SET>', constraint);
             return endpoint.getObjectsNoGrouping(qry);
+        }
+        
+        function getReferences(id) {
+        	var constraint = 'VALUES ?id2 { <' + id + '> } . ';
+        	var qry= prefixes + queryReferences.replace('<RESULT_SET>', constraint);
+        	return endpoint.getObjectsNoGrouping(qry);
         }
         
         function getPortal() {

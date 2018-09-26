@@ -72,6 +72,10 @@
                 });
                 
                 nbfService.getByReferences(id).then(function(data) {
+                	if (data.length && data[0].people) vm.references = {people: data[0].people, count: data[0].count};
+                });
+                
+                nbfService.getReferences(id).then(function(data) {
                 	if (data.length && data[0].people) vm.referenced = {people: data[0].people, count: data[0].count};
                 });
                 
