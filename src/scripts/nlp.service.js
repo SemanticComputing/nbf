@@ -226,7 +226,7 @@
             return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
                 if (results.length > 10000) {
                     return $q.reject({
-                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
+                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodattimien avulla'
                     });
                 }
                 var promises = {};
@@ -242,42 +242,20 @@
 
 	 function getResultsTop10(facetSelections) {
             var self = this;
-            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-                /*if (results.length > 10000) {
-                    return $q.reject({
-                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
-                    });
-                }*/
-                var promises = {};
-                var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
+            var promises = {};
+            var topQry = topTenResults.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
 
-                //self.upos.forEach(function() {
-		//console.log("results", promises)
-                promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-		console.log("results", promises)
-                //});
-                return promises;
-           // });
+            promises = nbfEndpoint.getObjectsNoGrouping(topQry);
+            return promises;
         }
 
 	 function getResultsBottom10(facetSelections) {
             var self = this;
-            //var qry = query.replace(/<RESULT_SET>/g, facetSelections.constraint.join(' '));
-            //return nbfEndpoint.getObjectsNoGrouping(qry).then(function(results) {
-                /*if (results.length > 10000) {
-                    return $q.reject({
-                        statusText: 'Tulosjoukko on liian suuri. Ole hyvä ja rajaa tuloksia suodittimien avulla'
-                    });
-                }*/
                 var promises = {};
                 var topQry = topBottomResults.replace(/<RESULT_SET>/g,  facetSelections.constraint.join(' '));
 
-                //self.upos.forEach(function() {
                 promises = nbfEndpoint.getObjectsNoGrouping(topQry);
-                //});
                 return promises;
-            //});
         }
 
 	 function getWordCount(facetSelections) {

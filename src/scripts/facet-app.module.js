@@ -217,33 +217,33 @@
         })
 
         .state('nlp', {
-            url: '/kielianalyysi?facets',
-	    params: {
-                facets: null
-            },
+            url: '/kielianalyysi',
             abstract: true,
-            //templateUrl: 'views/nlp/nlp.html',
             templateUrl: 'views/nlp/tabs.html',
             controller: 'NlpStatisticsController',
             controllerAs: 'vm',
         })
         .state('nlp.statistics', {
-            url: '',
+            url: '?facets',
+	    params: {
+                facets: null
+            },
+
             templateUrl: 'views/nlp/statistics.html',
             controller: 'NlpStatisticsController',
             controllerAs: 'vm',
         })
         .state('nlp.comparison', {
-	    url: '/vertaa?facets&facets2',
-	    params: {
-        	facets: null,
-        	facets2: null
-            },
+	    url: '',
             abstract: true,
             templateUrl: 'views/nlp/comparison.html',
         })
         .state('nlp.comparison.sides', {
-            url: '',
+            url: '/vertaa?facets&facets2',
+	    params: {
+        	facets: null,
+        	facets2: null
+            },
             views: {
                 'left@nlp.comparison': {
 	            templateUrl: 'views/nlp/comparison.left.html',
