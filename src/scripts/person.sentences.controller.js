@@ -275,7 +275,7 @@
                 var ticks = _.map(results, function(res) { return parseInt(res.year); });
                 var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
                 var options = {
-                    title: 'SKS:n Biografioiden keskimääräinen sanamääräjakauma vuosikymmenittäin',
+                    title: 'Viitatut henkilöt syntymävuoden mukaan vuosikymmenittäin',
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},
@@ -297,10 +297,10 @@
                     height: 500
                 };
 
-                var chart = new google.visualization.ColumnChart(document.getElementById('biography-len-chart'));
+                var chart = new google.visualization.ColumnChart(document.getElementById('referencing-time'));
 
                 data.addColumn('string', 'Vuosikymmen');
-                data.addColumn('number', 'Biografioiden keskimääräinen sanamäärä');
+                data.addColumn('number', 'Henkilöiden lukumäärä');
 
                 data.addRows(rows);
                 chart.draw(data, options);
@@ -340,7 +340,7 @@
                 var chart = new google.visualization.ColumnChart(document.getElementById('referenced-time'));
 
                 data.addColumn('string', 'Vuosikymmen');
-                data.addColumn('number', 'Biografioita');
+                data.addColumn('number', 'Henkilöiden lukumäärä');
 
                 data.addRows(rows);
                 chart.draw(data, options);
@@ -351,8 +351,9 @@
 
         var latestUpdate;
         function fetchResults(facetSelections) {
-            vm.isLoadingResults = true;
-            vm.isLoadingWordResults = true;
+            vm.isLoadingSentences = true;
+            vm.isLoadingReferences = true;
+            vm.isLoadingChart = true;
             vm.results = [];
             vm.error = undefined;
 
@@ -366,17 +367,8 @@
                 }
                 //drawChart(results);
 		vm.sentenceResults = organizeSentences(results);//calculatePercentage(results);
-                vm.isLoadingResults = false;
+                vm.isLoadingSentences = false;
 
-            }).then(function() {
-            return sentenceService.getWordCount(facetSelections).then(function(results) {
-                    if (latestUpdate !== updateId) {
-                        return;
-                    }
-                    vm.lemmaCount = results[0];
-                    //vm.isLoadingResults = false;
-		    //console.log(results[0]);
-                });
             }).then(function() {
                 //});
             return sentenceService.getReferences(facetSelections, id).then(function(results) {
@@ -384,7 +376,7 @@
                         return;
                     }
 		    vm.referenceResults = organizeReferences(results);//calculatePercentage(results);
-                    vm.isLoadingWordResults = false;
+                    vm.isLoadingReferences = false;
                 });
             }).then(function() {
              return sentenceService.getPersonName(facetSelections, id).then(function(results) {
@@ -402,17 +394,17 @@
                     }
 		console.log("results",results);
                 drawChart(results);
-                vm.isLoadingResults = false;
+                vm.isLoadingChart = false;
                 });
-            });/*.then(function() {
-            return sentenceService.getResultsTop10(facetSelections).then(function(results) {
+            }).then(function() {
+            return sentenceService.getReferencingByDecade(facetSelections, id).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
-                    vm.resultsTop10 = results;
-                    //vm.isLoadingResults = false;
+                    drawChartLen(results);
+                    vm.isLoadingChart = false;
                 });
-            }).then(function() {
+            });/*.then(function() {
             return sentenceService.getResultsBottom10(facetSelections).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;

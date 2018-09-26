@@ -21,6 +21,7 @@
         this.getWordUsageResults = getWordUsageResults;
         this.getWordCount = getWordCount;
 	this.getReferencesByDecade = getReferencesByDecade;
+	this.getReferencingByDecade = getReferencingByDecade;
         // Get the facets.
         // Return a promise (because of translation).
         this.getFacets = mapfacetService.getFacets;
@@ -143,10 +144,24 @@
 	    '  BIND( <file:///tmp/data/nlp/$person_formatted_link> as ?person)' +
 	    '  ?target  <http://ldf.fi/nbf/biography/data#anchor_link> ?person .' +
 	    '  ?target  nif:isString ?target_string .' +
-	    '  ?target dct:isPartOf ?sentence .' +
 	    '  ?source dct:hasPart/dct:references ?target .' +
 	    '  ?source <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
 	    '  SERVICE <http://ldf.fi/nbf/sparql> { ' +
+	    '    ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
+  	    '  }' +
+            '  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?year) ' +
+            ' } GROUP BY ?year ORDER BY ?year ';
+
+	var referencingByDecadeQuery = prefixes +
+            ' SELECT DISTINCT ?year (COUNT(distinct ?id) AS ?count) { ' +
+	    '  BIND( <http://ldf.fi/nbf/$personId> as ?person)' +
+	    '  ?source <http://ldf.fi/nbf/biography/data#docRef> ?person .' +
+	    '  ?source dct:hasPart/dct:references ?target .' +
+	    '  ?target  nif:isString ?target_string .' +
+	    '  ?target <http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .' +
+	    '  BIND(REPLACE(STR(?target_link), "file:///tmp/data/nlp/", "") AS ?link)' +
+	    '  SERVICE <http://ldf.fi/nbf/sparql> { ' +
+	    '    ?id nbf:formatted_link ?link .' +
 	    '    ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
   	    '  }' +
             '  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?year) ' +
@@ -300,6 +315,14 @@
 		    return promises;
 		} else { return {}; }
             });
+        }
+
+	 function getReferencingByDecade(facetSelections, id) {
+            var self = this;
+            var qry = referencingByDecadeQuery.replace('$personId', id);
+            var promises = endpoint.getObjectsNoGrouping(qry);
+	    console.log("promises",promises);
+	    return promises;
         }
 
 	function getLenStatistics(facetSelections) {

@@ -20,6 +20,9 @@
 			<span class="glyphicon glyphicon-info-sign" tooltip-placement="bottom"
                 		uib-tooltip="Listassa näkyy alla lauseet, joihin on alun perin manuaalisesti mennyt linkki Kansallisbiografian sivustolle. Lauseet eivät kata kaikkia joissa henkilö on mainittu vaan usein biografian ensimmäinen lause, jossa henkilö on mainittu.">
 	                </span></h4>
+			<div class="col-sm-12" ng-show="vm.isLoadingSentences">
+	      	    	<img class="loading-img" src="images/loading-lg.gif"></img>
+	    	    	</div>
 
 			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;" ng-include="'views/directive/nbf-sentence-list.directive.html'"> <list-sentences >
     			    <!--<div ng-repeat="sentences in vm.sentenceResults">
@@ -30,11 +33,21 @@
 				</li>
 			    </div>--></list-sentences></ul>
   			</div>
+			<div>
+			    <div class="col-sm-12" ng-show="vm.isLoadingChart">
+                        <img class="loading-img" src="images/loading-lg.gif"></img>
+                        </div>
+
+		    	    <div id="referenced-time"> </div>
+			</div>
 		    </div>
 		    <div> <h4> Viittaukset muihin biografioihin 
 			<span class="glyphicon glyphicon-info-sign" tooltip-placement="bottom"
                 		uib-tooltip="Listassa on lauseet henkilön biografiasta, joissa viitataan muihin henkilöihin. Linkit ovat manuaalisesti tuotettuja alkuperäisaineistoon ja koneellisesti irroitettu ja sijoitettu takaisin ensimmäiseen mainintaan henkilöstä tekstissä.">
 	                </span></h4>
+			<div class="col-sm-12" ng-show="vm.isLoadingReferences">
+	      	    		<img class="loading-img" src="images/loading-lg.gif"></img>
+	    	    	</div>
 
 			<div> <ul style="padding: 0; display: inline-table; vertical-align: middle; list-style-position: inside; text-align: left;"> 
     			    <div ng-repeat="sentences in vm.referenceResults">
@@ -46,11 +59,17 @@
 				</li>
 			    </div></ul>
   			</div>
+
+			<div>
+			    <div class="col-sm-12" ng-show="vm.isLoadingChart">
+                        	<img class="loading-img" src="images/loading-lg.gif"></img>
+                            </div>
+		    	    <div id="referencing-time"> </div>
+			</div>
 		    </div>
 		    <div class="col-sm-12" ng-show="vm.loading">
 	      	    	<!--<img class="loading-img" src="images/loading-lg.gif"></img>-->
 	    	    </div>
-		    <div id="referenced-time"> </div>
 		</div>
 	    </div>
 	</div>
