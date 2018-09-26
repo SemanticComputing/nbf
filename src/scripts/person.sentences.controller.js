@@ -351,8 +351,9 @@
 
         var latestUpdate;
         function fetchResults(facetSelections) {
-            vm.isLoadingResults = true;
-            vm.isLoadingWordResults = true;
+            vm.isLoadingSentences = true;
+            vm.isLoadingReferences = true;
+            vm.isLoadingChart = true;
             vm.results = [];
             vm.error = undefined;
 
@@ -366,17 +367,8 @@
                 }
                 //drawChart(results);
 		vm.sentenceResults = organizeSentences(results);//calculatePercentage(results);
-                vm.isLoadingResults = false;
+                vm.isLoadingSentences = false;
 
-            }).then(function() {
-            return sentenceService.getWordCount(facetSelections).then(function(results) {
-                    if (latestUpdate !== updateId) {
-                        return;
-                    }
-                    vm.lemmaCount = results[0];
-                    //vm.isLoadingResults = false;
-		    //console.log(results[0]);
-                });
             }).then(function() {
                 //});
             return sentenceService.getReferences(facetSelections, id).then(function(results) {
@@ -384,7 +376,7 @@
                         return;
                     }
 		    vm.referenceResults = organizeReferences(results);//calculatePercentage(results);
-                    vm.isLoadingWordResults = false;
+                    vm.isLoadingReferences = false;
                 });
             }).then(function() {
              return sentenceService.getPersonName(facetSelections, id).then(function(results) {
@@ -402,7 +394,7 @@
                     }
 		console.log("results",results);
                 drawChart(results);
-                vm.isLoadingResults = false;
+                vm.isLoadingChart = false;
                 });
             });/*.then(function() {
             return sentenceService.getResultsTop10(facetSelections).then(function(results) {
