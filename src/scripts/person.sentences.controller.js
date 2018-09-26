@@ -392,16 +392,29 @@
                     if (latestUpdate !== updateId) {
                         return;
                     }
-		console.log("results",results);
-                drawChart(results);
-                vm.isLoadingChart = false;
+		console.log("results",results, results.length);
+                if (results.length == 1) {
+                        if(results[0].count != 0) {
+                            drawChart(results);
+                        }
+                    } else {
+                        drawChart(results);
+                    }
+
+		vm.isLoadingChart = false;
                 });
             }).then(function() {
             return sentenceService.getReferencingByDecade(facetSelections, id).then(function(results) {
                     if (latestUpdate !== updateId) {
                         return;
                     }
-                    drawChartLen(results);
+		    if (results.length == 1) {
+			if(results[0].count != 0) {
+			    drawChartLen(results);
+			}
+		    } else {
+                    	drawChartLen(results);
+		    }
                     vm.isLoadingChart = false;
                 });
             });/*.then(function() {
