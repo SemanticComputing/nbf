@@ -17,7 +17,6 @@
         vm.clergyFacet = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":"?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5>."}}';
         vm.mapParam =  '{"center":{"latitude":62.64298263801266,"longitude":19.358826890587807},"zoom":4}';
         vm.mapParam2 = '{"center":{"latitude":64.02327764081613,"longitude":23.53710973262787},"zoom":5}';
-        vm.linguisticView = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
         
         var googleTranslateElementInit = function() {
         	new google.translate.TranslateElement({pageLanguage: 'fi',layout: google.translate.TranslateElement.InlineLayout.VERTICAL}, 'google_translate_element');
