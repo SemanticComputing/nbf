@@ -19,6 +19,7 @@
         vm.mapParam2 = '{"center":{"latitude":64.02327764081613,"longitude":23.53710973262787},"zoom":5}';
         
         var googleTranslateElementInit = function() {
+        	console.log('googleTranslateElementInit');
         	new google.translate.TranslateElement({pageLanguage: 'fi',layout: google.translate.TranslateElement.InlineLayout.VERTICAL}, 'google_translate_element');
         	}
         
@@ -44,8 +45,8 @@
                 networksH: "Verkostot",
                 networksP: "Tutki historiallisten henkilöiden verkostoja",
                 relationsH: "Yhteyshaku",
-                relationsP: "Hae henkilöiden ja paikkojen välisisä yhteyksiä",
-                casultiesH: "Kielianayysi",
+                relationsP: "Hae henkilöiden ja paikkojen välisiä yhteyksiä",
+                casultiesH: "Kielianalyysi",
                 casultiesP: "Tutki elämäkerroissa käytettyä kieltä",	
                 
                 /*
@@ -116,9 +117,9 @@
         
         function init() {
             nbfService.getPortal().then(function(test) {
-            	// googleTranslateElementInit(); 
+            	googleTranslateElementInit(); 
                 return test;
-            }).catch(handleError);
+            }).catch(handleError); 
         }
         
         function openPage() {
