@@ -315,7 +315,7 @@
                 var ticks = _.map(results, function(res) { return parseInt(res.year); });
                 var rows = _.map(results, function(res) { return [res.year, parseInt(res.count)]; });
                 var options = {
-                    title: 'Henkilöön tehdyt viittaukset vuosikymmenittäin',
+                    title: 'Henkilöön tehdyt viittaukset muista biografioista vuosikymmenittäin',
                     legend: { position: 'none' },
 
                     tooltip: {format: 'none'},
