@@ -112,7 +112,9 @@
 	    '  BIND(REPLACE(STR(?target_link), "file:///tmp/data/nlp/", "") AS ?link)' +
 	    '  SERVICE <http://ldf.fi/nbf/sparql> {' +
 	    '    ?personUri nbf:formatted_link ?link .' +
+	    '    ?person <http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://www.w3.org/2004/02/skos/core#prefLabel> ?label_lang . '+
 	    '  }' +
+	    '     BIND (str(?label_lang) AS ?label)' +
 	    '} ORDER BY ASC(?structure) ASC(?z) ASC(?y) ASC(?x)' ;
 
 	var sentenceQuery = prefixes +

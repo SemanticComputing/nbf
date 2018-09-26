@@ -126,16 +126,21 @@
 			words: $sce.trustAsHtml(render_targets(words, targets['data'])) 
 		    }; 
                     sentences['data'].push(words_obj); 
-		    words = data[obj].string.trim();
+		    words =  words = '<span class="personlink" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
 		    targets = {
                 	data: []
             	    };  
 		}
 		else {
 		    var str = trim_string(data, obj);
+		    if (obj == 0){
+			console.log("first",data[0])
+        	        words = '<span class="personlink" url="'+data[0].person+'">'+data[0].label+'</span>: ';
+                    }
 		    if(wordId != prev_wordId){
 		    	words += str; 
-		    }
+		    } 
+
 		} 
 		var target_string = data[obj].target_string.trim();
 		var target_link = data[obj].personUri.trim();
