@@ -19,12 +19,11 @@
         vm.mapParam2 = '{"center":{"latitude":64.02327764081613,"longitude":23.53710973262787},"zoom":5}';
         
         var googleTranslateElementInit = function() {
-        	console.log('googleTranslateElementInit');
         	new google.translate.TranslateElement({pageLanguage: 'fi',layout: google.translate.TranslateElement.InlineLayout.VERTICAL}, 'google_translate_element');
         	}
         
         var finnishStrings = {
-        		pageTitle: "Biografiasampo",
+                pageTitle: "Biografiasampo",
                 jumboTitle: "Biografiasampo",
                 jumboSubtitle: "Suomalaisten elämäkertojen verkosto semanttisessa webissä",
                 generalDesc: '<a href="http://seco.cs.aalto.fi/projects/biografiasampo/">Biografiasampo</a> mahdollistaa suomalaisten historiallisten henkilöiden elämäkertojen ja henkilöryhmien tutkimisen ' +
@@ -34,12 +33,12 @@
                 localeLinkText: "In English",
                 choosePerspective: "Valitse sovellusnäkymä aineistoihin",
                 perspectiveTooltip: "Klikkaa käynnistääksesi sovellus",
-                searchH: "Henkilöt (haku)",
+                searchH: "Henkilöt",
                 searchP: "Etsi elämäkertoja joustavasti eri näkökulmista",
-                placesH: "Paikat (haku)",
+                placesH: "Paikat",
                 placesP: "Hae ja tutustu elämäkertoihin paikkojen kautta",	
-                mapsH: "Elämäkerrat kartalla",
-                mapsP: "Visualisoi elämäkertoja kartalla",
+                mapsH: "Elämäkartat",
+                mapsP: "Visualisoi useita elämäkertoja kartoilla",
                 statisticsH: "Tilastot",
                 statisticsP: "Ryhmien elämäntarinat tilastojen kautta",
                 networksH: "Verkostot",
@@ -47,7 +46,7 @@
                 relationsH: "Yhteyshaku",
                 relationsP: "Hae henkilöiden ja paikkojen välisiä yhteyksiä",
                 casultiesH: "Kielianalyysi",
-                casultiesP: "Tutki elämäkerroissa käytettyä kieltä",	
+                casultiesP: "Tutki elämäkerroissa käytettyä kieltä",
                 
                 /*
                 photographsH: "Valokuvat",
