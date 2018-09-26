@@ -4,7 +4,7 @@
 }
 
 .comparison-title-setup{
- margin:inherit; 
+ margin:inherit;
  display:inline-flex;
 }
 
@@ -70,12 +70,14 @@ a.no-style {
 
 .navbar-brand {
   font-size: inherit;
+  height: 57.15px;
 }
-
+.navbar {
+  min-height:57.15px !important;
+}
 .navbar-brand span {
   padding-right: 5px;
 }
-
 .facetsidebar {
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
@@ -84,8 +86,6 @@ a.no-style {
 	bottom: 0px;
 	left: 0px;
 }
-
-
 .mapcontent, .chartcontent, .personmapcontent {
 	overflow: hidden;
 	position: absolute;
@@ -307,10 +307,10 @@ iframe.externalcontent {
 
 /* info marker */
 .relativeblock span, .tooltip-info {
-	aria-hidden:true; 
+	aria-hidden:true;
 	color:#888;
 	tooltip-placement:top;
-	position: relative; 
+	position: relative;
 	top: -2px;
 }
 
