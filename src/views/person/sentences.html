@@ -33,8 +33,13 @@
 				</li>
 			    </div>--></list-sentences></ul>
   			</div>
-			
-		    	<div id="referenced-time"> </div>
+			<div>
+			    <div class="col-sm-12" ng-show="vm.isLoadingChart">
+                        <img class="loading-img" src="images/loading-lg.gif"></img>
+                        </div>
+
+		    	    <div id="referenced-time"> </div>
+			</div>
 		    </div>
 		    <div> <h4> Viittaukset muihin biografioihin 
 			<span class="glyphicon glyphicon-info-sign" tooltip-placement="bottom"
@@ -54,6 +59,13 @@
 				</li>
 			    </div></ul>
   			</div>
+
+			<div>
+			    <div class="col-sm-12" ng-show="vm.isLoadingChart">
+                        	<img class="loading-img" src="images/loading-lg.gif"></img>
+                            </div>
+		    	    <div id="referencing-time"> </div>
+			</div>
 		    </div>
 		    <div class="col-sm-12" ng-show="vm.loading">
 	      	    	<!--<img class="loading-img" src="images/loading-lg.gif"></img>-->
