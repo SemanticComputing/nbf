@@ -226,7 +226,9 @@
         .state('nlp.statistics', {
             url: '?facets',
 	    params: {
-                facets: null
+                facets: {
+		    value: '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":"?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4>."}}'
+		}
             },
 
             templateUrl: 'views/nlp/statistics.html',
