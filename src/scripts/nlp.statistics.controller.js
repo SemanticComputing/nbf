@@ -19,7 +19,8 @@
     		FacetHandler, facetUrlStateHandlerService) {
 
         var vm = this;
-        
+        vm.admiralFacet = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":"?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4>."}}';
+
         vm.hasResults = hasResults;
         vm.facetParam1 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
         vm.facetParam2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}';

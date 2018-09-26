@@ -116,6 +116,7 @@
 	    var prev_wordId =0;
 	    if (data.length > 0) {
 	    for (obj in data) {
+		console.log(s, prev_sentence)
 		prev_sentence = s;
 		prev_wordId = wordId;
 		s=data[obj].sentence;
@@ -124,7 +125,8 @@
 		    var words_obj = { 
 			sentence: prev_sentence, 
 			words: $sce.trustAsHtml(render_targets(words, targets['data'])) 
-		    }; 
+		    };
+		    console.log(words); 
                     sentences['data'].push(words_obj); 
 		    words =  words = '<span class="personlink" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
 		    targets = {
