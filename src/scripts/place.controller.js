@@ -28,7 +28,8 @@
         		vm.place = data[0];
         		
         		placeService.getHierarchy(id).then(function(data) {
-        			if (data.length) { vm.related = data; setMap(); }
+        			if (data.length) { vm.related = data; }
+        			setMap();
         		}).catch(handleError);
         		
         		placeService.getEvents(id).then(function(data) {

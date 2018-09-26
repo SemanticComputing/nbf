@@ -186,11 +186,14 @@
             		if (RegExp('&quot;').test(ob.word)) {
             			ob.word = ob.word.replace("&quot;",'"');
             			quoted = !quoted;
-            			ob.space = quoted;
+            			ob.space = quoted; 
             		}
             			
             		if (RegExp("[&']").test(ob.word)) { 
-            			ob.word = ob.word.replace('&amp;nbsp;', ' ');
+            			ob.word = ob.word
+            				.replace('&amp;nbsp;', ' ')
+            				.replace('&amp;gt', '>')
+            				.replace('&amp;lt', '<'); 
             		}
             		
             		// no space in case –1942 or –VII
@@ -241,18 +244,10 @@
             			prev_ob = ob;
             		}
             	});
-            	// console.log(strings);
+            	
             	return data;
             });
         }
-        /*
-        function updateSortBy(sortBy) {
-            var sort = $location.search().sortBy || '?ordinal';
-            if (sort === sortBy) {
-                $location.search('desc', $location.search().desc ? null : true);
-            }
-            $location.search('sortBy', sortBy);
-        }
-        */
+        
     }
 })();
