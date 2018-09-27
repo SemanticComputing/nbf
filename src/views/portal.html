@@ -26,9 +26,9 @@
       <div class="row">
         <div class="col-md-12">
 
-          <p><a href="http://seco.cs.aalto.fi/projects/biografiasampo/">Biografiasampo</a> mahdollistaa suomalaisten elämäkertojen, henkilöiden ja henkilöryhmien tutkimisen 
+          <p><a href="http://seco.cs.aalto.fi/projects/biografiasampo/">Biografiasampo</a> mahdollistaa suomalaisten elämäkertojen, henkilöiden ja henkilöryhmien tutkimisen
           digitaalisten ihmistieteiden menetelmillä. Valitse alla sovellusnäkymä aineistoihin. Lisätietoa <a data-toggle='modal' data-target='#myModal' href='#'> ohjeessa</a>.</p>
-          
+
           <noscript>
             <p>Portaalilla voi hakea, selata ja visualisoida laajoja tietoaineistoja Suomen historiallisista henkilöistä.</p>
             <p><b>Salli JavaScript käyttääksesi Suomen sukua. Please enable JavaScript to use Semantic Biography of Finland.</b></p>
@@ -56,7 +56,7 @@
                 <p  id="placesP">{{ ::vm.strings["placesP"] }}</p>
               </div>
             </a>
-            
+
             <a id="maps" class="col-md-4 pers-link" ui-sref="maps.singleview">
               <div class="persbox" id="nav-maps" >
                 <h4 id="mapsH">{{ ::vm.strings["mapsH"] }}</h4>
@@ -64,7 +64,7 @@
               </div>
             </a>
 
-	          
+
 
             <a id="statistics" class="col-md-4 pers-link" ui-sref="visu.statistics">
               <div class="persbox" id="nav-statistics">
@@ -127,8 +127,8 @@ ui-sref="maps.comparison2.sides({facets: vm.admiralFacet, facets2: vm.clergyFace
 Ryhmät: Suomen suuriruhtinaskunnan kenraalien ja amiraalien (1809-1917) ja papiston (1800-1920) elämäkarttojen vertailu</a>
 
 <a class="btn btn-primary" role="button"
-ui-sref="place({ placeId: 'Hvittr%C3%A4sk'})">
-Paikka: Hvitträsk</a>
+ui-sref="place({ placeId: 'Turku'})">
+Paikka: Turku</a>
 
 <a class="btn btn-primary" role="button"
 ui-sref="nlp.statistics({ facets: vm.clergyFacet })">
@@ -150,5 +150,3 @@ Lauseiden sisältämät viittaukset Ida Aalbergiin ja lauseissa mainitut henkil�
 
 <!--   FOOTER     -->
 <div ng-include="'views/footer.html'"></div>
-
-
