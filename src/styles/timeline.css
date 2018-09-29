@@ -1,5 +1,3 @@
-.angular-google-map-container { width:100%; height: 900px; }
-.personmap .angular-google-map-container { height: 500px; }
 
 #labelcontainer { min-height: 100%; height: 100%; max-height: 100%; overflow-y: scroll; text-align: left; }
 
@@ -7,7 +5,7 @@
 svg#timelinecontainer {
 	width: 100%;
 	height: 100%;
-	stroke-width: 0px; 
+	stroke-width: 0px;
 	background-color: white;
 }
 
@@ -113,7 +111,7 @@ svg#timelinecontainer {
 
 #timelinecontainer text {
 	font-family:"Arial";
-	font-size:1.6px; 
+	font-size:1.6px;
 	text-anchor: end;
 	fill:#555;
 }
