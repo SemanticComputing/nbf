@@ -51,29 +51,29 @@
         	'  <RESULT_SET> ' +
         	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
         	'  ?id foaf:focus ?prs . ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source ?s ] FILTER ISLITERAL(?s) } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
         	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
         	'   ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }    ' +
-        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)        ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime }    ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime }    ' +
-        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)     ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
+        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime } ' +
+        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
         	'} LIMIT 1 ';
         
         //	http://yasgui.org/short/SyK2-M6vm
         var queryForHref = 
-        	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
+        	'SELECT DISTINCT ?id ?label ?image ?lifespan ' +
         	'WHERE {   ' +
         	'  { <RESULT_SET> } ' +
         	'  ?id nbf:formatted_link ?href ; ' +
         	'  		owl:sameAs*/foaf:focus ?prs . ' +
-        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source sources:source1 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source ?s ] FILTER ISLITERAL(?s) } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
-        	'  OPTIONAL { ?prs nbf:image/schema:image ?image3 } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
         	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
         	'   ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +

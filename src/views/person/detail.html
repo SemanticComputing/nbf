@@ -147,14 +147,14 @@
         </div>
       </div>
       
-      <div class="col-sm-6 col-md-12 text-left" ng-if="(vm.person) && !vm.person.bios">
+      <div class="col-sm-6 col-md-12 text-left" ng-if="(vm.person) && !vm.person.bios && !vm.person.externalLinks">
            	<br />
            	<h4>Henkilöllä ei ole biografiakuvauksia</h4>
            	<hr />
       </div>
             
       <div class="col-sm-6 col-md-12 text-left thumbnail"
-           	ng-if="vm.person.bios && vm.person.bios.length"
+           	ng-if="(vm.person.bios && vm.person.bios.length) || vm.person.externalLinks"
            	>
             <ul class="nav nav-tabs">
 		       	<li ng-repeat="bio in vm.person.bios | castArray" ng-class="{ active: vm.isSet($index) }">
