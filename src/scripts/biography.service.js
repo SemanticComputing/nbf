@@ -20,16 +20,16 @@
         /* Implementation */
 
         var prefixes =
+        	' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
+        	' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX schema: <http://schema.org/> ' +
         ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
-        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
-        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
@@ -38,14 +38,14 @@
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
         
         var prefixesNLP = 	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        'PREFIX bd: <http://ldf.fi/nbf/biography/data#> ' +
+        'PREFIX dct: <http://purl.org/dc/terms/> ' +
     	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
     	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-    	'PREFIX dct: <http://purl.org/dc/terms/> ' +
-    	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
     	'PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> ' +
-    	'PREFIX bd: <http://ldf.fi/nbf/biography/data#> ' +
     	'PREFIX ufal: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
     	'PREFIX nbfbiodata: <http://ldf.fi/nbf/biography/data#>  ' +
+    	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
     	'PREFIX biog: <http://ldf.fi/nbf/biography/> ';
         
         // The query for the results.
@@ -200,7 +200,7 @@
             		if (prev=="–" && RegExp('^[0-9IVXLCDM]').test(ob.word)) { ob.space = false; }
             		
             		// no space before . , : ; ! ? / ) ] } "
-            		if (ob.word && RegExp('^[.,:;=!?/)}%]').test(ob.word)) ob.space = false;
+            		if (ob.word && RegExp('^[.,;:=!?/)}%]').test(ob.word)) ob.space = false;
             		else {
             			// no space after "
                 		if (RegExp('"').test(prev)) ob.space = !quoted;

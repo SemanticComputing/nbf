@@ -2,6 +2,7 @@
 	<img ng-if="!people" class="loading-img" src="images/loading-lg.gif"></img>
     <li class="list-group-item col-xs-6 ng-scope" ng-repeat="person in people">
 		<a uib-popover-template="'views/persongroupTooltipTemplate.html'" 
+			class="notranslate"
 			popover-trigger="'mouseenter'"
 			popover-placement="{{ person.placement }}"
 			ui-sref="person.detail({{ person.link }})">{{ person.label }}</a>

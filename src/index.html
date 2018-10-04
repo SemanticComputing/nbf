@@ -5,23 +5,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1">
   <base href="/">
-  <title>Semanttinen kansallisbiografia</title>
-  <!--
+  <title>Biografiasampo</title>
+  
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
       "@type": "WebSite",
-      "url": "https://www.sotasampo.fi",
-      "name": "Sotasampo",
-      "alternateName": "WarSampo",
-      "sameAs": [
-        "https://www.wikidata.org/entity/Q28942343",
-        "https://www.facebook.com/groups/sotasampo"
+      "url": "https://www.biografiasampo.fi/",
+      "name": "Biografiasampo",
+      "alternateName": "BiographySampo",
+	"sameAs": [
+        "https://www.facebook.com/groups/514385075640669/"
       ]
     }
   </script>
-
-  -->
+      
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
@@ -37,7 +35,7 @@ if (window.location.host === 'biografiasampo.fi') {
 </script>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  
+
   <!-- build:css(.) styles/vendor.css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="bower_components/sparql-faceter/dist/semantic-faceted-search.css">
@@ -48,6 +46,7 @@ if (window.location.host === 'biografiasampo.fi') {
   <!-- build:css({.,src}) styles/facetedsearch.css -->
   <link rel="stylesheet" href="styles/facetedsearch.css">
   <link rel="stylesheet" href="styles/timeline.css">
+  <link rel="stylesheet" href="styles/googleMap.css">
   <link rel="stylesheet" href="styles/rzslider.css">
   <link rel="stylesheet" href="styles/mapPopup.css">
   <link rel="stylesheet" href="styles/front-page.css">
@@ -59,8 +58,11 @@ if (window.location.host === 'biografiasampo.fi') {
 </head>
 
 <body>
-
-   <!-- <ws-navbar></ws-navbar> --> 
+<!--[if lte IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+  
+   <!-- <ws-navbar></ws-navbar> -->
   <div ng-include="'views/navbar-fi.html'"></div>
   <div ui-view></div>
 

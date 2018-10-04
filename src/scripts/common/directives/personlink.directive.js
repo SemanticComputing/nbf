@@ -30,6 +30,6 @@
 		        });
 		        
 			}],
-			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><span ng-transclude></span></a>'
+			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" class="notranslate" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><span ng-transclude></span></a>'
 		}});
 })();

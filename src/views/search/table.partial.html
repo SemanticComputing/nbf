@@ -12,9 +12,9 @@
   <tr ng-show="!vm.isLoadingResults" ng-repeat="person in $data">
     <td class="person-image-container" data-title="'Nimi'">
       <div ng-class="::{ 'name-col col-md-12 col-lg-7': person.images }">
-        <b><a ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
-        <span ng-if="::person.birthDate">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
-        <span ng-if="::person.deathDate">&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
+        <b><a class="notranslate" ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b><br />
+        <span class="notranslate" ng-if="::person.birthDate">&#8727;&nbsp;{{ ::person.birthPlace }} {{ ::person.birthDate }}</span>
+        <span class="notranslate" ng-if="::person.deathDate">&dagger;&nbsp;{{ ::person.deathPlace }} {{ ::person.deathDate }}</span>
           <br />
 
         <span class="icon-menu">

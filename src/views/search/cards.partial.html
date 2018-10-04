@@ -15,13 +15,13 @@
             <div class="visible-caption">
               <div class="row">
                 <div class="col-xs-12 col-sm-3 col-md-12">
-                  <b><a ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b>
+                  <b><a class="notranslate" ui-sref="person.detail({ personId: person.id })">{{ ::person.givenName }} {{ ::person.familyName }}</a></b>
                 </div>
                 <div class="col-xs-12 col-sm-9 col-md-12">
                   <p ng-if="::(person.birthPlace || person.birthDate || person.deathDate)">
-                    &#8727;&nbsp;<span ng-if="::person.birthPlace">{{ ::person.birthPlace | castArray | join:', ' }}</span>
+                    &#8727;&nbsp;<span class="notranslate" ng-if="::person.birthPlace">{{ ::person.birthPlace | castArray | join:', ' }}</span>
                     {{ ::person.birthDate }}
-                    <span ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathPlace | castArray | join:', ' }}&nbsp;{{ ::person.deathDate }}</span>
+                    <span class="notranslate" ng-if=::person.deathDate>&dagger;&nbsp;{{ ::person.deathPlace | castArray | join:', ' }}&nbsp;{{ ::person.deathDate }}</span>
                   </p>
                 </div>
                 <div ng-if="::person.occupation" class="col-xs-12">
