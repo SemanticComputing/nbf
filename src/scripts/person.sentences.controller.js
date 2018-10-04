@@ -194,7 +194,7 @@
 	    for (obj in data) {
 		prev_sentence = s;
 		s=data[obj].sentence;
-		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink notranslate" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b class="notranslate">'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink notranslate" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
 		else { 
 		    var str = trim_string(data, obj);
 		    /*if (data[obj].upos != "PUNCT") {
