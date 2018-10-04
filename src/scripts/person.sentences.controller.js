@@ -126,7 +126,7 @@
 			sentence: prev_sentence, 
 			words: $sce.trustAsHtml(render_targets(words, targets['data'])) 
 		    };
-		    console.log(words); 
+		    console.log("Translate"); 
                     sentences['data'].push(words_obj); 
 		    words = '<span class="personlink notranslate" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
 		    targets = {
@@ -137,7 +137,7 @@
 		    var str = trim_string(data, obj);
 		    if (obj == 0){
 			console.log("first",data[0])
-        	        words = '<span class="personlink notranslate notranslate" url="'+data[0].person+'">'+data[0].label+'</span>: ';
+        	        words = '<span class="personlink notranslate" url="'+data[0].person+'">'+data[0].label+'</span>: ';
                     }
 		    if(wordId != prev_wordId){
 		    	words += str; 
@@ -177,7 +177,7 @@
 	    //console.log(targets);
 	    for (obj in targets) {
 		var target = targets[obj];
-		words = words.replace(target.target_string, '<span class="personlink" url="'+target.target_link+'">'+target.target_string+'</span>')
+		words = words.replace(target.target_string, '<span class="personlink notranslate" url="'+target.target_link+'">'+target.target_string+'</span>')
 	    }
 	    return words;
 	}
@@ -212,7 +212,7 @@
 		} 
 		var target_string = data[obj].target_string.trim()
 	    }
-	    var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; 
+	    var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b class="notranslate">'+target_string+'</b>'))}; 
 	    sentences['data'].push(words_obj); 
 	    words ="";
 	    }
