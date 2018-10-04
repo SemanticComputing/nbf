@@ -2,7 +2,7 @@
   <div class="col-sm-12" ng-show="!vm.person && !vm.error">
       <img class="loading-img" src="images/loading-lg.gif"></img>
     </div>
-	 <h1>{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
+	 <h1 class="notranslate">{{ vm.person.givenName }} {{ vm.person.familyName }}</h1>
       <div class="thumbnail" ng-show="vm.person">
         <div class="person-profile-img">
           <div class="row">
@@ -21,14 +21,14 @@
 	                <span ng-if="(vm.person.birth || vm.person.birthDate)">&#8727;&nbsp;
 	                	<span ng-repeat="p in vm.person.birth" 
 	                		><span ng-if="!$first">, </span
-	                		><span class="placelink" url="{{ ::p.id }}">{{ ::p.label }}</span
+	                		><span class="placelink notranslate" url="{{ ::p.id }}">{{ ::p.label }}</span
 	                	></span>
 	                	<span ng-if="vm.person.birthDate">{{ vm.person.birthDate }}</span>
 	                </span>
 	                <span ng-if="(vm.person.death || vm.person.deathDate)">&dagger;&nbsp;
 	                	<span ng-repeat="p in vm.person.death" 
 	                		><span ng-if="!$first">, </span
-	                		><span class="placelink" url="{{ ::p.id }}">{{ ::p.label }}</span
+	                		><span class="placelink notranslate" url="{{ ::p.id }}">{{ ::p.label }}</span
 	                	></span>
 	                	<span ng-if="vm.person.deathDate">{{ vm.person.deathDate }}</span>
 	                </span>
