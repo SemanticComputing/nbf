@@ -128,7 +128,7 @@
 		    };
 		    console.log(words); 
                     sentences['data'].push(words_obj); 
-		    words =  words = '<span class="personlink" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
+		    words = '<span class="personlink notranslate" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
 		    targets = {
                 	data: []
             	    };  
@@ -137,7 +137,7 @@
 		    var str = trim_string(data, obj);
 		    if (obj == 0){
 			console.log("first",data[0])
-        	        words = '<span class="personlink" url="'+data[0].person+'">'+data[0].label+'</span>: ';
+        	        words = '<span class="personlink notranslate notranslate" url="'+data[0].person+'">'+data[0].label+'</span>: ';
                     }
 		    if(wordId != prev_wordId){
 		    	words += str; 
@@ -194,7 +194,7 @@
 	    for (obj in data) {
 		prev_sentence = s;
 		s=data[obj].sentence;
-		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b>'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink notranslate" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
 		else { 
 		    var str = trim_string(data, obj);
 		    /*if (data[obj].upos != "PUNCT") {
@@ -205,7 +205,7 @@
 		    }*/
 
 		    if (obj == 0){
-        	        words = '<span class="personlink" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
+        	        words = '<span class="personlink notranslate" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
                     }
 	
 		    words += str; 
