@@ -126,7 +126,7 @@
 			sentence: prev_sentence, 
 			words: $sce.trustAsHtml(render_targets(words, targets['data'])) 
 		    };
-		    console.log("Translate"); 
+		    console.log("Translate,", data[obj].label); 
                     sentences['data'].push(words_obj); 
 		    words = '<span class="personlink notranslate" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
 		    targets = {
