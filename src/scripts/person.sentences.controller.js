@@ -82,14 +82,18 @@
                	} else if (obj == data.length-1){
                     str= " "+data[obj].string.trim()
                	} else if (data[obj-1].string.contains("(")){
-                    if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4){
+                    if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4 && data[next].word != data[obj].word){
 	            	str=data[obj].string.trim()+" -"
+			console.log(data[next] +"!="+ data[obj]);
 		    } else {
                         str=data[obj].string.trim()
 		    }
-		}else if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4){
+		}else if (data[obj].upos=="NUM" && data[obj].string.length == 4 && data[next].upos=="NUM" && data[next].string.length == 4 && data[next].word != data[obj].word){
 	            	str=data[obj].string.trim()+" -"
+			console.log(data[next].word +"!="+ data[obj].word);
+			console.log(next +"!="+ obj);
                 }else {
+		    console.log("test "+data[obj].string.trim());
                     str= " "+data[obj].string.trim()
                 }
             } else if (data[obj].string.contains("(")) {
@@ -128,7 +132,7 @@
 		    };
 		    console.log("Translate,", data[obj].label); 
                     sentences['data'].push(words_obj); 
-		    words = '<span class="personlink notranslate" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
+		    words = data[obj].string.trim();//'<span class="personlink notranslate" url="'+data[obj].person+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
 		    targets = {
                 	data: []
             	    };  
@@ -137,7 +141,7 @@
 		    var str = trim_string(data, obj);
 		    if (obj == 0){
 			console.log("first",data[0])
-        	        words = '<span class="personlink notranslate" url="'+data[0].person+'">'+data[0].label+'</span>: ';
+        	        words = '';//'<span class="personlink notranslate" url="'+data[0].person+'">'+data[0].label+'</span>: ';
                     }
 		    if(wordId != prev_wordId){
 		    	words += str; 
@@ -177,12 +181,12 @@
 	    //console.log(targets);
 	    for (obj in targets) {
 		var target = targets[obj];
-		words = words.replace(target.target_string, '<span class="personlink notranslate" url="'+target.target_link+'">'+target.target_string+'</span>')
+		words = words.replace(target.target_string, '<span class="personlink notranslate" style="font-weight:bold;" url="'+target.target_link+'">'+target.target_string+'</span>')
 	    }
 	    return words;
 	}
 
-	function organizeSentences(data) {
+	function organizeSentences(data, personNameRequired) {
 	    var obj;
 	    var words = ""; // = '<span class="personlink" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
 	    var sentences = {
@@ -190,12 +194,25 @@
 		};
 	    var s;
 	    var prev_sentence =0;
+	    var wordId;
+	    var prev_wordId =0;
+
 	    if (data.length > 0) {
 	    for (obj in data) {
 		prev_sentence = s;
+		prev_wordId = wordId;
 		s=data[obj].sentence;
-		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b class="notranslate">'+target_string+'</b>'))}; sentences['data'].push(words_obj); words = '<span class="personlink notranslate" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();}
-		else { 
+		wordId=data[obj].word;
+		if (s != prev_sentence && prev_sentence != 0 && words.length > 0) { 
+		    var words_obj = {sentence: prev_sentence, words: $sce.trustAsHtml(words.replace(target_string,'<b class="notranslate">'+target_string+'</b>'))}; 
+		    sentences['data'].push(words_obj); 
+		    console.log("Words: "+words);
+		    if(personNameRequired == 1){
+		    	words = '<span class="personlink notranslate" url="'+data[obj].personUri+'">'+data[obj].label+'</span>: ' + data[obj].string.trim();
+		    } else {
+			words = data[obj].string.trim();
+		    }
+		} else { 
 		    var str = trim_string(data, obj);
 		    /*if (data[obj].upos != "PUNCT") {
 			str= " "+data[obj].string.trim()
@@ -203,12 +220,17 @@
 			
 			str=data[obj].string.trim();
 		    }*/
+		    console.log("str: " +str);
 
 		    if (obj == 0){
-        	        words = '<span class="personlink notranslate" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
+			if (personNameRequired == 1){
+        	            words = '<span class="personlink notranslate" url="'+data[0].personUri+'">'+data[0].label+'</span>: ';
+			}
                     }
 	
-		    words += str; 
+		    if(wordId != prev_wordId){
+		    	words += str; 
+		    } else { console.log("Else: "+str+" ("+wordId+" / "+prev_wordId+")"); }
 		} 
 		var target_string = data[obj].target_string.trim()
 	    }
@@ -348,7 +370,7 @@
                     return;
                 }
                 //drawChart(results);
-		vm.sentenceResults = organizeSentences(results);//calculatePercentage(results);
+		vm.sentenceResults = organizeSentences(results, 1);//calculatePercentage(results);
                 vm.isLoadingSentences = false;
 
             }).then(function() {

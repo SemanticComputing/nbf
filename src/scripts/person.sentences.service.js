@@ -337,6 +337,7 @@
 		if(results.length > 0) {
                     var promises = {};
                     var uposQry = sentenceQuery.replace('$person_formatted_link', results[0].href);
+		    console.log(uposQry);
                     promises = endpoint.getObjectsNoGrouping(uposQry);
                     return promises;
 		} else { return {}; }
