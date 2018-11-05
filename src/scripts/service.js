@@ -43,22 +43,22 @@
         /* Implementation */
 
         var prefixes =
+        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
+        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-        ' PREFIX schema: <http://schema.org/> ' +
+        ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
-        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
-        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
-        ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
-        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
+        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
 
         // The query for the results.
@@ -66,7 +66,7 @@
         var query =
         ' SELECT DISTINCT * WHERE {' +
         '  { ' +
-        '    <RESULT_SET> ' +
+        '  <RESULT_SET> ' +
         '  }' +
         '  FILTER not exists { ?id owl:sameAs [] }' +
         '  ?id skosxl:prefLabel ?plabel . ' +
@@ -110,7 +110,7 @@
         var detailQuery =
             ' SELECT DISTINCT * WHERE {' +
             '  { ' +
-            '    <RESULT_SET> ' +
+            '  <RESULT_SET> ' +
             '  } ' +
             '  ?id skosxl:prefLabel ?plabel . ' +
             '  	  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
