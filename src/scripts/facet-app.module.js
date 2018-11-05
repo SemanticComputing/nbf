@@ -215,7 +215,12 @@
             controller: 'NetworkController',
             controllerAs: 'vm',
         })
-
+        .state('pointcloud', {
+            url: '/pistepilvi',
+            templateUrl: 'views/pointcloud.html',
+            controller: 'PointcloudController',
+            controllerAs: 'vm',
+        })
         .state('nlp', {
             url: '/kielianalyysi',
             abstract: true,

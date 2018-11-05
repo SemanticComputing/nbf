@@ -16,10 +16,10 @@
         // Get the results based on facet selections.
         this.getLinks = getLinks;
         this.getNodes = getNodes;
-        this.getGroupNodes = getGroupNodes;
+        
         this.getGroupLinks = getGroupLinks;
         this.getNodesForPeople = getNodesForPeople;
-        
+        this.getCloudNodes = getCloudNodes;
         this.getFacets = mapfacetService.getFacets;
         this.getFacetOptions = getFacetOptions;
         
@@ -111,7 +111,7 @@
         	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
         	'}  ' +
         	'GROUP BY ?id ?label ?gender ';
-        
+        /*
         var queryNodesForGroup =
         	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
         	'WHERE { ' +
@@ -128,6 +128,29 @@
         	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
         	'} ' +
         	'GROUP BY ?id ?label ?gender LIMIT <LIMIT> ';
+        */
+        var queryCloudForGroup =
+        	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+        	'PREFIX nbf: <http://ldf.fi/nbf/> ' +
+        	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+        	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+        	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+        	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        	'PREFIX schema: <http://schema.org/> ' +
+        	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+        	' ' +
+        	'SELECT distinct ?id ?x ?y ?label ?gender (sample(?cats) AS ?category) ' +
+        	'WHERE { ' +
+        	'	{ <RESULT_SET> } ' +
+        	'	?id skosxl:prefLabel ?id__label ; ' +
+        	'     nbf:coordinate [ nbf:x ?x ; nbf:y ?y ] . ' +
+        	'	OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
+        	'	OPTIONAL { ?id__label schema:givenName ?id__gname } ' +
+        	'	BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
+        	'	?id foaf:focus ?prs . ' +
+        	'	OPTIONAL { ?prs nbf:sukupuoli ?gender } ' +
+        	'	OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
+        	'}  GROUP BY ?id ?x ?y ?label ?gender LIMIT <LIMIT> ';
         
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -159,6 +182,7 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
+        /*
         function getGroupNodes(facetSelections, limit) {
         	
         	var cons = facetSelections.constraint.join(' '),
@@ -170,22 +194,29 @@
         	
         	return endpoint.getObjectsNoGrouping(q);
         }
+        */
         
         function getGroupLinks(facetSelections, limit) {
-        	
         	var cons = facetSelections.constraint.join(' '),
         		cons2 = cons.replace('?id ','?id2 '),
         		q = prefixes + queryLinksForGroup
         			.replace(/<RESULT_SET>/g, cons)
         			.replace(/<RESULT_SET2>/g, cons2)
         			.replace("<LIMIT>", limit);
-        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         
         function getNodesForPeople(ids) {
         	var q = prefixes + queryNodesForPeople
         			.replace(/<RESULT_SET>/g, ids);
+        	return endpoint.getObjectsNoGrouping(q);
+        }
+        
+        function getCloudNodes(facetSelections, limit) {
+        	var cons = facetSelections.constraint.join(' '),
+        		q = prefixes + queryCloudForGroup
+        			.replace(/<RESULT_SET>/g, cons)
+        			.replace("<LIMIT>", limit);
         	return endpoint.getObjectsNoGrouping(q);
         }
     }
