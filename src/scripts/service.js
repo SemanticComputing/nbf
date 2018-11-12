@@ -75,12 +75,12 @@
         '' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+        '  OPTIONAL { ?id nbf:blf ?blf . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
-        '  OPTIONAL { ?id nbf:blf ?blf . }' +
         '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
@@ -102,7 +102,7 @@
         '		}' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
-        '  			OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
+        '  		   OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
         '  		}' +
         ' }' +
         ' }';
@@ -113,8 +113,8 @@
             '  <RESULT_SET> ' +
             '  } ' +
             '  ?id skosxl:prefLabel ?plabel . ' +
-            '  	  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
-            '  	  OPTIONAL { ?plabel schema:familyName ?familyName . }' +
+            '  	 OPTIONAL { ?plabel schema:givenName ?givenName . }' +
+            '  	 OPTIONAL { ?plabel schema:familyName ?familyName . }' +
             ' ' +
             '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
             '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
@@ -169,7 +169,7 @@
             '  }' +
             ' }';
         
-        //	http://yasgui.org/short/SJL3C8Iv7
+        //	http://yasgui.org/short/E9NT6ULt5
         var relativeQuery =
         	'SELECT DISTINCT ?type (?relative__id AS ?id2) ?name  ' +
         	'WHERE { <RESULT_SET>  ' +
@@ -178,6 +178,8 @@
         	'    ( rels:Mother 1) ' +
         	'    ( rels:Parent 2) ' +
         	'    ( rels:Spouse 3) ' +
+        	'    ( rels:Husband 3) ' +
+        	'    ( rels:Wife 3) ' +
         	'    ( rels:Child 4) ' +
         	'    ( rels:Daughter 4) ' +
         	'    ( rels:Son 4 ) }  ' +
@@ -267,30 +269,37 @@
         	'  ?id foaf:focus/nbf:has_biography/schema:author ?author . ' +
         	'  } ' ;
         
-        //	http://yasgui.org/short/BJ4f20xYX
+        //	http://yasgui.org/short/d3mSEMp4r
         var queryReferences = 
         	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
         	' <RESULT_SET> ' +
-        	'   ?id2 nbf:formatted_link ?target . ' +
-        	'  BIND (URI(CONCAT("file:///tmp/data/nlp/",?target)) AS ?target_link) ' +
-        	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> { ' +
-        	'   ?par <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link ; ' +
-        	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#docRef> ?id . ' +
-        	' } ' +
-        	'} ';
+        	'  { ?id2 nbf:in_bio ?id } ' +
+        	'  UNION  ' +
+        	'  { ?id2 nbf:formatted_link ?target .  ' +
+        	'  BIND (URI(CONCAT("file:///tmp/data/nlp/",?target)) AS ?target_link)  ' +
+        	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> {  ' +
+        	'   ?par <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link ;  ' +
+        	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#docRef> ?id .  ' +
+        	'  } } ' +
+        	'  FILTER (?id!=?id2) ' +
+        	' }';
         
         //	NOTE this queries for persons references in current biography
-        //	not used on the person page
         //	http://yasgui.org/short/ByNkfgYK7
         var queryByReferences =
         	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE {   ' +
         	' <RESULT_SET> ' +
-        	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> {     ' +
-        	'    ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#docRef> ?id2 ;      			 ' +
-        	'         <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .      ' +
-        	'    BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target) ' +
+        	'  { ?id nbf:in_bio ?id2 ; ' +
+        	'        owl:sameAs*/foaf:focus/nbf:has_biography [] } ' +
+        	'  UNION  { ' +
+        	'    SERVICE <http://ldf.fi/nbf-nlp/sparql> {     ' +
+        	'      ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#docRef> ?id2 ;      			 ' +
+        	'           <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .      ' +
+        	'      BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target)    ' +
+        	'    }      ' +
+        	'    ?id nbf:formatted_link ?target .  ' +
         	'  } ' +
-        	'  ?id nbf:formatted_link ?target .  ' +
+        	'  FILTER (?id!=?id2) ' +
         	'} ';
         
         var queryPortal = 'SELECT * WHERE { ?x ?y ?z } LIMIT 1 ';

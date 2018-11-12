@@ -55,7 +55,7 @@
             <br />
              -->
             
-			<div class="btn-group" role="group" ng-if="vm.person.hasExtLinks">
+			<div class="btn-group" role="group" ng-if="vm.person.id">
 			  
               <a ng-if="vm.person.blf"
                  ng-href="{{ vm.person.blf }}"
@@ -140,7 +140,11 @@
                  Ylioppilasmatrikkeli 1853–1899
               </a>
               
-			  
+			  <a ng-href="http://ldf.fi/nbf/{{ vm.person.id }}"
+			  	class="btn btn-default btn-sm">
+			  	Data ldf.fi-palvelussa
+	          </a>
+	          
 			</div>
             
           </div>
