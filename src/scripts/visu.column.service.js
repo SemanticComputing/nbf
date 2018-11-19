@@ -161,7 +161,7 @@
     	'  BIND (replace(str(?id),"^.+//([^//]+)$","$1") AS ?url) ' +
     	'} GROUP BY ?value ';
         
-        // The SPARQL endpoint URL
+        // The SPARQL endpoint URL 
         var endpointUrl = SPARQL_ENDPOINT_URL;
 
         var facetOptions = {

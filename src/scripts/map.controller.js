@@ -45,7 +45,6 @@
         function init() {
         	
         	mapService.getEvents($stateParams.personId).then(function(events) {
-        		
         		vm.currentEvent = ".";
         		vm.events = events;
         		if (events.length) {
@@ -54,7 +53,6 @@
         		vm.events = processEvents(events, vm);
         		vm.viewBox = "1930,-10,120,27";
         		formMainline(vm);
-        		
         		return events;
             }).catch(handleError);
         }
@@ -261,16 +259,27 @@
         		//	no markers on the map
         		vm.map = { center: { latitude: 64, longitude: 18 }, zoom: 4 };
         	} else {
-	        	//	check the bounds on the map
-	        	var z = Math.max(bounds.f.b - bounds.b.b, 2*(bounds.f.f - bounds.b.f)), zoom;
-	        	
-	        	if(z<75) zoom = 5;
-	        	else if(z<100) zoom = 4;
-	        	else if(z<125) zoom = 3;
-	        	else zoom = 2;
-	        	
-	        	vm.map.center = {latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng() };
-	        	vm.map.zoom = zoom ;
+        		try {
+	        			
+		        	//	check the bounds on the map
+	        		var ne = bounds.getNorthEast(),
+		        		sw = bounds.getSouthWest(),
+		        		z = Math.max(ne.lat() - sw.lat(), 2*(ne.lng() - sw.lng())), 
+		        		zoom = 2;
+	        		
+	        		//	z = Math.max(bounds.f.b - bounds.b.b, 2*(bounds.f.f - bounds.b.f)), zoom
+	        		
+		        	if(z<75) zoom = 5;
+		        	else if(z<100) zoom = 4;
+		        	else if(z<125) zoom = 3;
+		        	else zoom = 2;
+		        	
+		        	vm.map.center = {latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng() };
+		        	vm.map.zoom = zoom ;
+        		}
+        		catch(error) {
+        			vm.map = { center: { latitude: 64, longitude: 18 }, zoom: 4 };
+        		}
         	}
         	
         	
