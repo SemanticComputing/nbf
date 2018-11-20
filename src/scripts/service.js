@@ -44,22 +44,22 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
+        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
+        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
+        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
-        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
-        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
-        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
-        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
-        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
-        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
+        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
         // The query for the results.
         // ?id is bound to the person URI.
@@ -337,7 +337,7 @@
         	
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
             var qry = prefixes + detailQuery.replace('<RESULT_SET>', constraint);
-            // console.log(qry);
+            
             return endpoint.getObjects(qry)
             .then(function(person) {
             	if (person.length) {
@@ -351,11 +351,9 @@
         	
         	var constraint = 'VALUES ?id { <' + id + '> } . ';
         	var qry = prefixes + bioQuery.replace('<RESULT_SET>', constraint);
-            console.log(qry);
+            
             return endpoint.getObjectsNoGrouping(qry)
             .then(function(result) {
-            	console.log('result');
-            	console.log(result);
                 return result;
             });
         }

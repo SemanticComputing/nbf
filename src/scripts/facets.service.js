@@ -31,10 +31,16 @@
             },
             dataset: {
                 facetId: 'dataset',
-                predicate: '<http://purl.org/dc/terms/source>',
+                predicate: '<http://purl.org/dc/terms/source> ',
                 name: 'Tietokanta',
                 chart: true,
-                enabled: true
+                enabled: true /*,
+                classes: [
+                    '<http://ldf.fi/nbf/sources/source1>',
+                    '<http://ldf.fi/nbf/sources/source2>',
+                    '<http://ldf.fi/nbf/sources/source3>',
+                    '<http://ldf.fi/nbf/sources/source4>',
+                    '<http://ldf.fi/nbf/sources/source5>' ] */
             },
             link: {
                 facetId: 'link',

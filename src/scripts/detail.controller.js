@@ -34,11 +34,11 @@
         		regex = /^p[0-9]+$/;
         	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
         	
-            nbfService.getPerson(id).then(function(person) {
-                vm.person = person;
-                vm.person.externalLinks = getExternalLinks(person);
+        	nbfService.getPerson(id).then(function(person) {
+            	vm.person = person;
+            	var exlinks = getExternalLinks(person);
+                if (exlinks.length) vm.person.externalLinks = exlinks;
                 
-            	
                 nbfService.getBios(id).then(function(data) {
                 	if (data.length) {
                 		vm.person.bios = data;
@@ -80,6 +80,7 @@
                 });
                 
                 return person;
+                
             }).catch(handleError);
         }
         
@@ -87,26 +88,29 @@
         	var p = person,
         		arr = [];
         	
-        	// if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
         	
         	/*
-        	if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
+        	//	pages can not be show in iframe:
         	// Load denied by X-Frame-Options: https://www.eduskunta.fi/FI/kansanedustajat/Sivut/808.aspx does not permit cross-origin framing.
+        	// if (p.blf) arr.push({url:p.blf, label:"Biografiskt lexikon för Finland"});
+        	if (p.eduskunta) arr.push({url:p.eduskunta, label:"Eduskunta"});
         	
         	if (p.fennica) {
         		arr.push({url:p.fennica[0], label:"Fennica"});
         		if (p.fennica.length>1) arr.push({url:p.fennica[1], label:"Fennica (2)"});
         	}
-        	*/
         	// if (p.website) arr.push({url:p.website, label:'Kotisivu'});
         	// if (p.kulsa) arr.push({url:p.kulsa, label:'Kulttuurisampo'});
+        	
+        	if (p.id) { // " class="" ng-href="http://ldf.fi/nbf/
+        		arr.push({url:'http://ldf.fi/nbf/'+p.id, label:'Data ldf.fi-palvelussa', tab:'ldffi'});
+        	}
+        	 */
         	
         	if (p.kansallisbiografia) {
         		arr.push({url:p.kansallisbiografia, label:'Biografiakeskuksen artikkeli', tab:'sks'});
         	}
-        	if (p.id) { // " class="" ng-href="http://ldf.fi/nbf/
-        		arr.push({url:'http://ldf.fi/nbf/'+p.id, label:'Data ldf.fi-palvelussa', tab:'ldffi'});
-        	}
+        	
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu', tab:'genikotisivu'});
 
         	if (p.genitree) arr.push({url:p.genitree, label:'Geni.com, sukupuu', tab:'genisukupuu'});
@@ -125,6 +129,8 @@
         		tab:'yo1853'});
         	
         	arr = arr.map(function(ob) {
+        		//	in case of multiple e.g. wikipedia links
+        		if (Array.isArray(ob.url)) { ob.url = ob.url[0] };
         		ob.url = ob.url.replace(/^http[s]*:/,'');
         		return ob;
         	})
