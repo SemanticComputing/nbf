@@ -162,7 +162,7 @@
             '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?is ] ' +
             '			OPTIONAL { ?is skos:prefLabel ?il } ' +
             '			BIND (COALESCE(?il, ?is) AS ?imagesources ) ' +
-            '			}' +
+            '	    }' +
             '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
             '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
