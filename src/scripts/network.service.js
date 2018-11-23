@@ -54,36 +54,48 @@
         	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
 
         
+        //	http://yasgui.org/short/gpKguzg7c
         var queryLinks = 
-        	'SELECT distinct * WHERE { ' +
+        	'SELECT distinct ?source ?target (SUM(?w) AS ?weight) WHERE { ' +
+        	' VALUES ?type { <CLASSES> } ' +
         	' VALUES ?source { <RESULT_SET> } ' +
         	' VALUES ?target { <RESULT_SET> } ' +
-        	' ?source nbf:references ?target .' +
+        	' ?source  nbf:refers [ nbf:target ?target ; ' +
+        	'                   nbf:type ?type ; ' +
+        	'                   nbf:weight ?w ]  ' +
         	' FILTER (?source!=?target) . ' +
-        	'} ';
+        	'} GROUP BY ?source ?target';
         
+        //	old model: http://yasgui.org/short/DE6-IHNbR
+        //	new model: http://yasgui.org/short/Zjq68Lgra
         var queryLinksForGroup =
-        	'SELECT distinct (?id AS ?source) (?id2 AS ?target) ' +
-			'WHERE { ' +
-			'  { <RESULT_SET> }' +
-			'  { <RESULT_SET2> } ' +
-			'  ?id nbf:references ?id2 . ' +
-			'} LIMIT <LIMIT> ';
+        	'SELECT distinct (?id AS ?source) (?id2 AS ?target) (SUM(?w) AS ?weight) ' +
+        	'WHERE { ' +
+        	'  VALUES ?type { <CLASSES> } ' +
+        	'  { <RESULT_SET> }' +
+			'  { <RESULT_SET2> }' +
+        	'  ?id nbf:refers [ nbf:target ?id2 ; ' +
+        	'                   nbf:type ?type ; ' +
+        	'                   nbf:weight ?w ] ' +
+        	'} GROUP BY ?id ?id2 ' +
+        	'LIMIT <LIMIT> ';
         
-        //	http://yasgui.org/short/rJmqP9Iv7
+        
+        //	http://yasgui.org/short/gqSzSYGn_
         var queryNodesForPerson =
         	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
         	'WHERE {    ' +
+        	'	VALUES ?type { <CLASSES> } ' +
         	'  VALUES ?source { <RESULT_SET> } ' +
         	'  GRAPH nbf:links { ' +
         	'    {  VALUES ?id { <RESULT_SET> } ' +
         	'       BIND (0 AS ?level) } ' +
         	'    UNION ' +
-        	'    { ?source nbf:references ?id . BIND (1 AS ?level) } ' +
+        	'    { ?source nbf:refers [ nbf:target ?id ; nbf:type ?type ] . BIND (1 AS ?level) } ' +
         	'    UNION ' +
-        	'    { ?id nbf:references ?source . BIND (1 AS ?level) } ' +
+        	'    { ?id nbf:refers [ nbf:target ?source ; nbf:type ?type ] . BIND (1 AS ?level) } ' +
         	'    UNION ' +
-        	'    { ?source nbf:references/nbf:references ?id . BIND (2 AS ?level)} ' +
+        	'    { ?source nbf:refers/nbf:target/nbf:refers [ nbf:target ?id ; nbf:type ?type ] . BIND (2 AS ?level)} ' +
         	'  } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
         	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
@@ -111,24 +123,7 @@
         	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
         	'}  ' +
         	'GROUP BY ?id ?label ?gender ';
-        /*
-        var queryNodesForGroup =
-        	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
-        	'WHERE { ' +
-        	'  { <RESULT_SET> } ' +
-        	'  { <RESULT_SET2> } ' +
-        	'  FILTER EXISTS { ?id nbf:references ?id2 }  ' +
-        	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname } ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
-        	' ' +
-        	'  ?id foaf:focus ?prs .  ' +
-        	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
-        	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
-        	'} ' +
-        	'GROUP BY ?id ?label ?gender LIMIT <LIMIT> ';
-        */
+        
         var queryCloudForGroup =
         	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         	'PREFIX nbf: <http://ldf.fi/nbf/> ' +
@@ -168,17 +163,19 @@
         var endpoint = new AdvancedSparqlService(endpointConfig);
 
         
-        function getLinks(ids) {
-        	var q = prefixes + queryLinks.replace(/<RESULT_SET>/g, ids);
+        function getLinks(ids, classes) {
+        	var q = prefixes + queryLinks.replace(/<RESULT_SET>/g, ids).replace("<CLASSES>", classes);
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getNodes(id, limit) {
+        function getNodes(id, limit, classes) {
         	var regex = /^p[0-9]+$/;
         	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
         	
         	var constraint = '<{}>'.replace('{}',id),
-        		q = prefixes + queryNodesForPerson.replace(/<RESULT_SET>/g, constraint).replace("<LIMIT>", ''+limit)
+        		q = prefixes + queryNodesForPerson.replace(/<RESULT_SET>/g, constraint)
+        			.replace("<LIMIT>", ''+limit)
+        			.replace("<CLASSES>", classes);
         	return endpoint.getObjectsNoGrouping(q);
         }
         
@@ -196,13 +193,14 @@
         }
         */
         
-        function getGroupLinks(facetSelections, limit) {
+        function getGroupLinks(facetSelections, limit, classes) {
         	var cons = facetSelections.constraint.join(' '),
         		cons2 = cons.replace('?id ','?id2 '),
         		q = prefixes + queryLinksForGroup
         			.replace(/<RESULT_SET>/g, cons)
         			.replace(/<RESULT_SET2>/g, cons2)
-        			.replace("<LIMIT>", limit);
+        			.replace("<LIMIT>", limit)
+        			.replace("<CLASSES>", classes);
         	return endpoint.getObjectsNoGrouping(q);
         }
         

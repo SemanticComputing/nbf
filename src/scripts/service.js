@@ -56,8 +56,8 @@
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/> ' +
-        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
@@ -233,9 +233,6 @@
         	'        bioc:relates_to ?id, ?prs ; ' +
         	'        nbf:value ?value . ' +
         	'  FILTER (?prs!=?id)  ' +
-        	//'  OPTIONAL { ?prs skosxl:prefLabel/schema:familyName ?fname . } ' +
-        	//'  OPTIONAL { ?prs skosxl:prefLabel/schema:givenName ?gname . }  ' +
-        	//'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
         	'} ORDER BY DESC(?value) LIMIT 16 ';
         
         //	
@@ -269,36 +266,23 @@
         	'  ?id foaf:focus/nbf:has_biography/schema:author ?author . ' +
         	'  } ' ;
         
-        //	http://yasgui.org/short/d3mSEMp4r
         var queryReferences = 
         	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
         	' <RESULT_SET> ' +
         	'  { ?id2 nbf:in_bio ?id } ' +
         	'  UNION  ' +
-        	'  { ?id2 nbf:formatted_link ?target .  ' +
-        	'  BIND (URI(CONCAT("file:///tmp/data/nlp/",?target)) AS ?target_link)  ' +
-        	'  SERVICE <http://ldf.fi/nbf-nlp/sparql> {  ' +
-        	'   ?par <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link ;  ' +
-        	'        dct:isPartOf/<http://ldf.fi/nbf/biography/data#docRef> ?id .  ' +
-        	'  } } ' +
+        	'  { ?id nbf:refers/nbf:target ?id2 } ' +
         	'  FILTER (?id!=?id2) ' +
         	' }';
         
-        //	NOTE this queries for persons references in current biography
-        //	http://yasgui.org/short/ByNkfgYK7
         var queryByReferences =
         	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE {   ' +
         	' <RESULT_SET> ' +
         	'  { ?id nbf:in_bio ?id2 ; ' +
         	'        owl:sameAs*/foaf:focus/nbf:has_biography [] } ' +
-        	'  UNION  { ' +
-        	'    SERVICE <http://ldf.fi/nbf-nlp/sparql> {     ' +
-        	'      ?par <http://purl.org/dc/terms/isPartOf>/<http://ldf.fi/nbf/biography/data#docRef> ?id2 ;      			 ' +
-        	'           <http://purl.org/dc/terms/references>/<http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .      ' +
-        	'      BIND(REPLACE(STR(?target_link),".*?(kb/artikkeli/\\\\d+/)","$1") as ?target)    ' +
-        	'    }      ' +
-        	'    ?id nbf:formatted_link ?target .  ' +
-        	'  } ' +
+        	'  UNION  ' +
+        	'  { ?id2 nbf:refers/nbf:target ?id . ' +
+        	'    ?id owl:sameAs*/foaf:focus/nbf:has_biography [] } ' + 
         	'  FILTER (?id!=?id2) ' +
         	'} ';
         

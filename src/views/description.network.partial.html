@@ -13,6 +13,15 @@
 		    	</p>
 		    	<div class="well well-sm">
 		    		<p style="color:{{vm.messagecolor}};">{{ vm.message }}</p>
+		    		<br/>
+		    		<p>Verkostossa näytetään
+				    <form name="eventForm" class="eventForm" ng-repeat="type in vm.CLASSTYPES">
+					  <label title="{{ type.tooltip }}" >
+					    <input type="checkbox" ng-model="type.check" ng-change="vm.changeclass()">
+					    <span>{{ type.label }}</span>
+					    </label><br/>
+					 </form>
+					 </p>
 	     			<p>
 						Näytä verkostossa korkeintaan 
 						<select ng-model="vm.searchlimit" 

@@ -56,6 +56,28 @@
         	fetchResults({ constraint: vm.previousSelections });
         };
         
+        vm.CLASSTYPES = [
+        	{type:"0", check: true, value:"nbf:ManualAnnotation", 
+        		label: "Aineistoon käsin kirjatut linkit", tooltip: "Verkostossa näytetään käsin kirjatut linkit"}, 
+        	{type:"1", check: true, value:"nbf:AutomaticAnnotation",  
+        			label: "Automaattisesti tunnistetut linkit", tooltip: "Verkostossa näytetään automaattisesti päätellyt linkit"}
+        	];
+        vm.linkoptions = vm.CLASSTYPES[0];
+        
+        vm.changeclass = function() {
+        	// require at least one event type to be chosen
+        	if (vm.CLASSTYPES.every(function (val) {return !(val.check);})) {
+        		vm.CLASSTYPES[0].check = true;
+        	}
+        	
+        	// $location.search(vm.right ? 'limit2' : 'limit', vm.searchlimit.value);
+        	
+        	// var st = vm.CLASSTYPES.map(function(val) { return val.check ? 1 : 0; }).join(',');
+        	// $location.search(vm.right ? 'events2' : 'events', st);
+        	
+        	fetchResults({ constraint: vm.previousSelections });
+        }; 
+        
         vm.SIZEOPTIONS = [
         	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
         	{value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
@@ -130,7 +152,7 @@
             		numeric2Size(vm.elems, 'pagerank', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            default:
+	            default: 
 	                break;
 	            
 	        }
@@ -239,9 +261,13 @@
             vm.message = '';
             vm.messagecolor = 'blue';
             
+            var linkclasses = "";
+            if (vm.CLASSTYPES[0].check) linkclasses +=  vm.CLASSTYPES[0].value + ' ';
+            if (vm.CLASSTYPES[1].check) linkclasses +=  vm.CLASSTYPES[1].value + ' ';
+            
             vm.cy = null;
             vm.personId = $stateParams.personId;
-            return networkService.getNodes($stateParams.personId, vm.searchlimit.value)
+            return networkService.getNodes($stateParams.personId, vm.searchlimit.value, linkclasses)
             .then(function(res) {
             	
             	if (res.length<2) {
@@ -258,8 +284,14 @@
             	vm.label = res[0].label;
             	vm.id = $stateParams.personId;
             	
-            	return networkService.getLinks(ids)
+            	return networkService.getLinks(ids, linkclasses)
                 .then(function(edges) {
+                	
+                	//	limit edge thicknesses
+                	edges.forEach(function(ob) {
+                		let w = parseInt(ob.weight);
+                		ob.weight = w>5 ? 5 : w;
+                	});
                 	
                 	vm.elems.edges = edges.map(function(ob) { return {data: ob};});
                 	
@@ -314,7 +346,7 @@
     	        {
     	            selector: 'edge',
     	            style: {
-    	            	'width': 1,
+    	            	'width': 'data(weight)',
     	                'line-color': '#999',
     	                'curve-style': 'bezier',
     	        		'target-arrow-shape': 'triangle',
