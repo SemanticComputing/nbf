@@ -208,18 +208,22 @@
                 }
             }
         })
-
+        
         .state('network', {
-            url: '/verkostot',
-            templateUrl: 'views/network.html',
-            controller: 'NetworkController',
-            controllerAs: 'vm',
+            url: '',
+            templateUrl: 'views/network/tabs.html'
         })
-        .state('pointcloud', {
+        .state('network.net', {
+            url: '/verkosto',
+            templateUrl: 'views/network/network.html',
+            controller: 'NetworkController',
+            controllerAs: 'vm'
+        })
+        .state('network.pointcloud', {
             url: '/pistepilvi',
-            templateUrl: 'views/pointcloud.html',
+            templateUrl: 'views/network/pointcloud.html',
             controller: 'PointcloudController',
-            controllerAs: 'vm',
+            controllerAs: 'vm'
         })
         .state('nlp', {
             url: '/kielianalyysi',

@@ -1,0 +1,44 @@
+<h1>Tutki ryhmiä piste&shy;pil&shy;venä</h1>
+<p>
+  	Sivulla näytetään havainnekuva henkilöistä pistepilvenä.
+  	Sijoittuminen on laskettu biografioiden laskennallisen samankaltaisuuden perusteella ja henkilöistä muodostuu selviä ryhmiä.
+</p>
+<p>
+  	Pisteitä voidaan siirtää hiirellä. 
+  	Pistettä klikkaamalla pääset tarkastelemaan valittua henkilöä.
+  	Alapuoleisilla valikoilla voidaan säätää pistepilven laajuutta ja ulkoasua.
+</p>
+<div class="well well-sm">
+  	<p style="color:{{vm.messagecolor}};">{{ vm.message }}</p>
+  	<p> Näytä korkeintaan 
+		<select ng-model="vm.searchlimit" 
+				ng-options="item.label for item in vm.LIMITOPTIONS"
+				ng-change="vm.changelimit()">
+     	</select> kohdetta.
+    </p>
+     
+    <p> Solmujen väri: 
+		<select ng-model="vm.coloroption" 
+				ng-options="item.value for item in vm.COLOROPTIONS"
+				ng-change="vm.changecolor()">
+     	</select>
+     	<span ng-if="vm.coloroption.tooltip" class="glyphicon glyphicon-info-sign tooltip-info" 
+				uib-tooltip="{{vm.coloroption.tooltip}}" tooltip-placement="right">
+		</span>
+    </p>
+    
+    <p> Pisteiden koko 
+		<select ng-model="vm.pointsize" 
+				ng-options="item.label for item in vm.POINTSIZEOPTIONS"
+				ng-change="vm.changepointsize()">
+     	</select>
+    </p>
+    
+    <p> Tekstikoko 
+		<select ng-model="vm.textsize" 
+				ng-options="item.label for item in vm.SIZEOPTIONS"
+				ng-change="vm.changetextsize()">
+     	</select>
+    </p>
+</div>
+

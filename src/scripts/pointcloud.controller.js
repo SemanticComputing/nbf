@@ -41,13 +41,14 @@
     		'#22AA99', '#AAAA11', '#6633CC', '#E67300',
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
-        vm.LIMITOPTIONS = [{value:10, label:'10'},
-        	{value:20, label:'20'},
-        	{value:50, label:'50'},
+        vm.LIMITOPTIONS = [
         	{value:100, label:'100'},
         	{value:200, label:'200'},
         	{value:500, label:'500'},
         	{value:1000, label:'1000'},
+        	{value:2000, label:'2000'},
+        	{value:5000, label:'5000'},
+        	{value:10000, label:'10000'},
         	{value:1e6, label:'ei rajaa'}];
         vm.searchlimit = vm.LIMITOPTIONS[3];
         
@@ -56,89 +57,38 @@
         	fetchResults({ constraint: vm.previousSelections });
         };
         
-        vm.SIZEOPTIONS = [
-        	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
-        	// {value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
-        	{value:'Asteluku', tooltip:'Asteluku (degree) tarkoittaa henkilöstä lähtevien ja saapuvien linkkien kokonaismäärää.'},
-        	{value:'Tuloaste', tooltip:'Tuloaste (indegree) tarkoittaa henkilöön saapuvien linkkien lukumäärää.'},
-        	{value:'Lähtöaste', tooltip:'Lähtöaste (outdegree) tarkoittaa henkilöstä lähtevien linkkien lukumäärää.'},
-        	{value:'Pagerank', tooltip:'Pagerank-algoritmi mittaa henkilön keskeisyyttä verkostossa.'}
-        	];
-        //	tuloaste (indegree)
-        vm.sizeoption = vm.SIZEOPTIONS[1];
         
-        vm.changesize = function() {
-        	var i = vm.SIZEOPTIONS.indexOf(vm.sizeoption);
-        	if (i>-1) {
-        		$location.search('sizeoption', i);
+        vm.SIZEOPTIONS = [
+        	{value:5, label:'5'},
+        	{value:10, label:'10'},
+        	{value:20, label:'20'},
+        	{value:50, label:'50'}];
+        vm.textsize = vm.SIZEOPTIONS[2];
+        
+        vm.changetextsize = function() {
+        	if (vm && vm.cy) {
+	        	vm.cy.style()
+	    		.selector('node')
+	  	    		.style("font-size", vm.textsize.value)
+	        	.update();
         	}
-        	
-        	var str = '20 px';
-        	
-        	switch(vm.sizeoption) {
-        		/*
-	            case vm.SIZEOPTIONS[1]:
-	            	//	DIJKSTRA
-	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.dijkstra = -dj.distanceTo(node);
-	            	});
-	            	numeric2Size(vm.elems, 'dijkstra', 'size', 10, 50);
-	            	str = 'data(size)';
-	            	break; */
-	            case vm.SIZEOPTIONS[1]:
-	            	//	DEGREE
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.degree = node.degree();
-	            	});
-	            	
-            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            case vm.SIZEOPTIONS[2]:
-	            	//	INDEGREE
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.degree = node.indegree();
-	            	});
-
-            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            case vm.SIZEOPTIONS[3]:
-	            	//	OUTDEGREE
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.degree = node.outdegree();
-	            	});
-
-            		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            case vm.SIZEOPTIONS[4]:
-	            	//	PAGERANK
-	            	var pr = vm.cy.elements().pageRank();
-		            vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		var rank = pr.rank(node);
-	            		n.data.pagerank = rank;
-	            	});
-            		numeric2Size(vm.elems, 'pagerank', 'size', 10, 50);
-            		str = 'data(size)';
-	                break;
-	            default:
-	                break;
-	            
-	        }
-        	
-        	vm.cy.style()
-        		.selector('node')
-      	    		.style("height", str)
-            		.style("width", str)
-            	.update();
-        	
+        };
+        
+        vm.POINTSIZEOPTIONS = [
+        	{value:5, label:'5'},
+        	{value:10, label:'10'},
+        	{value:20, label:'20'},
+        	{value:50, label:'50'}];
+        vm.pointsize = vm.POINTSIZEOPTIONS[2];
+        
+        vm.changepointsize = function() {
+        	if (vm && vm.cy) {
+	        	vm.cy.style()
+	    		.selector('node')
+	  	    		.style("width", vm.pointsize.value)
+	  	    		.style("height", vm.pointsize.value)
+	        	.update();
+        	}
         };
         
         vm.COLOROPTIONS = [
@@ -174,17 +124,6 @@
             		vm.showlegend = true;
             		break;
             		
-	            case vm.COLOROPTIONS[3]:
-	            	//	DIJKSTRA
-	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
-	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.dijkstra = dj.distanceTo(node);
-	            	});
-	            	category2Color(vm.elems, 'dijkstra', 'color');
-	            	str = 'data(color)';
-	                break;
-	                
 	            default:
 	            	str = vm.COLORS[0]
 	                break;
@@ -209,10 +148,6 @@
 
         if (lc.coloroption) {
         	vm.coloroption = vm.COLOROPTIONS[parseInt(lc.coloroption)];
-        }
-        
-        if (lc.sizeoption) {
-        	vm.sizeoption = vm.SIZEOPTIONS[parseInt(lc.sizeoption)];
         }
         
         vm.isScrollDisabled = isScrollDisabled;
@@ -331,6 +266,7 @@
     	                "shape": 'ellipse',
 	    				"height": '20',
 	    	      		"width": '20',
+	    	      		"font-size": vm.textsize.value,
 		    			"text-valign": "center",
 		    			"text-halign": "right",
 		    			"content": 'data(label)',
