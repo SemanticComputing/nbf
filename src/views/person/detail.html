@@ -9,7 +9,7 @@
             <div class="col-sm-12 text-center">
               <img ng-repeat="img in vm.person.images" class="person-img img img-responsive" ng-src="{{ img }}" 
               		uib-tooltip="Kuvalähde: {{ vm.person.imagesources[$index] }}" tooltip-enable="{{ !!vm.person.imagesources[$index] }}" tooltip-placement="bottom"
-              		/>
+              		/> 
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@
 	      <h3>Lähisukulaiset</h3>
 	      <span class="glyphicon glyphicon-info-sign"
 				uib-tooltip="Henkilön sukulaisissa näytetään vanhemmat, puolisot ja lapset, ei kaukaisempia sukulaisia.">
-		  </span>
+		  </span> x
 	  </div>
       <div class="col-sm-6" ng-repeat="relative in vm.person.relative">
       	{{ relative.type }} <personlink url="{{ relative.id2 }}">{{ relative.name }}</personlink>
