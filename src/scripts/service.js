@@ -55,9 +55,9 @@
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/>' +
-        ' PREFIX sources: <http://ldf.fi/nbf/sources/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+        ' PREFIX sources: <http://ldf.fi/nbf/sources/> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
@@ -286,6 +286,7 @@
         	'  FILTER (?id!=?id2) ' +
         	'} ';
         
+        
         var queryPortal = 'SELECT * WHERE { ?x ?y ?z } LIMIT 1 ';
         
         // The SPARQL endpoint URL
@@ -378,7 +379,7 @@
         function getByReferences(id) {
         	var constraint = 'VALUES ?id2 { <' + id + '> } . ';
         	var qry = prefixes + queryByReferences.replace('<RESULT_SET>', constraint);
-            return endpoint.getObjectsNoGrouping(qry);
+        	return endpoint.getObjectsNoGrouping(qry);
         }
         
         function getReferences(id) {

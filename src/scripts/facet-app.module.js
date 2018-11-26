@@ -208,7 +208,12 @@
                 }
             }
         })
-        
+        .state('relativenetwork', {
+            url: '/sukulaisuudet',
+            templateUrl: 'views/network/relativeNetwork.html',
+            controller: 'NetworkRelativeController',
+            controllerAs: 'vm'
+        })
         .state('network', {
             url: '',
             templateUrl: 'views/network/tabs.html'
