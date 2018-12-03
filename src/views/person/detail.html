@@ -139,12 +139,12 @@
                  class="btn btn-default btn-sm">
                  Ylioppilasmatrikkeli 1853–1899
               </a>
-              
+              <!-- 
 			  <a ng-href="http://ldf.fi/nbf/{{ vm.person.id }}"
 			  	class="btn btn-default btn-sm">
 			  	Data ldf.fi-palvelussa
 	          </a>
-	          
+               -->
 			</div>
             
           </div>
@@ -189,7 +189,7 @@
 	      <h3>Lähisukulaiset</h3>
 	      <span class="glyphicon glyphicon-info-sign"
 				uib-tooltip="Henkilön sukulaisissa näytetään vanhemmat, puolisot ja lapset, ei kaukaisempia sukulaisia.">
-		  </span> x
+		  </span>
 	  </div>
       <div class="col-sm-6" ng-repeat="relative in vm.person.relative">
       	{{ relative.type }} <personlink url="{{ relative.id2 }}">{{ relative.name }}</personlink>

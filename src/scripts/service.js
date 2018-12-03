@@ -49,9 +49,9 @@
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
-        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/>' +
@@ -81,8 +81,8 @@
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
-        '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
+        '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +

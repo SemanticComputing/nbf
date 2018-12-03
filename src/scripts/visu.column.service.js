@@ -67,8 +67,8 @@
 	    	'SELECT DISTINCT ?value (COUNT(?id) AS ?count) (GROUP_CONCAT(?url; separator=",") AS ?persons) ' +
 	    	'WHERE { ' +
 	    	'  { <RESULT_SET> } ' +
-	    	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ] ; ' +
-	    	'       foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ] . ' +
+	    	'  ?id foaf:focus/^crm:P100_was_death_of/nbf:time [ gvp:estStart ?time ; gvp:estEnd ?time2 ; skos:prefLabel [] ] ; ' +
+	    	'       foaf:focus/^crm:P98_brought_into_life/nbf:time [ gvp:estStart ?birth ; gvp:estEnd ?birth2 ; skos:prefLabel [] ] . ' +
 	    	'  BIND (xsd:integer(0.5*(year(?time)+year(?time2)-year(?birth)-year(?birth2))) AS ?value) ' +
 	    	'  FILTER (-1<?value && ?value<120) ' +
 	    	'  BIND (replace(str(?id),"^.+/([^/]+)$","$1") AS ?url) ' +
