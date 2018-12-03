@@ -108,7 +108,18 @@
         	 */
         	
         	if (p.kansallisbiografia) {
-        		arr.push({url:p.kansallisbiografia, label:'Biografiakeskuksen artikkeli', tab:'sks'});
+        		//	person might have several biographies
+        		if (!Array.isArray(p.kansallisbiografia)) {
+        			p.kansallisbiografia = [p.kansallisbiografia];
+        		}
+        		p.kansallisbiografia.forEach(function (url,i ) {
+        			if (i==0) {
+        				arr.push({url:url, label:'Biografiakeskuksen artikkeli', tab:'sks'});
+        			} else {
+        				arr.push({url:url, label:'Biografiakeskuksen artikkeli '+(i+1), tab:'sks'+(i+1)});
+        			}
+        		})
+        		
         	}
         	
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu', tab:'genikotisivu'});

@@ -131,7 +131,7 @@
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
             '  OPTIONAL { ?id nbf:yo1853 ?yo1853 . }' +
-            '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
+            '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +
             /*
             '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
@@ -325,6 +325,7 @@
             
             return endpoint.getObjects(qry)
             .then(function(person) {
+
             	if (person.length) {
                     return person[person.length-1];
                 }

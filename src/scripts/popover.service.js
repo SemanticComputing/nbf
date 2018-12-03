@@ -31,17 +31,17 @@
         	' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         	' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         	' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
-        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
-        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
-        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-        ' PREFIX schema: <http://schema.org/> ' +
-        ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
-        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
-        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
-        ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
-        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
-        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
+        	' PREFIX nbf: <http://ldf.fi/nbf/> ' +
+	        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
+	        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+	        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+	        ' PREFIX schema: <http://schema.org/> ' +
+	        ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
+	        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+	        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+	        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
+	        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
+	        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
 
         
         //	http://yasgui.org/short/ByjM-gdIm
@@ -59,8 +59,8 @@
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
         	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime } ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time ?bir . ?bir gvp:estStart ?btime ; skos:prefLabel [] } ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time ?dea . ?dea gvp:estStart ?dtime ; skos:prefLabel [] } ' +
         	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
         	'} LIMIT 1 ';
         
