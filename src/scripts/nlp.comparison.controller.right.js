@@ -14,6 +14,20 @@
         var vm = this;
 
         vm.hasResults = hasResults;
+
+	// Setup parameters for example queries to be rendered to json later. Make sure json is valid: https://jsonlint.com/
+        vm.facetParam1 ='{"dataset":{"value":"<http://ldf.fi/nbf/sources/source5>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source5> . "}}';
+	vm.facetParam1Ex1 = '{"link":{"value":["yo1853"],"constraint":"?id <http://ldf.fi/nbf/yo1853> [] ."}}';
+	vm.facetParam1Ex2 = '{"slider":{"value":{"min":200,"max":2020},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_89 . FILTER (200<=year(?slider_89) && year(?slider_89)<=2020) "},"category":{"value":"kirjallisuus@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>/<http://www.w3.org/2004/02/skos/core#prefLabel> \"kirjallisuus\"@fi . "}}';
+        vm.facetParam1Ex3 = '{"slider":{"value":{"min":1800,"max":1900},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_89 . FILTER (1800<=year(?slider_89) && year(?slider_89)<=1900) "},"gender":{"value":"\"mies\"@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli> \"mies\"@fi . "}}';
+        vm.facetParam2Ex3 = '{"slider":{"value":{"min":1800,"max":1900},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_89 . FILTER (1800<=year(?slider_89) && year(?slider_89)<=1900) "},"gender":{"value":"\"mies\"@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli> \"mies\"@fi . "}}';
+        vm.facetParam1Ex4 = '{"place":{"value":"<http://ldf.fi/nbf/places/Ruotsi>","constraint":" ?seco_v_place (<http://www.w3.org/2004/02/skos/core#broader>)* <http://ldf.fi/nbf/places/Ruotsi> .  ?id <http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/<http://ldf.fi/nbf/place> ?seco_v_place . "}}';
+        vm.facetParam2 = '{"dataset":{"value":"<http://ldf.fi/nbf/sources/source4>","constraint":" ?id <http://purl.org/dc/terms/source> <http://ldf.fi/nbf/sources/source4> . "}}';
+        vm.facetParam2Ex1 = '{"link":{"value":["norssit"],"constraint":"?id <http://ldf.fi/nbf/norssi> [] ."}}';
+        vm.facetParam2Ex2 = {"slider":{"value":{"min":200,"max":2020},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_76 . FILTER (200<=year(?slider_76) && year(?slider_76)<=2020) "},"category":{"value":"kuvataiteet, valokuvaus@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/has_category>/<http://www.w3.org/2004/02/skos/core#prefLabel> \"kuvataiteet, valokuvaus\"@fi . "}};
+        //vm.facetParam2Ex3 = '{"slider":{"value":{"min":1800,"max":1900},"constraint":"?id <http://xmlns.com/foaf/0.1/focus>/^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>/<http://ldf.fi/nbf/time>/<http://vocab.getty.edu/ontology#estStart> ?slider_89 . FILTER (1800<=year(?slider_89) && year(?slider_89)<=1900) "},"gender":{"value":"\"nainen\"@fi","constraint":" ?id <http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/nbf/sukupuoli> \"nainen\"@fi . "}}';
+        vm.facetParam2Ex4 = '{"place":{"value":"<http://ldf.fi/nbf/places/Ven%C3%A4j%C3%A4>","constraint":" ?seco_v_place (<http://www.w3.org/2004/02/skos/core#broader>)* <http://ldf.fi/nbf/places/Ven%C3%A4j%C3%A4> .  ?id <http://xmlns.com/foaf/0.1/focus>/(^<http://www.cidoc-crm.org/cidoc-crm/P98_brought_into_life>)/<http://ldf.fi/nbf/place> ?seco_v_place . "}}';
+
         vm.removeFacetSelections = removeFacetSelections;
         vm.upos = nlpService.upos;
 
@@ -46,16 +60,28 @@
             return fetchResults(facetSelections);
         }
 
+	function replacer(match, p1, p2, offset, string) {
+	    // p1 is nondigits, p2 digits, and p3 non-alphanumerics
+	    return [p1, p2].join(' - ');
+	}
+
+
 	function calculatePercentage(data) {
             var obj;
             var word;
-            console.log(vm.lemmaCount.count);
+            console.log("start count",vm.lemmaCount.count);
             for (obj in data) {
-                console.log(obj)
-                console.log(data[obj])
+                //console.log(obj)
+                //console.log(data[obj])
                 var class_sum = getPosTotal(obj);
                 for (word in data[obj]) {
-                    console.log(data[obj][word].count);
+                    //console.log("count",data[obj][word].count);
+		    var lemma = data[obj][word].lemma;
+		    console.log("lemma:", lemma);
+		    if(lemma.match(/^\d/) && lemma.match(/[a-zäöåA-ZÄÖÅ]$/)) {
+			console.log("check",lemma.replace(/([^\d]*)([^\w]*)/), replacer);
+		    	data[obj][word].lemma = lemma.replace(/([^\d]*)([^\w]*)/, replacer);
+		    }
                     data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
                     data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
                 }
@@ -98,9 +124,9 @@
         var latestUpdate;
         function fetchResults(facetSelections) {
             vm.isLoadingResults = true;
+	    vm.isLoadingWordResults = true;
             vm.results = [];
             vm.error = undefined;
-	    vm.isLoadingWordResults = true;
 
             var updateId = _.uniqueId();
             latestUpdate = updateId;

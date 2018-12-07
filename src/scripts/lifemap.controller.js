@@ -16,8 +16,10 @@
     .controller('LifemapController', LifemapController);
 
     /* @ngInject */
-    function LifemapController($scope, $location, $state, $uibModal, _, groupmapService,
-            FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
+    function LifemapController($scope, $location, $state, 
+    		$uibModal, _, groupmapService,
+            FacetHandler, facetUrlStateHandlerService, 
+            EVENT_FACET_CHANGED) {
 
     	
         var vm = this;
@@ -39,7 +41,8 @@
         		);
         };
         
-        vm.mapevents= { zoom_changed: mapchange, dragend: mapchange };
+        vm.mapevents= { zoom_changed: mapchange, 
+        		dragend: mapchange };
         
         vm.LIMITOPTIONS = [{value:200},{value:500},{value:1000},{value:2500},{value:5000}];
         vm.searchlimit = vm.LIMITOPTIONS[0];
