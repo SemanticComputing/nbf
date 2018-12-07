@@ -46,11 +46,13 @@
                 if (person.kirjasampo) {
                 	person.kirjasampo = person.kirjasampo.replace('http://','https://')
                 }
-                /*
-                if (person.kulsa) {
-                	person.kulsa = person.kulsa.replace('http://','https://')
+                
+                if (person.ulan) {
+                	//	http://vocab.getty.edu/ulan/500108094
+                	//	http://vocab.getty.edu/page/ulan/500108094
+                	person.ulan = person.ulan.replace('vocab.getty.edu/ulan/','vocab.getty.edu/page/ulan/')
                 }
-                */
+                
                 if (person.fennica) {
                 	// couples might have several fennica links:
                 	if (person.fennica.constructor !== Array) {
