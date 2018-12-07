@@ -1,4 +1,5 @@
-<div class="col-sm-12 mapspinner" ng-show="vm.isLoadingResults && !vm.error" >
+<div class="col-sm-12 mapspinner" 
+	ng-show="vm.isLoadingResults && !vm.error" >
       <img class="loading-img" src="images/loading-lg.gif"></img>
 </div>
 <ui-gmap-google-map 
@@ -12,9 +13,9 @@
  			show="vm.window.show" 
  			options="vm.window" 
  			templateUrl="'views/groupmap/popup.html'"
-                templateParameter="vm"/
-        		closeClick="vm.closeWindow">
-        		<span></span>
+            templateParameter="vm"/
+        	closeClick="vm.closeWindow">
+        	<span></span>
     </ui-gmap-window>
     		
  	<ui-gmap-polyline static="true" visible="true" geodesic="true" 

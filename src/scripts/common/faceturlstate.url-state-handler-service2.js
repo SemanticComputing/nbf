@@ -21,7 +21,7 @@
     * Updating the URL parameters can be done, e.g., when the facet states
     * have been received while listening for facet updates.
     * See {@link seco.facetedSearch.FacetHandler `FacetHandler`} for details
-    * regarding events.
+    * regarding events. 
     */
     .service('facetUrlStateHandlerService2', facetUrlStateHandlerService2);
 

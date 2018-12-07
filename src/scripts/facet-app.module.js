@@ -121,7 +121,7 @@
             controller: 'PersonLinguisticsController',
             controllerAs: 'vm'
         })
-        .state('place', { //
+        .state('place', { 
             url: '/paikka/:placeId',
             templateUrl: 'views/place.html',
             controller: 'PlaceController',

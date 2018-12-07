@@ -93,12 +93,10 @@
 	        param = vm.right ? 'map2' : 'map';
 	        if (lc[param]) {
 	        	try {
-	                var map = angular.fromJson(lc[param]);
-	                vm.map = map; 
+	                vm.map = angular.fromJson(lc[param]);
 	            }
 	            catch(e) {
 	            	$location.search(param, null);
-	            	// console.log('parameter '+param+' cleared')
 	            }
 	        }
         };
@@ -252,7 +250,7 @@
         function getPlaceLabel(label, type, count) {
         	var arr = ['syntyneet', 'kuolleet', 'ura', 'teokset' ,'kunniamaininnat'];
         	return label + ", "+vm.EVENTTYPES[parseInt(type)].label2+" ("+count+")";
-			
-        }
+		}
+        
     }
 })();
