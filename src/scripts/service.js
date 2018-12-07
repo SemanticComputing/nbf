@@ -74,10 +74,10 @@
         '  	OPTIONAL { ?plabel schema:familyName ?familyName . }' +
         '' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
-        '  OPTIONAL { ?id nbf:ulan ?ulan .  }' +
         '  OPTIONAL { ?id nbf:blf ?blf . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+        '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
@@ -86,7 +86,6 @@
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
-        // '  OPTIONAL { ?id nbf:kulsa ?kulsa . }' +
         '  OPTIONAL { ?id nbf:yo1853 ?yo1853 . }' +
         '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +

@@ -42,10 +42,10 @@
         ' PREFIX schema: <http://schema.org/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
-        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +

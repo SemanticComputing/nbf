@@ -194,7 +194,7 @@
             templateUrl: 'views/comparison.html',
         })
         .state('maps.comparison2.sides', {
-            url: '',
+            url: '', 
             views: {
                 'left@maps.comparison2': {
                     templateUrl: 'views/groupmap/comparison2.left.html',
