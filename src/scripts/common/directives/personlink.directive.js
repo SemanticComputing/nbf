@@ -16,7 +16,7 @@
 		        popoverService.getPopover($scope.url).then(function(data) {
 		        	if (data.length) data = data[0];
 		        	
-		        	$scope.label = data.label;
+		        	$scope.label = data.label; 
 		        	
 		        	//	check if lifespan contains any numbers
 		        	if ((new RegExp(/\d/)).test(data.lifespan)) {
@@ -30,6 +30,6 @@
 		        });
 		        
 			}],
-			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" class="notranslate" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><span ng-transclude></span></a>'
+			template: '<a uib-popover-template="\'views/tooltips/personTooltipTemplate.html\'" class="notranslate" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><span ng-transclude></span></a>'
 		}});
 })();

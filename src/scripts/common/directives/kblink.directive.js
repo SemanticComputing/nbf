@@ -32,6 +32,6 @@
 		        });
 		        
 			}],
-			template: '<a uib-popover-template="\'views/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}" ng-transclude></a>'
+			template: '<a uib-popover-template="\'views/tooltips/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}" ng-transclude></a>'
 		}});
 })();

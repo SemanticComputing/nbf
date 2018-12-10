@@ -42,8 +42,8 @@
 		        
 			}],
 			
-			template: '<a ng-if="!isYso" uib-popover-template="\'views/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ui-sref="place({{ placeid }})"><span ng-transclude></span></a>'+
-			'<a ng-if="isYso" uib-popover-template="\'views/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}"><span ng-transclude></span></a>'
+			template: '<a ng-if="!isYso" uib-popover-template="\'views/tooltips/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ui-sref="place({{ placeid }})"><span ng-transclude></span></a>'+
+			'<a ng-if="isYso" uib-popover-template="\'views/tooltips/placeTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ng-href="{{ link }}"><span ng-transclude></span></a>'
 			
 		};
 	}
