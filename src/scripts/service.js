@@ -46,9 +46,9 @@
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
-        ' PREFIX dct: <http://purl.org/dc/terms/> ' +
+        ' PREFIX dct: <http://purl.org/dc/terms/>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-        ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
@@ -75,8 +75,8 @@
         '' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:blf ?blf . }' +
-        '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
+        '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
@@ -117,18 +117,18 @@
             ' ' +
             '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
             '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+            '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
             '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
             '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
-            '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
             '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
-            '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
+            '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:yo1853 ?yo1853 . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +
@@ -150,7 +150,7 @@
             '  } ' +
             */
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
-            '  		OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
+            '  	OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
             '  			OPTIONAL { ?bir nbf:place ?birth__id . ?birth__id skos:prefLabel ?birth__label } ' +
             '  			OPTIONAL { ?bir nbf:time/skos:prefLabel ?birthDate }' +
             '		} ' +
@@ -175,7 +175,7 @@
         	'  VALUES (?class ?order) { ' +
         	'    ( rels:Father 0) ' +
         	'    ( rels:Mother 1) ' +
-        	'    ( rels:Parent 2) ' +
+        	'    ( rels:Parent 2)' +
         	'    ( rels:Spouse 3) ' +
         	'    ( rels:Husband 3) ' +
         	'    ( rels:Wife 3) ' +
@@ -204,7 +204,7 @@
         
         var bioQuery =
             'SELECT DISTINCT * WHERE {' +
-            ' { <RESULT_SET> }' +
+            ' { <RESULT_SET> } ' +
             ' ?id owl:sameAs*|^owl:sameAs ?prs .' +
             ' ?prs foaf:focus/nbf:has_biography ?bio .' +
             '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' + /* MOVED TO biography.service.js
@@ -229,8 +229,8 @@
         	'WHERE { ' +
         	'  { <RESULT_SET> } ' +
         	'  ?dst a nbf:Distance ; ' +
-        	'        bioc:relates_to ?id, ?prs ; ' +
-        	'        nbf:value ?value . ' +
+        	'       bioc:relates_to ?id, ?prs ; ' +
+        	'       nbf:value ?value . ' +
         	'  FILTER (?prs!=?id)  ' +
         	'} ORDER BY DESC(?value) LIMIT 16 ';
         
@@ -248,9 +248,9 @@
         	'  { ' +
         	'  SELECT DISTINCT ?author ?id2 ?prs2 ' +
         	'    WHERE { ' +
-        	'        <RESULT_SET> ' +
-        	'        ?id2 owl:sameAs*|^owl:sameAs ?prs2 . ' +
-        	'        ?prs2 foaf:focus/nbf:has_biography/nbf:authors ?author . ' +
+        	'       <RESULT_SET> ' +
+        	'       ?id2 owl:sameAs*|^owl:sameAs ?prs2 . ' +
+        	'       ?prs2 foaf:focus/nbf:has_biography/nbf:authors ?author . ' +
         	'    } ' +
         	'  } ' +
         	'  ?prs foaf:focus/nbf:has_biography/nbf:authors ?author . ' +
@@ -269,7 +269,7 @@
         	'SELECT (GROUP_CONCAT(DISTINCT(?id); separator=",") as ?people) (COUNT(DISTINCT ?id) AS ?count) WHERE { ' +
         	' <RESULT_SET> ' +
         	'  { ?id2 nbf:in_bio ?id } ' +
-        	'  UNION  ' +
+        	'  UNION ' +
         	'  { ?id nbf:refers/nbf:target ?id2 } ' +
         	'  FILTER (?id!=?id2) ' +
         	' }';

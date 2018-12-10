@@ -52,43 +52,43 @@
         var query =
             'SELECT DISTINCT * WHERE {' +
             ' { <RESULT_SET> }' +
-            '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
-            '  OPTIONAL { ?bio nbf:authors ?author_text }' +
-            '  OPTIONAL { ?bio schema:dateCreated ?created }' +
-            '  OPTIONAL { ?bio schema:dateModified ?modified }' +
-            '  OPTIONAL { ?bio schema:relatedLink ?link }'  +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "0"^^xsd:integer ; nbf:content ?lead_paragraph ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "1"^^xsd:integer ; nbf:content ?description    ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "2"^^xsd:integer ; nbf:content ?family_paragraph ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "3"^^xsd:integer ; nbf:content ?parent_paragraph ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "4"^^xsd:integer ; nbf:content ?spouse_paragraph ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
-            '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
+            ' OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
+            ' OPTIONAL { ?bio nbf:authors ?author_text }' +
+            ' OPTIONAL { ?bio schema:dateCreated ?created }' +
+            ' OPTIONAL { ?bio schema:dateModified ?modified }' +
+            ' OPTIONAL { ?bio schema:relatedLink ?link }'  +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "0"^^xsd:integer ; nbf:content ?lead_paragraph ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "1"^^xsd:integer ; nbf:content ?description    ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "2"^^xsd:integer ; nbf:content ?family_paragraph ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "3"^^xsd:integer ; nbf:content ?parent_paragraph ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "4"^^xsd:integer ; nbf:content ?spouse_paragraph ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
+            ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
             '} ORDER BY str(?source)';
         
         var queryNLP = 
         	'SELECT DISTINCT ?x ?y ?z ?word  ' +
-        	'	(SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url)  ' +
-        	'WHERE {  ' +
-        	'  VALUES ?id { <RESULT_SET> }  ' +
-        	'  ?struc nbfbiodata:docRef ?id ;  ' +
-        	'         dct:hasPart ?parag .  ' +
+        	' (SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url) ' +
+        	'WHERE { ' +
+        	'  VALUES ?id { <RESULT_SET> } ' +
+        	'  ?struc nbfbiodata:docRef ?id ; ' +
+        	'       dct:hasPart ?parag .  ' +
         	'  ?parag nbfbiodata:order ?parag_str .  ' +
         	'  BIND (xsd:integer(xsd:decimal(?parag_str)) AS ?x)  ' +
-        	'  ?sent dct:isPartOf ?parag ;  ' +
-        	'        nif:order ?sent_str .  ' +
-        	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y)  ' +
-        	'  ?w nif:sentence ?sent ;  ' +
-        	'     ufal:ID ?w_str .  ' +
+        	'  ?sent dct:isPartOf ?parag ; ' +
+        	'       nif:order ?sent_str . ' +
+        	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y) ' +
+        	'  ?w nif:sentence ?sent ; ' +
+        	'     ufal:ID ?w_str . ' +
         	'  BIND (xsd:integer(?w_str) AS ?z)  ' +
         	'  OPTIONAL { ?sent nbfbiodata:hasNamedEntity ?nes . ' +
-        	'    ?nes nif:beginIndex ?ne__begin ;  ' +
-        	'        nif:endIndex ?ne__end . ' +
+        	'    ?nes nif:beginIndex ?ne__begin ; ' +
+        	'       nif:endIndex ?ne__end . ' +
         	'    FILTER (?ne__begin<=?z && ?z<=?ne__end ) ' +
         	'    ?neg <http://ldf.fi/nbf/biography/data#member> ?nes . ' +
         	'    ?nes nbfbiodata:namedEntityType ?ne__typeurl ;  ' +
-        	'        skos:relatedMatch ?ne__urls .  ' +
+        	'       skos:relatedMatch ?ne__urls . ' +
         	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__types) ' +
         	'  } ' +
         	'  OPTIONAL { ?w ufal:WORD ?word } ' +
