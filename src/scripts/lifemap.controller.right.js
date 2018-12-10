@@ -20,9 +20,9 @@
     function LifemapControllerRight($scope, $location, $state, 
     		$uibModal, _, groupmapService,
             FacetHandler, facetUrlStateHandlerService2, 
-            EVENT_FACET_CHANGED) {
+            EVENT_FACET_CHANGED
+            ) {
 
-    	
         var vm = this;
         
         // for comparison views
@@ -127,12 +127,10 @@
 	        param = vm.right ? 'map2' : 'map';
 	        if (lc[param]) {
 	        	try {
-	                var map = angular.fromJson(lc[param]);
-	                vm.map = map; 
+	                vm.map = angular.fromJson(lc[param]);
 	            }
 	            catch(e) {
 	            	$location.search(param, null);
-	            	// console.log('parameter '+param+' cleared')
 	            }
 	        }
         };

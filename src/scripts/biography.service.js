@@ -135,7 +135,7 @@
             		"PersonName": "personlink" ,
             		"PlaceName": "placelink" ,
 		            "OrganizationName": "organizationlink" ,
-		            "VocationName": "vocationlink" ,
+		            "VocationName": false , // "vocationlink" ,
 		            "AnonymEntity": false ,
 		            "AddressName": false ,
 		            "CorporationsName": false ,
