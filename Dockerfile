@@ -4,25 +4,23 @@ FROM node:9
 
 RUN npm install -g bower grunt-cli serve
 
-RUN mkdir /app && chown node:node /app
-
 WORKDIR /app
 
-USER node
-
 COPY *.json ./
+COPY Gruntfile.js ./
+COPY src ./src
 
+RUN chown -R node:node .
+
+USER node
 
 RUN npm install
 RUN bower install
 
-EXPOSE 9000
-
-COPY Gruntfile.js ./
-COPY --chown=node src ./src
-
 RUN grunt build
 
-COPY serve.json docs
+COPY serve.json ./docs
+
+EXPOSE 9000
 
 CMD serve -l 9000 docs
