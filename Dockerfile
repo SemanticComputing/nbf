@@ -19,7 +19,7 @@ RUN bower install
 EXPOSE 9000
 
 COPY Gruntfile.js ./
-COPY src ./src
+COPY --chown=node src ./src
 
 RUN grunt build
 
