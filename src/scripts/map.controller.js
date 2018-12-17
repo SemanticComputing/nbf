@@ -267,15 +267,13 @@
 		        		z = Math.max(ne.lat() - sw.lat(), 2*(ne.lng() - sw.lng())), 
 		        		zoom = 2;
 	        		
-	        		//	z = Math.max(bounds.f.b - bounds.b.b, 2*(bounds.f.f - bounds.b.f)), zoom
-	        		
 		        	if(z<75) zoom = 5;
 		        	else if(z<100) zoom = 4;
 		        	else if(z<125) zoom = 3;
 		        	else zoom = 2;
+		        	vm.map = { center: {latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng() },
+		        				zoom: zoom };
 		        	
-		        	vm.map.center = {latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng() };
-		        	vm.map.zoom = zoom ;
         		}
         		catch(error) {
         			vm.map = { center: { latitude: 64, longitude: 18 }, zoom: 4 };

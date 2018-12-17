@@ -45,24 +45,27 @@
 
         
         //	http://yasgui.org/short/ByjM-gdIm
+        // '  <RESULT_SET> ' +
         var queryForPopover =
-        	'SELECT DISTINCT ?id ?label ?image ?lifespan  ' +
+        	'SELECT DISTINCT ?id ?label ?image ?lifespan ?hasbio ' +
         	'WHERE {' +
         	'  <RESULT_SET> ' +
-        	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS {?id owl:sameAs []} ' +
+        	'  ?id2 owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ' +
         	'  ?id foaf:focus ?prs . ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source ?s ] FILTER ISLITERAL(?s) } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
         	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
-        	'   ' +
+        	'  ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
         	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time ?bir . ?bir gvp:estStart ?btime ; skos:prefLabel [] } ' +
-        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time ?dea . ?dea gvp:estStart ?dtime ; skos:prefLabel [] } ' +
-        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
-        	'} LIMIT 1 ';
+        	'  OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time ?bir . ?bir gvp:estStart ?btime ; skos:prefLabel [] } ' +
+        	'  OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time ?dea . ?dea gvp:estStart ?dtime ; skos:prefLabel [] } ' +
+        	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan)' +
+        	'  ' +
+        	'  OPTIONAL { ?prs nbf:has_biography [] . BIND (true as ?hasbio) }' +
+        	'} LIMIT 1 '
         
         //	http://yasgui.org/short/SyK2-M6vm
         var queryForHref = 

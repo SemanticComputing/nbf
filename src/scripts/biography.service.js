@@ -67,17 +67,18 @@
             ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
             '} ORDER BY str(?source)';
         
-        var queryNLP = 
+        //	http://yasgui.org/short/DVB6hYJIw
+        var queryNLP =
         	'SELECT DISTINCT ?x ?y ?z ?word  ' +
         	' (SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url) ' +
         	'WHERE { ' +
         	'  VALUES ?id { <RESULT_SET> } ' +
         	'  ?struc nbfbiodata:docRef ?id ; ' +
-        	'       dct:hasPart ?parag .  ' +
+        	'      dct:hasPart ?parag .  ' +
         	'  ?parag nbfbiodata:order ?parag_str .  ' +
         	'  BIND (xsd:integer(xsd:decimal(?parag_str)) AS ?x)  ' +
         	'  ?sent dct:isPartOf ?parag ; ' +
-        	'       nif:order ?sent_str . ' +
+        	'      nif:order ?sent_str . ' +
         	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y) ' +
         	'  ?w nif:sentence ?sent ; ' +
         	'     ufal:ID ?w_str . ' +
@@ -193,11 +194,14 @@
             			ob.word = ob.word
             				.replace('&amp;nbsp;', ' ')
             				.replace('&amp;gt', '>')
+            				.replace('&amp;amp;', '&')
             				.replace('&amp;lt', '<'); 
             		}
             		
             		// no space in case –1942 or –VII
             		if (prev=="–" && RegExp('^[0-9IVXLCDM]').test(ob.word)) { ob.space = false; }
+            		
+            		//	TODO cases "Vaalikone poliittisena mediana // Politiikka 2/2004"
             		
             		// no space before . , : ; ! ? / ) ] } "
             		if (ob.word && RegExp('^[.,;:=!?/)}%]').test(ob.word)) ob.space = false;
@@ -207,6 +211,7 @@
             		}
             		// no space after ( [ { /
             		if (RegExp('[/({\[]').test(prev)) ob.space = false;
+            		
             		
             		
             		//	test if has a named entity link:
@@ -224,11 +229,6 @@
             				}
             			}
             		}
-            		
-            		//	test different cases
-            		
-            		//	todo word="&quot;"
-            		
             		
             		/*
             		 tammi <UNDEFINED> helmikuussa
