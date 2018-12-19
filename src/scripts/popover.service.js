@@ -44,8 +44,7 @@
 	        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
 
         
-        //	http://yasgui.org/short/ByjM-gdIm
-        // '  <RESULT_SET> ' +
+        //	http://yasgui.org/short/wgnwg0hUF
         var queryForPopover =
         	'SELECT DISTINCT ?id ?label ?image ?lifespan ?hasbio ' +
         	'WHERE {' +

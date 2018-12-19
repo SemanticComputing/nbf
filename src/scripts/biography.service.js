@@ -67,7 +67,7 @@
             ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
             '} ORDER BY str(?source)';
         
-        //	http://yasgui.org/short/DVB6hYJIw
+        //	http://yasgui.org/short/O7Rul_hHW
         var queryNLP =
         	'SELECT DISTINCT ?x ?y ?z ?word  ' +
         	' (SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url) ' +
@@ -76,17 +76,17 @@
         	'  ?struc nbfbiodata:docRef ?id ; ' +
         	'      dct:hasPart ?parag .  ' +
         	'  ?parag nbfbiodata:order ?parag_str .  ' +
-        	'  BIND (xsd:integer(xsd:decimal(?parag_str)) AS ?x)  ' +
+        	'  BIND (xsd:integer(xsd:decimal(?parag_str))-2 AS ?x)  ' +
         	'  ?sent dct:isPartOf ?parag ; ' +
         	'      nif:order ?sent_str . ' +
-        	'  BIND (xsd:integer(xsd:decimal(?sent_str)) AS ?y) ' +
+        	'  BIND (xsd:integer(xsd:decimal(?sent_str))-1 AS ?y) ' +
         	'  ?w nif:sentence ?sent ; ' +
         	'     ufal:ID ?w_str . ' +
-        	'  BIND (xsd:integer(?w_str) AS ?z)  ' +
+        	'  BIND (xsd:integer(?w_str)-1 AS ?z)  ' +
         	'  OPTIONAL { ?sent nbfbiodata:hasNamedEntity ?nes . ' +
         	'    ?nes nif:beginIndex ?ne__begin ; ' +
         	'       nif:endIndex ?ne__end . ' +
-        	'    FILTER (?ne__begin<=?z && ?z<=?ne__end ) ' +
+        	'    FILTER (?ne__begin<=?z +1 && ?z +1<=?ne__end ) ' +
         	'    ?neg <http://ldf.fi/nbf/biography/data#member> ?nes . ' +
         	'    ?nes nbfbiodata:namedEntityType ?ne__typeurl ;  ' +
         	'       skos:relatedMatch ?ne__urls . ' +
@@ -230,11 +230,7 @@
             			}
             		}
             		
-            		/*
-            		 tammi <UNDEFINED> helmikuussa
-            		 Lauriksi <UNDEFINED> isä (ajatusviiva)
-            		 15. <UNDEFINED> 16.1.1925
-            		 */
+            		
             		if (ob) {
             			data[x][y].push(ob);
             			
@@ -244,7 +240,7 @@
             			prev_ob = ob;
             		}
             	});
-            	
+            	console.log(data);
             	return data;
             });
         }

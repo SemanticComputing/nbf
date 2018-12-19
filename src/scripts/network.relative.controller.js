@@ -407,7 +407,7 @@
                 wheelSensitivity: 0.2,
 	        	layout: {
 	        		name: 'circle'
-	        	},
+	        	}, 
 	        	style: style
 	            });
             
@@ -429,7 +429,7 @@
             
             vm.changecolor();
             vm.changesize();
-
+            
             vm.cy.layout({
         		name: 'cose',
         		idealEdgeLength: 100,
