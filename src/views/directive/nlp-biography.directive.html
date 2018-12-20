@@ -1,10 +1,19 @@
 <div class="col-sm-6 col-md-12 mapspinner" ng-show="!data" >
     <img class="loading-img" src="images/loading-lg.gif"></img>
 </div>
+<div class="col-sm-6 col-md-12"> <h3> KONTEKSTUAALINEN LUKIJA </h3> <p> Alla oleva teksti on annotoitu henkilöiden, paikkojen, ja organisaatioiden osalta automaattisin menetelmin. </p> </div>
 <div class="col-sm-6 col-md-12 nlp_content" ng-if="!!data">
-	<p ng-repeat="parag in data track by $index" >
-<span ng-repeat="sentence in parag track by $index" ><span ng-repeat="x in sentence track by $index" class="nlp"><span ng-if="x.space"> </span><span ng-if="x.placelink" class="placelink" url="{{x.placelink}}">{{x.word}}</span><span ng-if="x.organizationlink" class="organizationlink" url="{{x.organizationlink}}">{{x.word}}</span><span ng-if="x.vocationlink" class="vocationlink" >{{x.word}}</span><span ng-if="x.personlink" class="personlink" url="{{x.personlink}}">{{x.word}}</span><span ng-if="!x.class">{{x.word}}</span></span>
-</span>
-		<hr />
-	</p>
+    <p ng-repeat="parag in data track by $index" >
+        <span ng-repeat="sentence in parag track by $index" >
+	    <span ng-repeat="x in sentence track by $index" class="nlp">
+		<span ng-if="x.space"> </span>
+		<span ng-if="x.placelink" class="placelink" url="{{x.placelink}}">{{x.word}}</span>
+		<span ng-if="x.organizationlink" class="organizationlink" url="{{x.organizationlink}}">{{x.word}}</span>
+		<span ng-if="x.vocationlink" class="vocationlink" >{{x.word}}</span>
+		<span ng-if="x.personlink" class="personlink" url="{{x.personlink}}">{{x.word}}</span>
+		<span ng-if="!x.class">{{x.word}}</span>
+	    </span>
+	</span>
+	<hr />
+    </p>
 </div>

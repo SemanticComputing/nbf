@@ -14,7 +14,7 @@
 	        	
 			}],
 			
-			template: '<a ng-href="{{ link }}" uib-popover-template="\'views/tooltips/organizationTooltipTemplate.html\'" popover-trigger="\'mouseenter\'"><span ng-transclude></span></a>'
+			template: '<a ng-href="{{ link }}" uib-popover-template="\'views/tooltips/organizationTooltipTemplate.html\'" popover-trigger="\'mouseenter\'"><small><span class="glyphicon glyphicon-briefcase"></span></small>&nbsp;<span ng-transclude></span></a>'
 			
 		};
 	}

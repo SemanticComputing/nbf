@@ -29,6 +29,6 @@
 		        	
 		        });
 			}],
-			template: '<a uib-popover-template="\'views/tooltips/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ link }})">{{ label }}</a>'
+			template: '<a uib-popover-template="\'views/tooltips/personTooltipTemplate.html\'" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ link }})"><span class="glyphicon glyphicon-user"></span>{{ label }}</a>'
 		}});
 })();
