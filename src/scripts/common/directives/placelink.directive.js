@@ -30,6 +30,7 @@
 		        }
 		        
 		        $scope.image = false; // 'https://maps.googleapis.com/maps/api/staticmap?center=Pohja,Finland&zoom=5&size=400x300'
+			//$scope.image = "https://maps.googleapis.com/maps/api/staticmap?center="+data.label+"&zoom=13&size=400x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyCCpdk_ltTRwAtWkieAUL6DBx-iZkAfJ1A"; 
 	        	$scope.lifespan = '';
 	        	
 		        popoverService.getPlacePopover($scope.url).then(function(data) {
