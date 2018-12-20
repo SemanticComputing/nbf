@@ -159,6 +159,7 @@
             	var strings = [], string="";
             	
             	res.forEach(function(ob) {
+			//ob.word = ob.word.trim()
             		var x=parseInt(ob.x), y=parseInt(ob.y), z=parseInt(ob.z);
             		
             		//	new paragraph
@@ -195,7 +196,8 @@
             				.replace('&amp;nbsp;', ' ')
             				.replace('&amp;gt', '>')
             				.replace('&amp;amp;', '&')
-            				.replace('&amp;lt', '<'); 
+            				.replace('&amp;lt', '<')
+					.trim(); 
             		}
             		
             		// no space in case –1942 or –VII
@@ -204,8 +206,11 @@
             		//	TODO cases "Vaalikone poliittisena mediana // Politiikka 2/2004"
             		
             		// no space before . , : ; ! ? / ) ] } "
-            		if (ob.word && RegExp('^[.,;:=!?/)}%]').test(ob.word)) ob.space = false;
-            		else {
+            		if (ob.word && RegExp('^[.,;:=!?/)}%]').test(ob.word)) { 
+				ob.space = false; 
+				//console.log('['+ob.word+']');
+            		} else {
+				//console.log('['+ob.word+']');
             			// no space after "
                 		if (RegExp('"').test(prev)) ob.space = !quoted;
             		}
