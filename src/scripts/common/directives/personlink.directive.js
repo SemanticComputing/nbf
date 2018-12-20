@@ -31,6 +31,6 @@
 		        });
 		        
 			}],
-			template: '<a uib-popover-template="\'views/tooltips/personTooltipTemplate.html\'" class="notranslate" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><small><span class="glyphicon glyphicon-user"></span></small>&nbsp;<span ng-transclude style="color:{{ color }};"></span></a>'
+			template: '<a uib-popover-template="\'views/tooltips/personTooltipTemplate.html\'" class="notranslate" popover-trigger="\'mouseenter\'" ui-sref="person.detail({{ personId }})"><span ng-transclude style="color:{{ color }};"></span></a>'
 		}});
 })();
