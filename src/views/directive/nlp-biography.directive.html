@@ -1,7 +1,7 @@
 <div class="col-sm-6 col-md-12 mapspinner" ng-show="!data" >
     <img class="loading-img" src="images/loading-lg.gif"></img>
 </div>
-<div class="col-sm-6 col-md-12"> <h3> KONTEKSTUAALINEN LUKIJA </h3> <p> Alla oleva teksti on annotoitu henkilöiden, paikkojen, ja organisaatioiden osalta automaattisin menetelmin. </p> </div>
+<div class="col-sm-6 col-md-12 disclaimer"> <h3> KONTEKSTUAALINEN LUKIJA </h3> <p> Alla oleva teksti on annotoitu <span class="person-disclaimer"><small><span class="glyphicon glyphicon-user"></span></small>&nbsp;henkilöiden</span>, <span class="place-disclaimer"><small><span class="glyphicon glyphicon-globe"></span></small>&nbsp;paikkojen</span>, ja <span class="organization-disclaimer"><small><span class="glyphicon glyphicon-briefcase"></span></small>&nbsp;organisaatioiden</span> osalta automaattisin menetelmin. </p> </div>
 <div class="col-sm-6 col-md-12 nlp_content" ng-if="!!data">
     <p ng-repeat="parag in data track by $index" >
         <span ng-repeat="sentence in parag track by $index" >
