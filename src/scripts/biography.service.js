@@ -126,11 +126,13 @@
             });
         }
         
-        function getNlpBio(id) {
+        function getNlpBio($scope) {
         	
-        	id = id.replace('nbf/bio','nbf/p');
+        	var id = $scope.url.replace('nbf/bio','nbf/p');
         	var constraint = ' <' + id + '> ';
             var qry = prefixesNLP + queryNLP.replace('<RESULT_SET>', constraint);
+            
+            $scope.has_annotations = false;
             
             var typeclasses =  {
             		"PersonName": "personlink" ,
@@ -232,6 +234,9 @@
             					prev = (ob.word ? ob.word.slice(-1) : "");
             					ob = null;
             				}
+            				
+            				$scope.has_annotations = true;
+            
             			}
             		}
             		
@@ -245,7 +250,7 @@
             			prev_ob = ob;
             		}
             	});
-            	console.log('DATA:'+data);
+            	// console.log('DATA:'+data);
             	return data;
             });
         }

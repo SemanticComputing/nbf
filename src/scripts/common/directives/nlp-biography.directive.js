@@ -10,7 +10,7 @@
 				
 				$scope.loadBio = function () {
 					if ($scope.active!='false') {
-						biographyService.getNlpBio( $scope.url ).then(function(data) {
+						biographyService.getNlpBio( $scope ).then(function(data) {
 							$scope.data = data;
 				        });
 					}; 
