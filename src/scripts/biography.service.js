@@ -222,10 +222,12 @@
             		//	test if has a named entity link:
             		ob.class = false;
             		if (ob.ne && ob.ne.type && ob.ne.url) {
+				//ob.nes = true;
             			if (typeclasses[ob.ne.type]!=false) {
             				ob[typeclasses[ob.ne.type]] = ob.ne.url;
             				ob.class = true;
-            				
+					ob.nes = true;
+
             				//	merge following object with same link: 'Lauri'+'Törni'='Lauri Törni'
             				if (prev_ob && prev_ob[typeclasses[ob.ne.type]] == ob.ne.url) {
             					prev_ob.word += (ob.space ? ' ' : '')+ob.word; 
