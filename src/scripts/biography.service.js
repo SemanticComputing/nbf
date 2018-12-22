@@ -69,12 +69,13 @@
         
         //	http://yasgui.org/short/O7Rul_hHW
         var queryNLP =
-        	'SELECT DISTINCT ?x ?y ?z ?word  ' +
+        	'SELECT DISTINCT ?x ?y ?z ?word ?parag_value  ' +
         	' (SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url) ' +
         	'WHERE { ' +
         	'  VALUES ?id { <RESULT_SET> } ' +
         	'  ?struc nbfbiodata:docRef ?id ; ' +
         	'      dct:hasPart ?parag .  ' +
+        	'  ?parag nif:isString ?parag_value .  ' +
         	'  ?parag nbfbiodata:order ?parag_str .  ' +
         	'  BIND (xsd:integer(xsd:decimal(?parag_str))-2 AS ?x)  ' +
         	'  ?sent dct:isPartOf ?parag ; ' +
@@ -93,7 +94,7 @@
         	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__types) ' +
         	'  } ' +
         	'  OPTIONAL { ?w ufal:WORD ?word } ' +
-        	'} GROUP BY ?x ?y ?z ?word ORDER BY ?x ?y ?z ';
+        	'} GROUP BY ?x ?y ?z ?word ?parag_value ORDER BY ?x ?y ?z ';
         	
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -159,13 +160,20 @@
             		quoted = false;
             	
             	var strings = [], string="";
+		var parag_value;
+		var limit = 100;
             	
             	res.forEach(function(ob) {
 			//ob.word = ob.word.trim()
             		var x=parseInt(ob.x), y=parseInt(ob.y), z=parseInt(ob.z);
             		
             		//	new paragraph
-            		if (!data[x]) data[x] = [];
+            		if (!data[x]) {
+				data[x] = [];
+				if (RegExp('^(URA.|TEOKSET.|Elokuvat:|Televisiosarjat:|TUOTANTO.|LÄHTEET JA KIRJALLISUUS.|MUUT LÄHTEET.)').test(ob.parag_value)){
+					if (z < limit) limit = z;
+				}
+			}
             		
             		//	new sentence
             		if (!data[x][y]) {
@@ -226,6 +234,9 @@
             		if (ob.ne && ob.ne.type && ob.ne.url) {
 				//ob.nes = true;
             			if (typeclasses[ob.ne.type]!=false) {
+					if ( (limit <= z && ob.ne.type == "PersonName")) {
+						console.log("Skipped: "+ob.ne+ ", "+ob.word);
+					} else {
             				ob[typeclasses[ob.ne.type]] = ob.ne.url;
             				ob.class = true;
 					ob.nes = true;
@@ -238,7 +249,7 @@
             				}
             				
             				$scope.has_annotations = true;
-            
+            				}
             			}
             		}
             		
