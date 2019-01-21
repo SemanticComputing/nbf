@@ -22,18 +22,18 @@
         var prefixes =
         	' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         	' PREFIX dct: <http://purl.org/dc/terms/> ' +
+        	' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+        	' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX schema: <http://schema.org/> ' +
         ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
-        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX nbf: <http://ldf.fi/nbf/> ' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
-        ' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
-        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#> ';
         
@@ -44,7 +44,7 @@
     	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
     	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
     	'PREFIX ufal: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
-    	'PREFIX nbfbiodata: <http://ldf.fi/nbf/biography/data#>  ' +
+    	// 'PREFIX nbfbiodata: <http://ldf.fi/nbf/biography/data#>  ' +
     	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
     	'PREFIX biog: <http://ldf.fi/nbf/biography/> ';
         
@@ -67,34 +67,37 @@
             ' OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' +
             '} ORDER BY str(?source)';
         
-        //	http://yasgui.org/short/O7Rul_hHW
+        //	http://yasgui.org/short/NtOXf3wrw
         var queryNLP =
-        	'SELECT DISTINCT ?x ?y ?z ?word ?parag_value  ' +
-        	' (SAMPLE(?ne__types) AS ?ne__type) (SAMPLE(?ne__urls) AS ?ne__url) ' +
+        	'SELECT DISTINCT ?x ?y ?z ' +
+        	'	?ne__type ?ne__url ' +
+        	'	?word ?set_limit ' +
         	'WHERE { ' +
         	'  VALUES ?id { <RESULT_SET> } ' +
-        	'  ?struc nbfbiodata:docRef ?id ; ' +
-        	'      dct:hasPart ?parag .  ' +
-        	'  ?parag nif:isString ?parag_value .  ' +
-        	'  ?parag nbfbiodata:order ?parag_str .  ' +
-        	'  BIND (xsd:integer(xsd:decimal(?parag_str))-2 AS ?x)  ' +
+        	'  ?struc bd:docRef ?id ; ' +
+        	'         dct:hasPart ?parag . ' +
+        	'  ?parag nif:isString ?parag_value ; ' +
+        	'         bd:order ?parag_str . ' +
+        	'  BIND (REGEX(?parag_value, "^(URA|TEOKSET|Elokuvat:|Televisiosarjat:|TUOTANTO|LÄHTEET JA KIRJALLISUUS.|MUUT LÄHTEET)") AS ?set_limit) ' +
+        	'  BIND (xsd:integer(xsd:decimal(?parag_str))-2 AS ?x) ' +
         	'  ?sent dct:isPartOf ?parag ; ' +
-        	'      nif:order ?sent_str . ' +
+        	'        nif:order ?sent_str . ' +
         	'  BIND (xsd:integer(xsd:decimal(?sent_str))-1 AS ?y) ' +
         	'  ?w nif:sentence ?sent ; ' +
         	'     ufal:ID ?w_str . ' +
-        	'  BIND (xsd:integer(?w_str)-1 AS ?z)  ' +
-        	'  OPTIONAL { ?sent nbfbiodata:hasNamedEntity ?nes . ' +
+        	'  BIND (xsd:integer(?w_str)-1 AS ?z) ' +
+        	'  OPTIONAL { ' +
+        	'    ?neg dct:isPartOf ?sent ; bd:primary ?nes . ' +
         	'    ?nes nif:beginIndex ?ne__begin ; ' +
-        	'       nif:endIndex ?ne__end . ' +
+        	'         nif:endIndex ?ne__end . ' +
         	'    FILTER (?ne__begin<=?z +1 && ?z +1<=?ne__end ) ' +
-        	'    ?neg <http://ldf.fi/nbf/biography/data#member> ?nes . ' +
-        	'    ?nes nbfbiodata:namedEntityType ?ne__typeurl ;  ' +
-        	'       skos:relatedMatch ?ne__urls . ' +
-        	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__types) ' +
-        	'  } ' +
+        	'    ?nes bd:namedEntityType ?ne__typeurl ; ' +
+        	'         skos:relatedMatch ?ne__url . ' +
+        	'    BIND (REPLACE(STR(?ne__typeurl), "^.*?([^/]+)$", "$1") AS ?ne__type) ' +
+        	'} ' +
         	'  OPTIONAL { ?w ufal:WORD ?word } ' +
-        	'} GROUP BY ?x ?y ?z ?word ?parag_value ORDER BY ?x ?y ?z ';
+        	'} GROUP BY ?x ?y ?z ?word ?ne__type ?ne__url ?nes ?set_limit ' +
+        	'ORDER BY ?x ?y ?z ';
         	
         // The SPARQL endpoint URL
         var endpointConfig = {
@@ -159,21 +162,24 @@
             		prev_ob = null,
             		quoted = false;
             	
-            	var strings = [], string="";
-		var parag_value;
-		var limit = 100;
+            	// var strings = [], string="";
+				var limit = 1000;
             	
             	res.forEach(function(ob) {
-			//ob.word = ob.word.trim()
+            		
             		var x=parseInt(ob.x), y=parseInt(ob.y), z=parseInt(ob.z);
             		
             		//	new paragraph
             		if (!data[x]) {
-				data[x] = [];
-				if (RegExp('^(URA.|TEOKSET.|Elokuvat:|Televisiosarjat:|TUOTANTO.|LÄHTEET JA KIRJALLISUUS.|MUUT LÄHTEET.)').test(ob.parag_value)){
-					if (z < limit) limit = z;
-				}
-			}
+						data[x] = [];
+						
+						if (ob.set_limit == 'true' && z < limit) {
+							limit = z;
+						}
+						/*if (RegExp('^(URA.|TEOKSET.|Elokuvat:|Televisiosarjat:|TUOTANTO.|LÄHTEET JA KIRJALLISUUS.|MUUT LÄHTEET.)').test(ob.parag_value)){
+							if (z < limit) limit = z;
+						}*/
+					}
             		
             		//	new sentence
             		if (!data[x][y]) {
@@ -181,8 +187,8 @@
             			prev="";
             			prev_ob = null;
             			quoted = false;
-            			if (string) strings.push(string);
-            			string = "";
+            			//if (string) strings.push(string);
+            			//string = "";
             		}
             		
             		//	by default a space before word
@@ -217,10 +223,8 @@
             		
             		// no space before . , : ; ! ? / ) ] } "
             		if (ob.word && RegExp('^[.,;:=!?/)}%]').test(ob.word)) { 
-				ob.space = false; 
-				//console.log('['+ob.word+']');
+            			ob.space = false; 
             		} else {
-				//console.log('['+ob.word+']');
             			// no space after "
                 		if (RegExp('"').test(prev)) ob.space = !quoted;
             		}
@@ -228,42 +232,40 @@
             		if (RegExp('[/({\[]').test(prev)) ob.space = false;
             		
             		
-            		
             		//	test if has a named entity link:
             		ob.class = false;
             		if (ob.ne && ob.ne.type && ob.ne.url) {
-				//ob.nes = true;
             			if (typeclasses[ob.ne.type]!=false) {
-					if ( (limit <= z && ob.ne.type == "PersonName")) {
-						console.log("Skipped: "+ob.ne+ ", "+ob.word);
-					} else {
-            				ob[typeclasses[ob.ne.type]] = ob.ne.url;
-            				ob.class = true;
-					ob.nes = true;
-
-            				//	merge following object with same link: 'Lauri'+'Törni'='Lauri Törni'
-            				if (prev_ob && prev_ob[typeclasses[ob.ne.type]] == ob.ne.url) {
-            					prev_ob.word += (ob.space ? ' ' : '')+ob.word; 
-            					prev = (ob.word ? ob.word.slice(-1) : "");
-            					ob = null;
-            				}
-            				
-            				$scope.has_annotations = true;
+							if ( (limit <= z && ob.ne.type == "PersonName")) {
+								// console.log("Skipped: "+ob.ne+ ", "+ob.word);
+							} else {
+	            				ob[typeclasses[ob.ne.type]] = ob.ne.url;
+	            				ob.class = true;
+	            				ob.nes = true;
+	
+	            				//	merge following object with same link: 'Lauri'+'Törni'='Lauri Törni'
+	            				if (prev_ob && prev_ob[typeclasses[ob.ne.type]] == ob.ne.url) {
+	            					prev_ob.word += (ob.space ? ' ' : '')+ob.word; 
+	            					prev = (ob.word ? ob.word.slice(-1) : "");
+	            					ob = null;
+	            				}
+	            				
+	            				$scope.has_annotations = true;
             				}
             			}
             		}
             		
             		
             		if (ob) {
-            			data[x][y].push(ob);
-            			
-            			string += (prev_ob && ob.space ? ' ' : '')+ob.word;
+            			// data[x][y].push(ob);
+            			data[x][y][z] = ob;
+            			// string += (prev_ob && ob.space ? ' ' : '')+ob.word;
             			
             			prev = (ob.word ? ob.word.slice(-1) : "");
             			prev_ob = ob;
             		}
             	});
-            	// console.log('DATA:'+data);
+            	
             	return data;
             });
         }

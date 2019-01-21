@@ -43,22 +43,22 @@
         /* Implementation */
 
         var prefixes =
-        ' PREFIX bioc: <http://ldf.fi/schema/bioc/>' +
+        ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
         ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>' +
         ' PREFIX dct: <http://purl.org/dc/terms/>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
-        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
+        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/>' +
         ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
-        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>' +
+        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
         // The query for the results.
@@ -96,12 +96,12 @@
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
         '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
         '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
-        '  		   ?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation ' +
-        '  		   OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
+        '  		  ?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation ' +
+        '  		  OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
         '		}' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
-        '  		   OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
+        '  		  OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
         '  		}' +
         ' }' +
         ' }';
@@ -173,15 +173,15 @@
         	'SELECT DISTINCT ?type (?relative__id AS ?id2) ?name  ' +
         	'WHERE { <RESULT_SET>  ' +
         	'  VALUES (?class ?order) { ' +
-        	'    ( rels:Father 0) ' +
-        	'    ( rels:Mother 1) ' +
+        	'    ( rels:Father 0)' +
+        	'    ( rels:Mother 1)' +
         	'    ( rels:Parent 2)' +
-        	'    ( rels:Spouse 3) ' +
-        	'    ( rels:Husband 3) ' +
-        	'    ( rels:Wife 3) ' +
-        	'    ( rels:Child 4) ' +
-        	'    ( rels:Daughter 4) ' +
-        	'    ( rels:Son 4 ) }  ' +
+        	'    ( rels:Husband 3)' +
+        	'    ( rels:Wife 3)' +
+        	'    ( rels:Spouse 3)' +
+        	'    ( rels:Child 4)' +
+        	'    ( rels:Daughter 4)' +
+        	'    ( rels:Son 4 ) } ' +
         	'  { ?id bioc:has_family_relation [  ' +
         	'        bioc:inheres_in ?rel ; ' +
         	'        a ?class ; ' +
