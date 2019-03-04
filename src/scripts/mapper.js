@@ -25,16 +25,29 @@
         	
             objects.forEach(function(person) {
                 
-            	person.id = (person.id).replace(/^.+?(p[0-9]+)$/, '$1');
+            	person.id = (person.id).replace(/^.+?(p[0-9_]+)$/, '$1');
             	
             	person.birth = person.birth ? _.castArray(person.birth) : null;
             	person.death = person.death ? _.castArray(person.death) : null;
             	
+            	/**
+            	if (person.images) {
+            		
+            		person.images = _.castArray(person.images);
+            		person.images = person.images.map(function(st) {
+            		    return st.replace(/^https*:/,"");
+            		});
+            		console.log(person.images);
+            	
+            	} else {
+            		person.images = ['images/person_placeholder.svg'];
+            	} */
                 person.images = person.images ? 
                 		_.castArray(person.images) : 
                 			['images/person_placeholder.svg'];
-                person.imagesources = person.imagesources ? _.castArray(person.imagesources) : [ false ];
                 
+                person.imagesources = person.imagesources ? _.castArray(person.imagesources) : [ false ];
+            	
                 if (person.description) person.description = $sce.trustAsHtml(person.description);
                 if (person.source_paragraph) person.source_paragraph = $sce.trustAsHtml(person.source_paragraph);
                 if (person.lead_paragraph) person.lead_paragraph = $sce.trustAsHtml(person.lead_paragraph);

@@ -18,7 +18,7 @@
 		        	
 		        	$scope.label = data.label;
 		        	
-		        	$scope.link = '#!/henkilo/'+ (data.id).replace(/^.+?(p[0-9]+)$/, '$1');
+		        	$scope.link = '#!/henkilo/'+ (data.id).replace(/^.+?(p[0-9_]+)$/, '$1');
 		        	
 		        	//	check if lifespan contains any numbers
 		        	if ((new RegExp(/\d/)).test(data.lifespan)) {

@@ -121,7 +121,7 @@
         var endpoint = new AdvancedSparqlService(endpointConfig, personMapperService);
         
         function getEvents(id) {
-        	var regex = /^p[0-9]+$/;
+        	var regex = /^p[0-9_]+$/;
         	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
         	
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?pc . ',

@@ -15,7 +15,7 @@
 		        	
 		        	data.forEach(function (person, i) {
 		        		
-				        person.link = { personId: (person.id).replace(/^.+?(p[0-9]+)$/, '$1') };
+				        person.link = { personId: (person.id).replace(/^.+?(p[0-9_]+)$/, '$1') };
 				        
 		        		//	(0800-0900) -> (800-900)
 		        		person.lifespan = person.lifespan.replace(/(\D)0/g, "$1");

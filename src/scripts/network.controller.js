@@ -417,7 +417,7 @@
 
             	document.body.style.cursor = "auto";
             	
-            	$state.go('person.network',{ personId: (this.id()).replace(/^.+?(p[0-9]+)$/, '$1') });
+            	$state.go('person.network',{ personId: (this.id()).replace(/^.+?(p[0-9_]+)$/, '$1') });
             	
 	    	});
             

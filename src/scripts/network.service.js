@@ -187,7 +187,7 @@
         }
         
         function getNodes(id, limit, classes) {
-        	var regex = /^p[0-9]+$/;
+        	var regex = /^p[0-9_]+$/;
         	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
         	
         	var constraint = '<{}>'.replace('{}',id),

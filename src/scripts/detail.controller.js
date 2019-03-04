@@ -31,7 +31,7 @@
         function init() {
         	
         	var id = $stateParams.personId,
-        		regex = /^p[0-9]+$/;
+        		regex = /^p[0-9_]+$/;
         	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
         	
         	nbfService.getPerson(id).then(function(person) {

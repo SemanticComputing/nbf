@@ -8,7 +8,7 @@
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 		        
 		        
-		        $scope.link = { personId: ($scope.url).replace(/^.+?(p[0-9]+)$/, '$1') };
+		        $scope.link = { personId: ($scope.url).replace(/^.+?\/(p[0-9_-]+)$/, '$1') };
 		        $scope.image = false;
 		        $scope.lifespan = '';
 		        
