@@ -5,7 +5,7 @@
 		return {
 			restrict: 	'AE',
 			scope: 		{ url: '@', active: '@' },
-			
+			 
 			controller: ['$scope', 'biographyService', function($scope, biographyService){
 				
 				$scope.loadBio = function () {

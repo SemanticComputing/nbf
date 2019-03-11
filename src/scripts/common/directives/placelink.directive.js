@@ -6,7 +6,7 @@
 		return {
 			restrict: 	'EC',
 			scope: 		{ url: '@' },
-			transclude: true,
+			transclude: true, 
 			controller: ['$scope', 'popoverService', function($scope, popoverService){
 				
 		        var res = $scope.url.match(/yso.fi.+?Y([^/]+)$/);

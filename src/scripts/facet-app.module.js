@@ -36,8 +36,6 @@
         $urlMatcherFactoryProvider.strictMode(false);
     })
 
-
-
     .service('authInterceptor', function ($q, $state) {
         this.responseError = function(response) {
             if (response.status == 401) {
@@ -107,6 +105,22 @@
          	},
             templateUrl: 'views/person/network.html',
             controller: 'PersonNetworkController',
+            controllerAs: 'vm'
+        })
+        .state('person.relatives', {
+            url: '/sukulaiset?coloroption&sizeoption',
+            params: {
+            	coloroption: {
+         	      value: '0',
+         	      squash: true
+         	   },
+         	    sizeoption: {
+         	      value: '0',
+         	      squash: true
+         	   }
+         	},
+            templateUrl: 'views/person/relatives.html',
+            controller: 'PersonRelativeController',
             controllerAs: 'vm'
         })
         .state('person.sentence', {

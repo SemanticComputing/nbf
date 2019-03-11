@@ -44,15 +44,15 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>' +
+        ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
         ' PREFIX dct: <http://purl.org/dc/terms/>' +
-        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
-        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
+        ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
-        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
+        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
+        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
@@ -70,10 +70,9 @@
         '  }' +
         '  FILTER not exists { ?id owl:sameAs [] }' +
         '  ?id skosxl:prefLabel ?plabel . ' +
-        '  	OPTIONAL { ?plabel schema:givenName ?givenName . }' +
-        '  	OPTIONAL { ?plabel schema:familyName ?familyName . }' +
+        '  OPTIONAL { ?plabel schema:familyName ?familyName . }' +
+        '  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
         '' +
-        '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:blf ?blf . }' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
@@ -83,6 +82,7 @@
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
         '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+        '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
         '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
@@ -108,9 +108,7 @@
 
         var detailQuery =
             ' SELECT DISTINCT * WHERE {' +
-            '  { ' +
-            '  <RESULT_SET> ' +
-            '  } ' +
+            '  { <RESULT_SET> } ' +
             '  ?id skosxl:prefLabel ?plabel . ' +
             '  	 OPTIONAL { ?plabel schema:familyName ?familyName . }' +
             '  	 OPTIONAL { ?plabel schema:givenName ?givenName . }' +
@@ -118,8 +116,8 @@
             '  OPTIONAL { ?id nbf:blf ?blf . }' +
             '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
             '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
-            '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
+            '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
@@ -175,14 +173,14 @@
         	'    ( rels:Father 0)' +
         	'    ( rels:Mother 1)' +
         	'    ( rels:Parent 2)' +
-        	'    ( rels:Husband 3)' +
         	'    ( rels:Wife 3)' +
+        	'    ( rels:Husband 3)' +
         	'    ( rels:Spouse 3)' +
-        	'    ( rels:Child 4)' +
         	'    ( rels:Daughter 4)' +
+        	'    ( rels:Child 4)' +
         	'    ( rels:Son 4 ) } ' +
         	'  { ?id bioc:has_family_relation [  ' +
-        	'        bioc:inheres_in ?rel ; ' +
+        	'       bioc:inheres_in ?rel ; ' +
         	'       a ?class ; ' +
         	'        a/skos:prefLabel ?type ] .  ' +
         	'  } UNION ' +

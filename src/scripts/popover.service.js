@@ -25,20 +25,20 @@
 
         var prefixes =
         	' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        	' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+        	' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         	' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         	' PREFIX dct: <http://purl.org/dc/terms/> ' +
         	' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
         	' PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> ' +
         	' PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
-        	' PREFIX nbf: <http://ldf.fi/nbf/> ' +
 	        ' PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
+        	' PREFIX nbf: <http://ldf.fi/nbf/> ' +
 	        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
 	        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
 	        ' PREFIX schema: <http://schema.org/> ' +
-	        ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
 	        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
 	        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+	        ' PREFIX sources:	<http://ldf.fi/nbf/sources/> ' +
 	        ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ' +
 	        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
 	        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ';
@@ -56,8 +56,8 @@
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
         	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
         	'  ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
-        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }' +
         	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
         	'  OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time ?bir . ?bir gvp:estStart ?btime ; skos:prefLabel [] } ' +
         	'  OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time ?dea . ?dea gvp:estStart ?dtime ; skos:prefLabel [] } ' +
@@ -77,7 +77,7 @@
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
         	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
         	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image) ' +
-        	'   ' +
+        	' ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . }    ' +
         	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . }    ' +
         	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label)        ' +
@@ -92,17 +92,17 @@
     	'  <RESULT_SET> ' +
     	'  ?id2 owl:sameAs* ?id . ' +
     	'  FILTER NOT EXISTS {?id owl:sameAs []} ' +
-    	'  ?id foaf:focus ?prs . ' +
+    	'  ?id foaf:focus ?prs .' +
     	'  OPTIONAL { ?prs nbf:image [ schema:image ?image1 ; dct:source ?s ] FILTER ISLITERAL(?s) } ' +
     	'  OPTIONAL { ?prs nbf:image [ schema:image ?image2 ; dct:source sources:source10 ] } ' +
     	'  OPTIONAL { ?prs nbf:image [ schema:image ?image3 ; dct:source/skos:prefLabel ?s ]  } ' +
-    	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image0) ' +
+    	'  BIND (COALESCE(?image1, ?image2, ?image3) AS ?image0)' +
     	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
     	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
     	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
     	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
     	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime } ' +
-    	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-", COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
+    	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-" , COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
     	'} GROUP BY ?id ?label ?lifespan ORDER BY UCASE(?fname) ?gname ';
         
     	var queryForPlacePopover =
@@ -110,9 +110,9 @@
 	    	'  <RESULT_SET> ' +
 	    	'  ?id skos:prefLabel ?label . ' +
 	    	'  FILTER (lang(?label)="fi") ' +
-	    	'  OPTIONAL { ' +
-	    	'    ?id geo:lat ?latitude . ' +
-	    	'    ?id geo:long ?longitude  ' +
+	    	'  OPTIONAL {' +
+	    	'    ?id geo:lat ?latitude .' +
+	    	'    ?id geo:long ?longitude' +
 	    	'  } ' +
 	    	'} LIMIT 1 ';
     	

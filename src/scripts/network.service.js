@@ -17,6 +17,9 @@
         this.getLinks = getLinks;
         this.getNodes = getNodes;
         
+        this.getRelativeLinks = getRelativeLinks;
+        this.getRelativeNodes = getRelativeNodes;
+        
         this.getGroupLinks = getGroupLinks;
         this.getNodesForPeople = getNodesForPeople;
         this.getCloudNodes = getCloudNodes;
@@ -46,16 +49,16 @@
 
         var prefixes =
         	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
-        	'PREFIX nbf: <http://ldf.fi/nbf/> ' +
         	'PREFIX bioc:  <http://ldf.fi/schema/bioc/> ' +
         	'PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
+        	'PREFIX nbf: <http://ldf.fi/nbf/> ' +
         	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+        	'PREFIX schema: <http://schema.org/> ' +
         	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-        	'PREFIX schema: <http://schema.org/> ' +
         	'PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
-        	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
+	    	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
 
         
         //	http://yasgui.org/short/gpKguzg7c
@@ -82,6 +85,44 @@
         	'                   nbf:weight ?w ] ' +
         	'} GROUP BY ?id ?id2 ' +
         	'LIMIT <LIMIT> ';
+        
+        //	http://yasgui.org/short/HQOSbJBKD
+        var queryRelativeLinks = 
+	        	'SELECT DISTINCT ?source ?target ?label WHERE { ' +
+	'  {	SELECT distinct ?bio WHERE { ' +
+	'      {	SELECT distinct ?bio1 WHERE { ' +
+	'          VALUES ?id { <RESULT_SET> } ' +
+	'          ?id nbf:in_bio|^nbf:in_bio ?bio1 ' +
+	'        }} ?bio1 (^nbf:in_bio/nbf:in_bio){,<LIMIT>} ?bio . ' +
+	'    }} ' +
+	'  { ' +
+	'    ?source nbf:in_bio ?bio ; ' +
+	'            a nbf:PersonConcept ; ' +
+	'            bioc:has_family_relation ?rel_uri . ' +
+	'    ?rel_uri  bioc:inheres_in ?target . ' +
+	'  } UNION { ' +
+	'    ?target nbf:in_bio ?bio ; ' +
+	'            a nbf:PersonConcept ; ' +
+	'            ^bioc:inheres_in ?rel_uri. ' +
+	'    ?source bioc:has_family_relation ?rel_uri.  ' +
+	'  } ' +
+	'  VALUES (?rel_class ?order) { ' +
+	'    (rels:Wife 0) ' +
+	'    (rels:Husband 1) ' +
+	'    (rels:Spouse 2) ' +
+	'    (rels:Son 0) ' +
+	'    (rels:Daughter 0) ' +
+	'    (rels:Child 1) ' +
+	'    (rels:Father 2) ' +
+	'    (rels:Mother 2) ' +
+	'    (rels:Parent 3) ' +
+	'  } ' +
+	'  ?rel_uri a ?rel_class . ' +
+	'  ?rel_class skos:prefLabel ?label . ' +
+	'  FILTER(LANG(?label)="fi") ' +
+	'   ' +
+	'} ORDER BY ?order ';
+        
         
         //	example http://yasgui.org/short/y1M2Z_CC5
         var queryLinksOfRelatives =
@@ -129,15 +170,15 @@
         
         var queryNodesForPeople =
         	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
-        	'WHERE { ' +
+        	'WHERE {' +
         	'  VALUES ?id { <RESULT_SET> } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
-        	'  OPTIONAL { ?id__label schema:familyName ?id__fname }  ' +
-        	'  OPTIONAL { ?id__label schema:givenName ?id__gname }  ' +
-        	'  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label) ' +
-        	' ' +
-        	'  ?id foaf:focus ?prs .  ' +
-        	'  OPTIONAL { ?prs nbf:sukupuoli ?gender }  ' +
+        	'  OPTIONAL { ?id__label schema:familyName ?id__fname }' +
+        	'  OPTIONAL { ?id__label schema:givenName ?id__gname }' +
+        	'  BIND (CONCAT(COALESCE(?id__gname,"")," ",COALESCE(?id__fname,"")) AS ?label)' +
+        	'' +
+        	'  ?id foaf:focus ?prs .' +
+        	'  OPTIONAL { ?prs nbf:sukupuoli ?gender } ' +
         	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
         	'}  ' +
         	'GROUP BY ?id ?label ?gender ';
@@ -195,7 +236,25 @@
         			.replace("<LIMIT>", ''+limit)
         			.replace("<CLASSES>", classes);
         	return endpoint.getObjectsNoGrouping(q);
+        } 
+        
+        function getRelativeLinks(ids, limit) {
+        	var q = prefixes + queryRelativeLinks.replace(/RESULT_SET/g, ids)
+        		.replace("<LIMIT>", ''+(limit-1));
+        	return endpoint.getObjectsNoGrouping(q);
         }
+        
+        function getRelativeNodes(id, limit, classes) {
+        	var regex = /^p[0-9_]+$/;
+        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
+        	
+        	var constraint = '<{}>'.replace('{}',id),
+        		q = prefixes + queryNodesForPerson.replace(/<RESULT_SET>/g, constraint)
+        			.replace("<LIMIT>", ''+limit)
+        			.replace("<CLASSES>", classes);
+        	return endpoint.getObjectsNoGrouping(q);
+        }
+        
         
         function getGroupRelatives(facetSelections, limit) {
         	var cons = facetSelections.constraint.join(' '),

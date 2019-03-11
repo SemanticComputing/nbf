@@ -13,13 +13,13 @@
     /*
     * Controller for the results view.
     */
-    .controller('NetworkRelativeController', NetworkRelativeController);
+    .controller('PersonRelativeController', PersonRelativeController);
 
     /* @ngInject */
-    function NetworkRelativeController($scope, $location, $state, $uibModal, _, networkService,
-            FacetHandler, facetUrlStateHandlerService, EVENT_FACET_CHANGED) {
+    function PersonRelativeController($scope, $location, $state, _, $stateParams, networkService,
+            FacetHandler) {
 
-    	var vm = this;
+        var vm = this;
         vm.cy = null;
         vm.elems = {};
         vm.message = "";
@@ -28,34 +28,31 @@
         vm.loading = false;
         vm.showlegend = false;
         
-        vm.showWindow = function() {
-        	vm.window.show = true;
-        }
-        vm.closeWindow = function() {
-        	vm.window.show = false;
-        }
+        //	popover not used above the canvas element
+        vm.popover = false;
+		vm.popx = '200px';
+		vm.popy = '200py';
+		
         
-        vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618',
+        vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
     		'#990099', '#3B3EAC', '#0099C6', '#DD4477',
     		'#66AA00', '#B82E2E', '#316395', '#994499',
     		'#22AA99', '#AAAA11', '#6633CC', '#E67300',
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
-        vm.LIMITOPTIONS = [{value:10, label:'10'},
-        	{value:20, label:'20'},
-        	{value:50, label:'50'},
-        	{value:100, label:'100'},
-        	{value:200, label:'200'},
-        	{value:500, label:'500'},
-        	{value:1000, label:'1000'},
-        	{value:1e6, label:'ei rajaa'}];
-        vm.searchlimit = vm.LIMITOPTIONS[3];
+        vm.LIMITOPTIONS = [{value:1, label:'1'},
+        	{value:2, label:'2'},
+        	{value:3, label:'3'},
+        	{value:5, label:'4'},
+        	{value:6, label:'5'}
+        	];
+        vm.searchlimit = vm.LIMITOPTIONS[1];
+        
         
         vm.changelimit = function() {
         	$location.search('limit',vm.searchlimit.value);
         	fetchResults({ constraint: vm.previousSelections });
         };
-        
         
         vm.CLASSTYPES = [
         	{type:"0", check: true, value:"nbf:ManualAnnotation", 
@@ -81,7 +78,7 @@
         
         vm.SIZEOPTIONS = [
         	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
-        	// {value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
+        	{value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
         	{value:'Asteluku', tooltip:'Asteluku (degree) tarkoittaa henkilöstä lähtevien ja saapuvien linkkien kokonaismäärää.'},
         	{value:'Tuloaste', tooltip:'Tuloaste (indegree) tarkoittaa henkilöön saapuvien linkkien lukumäärää.'},
         	{value:'Lähtöaste', tooltip:'Lähtöaste (outdegree) tarkoittaa henkilöstä lähtevien linkkien lukumäärää.'},
@@ -99,18 +96,36 @@
         	var str = '20 px';
         	
         	switch(vm.sizeoption) {
-        		
 	            case vm.SIZEOPTIONS[1]:
+	            	//	DIJKSTRA
+	            	var root = vm.cy.getElementById(vm.id);
+	            	
+	            	var dj = vm.cy.elements().dijkstra( {root:root} );
+	            	
+	            	vm.elems.nodes.forEach(function (n) {
+	            		var node = vm.cy.getElementById(n.data.id),
+	            			d = -dj.distanceTo(node);
+	            		n.data.dijkstra = d==-Infinity ? -6 : d;
+	            	});
+	            	
+	            	numeric2Size(vm.elems, 'dijkstra', 'size', 0.3, 1.0);
+	            	
+	            	vm.elems.nodes.forEach(function(ob) {
+	            		ob.data.size = 50*ob.data.size*ob.data.size; });
+	            	
+	            	str = 'data(size)';
+	            	break;
+	            case vm.SIZEOPTIONS[2]:
 	            	//	DEGREE
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
 	            		n.data.degree = node.degree();
 	            	});
-	            	
+
             		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            case vm.SIZEOPTIONS[2]:
+	            case vm.SIZEOPTIONS[3]:
 	            	//	INDEGREE
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
@@ -120,7 +135,7 @@
             		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            case vm.SIZEOPTIONS[3]:
+	            case vm.SIZEOPTIONS[4]:
 	            	//	OUTDEGREE
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
@@ -130,7 +145,7 @@
             		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            case vm.SIZEOPTIONS[4]:
+	            case vm.SIZEOPTIONS[5]:
 	            	//	PAGERANK
 	            	var pr = vm.cy.elements().pageRank();
 		            vm.elems.nodes.forEach(function (n) {
@@ -141,7 +156,7 @@
             		numeric2Size(vm.elems, 'pagerank', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            default:
+	            default: 
 	                break;
 	            
 	        }
@@ -151,17 +166,15 @@
       	    		.style("height", str)
             		.style("width", str)
             	.update();
-        	
         };
         
         vm.COLOROPTIONS = [
         	{value:'Vakio', tooltip:'Tästä voit valita miten solmun väri määräytyy'},
         	{value:'Sukupuoli', tooltip:'Henkilöt väritetään sukupuolen mukaan.'},
-        	{value:'Toimiala', tooltip:'Henkilöt väritetään tietokannassa ilmoitetun toimialan mukaan.'}
-        	//, {value:'Etäisyys', tooltip:'Solmujen väri määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'}
-        	];
+        	{value:'Toimiala', tooltip:'Henkilöt väritetään tietokannassa ilmoitetun toimialan mukaan.'},
+        	{value:'Etäisyys', tooltip:'Solmujen väri määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'}];
         
-        vm.coloroption = vm.COLOROPTIONS[0];
+        vm.coloroption = vm.COLOROPTIONS[3];
         
         vm.changecolor = function() {
         	var i = vm.COLOROPTIONS.indexOf(vm.coloroption);
@@ -191,8 +204,9 @@
 	            	//	DIJKSTRA
 	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
 	            	vm.elems.nodes.forEach(function (n) {
-	            		var node = vm.cy.getElementById(n.data.id);
-	            		n.data.dijkstra = dj.distanceTo(node);
+	            		var node = vm.cy.getElementById(n.data.id),
+	            			d = -dj.distanceTo(node);
+	            		n.data.dijkstra = d==-Infinity ? -6 : d;
 	            	});
 	            	category2Color(vm.elems, 'dijkstra', 'color');
 	            	str = 'data(color)';
@@ -210,7 +224,7 @@
             	.update();
         };
         
-//    	set url parameters:
+        //	set url parameters:
         var lc = $location.search();
         
         if (lc.limit) {
@@ -220,92 +234,48 @@
         	});
         }
 
-        if (lc.coloroption) {
+        if (lc.hasOwnProperty('coloroption')) {
         	vm.coloroption = vm.COLOROPTIONS[parseInt(lc.coloroption)];
         }
         
-        if (lc.sizeoption) {
+        if (lc.hasOwnProperty('sizeoption')) {
         	vm.sizeoption = vm.SIZEOPTIONS[parseInt(lc.sizeoption)];
         }
         
-        vm.isScrollDisabled = isScrollDisabled;
-        vm.removeFacetSelections = removeFacetSelections;
-        vm.getSortClass = networkService.getSortClass;
         
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-            updateResults(event, config);
+        	fetchResults(event, config);
             initListener();
         });
         
-        $scope.$on('sf-facet-constraints', updateResults);
-
-        networkService.getFacets().then(function(facets) {
-        	vm.facets = facets;
-            vm.facetOptions = getFacetOptions();
-            vm.facetOptions.scope = $scope;
-            vm.handler = new FacetHandler(vm.facetOptions);
-        });
-
-        function removeFacetSelections() {
-            $state.reload();
-        }
-
-        function openPage(person) {
-            $uibModal.open({
-                component: 'registerPageModal',
-                size: 'lg',
-                resolve: {
-                    person: function() { return person; }
-                }
-            });
-        }
-
-        function getFacetOptions() {
-            var options = networkService.getFacetOptions();
-            options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
-            return options;
-        }
-
-        function isScrollDisabled() {
-            return vm.isLoadingResults || nextPageNo > maxPage;
-        }
-
-        function sortBy(sortBy) {
-        	networkService.updateSortBy(sortBy);
-            return fetchResults({ constraint: vm.previousSelections });
-        }
-
-        function updateResults(event, facetSelections) {
-            if (vm.previousSelections && _.isEqual(facetSelections.constraint,
-                    vm.previousSelections)) {
-                return;
-            }
-            vm.previousSelections = _.clone(facetSelections.constraint);
-            facetUrlStateHandlerService.updateUrlParams(facetSelections);
-            return fetchResults(facetSelections);
-        }
-
+        $scope.$on('sf-facet-constraints', fetchResults);
+        
+        vm.handler = new FacetHandler({scope : $scope});
+        
+        
         var latestUpdate;
-        function fetchResults(facetSelections) {
+        function fetchResults() {
             
             vm.error = undefined;
+            vm.loading = true;
+            
             if (vm.cy) {
             	vm.cy.elements().remove();
             }
             
-            vm.cy = null;
-            vm.message = "";
-            vm.loading = true;
-            
-            var updateId = _.uniqueId();
-            latestUpdate = updateId;
+            vm.message = '';
+            vm.messagecolor = 'blue';
             
             var linkclasses = "";
-            if (vm.CLASSTYPES[0].check) linkclasses +=  vm.CLASSTYPES[0].value + ' ';
-            if (vm.CLASSTYPES[1].check) linkclasses +=  vm.CLASSTYPES[1].value + ' ';
+            // if (vm.CLASSTYPES[0].check) linkclasses +=  vm.CLASSTYPES[0].value + ' ';
+            // if (vm.CLASSTYPES[1].check) linkclasses +=  vm.CLASSTYPES[1].value + ' ';
+            
+            vm.cy = null;
+            vm.id = $stateParams.personId;
+            
             
             //	Search links first
-            return networkService.getGroupRelatives(facetSelections, vm.searchlimit.value)
+            return networkService.getRelativeLinks('http://ldf.fi/nbf/'+vm.id, vm.searchlimit.value)
             .then(function(edges) {
             	
             	if (edges.length<1) {
@@ -315,25 +285,41 @@
                 	return;
             	}
             	
-            	// limit edge thicknesses
+            	edges.map(function(ob) { 
+            		ob.source = ob.source.replace('http://ldf.fi/nbf/','') ;
+            		ob.target = ob.target.replace('http://ldf.fi/nbf/','') }
+            		);
+            	
+            	//	remove double edges
+            	var check = {}, new_edges=[];
             	edges.forEach(function(ob) {
-            		ob.weight = 1;
+            		
+            		if (!check[ob.source+'-'+ob.target]) {
+            			new_edges.push(ob);
+            			check[ob.target+'-'+ob.source] = true;
+            			check[ob.source+'-'+ob.target] = true;
+            		}
             	});
+            	edges = new_edges;
             	
             	vm.elems.edges = edges.map(function(ob) { return { data: ob }});
-            
+            	
             	var dct = {}, ids = "";
             	edges.forEach(function(ob) { 
-            		dct[ob.source.replace('http://ldf.fi/nbf/','nbf:')] = true; 
-            		dct[ob.target.replace('http://ldf.fi/nbf/','nbf:')] = true; });
+            		dct['nbf:'+ob.source] = true; 
+            		dct['nbf:'+ob.target] = true; });
             	
             	for (let id in dct) { ids += id + ' ';}
             	
             	return networkService.getNodesForPeople(ids)
                 .then(function(res) {
-
+					
+					res.forEach(function(ob) {
+						ob.id = ob.id.replace("http://ldf.fi/nbf/","");
+						if (ob.id==vm.id) vm.label=ob.label; 
+						});
+					
                 	vm.elems.nodes = res.map(function(ob) { return {data: ob};});
-                	
                 	processData(vm);
                 	
                 	vm.loading = false;
@@ -350,7 +336,7 @@
                 }).catch(handleError);
             	
             }).catch(handleError);
-             
+            
         }
 
         function handleError(error) {
@@ -358,7 +344,9 @@
             vm.error = error;
         }
         
+        
         function processData(vm) {
+        	
     		var style = [
     	        {
     	            selector: 'node',
@@ -366,11 +354,12 @@
     	                "shape": 'ellipse',
 	    				"height": '20',
 	    	      		"width": '20',
+	    	      		'font-size': 16,
 		    			"text-valign": "center",
 		    			"text-halign": "right",
 		    			"content": 'data(label)',
 		    			'background-color': vm.COLORS[0],
-                        'color': '#888'
+                        'color': '#444'
     	            }
     	        },
                 {
@@ -383,41 +372,53 @@
     	        {
     	            selector: 'edge',
     	            style: {
-    	            	'width': 'data(weight)',
+    	            	'width': '1',
+    	            	'content': 'data(label)',
     	                'line-color': '#999',
     	                'curve-style': 'bezier',
-    	                'content': 'data(label)',
     	        		'target-arrow-shape': 'triangle',
     	        		'target-arrow-color': '#999',
-    	        		'color': '#555',
-    	        		'font-size': '9',
-    	        		"text-valign": "top",
-    	        		"text-halign": "center",
-    	        		'edge-text-rotation': 'autorotate',
-    	        		"text-background-opacity": 1,
-    	        		"text-background-color": "#FFF",
-    	        		"text-background-shape": "roundrectangle"
+    	        		'font-size': 12,
+    	        		'text-rotation': 'autorotate',
+    	        		'color': '#888'
     	            }
     	        }
     	        ];
     		
+    		var layout = {
+        		name: 'cose',
+        		idealEdgeLength: 100,
+        		nodeOverlap: 20,
+        		refresh: 20,
+        		fit: true,
+        		padding: 30,
+        		randomize: false,
+        		componentSpacing: 100,
+        		nodeRepulsion: 400000,
+        		edgeElasticity: 100,
+        		nestingFactor: 5,
+        		gravity: 80,
+        		numIter: 800,
+        		initialTemp: 200,
+        		coolingFactor: 0.95,
+        		minTemp: 1.0
+	        };
             vm.cy = cytoscape({
                 container: document.getElementById('networkcontainer'),
                 elements: vm.elems,
                 wheelSensitivity: 0.2,
-	        	layout: {
-	        		name: 'circle'
-	        	}, 
+	        	layout: layout,
 	        	style: style
 	            });
             
             vm.cy.on('click', 'node', function(evt){
-
+            	
             	document.body.style.cursor = "auto";
             	
-            	$state.go('person.network',{ personId: (this.id()).replace(/^.+?(p[0-9_]+)$/, '$1') });
+            	$state.go('person.relatives',{ personId: (this.id()).replace(/^.+?(p[0-9_]+)$/, '$1') });
             	
 	    	});
+            
             
             vm.cy.on('mouseover', 'node', function(evt){
             	document.body.style.cursor = "pointer";
@@ -426,10 +427,10 @@
             vm.cy.on('mouseout', 'node', function(evt){
             	document.body.style.cursor = "auto";
         	});
-            
+        	
             vm.changecolor();
             vm.changesize();
-            
+            /**
             vm.cy.layout({
         		name: 'cose',
         		idealEdgeLength: 100,
@@ -448,12 +449,33 @@
         		coolingFactor: 0.95,
         		minTemp: 1.0
 	        }).run();
-            
+	        */
+            /**
+            vm.cy.layout({
+        		name: 'breadthfirst',
+        		roots: [ vm.cy.getElementById(vm.id) ],
+        		idealEdgeLength: 100,
+        		nodeOverlap: 20,
+        		refresh: 20,
+        		fit: true,
+        		padding: 30,
+        		randomize: false,
+        		componentSpacing: 100,
+        		nodeRepulsion: 400000,
+        		edgeElasticity: 100,
+        		nestingFactor: 5,
+        		gravity: 80,
+        		numIter: 800,
+        		initialTemp: 200,
+        		coolingFactor: 0.95,
+        		minTemp: 1.0
+	        }).run();
+            */
             if (vm.cy.panzoom) {
             	vm.cy.panzoom({}); 
             };
             
-        };
+        }
         
         var category2Color = function (elems, prop, newprop) {
     		var dct = {};
@@ -516,6 +538,6 @@
     		});
 
     	};
-    	
+        
     }
 })();
