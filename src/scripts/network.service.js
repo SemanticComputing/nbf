@@ -86,22 +86,22 @@
         	'} GROUP BY ?id ?id2 ' +
         	'LIMIT <LIMIT> ';
         
-        //	http://yasgui.org/short/HQOSbJBKD
+        //	http://yasgui.org/short/W-DqUCxCO
         var queryRelativeLinks = 
 	        	'SELECT DISTINCT ?source ?target ?label WHERE { ' +
 	'  {	SELECT distinct ?bio WHERE { ' +
 	'      {	SELECT distinct ?bio1 WHERE { ' +
 	'          VALUES ?id { <RESULT_SET> } ' +
-	'          ?id nbf:in_bio|^nbf:in_bio ?bio1 ' +
+	'          ?id (nbf:in_bio)?|^nbf:in_bio ?bio1 ' +
 	'        }} ?bio1 (^nbf:in_bio/nbf:in_bio){,<LIMIT>} ?bio . ' +
 	'    }} ' +
 	'  { ' +
-	'    ?source nbf:in_bio ?bio ; ' +
+	'    ?source nbf:in_bio? ?bio ; ' +
 	'            a nbf:PersonConcept ; ' +
 	'            bioc:has_family_relation ?rel_uri . ' +
 	'    ?rel_uri  bioc:inheres_in ?target . ' +
 	'  } UNION { ' +
-	'    ?target nbf:in_bio ?bio ; ' +
+	'    ?target nbf:in_bio? ?bio ; ' +
 	'            a nbf:PersonConcept ; ' +
 	'            ^bioc:inheres_in ?rel_uri. ' +
 	'    ?source bioc:has_family_relation ?rel_uri.  ' +
@@ -169,7 +169,7 @@
         	'ORDER BY ?level LIMIT <LIMIT> ';
         
         var queryNodesForPeople =
-        	'SELECT distinct ?id ?label ?gender (sample(?cats) AS ?category)  ' +
+        	'SELECT distinct ?id ?label ?gender ?hasbio (sample(?cats) AS ?category)  ' +
         	'WHERE {' +
         	'  VALUES ?id { <RESULT_SET> } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
@@ -180,8 +180,10 @@
         	'  ?id foaf:focus ?prs .' +
         	'  OPTIONAL { ?prs nbf:sukupuoli ?gender } ' +
         	'  OPTIONAL { ?prs nbf:has_category/skos:prefLabel ?cats } ' +
+        	'  OPTIONAL { ?prs nbf:has_biography ?bio }' +
+        	'  BIND (IF(BOUND(?bio),True,False) AS ?hasbio )' +
         	'}  ' +
-        	'GROUP BY ?id ?label ?gender ';
+        	'GROUP BY ?id ?label ?gender ?hasbio ';
         
         var queryCloudForGroup =
         	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +

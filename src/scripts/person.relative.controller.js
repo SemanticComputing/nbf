@@ -54,6 +54,7 @@
         	fetchResults({ constraint: vm.previousSelections });
         };
         
+        /*
         vm.CLASSTYPES = [
         	{type:"0", check: true, value:"nbf:ManualAnnotation", 
         		label: "Aineistoon käsin kirjatut linkit", tooltip: "Verkostossa näytetään käsin kirjatut linkit"}, 
@@ -75,10 +76,12 @@
         	
         	fetchResults({ constraint: vm.previousSelections });
         }; 
+        */
         
         vm.SIZEOPTIONS = [
         	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
         	{value:'Etäisyys', tooltip:'Solmujen koko määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'},
+        	{value:'Biografia', tooltip:'Biografialliset henkilöt näytetään isompina kuin tekstissä mainitut sukulaiset.'},
         	{value:'Asteluku', tooltip:'Asteluku (degree) tarkoittaa henkilöstä lähtevien ja saapuvien linkkien kokonaismäärää.'},
         	{value:'Tuloaste', tooltip:'Tuloaste (indegree) tarkoittaa henkilöön saapuvien linkkien lukumäärää.'},
         	{value:'Lähtöaste', tooltip:'Lähtöaste (outdegree) tarkoittaa henkilöstä lähtevien linkkien lukumäärää.'},
@@ -115,7 +118,19 @@
 	            	
 	            	str = 'data(size)';
 	            	break;
+	            	
 	            case vm.SIZEOPTIONS[2]:
+	            	//	BIOGRAPHY
+	            	vm.elems.nodes.forEach(function (n) {
+	            		var node = vm.cy.getElementById(n.data.id);
+	            		n.data.degree = (n.data.hasbio=="sukulainen") ? 1 : 2;
+	            	});
+	            	
+            		numeric2Size(vm.elems, 'degree', 'size', 20, 50);
+            		str = 'data(size)';
+	                break;
+	                
+	            case vm.SIZEOPTIONS[3]:
 	            	//	DEGREE
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
@@ -125,7 +140,8 @@
             		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            case vm.SIZEOPTIONS[3]:
+	                
+	            case vm.SIZEOPTIONS[4]:
 	            	//	INDEGREE
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
@@ -135,7 +151,7 @@
             		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            case vm.SIZEOPTIONS[4]:
+	            case vm.SIZEOPTIONS[5]:
 	            	//	OUTDEGREE
 	            	vm.elems.nodes.forEach(function (n) {
 	            		var node = vm.cy.getElementById(n.data.id);
@@ -145,7 +161,7 @@
             		numeric2Size(vm.elems, 'degree', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
-	            case vm.SIZEOPTIONS[5]:
+	            case vm.SIZEOPTIONS[6]:
 	            	//	PAGERANK
 	            	var pr = vm.cy.elements().pageRank();
 		            vm.elems.nodes.forEach(function (n) {
@@ -156,6 +172,7 @@
             		numeric2Size(vm.elems, 'pagerank', 'size', 10, 50);
             		str = 'data(size)';
 	                break;
+	            
 	            default: 
 	                break;
 	            
@@ -172,6 +189,7 @@
         	{value:'Vakio', tooltip:'Tästä voit valita miten solmun väri määräytyy'},
         	{value:'Sukupuoli', tooltip:'Henkilöt väritetään sukupuolen mukaan.'},
         	{value:'Toimiala', tooltip:'Henkilöt väritetään tietokannassa ilmoitetun toimialan mukaan.'},
+        	{value:'Biografia', tooltip:'Biografialliset henkilöt väritetään eri tavalla kuin teksteistä poimitut sukulaiset.'},
         	{value:'Etäisyys', tooltip:'Solmujen väri määräytyy keskushenkilöön johtavan linkkipolun etäisyyden perusteella.'}];
         
         vm.coloroption = vm.COLOROPTIONS[3];
@@ -201,6 +219,13 @@
             		break;
             		
 	            case vm.COLOROPTIONS[3]:
+	            	//	BIOGRAPHY
+	            	category2Color(vm.elems, "hasbio", "color");
+            		str = 'data(color)';
+            		vm.showlegend = true;
+            		break;
+            		
+	            case vm.COLOROPTIONS[4]:
 	            	//	DIJKSTRA
 	            	var dj = vm.cy.elements().dijkstra( {root:vm.cy.getElementById(vm.id)} );
 	            	vm.elems.nodes.forEach(function (n) {
@@ -266,7 +291,7 @@
             vm.message = '';
             vm.messagecolor = 'blue';
             
-            var linkclasses = "";
+            // var linkclasses = "";
             // if (vm.CLASSTYPES[0].check) linkclasses +=  vm.CLASSTYPES[0].value + ' ';
             // if (vm.CLASSTYPES[1].check) linkclasses +=  vm.CLASSTYPES[1].value + ' ';
             
@@ -317,10 +342,11 @@
 					res.forEach(function(ob) {
 						ob.id = ob.id.replace("http://ldf.fi/nbf/","");
 						if (ob.id==vm.id) vm.label=ob.label; 
+						ob.hasbio = (ob.hasbio=="true") ? "biografiallinen henkilö" : "sukulainen" ;
 						});
 					
                 	vm.elems.nodes = res.map(function(ob) { return {data: ob};});
-                	processData(vm);
+                	initGraph(vm);
                 	
                 	vm.loading = false;
                 	
@@ -345,7 +371,7 @@
         }
         
         
-        function processData(vm) {
+        function initGraph(vm) {
         	
     		var style = [
     	        {
@@ -377,10 +403,11 @@
     	                'line-color': '#999',
     	                'curve-style': 'bezier',
     	        		'target-arrow-shape': 'triangle',
-    	        		'target-arrow-color': '#999',
+    	        		'target-arrow-color': '#AAA',
     	        		'font-size': 12,
+    	        		'text-margin-y': -12,
     	        		'text-rotation': 'autorotate',
-    	        		'color': '#888'
+    	        		'color': '#777'
     	            }
     	        }
     	        ];
