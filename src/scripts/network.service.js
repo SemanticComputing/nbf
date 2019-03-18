@@ -58,6 +58,8 @@
         	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         	'PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
+        	'PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
+        	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
 	    	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
 
         
@@ -97,15 +99,15 @@
 	'    }} ' +
 	'  { ' +
 	'    ?source nbf:in_bio? ?bio ; ' +
-	'            a nbf:PersonConcept ; ' +
 	'            bioc:has_family_relation ?rel_uri . ' +
 	'    ?rel_uri  bioc:inheres_in ?target . ' +
 	'  } UNION { ' +
-	'    ?target nbf:in_bio? ?bio ; ' +
-	'            a nbf:PersonConcept ; ' +
+	'    ?target nbf:in_bio? ?bio ; '  +
 	'            ^bioc:inheres_in ?rel_uri. ' +
 	'    ?source bioc:has_family_relation ?rel_uri.  ' +
 	'  } ' +
+	'  ?source a nbf:PersonConcept ; skosxl:prefLabel []. ' +
+	'  ?target a nbf:PersonConcept ; skosxl:prefLabel []. ' +
 	'  VALUES (?rel_class ?order) { ' +
 	'    (rels:Wife 0) ' +
 	'    (rels:Husband 1) ' +
@@ -168,8 +170,9 @@
         	'GROUP BY ?level ?id ?label ?gender ' +
         	'ORDER BY ?level LIMIT <LIMIT> ';
         
+        //	http://yasgui.org/short/AIEN5IruP
         var queryNodesForPeople =
-        	'SELECT distinct ?id ?label ?gender ?hasbio (sample(?cats) AS ?category)  ' +
+        	'SELECT distinct ?id ?label ?gender ?hasbio (sample(?cats) AS ?category) ' +
         	'WHERE {' +
         	'  VALUES ?id { <RESULT_SET> } ' +
         	'  ?id skosxl:prefLabel ?id__label . ' +
@@ -282,7 +285,6 @@
         function getNodesForPeople(ids) {
         	var q = prefixes + queryNodesForPeople
         			.replace(/<RESULT_SET>/g, ids);
-
         	return endpoint.getObjectsNoGrouping(q);
         }
         

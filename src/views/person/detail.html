@@ -198,6 +198,20 @@
       </div> 
     </div>
     
+    <div class="col-md-4 text-left well nbfwell" ng-if="vm.person.secondrelative && vm.person.secondrelative.length">
+      <div class="relativeblock">
+	      <h3>Muut sukulaiset</h3>
+	      <span class="glyphicon glyphicon-info-sign"
+				uib-tooltip="Tässä näytetään aineistosta muita sukulaisia, kuten isovanhemmat, vanhempien sisarukset, sisarukset ja näiden lapset, lastenlapset sekä aviosukulaiset.
+				Sukulaisista näytetään vain ne, joilla on biografiakuvaus. 
+				Aineisto on päätelty laskennallisesti materiaalissa, joten siinä saattaa esiintyä virheitä.">
+		  </span>
+	  </div>
+      <div class="col-sm-6" ng-repeat="relative in vm.person.secondrelative">
+      	{{ relative.type }} <personlink url="{{ relative.id2 }}">{{ relative.name }}</personlink>
+      </div> 
+    </div>
+    
     <div class="col-md-4 text-left well nbfwell" ng-if="vm.similar">
     	<div class="relativeblock">
     		<h3>Samankaltaisia biografioita</h3>

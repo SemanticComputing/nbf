@@ -14,6 +14,7 @@
 		        $scope.lifespan = '';
 		        
 		        popoverService.getPopover($scope.url).then(function(data) {
+		        	if (!data) return;
 		        	if (data.length) data = data[0];
 		        	
 		        	$scope.label = data.label; 

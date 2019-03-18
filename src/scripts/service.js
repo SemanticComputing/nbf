@@ -35,6 +35,7 @@
         this.getByReferences = getByReferences;
         this.getPerson = getPerson;
         this.getRelatives = getRelatives;
+        this.getSecondRelatives = getSecondRelatives;
         this.getSimilar = getSimilar;
         
         //	init login
@@ -44,20 +45,20 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>' +
         ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
+        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>' +
         ' PREFIX dct: <http://purl.org/dc/terms/>' +
-        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
-        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
+        ' PREFIX nbf: <http://ldf.fi/nbf/>' +
+        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
-        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
-        ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
-        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
+        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
+        ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
@@ -197,7 +198,55 @@
         	'  OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
         	'  BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?name2)  ' +
         	'  OPTIONAL { ?relative__id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
-        	'} GROUP BY ?type ?relative__id ORDER BY ?order ?btime ';
+        	'} GROUP BY ?order ?type ?relative__id ORDER BY ?order ?btime ';
+        
+        //	http://yasgui.org/short/DZ82Sid3_
+        var secondRelativeQuery = 
+        	'SELECT DISTINCT ?type (?relative__id AS ?id2) (SAMPLE(?name2) AS ?name) ?order ' +
+			'  WHERE { <RESULT_SET> ' +
+			'  VALUES (?class ?order) { ' +
+			'    (rels:GreatGrandmother 1) ' +
+			'    (rels:GreatGrandfather 1) ' +
+			'    (rels:GrandMother 2) ' +
+			'    (rels:GrandFather 2) ' +
+			'    (rels:Uncle 3) ' +
+			'    (rels:Aunt 3) ' +
+			'    (rels:MothersBrother 3) ' +
+			'    (rels:MotherInLaw 4) ' +
+			'    (rels:FatherInLaw 4) ' +
+			'    (rels:Sister 5) ' +
+			'    (rels:Brother 5) ' +
+			'    (rels:Cousin 6) ' +
+			'    (rels:SecondCousin 6) ' +
+			'    (rels:SisterInLaw 7) ' +
+			'    (rels:BrotherInLaw 7) ' +
+			'    (rels:BrothersSon 8) ' +
+			'    (rels:SistersSon 8) ' +
+			'    (rels:BrothersDaughter 8) ' +
+			'    (rels:SistersDaughter 8) ' +
+			'    (rels:SonInLaw 9) ' +
+			'    (rels:DaughterInLaw 9) ' +
+			'    (rels:Grandchild 10) ' +
+			'    (rels:GreatGrandchild 11) ' +
+			'	 } ' +
+			'  { ?id bioc:has_family_relation [ ' +
+			'        bioc:inheres_in ?rel ; ' +
+			'        a ?class ; ' +
+			'        a/skos:prefLabel ?type ] . ' +
+			'  } UNION ' +
+			'  { ?rel bioc:has_family_relation [ ' +
+			'        bioc:inheres_in ?id ; ' +
+			'        a ?class ; ' +
+			'        bioc:inverse_role/skos:prefLabel ?type ] . ' +
+			'  } ' +
+			'  FILTER (LANG(?type)="fi") ' +
+			'  ?rel owl:sameAs* ?relative__id . ' +
+			'  FILTER NOT EXISTS { ?relative__id owl:sameAs [] } ' +
+			'  ?relative__id skosxl:prefLabel ?relative__label . ' +
+			'  OPTIONAL { ?relative__label schema:familyName ?relative__familyName } ' +
+			'  OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
+			'  BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?name2) ' +
+			'} GROUP BY ?order ?type ?relative__id ORDER BY ?order ';
         
         var bioQuery =
             'SELECT DISTINCT * WHERE {' +
@@ -341,9 +390,14 @@
         }
 
         function getRelatives(id) {
-        	var qry = prefixes + relativeQuery;
+        	var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
+            var qry = prefixes + relativeQuery.replace('<RESULT_SET>', constraint);
+            return endpoint.getObjectsNoGrouping(qry);
+        }
+        
+        function getSecondRelatives(id) {
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
-            qry = qry.replace('<RESULT_SET>', constraint);
+            var qry = prefixes + secondRelativeQuery.replace('<RESULT_SET>', constraint);
             return endpoint.getObjectsNoGrouping(qry);
         }
         

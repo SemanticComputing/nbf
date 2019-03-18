@@ -79,6 +79,10 @@
                 	if (data.length && data[0].people) vm.referenced = {people: data[0].people, count: data[0].count};
                 });
                 
+                nbfService.getSecondRelatives(id).then(function(data) {
+                	if (data.length) vm.person.secondrelative = data;
+                });
+                
                 return person;
                 
             }).catch(handleError);
