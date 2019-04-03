@@ -81,10 +81,11 @@
         	'WHERE { ' +
         	'  VALUES ?type { <CLASSES> } ' +
         	'  { <RESULT_SET> }' +
-			'  { <RESULT_SET2> }' +
         	'  ?id nbf:refers [ nbf:target ?id2 ; ' +
         	'                   nbf:type ?type ; ' +
-        	'                   nbf:weight ?w ] ' +
+        	'                   nbf:weight ?w ] . ' +
+			'  { <RESULT_SET2> } ' +
+			//' ?id2 a nbf:PersonConcept . ' +
         	'} GROUP BY ?id ?id2 ' +
         	'LIMIT <LIMIT> ';
         
@@ -270,10 +271,9 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        
         function getGroupLinks(facetSelections, limit, classes) {
         	var cons = facetSelections.constraint.join(' '),
-        		cons2 = cons.replace('?id ','?id2 '),
+        		cons2 = cons.replace(/\?(id|ordinal) /g,'?$12 ').replace(/(\?slider_\d)/g,'$1b'),
         		q = prefixes + queryLinksForGroup
         			.replace(/<RESULT_SET>/g, cons)
         			.replace(/<RESULT_SET2>/g, cons2)
