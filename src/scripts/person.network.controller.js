@@ -100,7 +100,7 @@
         	switch(vm.sizeoption) {
 	            case vm.SIZEOPTIONS[1]:
 	            	//	DIJKSTRA
-	            	var root = vm.cy.getElementById('http://ldf.fi/nbf/'+vm.id);
+	            	var root = vm.cy.getElementById(vm.id);
 	            	
 	            	var dj = vm.cy.elements().dijkstra( {root:root} );
 	            	vm.elems.nodes.forEach(function (n) {
@@ -267,51 +267,83 @@
             
             vm.cy = null;
             vm.personId = $stateParams.personId;
-            return networkService.getNodes($stateParams.personId, vm.searchlimit.value, linkclasses)
-            .then(function(res) {
-            	
-            	if (res.length<2) {
-            		vm.loading = false;
-                	vm.message = "Henkilölle ei löydy näytettävää verkostoa.";
-                	vm.messagecolor = 'red';
-                	return;
-            	}
-            	
-            	vm.elems.nodes = res.map(function(ob) { return { data: ob }});
-            	
-            	var ids = res.map(function(ob) { return ob.id.replace('http://ldf.fi/nbf/','nbf:'); }).join(' ');
-            	
-            	vm.label = res[0].label;
-            	vm.id = $stateParams.personId;
-            	
-            	return networkService.getLinks(ids, linkclasses)
-                .then(function(edges) {
-                	
-                	//	limit edge thicknesses
-                	edges.forEach(function(ob) {
-                		let w = parseInt(ob.weight);
-                		ob.weight = w>5 ? 5 : w;
-                	});
-                	
-                	vm.elems.edges = edges.map(function(ob) { return {data: ob};});
-                	
-                	processData(vm);
-                	
-                	vm.loading = false;
-                	
-                	if (vm.elems.edges.length==vm.searchlimit.value) {
-                		vm.message = "Näytetään {} ensimmäistä linkkiä ja {2} henkilöä"
-                			.replace('{}', vm.searchlimit.value)
-                			.replace('{2}', vm.elems.nodes.length);
-                	} else {
-                		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
-                			.replace('{}', vm.elems.edges.length)
-                			.replace('{2}', vm.elems.nodes.length);
-                	}
-                }).catch(handleError);
-            	
-            }).catch(handleError);
             
+            return networkService.getNeighbors($stateParams.personId, vm.searchlimit.value)
+                .then(function(res) {
+                	
+	                if (res.length<2) {
+	            		vm.loading = false;
+	                	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
+	                	vm.messagecolor = 'red';
+	                	return;
+	            	}
+	            	
+					let ids = "";
+	            	res.forEach(function(ob) {
+	            		ids += ob.id.replace("http://ldf.fi/nbf/","nbf:") +" ";
+	            		});
+	            	
+				return networkService.getLinks(ids, linkclasses)
+	            .then(function(edges) {
+	            	
+	            	if (edges.length<1) {
+	            		vm.loading = false;
+	                	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
+	                	vm.messagecolor = 'red';
+	                	return;
+	            	}
+	            	
+	            	edges.forEach(function(ob) { 
+	            		ob.source = ob.source.replace('http://ldf.fi/nbf/','') ;
+	            		ob.target = ob.target.replace('http://ldf.fi/nbf/','') }
+	            		);
+	            	
+	            	vm.elems.edges = edges.map(function(ob) { return { data: ob }});
+	            	
+	            	let dct = {}, ids = "";
+	            	edges.forEach(function(ob) { 
+	            		dct['nbf:'+ob.source] = true; 
+	            		dct['nbf:'+ob.target] = true; 
+	            		
+	            		//	limit edge thicknesses
+	                	let w = parseInt(ob.weight);
+	                	ob.weight = w>5 ? 5 : w;
+	                	
+	                	});
+	            	
+	            	for (let id in dct) { ids += id + ' ';}
+	            	
+	            	vm.id = $stateParams.personId;
+	            	
+	            	return networkService.getNodesForPeople(ids, vm.searchlimit.value)
+	                .then(function(res) {
+	                	
+	                	res.forEach(function(ob) {
+							ob.id = ob.id.replace("http://ldf.fi/nbf/","");
+							if (ob.id==vm.id) vm.label=ob.label; 
+							ob.hasbio = (ob.hasbio=="true") ? "biografiallinen henkilö" : "sukulainen" ;
+							});
+						
+	                	vm.elems.nodes = res.map(function(ob) { return {data: ob};});
+	                	
+	                	processData(vm);
+	                	
+	                	vm.loading = false;
+	                	
+	                	if (vm.elems.edges.length==vm.searchlimit.value) {
+	                		vm.message = "Näytetään {} ensimmäistä linkkiä ja {2} henkilöä"
+	                			.replace('{}', vm.searchlimit.value)
+	                			.replace('{2}', vm.elems.nodes.length);
+	                	} else {
+	                		vm.message = "Näytetään {} linkkiä ja {2} henkilöä"
+	                			.replace('{}', vm.elems.edges.length)
+	                			.replace('{2}', vm.elems.nodes.length);
+	                	}
+	                	
+	                }).catch(handleError);
+	            }).catch(handleError);
+            }).catch(handleError);
+               
         }
 
         function handleError(error) {
@@ -333,7 +365,7 @@
 		    			"text-halign": "right",
 		    			"content": 'data(label)',
 		    			'background-color': vm.COLORS[0],
-                        'color': '#888'
+                        'color': '#444'
     	            }
     	        },
                 {
@@ -347,10 +379,10 @@
     	            selector: 'edge',
     	            style: {
     	            	'width': 'data(weight)',
-    	                'line-color': '#999',
+    	                'line-color': '#BBB',
     	                'curve-style': 'bezier',
     	        		'target-arrow-shape': 'triangle',
-    	        		'target-arrow-color': '#999'
+    	        		'target-arrow-color': '#BBB'
     	            }
     	        }
     	        ];

@@ -15,13 +15,14 @@
     	
         // Get the results based on facet selections.
         this.getLinks = getLinks;
-        this.getNodes = getNodes;
+        this.getNodes = getNodesForPeople;
+        this.getNodesForPeople = getNodesForPeople;
+        this.getNeighbors = getNeighbors;
         
         this.getRelativeLinks = getRelativeLinks;
         this.getRelativeNodes = getRelativeNodes;
         
         this.getGroupLinks = getGroupLinks;
-        this.getNodesForPeople = getNodesForPeople;
         this.getCloudNodes = getCloudNodes;
         this.getFacets = mapfacetService.getFacets;
         this.getFacetOptions = getFacetOptions;
@@ -61,10 +62,37 @@
         	'PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
 	    	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
-
-        
+		
+		//	http://yasgui.org/short/_w4DcWLuu
+		var queryNeighbors =
+			'SELECT DISTINCT ?id WHERE { GRAPH nbf:links { '+
+			'    VALUES ?source { <RESULT_SET> } '+
+			'    { ?source (nbf:refers/nbf:target){0} ?id . BIND (0 AS ?level) } '+
+			'    UNION '+
+			'    { ?id nbf:refers/nbf:target ?source . BIND (1 AS ?level) } '+
+			'    UNION '+
+			'    { ?source nbf:refers/nbf:target ?id . BIND (1 AS ?level) } '+
+			'    UNION '+
+			'    { ?id (nbf:refers/nbf:target){2} ?source . BIND (2 AS ?level) } '+
+			'    UNION '+
+			'    { ?source (nbf:refers/nbf:target){2} ?id . BIND (2 AS ?level) } '+
+			'} } ORDER BY ?level LIMIT <LIMIT> ';
+	    
+	    
+		//	http://yasgui.org/short/E7jnrOYGV
+		var queryLinks = 
+			'SELECT DISTINCT ?source ?target (SUM(?w) AS ?weight) WHERE { '+
+			'   '+
+			'  VALUES ?source { <RESULT_SET> } '+
+			'  VALUES ?target { <RESULT_SET> } '+
+			'   '+
+			'  	VALUES ?type { <CLASSES> } '+
+			'    ?ref nbf:target ?target ; nbf:type ?type ; ^nbf:refers ?source . '+
+			'    OPTIONAL { ?ref nbf:weight ?w } '+
+			'} GROUP BY ?source ?target ';
+		
         //	http://yasgui.org/short/gpKguzg7c
-        var queryLinks = 
+        var queryLinksOld = 
         	'SELECT distinct ?source ?target (SUM(?w) AS ?weight) WHERE { ' +
         	' VALUES ?type { <CLASSES> } ' +
         	' VALUES ?source { <RESULT_SET> } ' +
@@ -74,6 +102,8 @@
         	'                   nbf:weight ?w ]  ' +
         	' FILTER (?source!=?target) . ' +
         	'} GROUP BY ?source ?target';
+        
+        
         
         //	example query http://yasgui.org/short/Zjq68Lgra
         var queryLinksForGroup =
@@ -187,7 +217,7 @@
         	'  OPTIONAL { ?prs nbf:has_biography ?bio }' +
         	'  BIND (IF(BOUND(?bio),True,False) AS ?hasbio )' +
         	'}  ' +
-        	'GROUP BY ?id ?label ?gender ?hasbio ';
+        	'GROUP BY ?id ?label ?gender ?hasbio LIMIT <LIMIT> ';
         
         var queryCloudForGroup =
         	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
@@ -226,23 +256,30 @@
         
         // This handler is for the additional queries.
         var endpoint = new AdvancedSparqlService(endpointConfig);
-
+        
+        function getNeighbors(id, limit) {
+        	var regex = /^p[0-9_]+$/;
+        	if (regex.test(id)) { id = '<http://ldf.fi/nbf/'+id+'>'; }
+        	
+        	var q = prefixes + queryNeighbors.
+        		replace(/<RESULT_SET>/g, id).
+        		replace(/<LIMIT>/g, limit);
+        	return endpoint.getObjectsNoGrouping(q);
+        }
         
         function getLinks(ids, classes) {
         	var q = prefixes + queryLinks.replace(/<RESULT_SET>/g, ids).replace("<CLASSES>", classes);
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getNodes(id, limit, classes) {
-        	var regex = /^p[0-9_]+$/;
-        	if (regex.test(id)) { id = 'http://ldf.fi/nbf/'+id; }
-        	
-        	var constraint = '<{}>'.replace('{}',id),
-        		q = prefixes + queryNodesForPerson.replace(/<RESULT_SET>/g, constraint)
-        			.replace("<LIMIT>", ''+limit)
-        			.replace("<CLASSES>", classes);
+        function getNodesForPeople(ids, limit) {
+        	var q = prefixes + queryNodesForPeople
+        			.replace(/<RESULT_SET>/g, ids)
+        			.replace("<LIMIT>", ''+limit);
+        	console.log(q);
         	return endpoint.getObjectsNoGrouping(q);
-        } 
+        }
+        
         
         function getRelativeLinks(ids, limit) {
         	var q = prefixes + queryRelativeLinks.replace(/RESULT_SET/g, ids)
@@ -282,11 +319,7 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getNodesForPeople(ids) {
-        	var q = prefixes + queryNodesForPeople
-        			.replace(/<RESULT_SET>/g, ids);
-        	return endpoint.getObjectsNoGrouping(q);
-        }
+        
         
         function getCloudNodes(facetSelections, limit) {
         	var cons = facetSelections.constraint.join(' '),

@@ -317,7 +317,7 @@
             //	Search links first
             return networkService.getGroupLinks(facetSelections, vm.searchlimit.value, linkclasses)
             .then(function(edges) {
-            	
+            	console.log(edges);
             	if (edges.length<1) {
             		vm.loading = false;
                 	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
@@ -340,9 +340,10 @@
             	
             	for (let id in dct) { ids += id + ' ';}
             	
-            	return networkService.getNodesForPeople(ids)
+            	
+            	return networkService.getNodesForPeople(ids, 10*vm.searchlimit.value)
                 .then(function(res) {
-
+					console.log(res);
                 	vm.elems.nodes = res.map(function(ob) { return {data: ob};});
                 	
                 	processData(vm);
@@ -381,7 +382,7 @@
 		    			"text-halign": "right",
 		    			"content": 'data(label)',
 		    			'background-color': vm.COLORS[0],
-                        'color': '#888'
+                        'color': '#444'
     	            }
     	        },
                 {
@@ -395,10 +396,10 @@
     	            selector: 'edge',
     	            style: {
     	            	'width': 'data(weight)',
-    	                'line-color': '#999',
+    	                'line-color': '#bbb',
     	                'curve-style': 'bezier',
     	        		'target-arrow-shape': 'triangle',
-    	        		'target-arrow-color': '#999'
+    	        		'target-arrow-color': '#bbb'
     	            }
     	        }
     	        ];

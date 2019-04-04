@@ -40,6 +40,8 @@
     		'#22AA99', '#AAAA11', '#6633CC', '#E67300',
     		'#8B0707', '#329262', '#5574A6', '#3B3EAC', '#999' ];
     	
+    	vm.LIMIT = 1500;
+    	
         vm.LIMITOPTIONS = [{value:1, label:'1'},
         	{value:2, label:'2'},
         	{value:3, label:'3'},
@@ -336,7 +338,7 @@
             	
             	for (let id in dct) { ids += id + ' ';}
             	
-            	return networkService.getNodesForPeople(ids)
+            	return networkService.getNodesForPeople(ids, vm.LIMIT)
                 .then(function(res) {
 					
 					res.forEach(function(ob) {
