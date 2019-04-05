@@ -29,10 +29,10 @@
         vm.showlegend = false;
         
         //	popover not used above the canvas element
-        vm.popover = false;
+        /** vm.popover = false;
 		vm.popx = '200px';
 		vm.popy = '200py';
-		
+		*/
         
         vm.COLORS = ['#3366CC', '#DC3912', '#FF9900', '#109618', 
     		'#990099', '#3B3EAC', '#0099C6', '#DD4477',
@@ -56,29 +56,7 @@
         	fetchResults({ constraint: vm.previousSelections });
         };
         
-        /*
-        vm.CLASSTYPES = [
-        	{type:"0", check: true, value:"nbf:ManualAnnotation", 
-        		label: "Aineistoon käsin kirjatut linkit", tooltip: "Verkostossa näytetään käsin kirjatut linkit"}, 
-        	{type:"1", check: true, value:"nbf:AutomaticAnnotation",  
-        			label: "Automaattisesti tunnistetut linkit", tooltip: "Verkostossa näytetään automaattisesti päätellyt linkit"}
-        	];
-        vm.linkoptions = vm.CLASSTYPES[0];
         
-        vm.changeclass = function() {
-        	// require at least one event type to be chosen
-        	if (vm.CLASSTYPES.every(function (val) {return !(val.check);})) {
-        		vm.CLASSTYPES[0].check = true;
-        	}
-        	
-        	// $location.search(vm.right ? 'limit2' : 'limit', vm.searchlimit.value);
-        	
-        	// var st = vm.CLASSTYPES.map(function(val) { return val.check ? 1 : 0; }).join(',');
-        	// $location.search(vm.right ? 'events2' : 'events', st);
-        	
-        	fetchResults({ constraint: vm.previousSelections });
-        }; 
-        */
         
         vm.SIZEOPTIONS = [
         	{value:'Vakio', tooltip:'Tästä voit valita miten solmun koko määräytyy'},
@@ -332,13 +310,13 @@
             	vm.elems.edges = edges.map(function(ob) { return { data: ob }});
             	
             	var dct = {}, ids = "";
-            	edges.forEach(function(ob) { 
+            	edges.forEach(function(ob) {
             		dct['nbf:'+ob.source] = true; 
             		dct['nbf:'+ob.target] = true; });
             	
             	for (let id in dct) { ids += id + ' ';}
             	
-            	return networkService.getNodesForPeople(ids, vm.LIMIT)
+            	return networkService.getNodesForPeople(ids)
                 .then(function(res) {
 					
 					res.forEach(function(ob) {

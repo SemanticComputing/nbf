@@ -315,7 +315,7 @@
 	            	
 	            	vm.id = $stateParams.personId;
 	            	
-	            	return networkService.getNodesForPeople(ids, vm.searchlimit.value)
+	            	return networkService.getNodesForPeople(ids)
 	                .then(function(res) {
 	                	
 	                	res.forEach(function(ob) {

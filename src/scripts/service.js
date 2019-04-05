@@ -45,20 +45,20 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>' +
+        ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
         ' PREFIX dct: <http://purl.org/dc/terms/>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
-        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
-        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
-        ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
-        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
-        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
+        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
+        ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/>' +
+        ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
+        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 

@@ -15,12 +15,12 @@
     	
         // Get the results based on facet selections.
         this.getLinks = getLinks;
-        this.getNodes = getNodesForPeople;
+        // this.getNodes = getNodesForPeople;
         this.getNodesForPeople = getNodesForPeople;
         this.getNeighbors = getNeighbors;
         
         this.getRelativeLinks = getRelativeLinks;
-        this.getRelativeNodes = getRelativeNodes;
+        // this.getRelativeNodes = getRelativeNodes;
         
         this.getGroupLinks = getGroupLinks;
         this.getCloudNodes = getCloudNodes;
@@ -49,19 +49,20 @@
         /* Implementation */
 
         var prefixes =
-        	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         	'PREFIX bioc:  <http://ldf.fi/schema/bioc/> ' +
+        	'PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
+        	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
         	'PREFIX owl: <http://www.w3.org/2002/07/owl#> ' +
         	'PREFIX nbf: <http://ldf.fi/nbf/> ' +
         	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-        	'PREFIX schema: <http://schema.org/> ' +
-        	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
-        	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
         	'PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
-        	'PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
-        	'PREFIX gvp: <http://vocab.getty.edu/ontology#> ' +
+        	'PREFIX schema: <http://schema.org/> ' +
+        	'PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
+        	'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+        	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
 	    	'PREFIX foaf: <http://xmlns.com/foaf/0.1/> ';
+		
 		
 		//	http://yasgui.org/short/_w4DcWLuu
 		var queryNeighbors =
@@ -76,7 +77,8 @@
 			'    { ?id (nbf:refers/nbf:target){2} ?source . BIND (2 AS ?level) } '+
 			'    UNION '+
 			'    { ?source (nbf:refers/nbf:target){2} ?id . BIND (2 AS ?level) } '+
-			'} } ORDER BY ?level LIMIT <LIMIT> ';
+			'} FILTER EXISTS { ?id a nbf:PersonConcept } ' +
+			'} ORDER BY ?level LIMIT <LIMIT> ';
 	    
 	    
 		//	http://yasgui.org/short/E7jnrOYGV
@@ -121,40 +123,40 @@
         
         //	http://yasgui.org/short/W-DqUCxCO
         var queryRelativeLinks = 
-	        	'SELECT DISTINCT ?source ?target ?label WHERE { ' +
-	'  {	SELECT distinct ?bio WHERE { ' +
-	'      {	SELECT distinct ?bio1 WHERE { ' +
-	'          VALUES ?id { <RESULT_SET> } ' +
-	'          ?id (nbf:in_bio)?|^nbf:in_bio ?bio1 ' +
-	'        }} ?bio1 (^nbf:in_bio/nbf:in_bio){,<LIMIT>} ?bio . ' +
-	'    }} ' +
-	'  { ' +
-	'    ?source nbf:in_bio? ?bio ; ' +
-	'            bioc:has_family_relation ?rel_uri . ' +
-	'    ?rel_uri  bioc:inheres_in ?target . ' +
-	'  } UNION { ' +
-	'    ?target nbf:in_bio? ?bio ; '  +
-	'            ^bioc:inheres_in ?rel_uri. ' +
-	'    ?source bioc:has_family_relation ?rel_uri.  ' +
-	'  } ' +
-	'  ?source a nbf:PersonConcept ; skosxl:prefLabel []. ' +
-	'  ?target a nbf:PersonConcept ; skosxl:prefLabel []. ' +
-	'  VALUES (?rel_class ?order) { ' +
-	'    (rels:Wife 0) ' +
-	'    (rels:Husband 1) ' +
-	'    (rels:Spouse 2) ' +
-	'    (rels:Son 0) ' +
-	'    (rels:Daughter 0) ' +
-	'    (rels:Child 1) ' +
-	'    (rels:Father 2) ' +
-	'    (rels:Mother 2) ' +
-	'    (rels:Parent 3) ' +
-	'  } ' +
-	'  ?rel_uri a ?rel_class . ' +
-	'  ?rel_class skos:prefLabel ?label . ' +
-	'  FILTER(LANG(?label)="fi") ' +
-	'   ' +
-	'} ORDER BY ?order ';
+        	'SELECT DISTINCT ?source ?target ?label WHERE { ' +
+			'  {	SELECT distinct ?bio WHERE { ' +
+			'      {	SELECT distinct ?bio1 WHERE { ' +
+			'          VALUES ?id { <RESULT_SET> } ' +
+			'          ?id (nbf:in_bio)?|^nbf:in_bio ?bio1 ' +
+			'        }} ?bio1 (^nbf:in_bio/nbf:in_bio){,<LIMIT>} ?bio . ' +
+			'    }} ' +
+			'  { ' +
+			'    ?source nbf:in_bio? ?bio ; ' +
+			'            bioc:has_family_relation ?rel_uri . ' +
+			'    ?rel_uri  bioc:inheres_in ?target . ' +
+			'  } UNION { ' +
+			'    ?target nbf:in_bio? ?bio ; '  +
+			'            ^bioc:inheres_in ?rel_uri. ' +
+			'    ?source bioc:has_family_relation ?rel_uri.  ' +
+			'  } ' +
+			'  ?source a nbf:PersonConcept ; skosxl:prefLabel []. ' +
+			'  ?target a nbf:PersonConcept ; skosxl:prefLabel []. ' +
+			'  VALUES (?rel_class ?order) { ' +
+			'    (rels:Wife 0) ' +
+			'    (rels:Husband 1) ' +
+			'    (rels:Spouse 2) ' +
+			'    (rels:Son 0) ' +
+			'    (rels:Daughter 0) ' +
+			'    (rels:Child 1) ' +
+			'    (rels:Father 2) ' +
+			'    (rels:Mother 2) ' +
+			'    (rels:Parent 3) ' +
+			'  } ' +
+			'  ?rel_uri a ?rel_class . ' +
+			'  ?rel_class skos:prefLabel ?label . ' +
+			'  FILTER(LANG(?label)="fi") ' +
+			'   ' +
+			'} ORDER BY ?order ';
         
         
         //	example http://yasgui.org/short/y1M2Z_CC5
@@ -217,7 +219,7 @@
         	'  OPTIONAL { ?prs nbf:has_biography ?bio }' +
         	'  BIND (IF(BOUND(?bio),True,False) AS ?hasbio )' +
         	'}  ' +
-        	'GROUP BY ?id ?label ?gender ?hasbio LIMIT <LIMIT> ';
+        	'GROUP BY ?id ?label ?gender ?hasbio '; // LIMIT <LIMIT> ';
         
         var queryCloudForGroup =
         	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
@@ -272,11 +274,10 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getNodesForPeople(ids, limit) {
+        function getNodesForPeople(ids) {
         	var q = prefixes + queryNodesForPeople
-        			.replace(/<RESULT_SET>/g, ids)
-        			.replace("<LIMIT>", ''+limit);
-        	console.log(q);
+        			.replace(/<RESULT_SET>/g, ids);
+        			// .replace("<LIMIT>", ''+limit);
         	return endpoint.getObjectsNoGrouping(q);
         }
         
@@ -308,8 +309,9 @@
         	return endpoint.getObjectsNoGrouping(q);
         }
         
-        function getGroupLinks(facetSelections, limit, classes) {
-        	var cons = facetSelections.constraint.join(' '),
+        
+        function getGroupLinks(selections, limit, classes) {
+        	var cons = selections.constraint.join(' '),
         		cons2 = cons.replace(/\?(id|ordinal) /g,'?$12 ').replace(/(\?slider_\d)/g,'$1b'),
         		q = prefixes + queryLinksForGroup
         			.replace(/<RESULT_SET>/g, cons)
@@ -318,7 +320,6 @@
         			.replace("<CLASSES>", classes);
         	return endpoint.getObjectsNoGrouping(q);
         }
-        
         
         
         function getCloudNodes(facetSelections, limit) {

@@ -317,7 +317,6 @@
             //	Search links first
             return networkService.getGroupLinks(facetSelections, vm.searchlimit.value, linkclasses)
             .then(function(edges) {
-            	console.log(edges);
             	if (edges.length<1) {
             		vm.loading = false;
                 	vm.message = "Asetuksilla ei löydy näytettävää verkostoa.";
@@ -341,9 +340,8 @@
             	for (let id in dct) { ids += id + ' ';}
             	
             	
-            	return networkService.getNodesForPeople(ids, 10*vm.searchlimit.value)
+            	return networkService.getNodesForPeople(ids)
                 .then(function(res) {
-					console.log(res);
                 	vm.elems.nodes = res.map(function(ob) { return {data: ob};});
                 	
                 	processData(vm);
