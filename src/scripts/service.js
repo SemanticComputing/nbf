@@ -200,7 +200,7 @@
         	'  OPTIONAL { ?relative__id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
         	'} GROUP BY ?order ?type ?relative__id ORDER BY ?order ?btime ';
         
-        //	http://yasgui.org/short/DZ82Sid3_
+        //	http://yasgui.org/short/DZ82Sid3_ <- may not be up to date
         var secondRelativeQuery = 
         	'SELECT DISTINCT ?type (?relative__id AS ?id2) (SAMPLE(?name2) AS ?name) ?order ' +
 			'  WHERE { <RESULT_SET> ' +
@@ -217,19 +217,19 @@
 			'    (rels:Sister 5) ' +
 			'    (rels:Brother 5) ' +
 			'    (rels:Cousin 6) ' +
-			'    (rels:SecondCousin 6) ' +
-			'    (rels:ThirdCousin 6) ' +
-			'    (rels:FourthCousin 6) ' +
-			'    (rels:SisterInLaw 7) ' +
-			'    (rels:BrotherInLaw 7) ' +
-			'    (rels:BrothersSon 8) ' +
-			'    (rels:SistersSon 8) ' +
-			'    (rels:BrothersDaughter 8) ' +
-			'    (rels:SistersDaughter 8) ' +
-			'    (rels:SonInLaw 9) ' +
-			'    (rels:DaughterInLaw 9) ' +
-			'    (rels:Grandchild 10) ' +
-			'    (rels:GreatGrandchild 11) ' +
+			'    (rels:SecondCousin 7) ' +
+			'    (rels:ThirdCousin 8) ' +
+			'    (rels:FourthCousin 9) ' +
+			'    (rels:SisterInLaw 10) ' +
+			'    (rels:BrotherInLaw 10) ' +
+			'    (rels:BrothersSon 11) ' +
+			'    (rels:SistersSon 11) ' +
+			'    (rels:BrothersDaughter 11) ' +
+			'    (rels:SistersDaughter 11) ' +
+			'    (rels:SonInLaw 12) ' +
+			'    (rels:DaughterInLaw 12) ' +
+			'    (rels:Grandchild 13) ' +
+			'    (rels:GreatGrandchild 14) ' +
 			'	 } ' +
 			'  { ?id bioc:has_family_relation [ ' +
 			'        bioc:inheres_in ?rel ; ' +
