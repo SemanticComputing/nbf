@@ -218,6 +218,8 @@
 			'    (rels:Brother 5) ' +
 			'    (rels:Cousin 6) ' +
 			'    (rels:SecondCousin 6) ' +
+			'    (rels:ThirdCousin 6) ' +
+			'    (rels:FourthCousin 6) ' +
 			'    (rels:SisterInLaw 7) ' +
 			'    (rels:BrotherInLaw 7) ' +
 			'    (rels:BrothersSon 8) ' +
