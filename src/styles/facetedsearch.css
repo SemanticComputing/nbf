@@ -291,6 +291,12 @@ h1 {
 	margin-bottom: -30px;
 }
 
+.sankeycontainer {
+	height: 100%;
+	margin-top: 15px;
+	margin-bottom: 0px;
+}
+
 iframe.externalcontent {
 	width: 100%;
 	min-height: 600px;

@@ -356,6 +356,12 @@
                 }
             }
         })
+        .state('visu.statistics3', {
+            url: '/verkkosuhteet',
+            templateUrl: 'views/visu3/statistics.html',
+            controller: 'VisuNetController',
+            controllerAs: 'vm',
+        })
         .state('testing', {
             url: '/testing',
             templateUrl: 'views/testing.html',
