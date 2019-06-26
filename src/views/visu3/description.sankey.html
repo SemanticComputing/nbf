@@ -1,0 +1,26 @@
+<h1>Tutki tilastoja</h1>
+<p>
+Aineistosta laskettuja tilastoja. 
+<br/>Rajaa aineistoa tekemällä valintoja alla olevista suodattimista. 
+</p>
+  
+  	<p>
+  	Sivulla näytetään havainnekuva henkilöön liittyvästä ver&shy;kos&shy;tosta.
+  	Linkitys on luotu biografiakuvausten viittausten perusteella. 
+  	Huom: osa tietokannoista kuten <em>Kenraalit ja amiraalit</em> tai
+  	<em>Suomen papisto 1800–1920</em> eivät sisällä tällaisia viittauksia.
+  	</p>
+  	<div>
+  		<p style="color:{{vm.messagecolor}};">{{ vm.message }}</p>
+  		<br/>
+  		<p>
+			Näytä korkeintaan 
+			<select ng-model="vm.limit" 
+					ng-options="item.label for item in vm.LIMITOPTIONS"
+					ng-change="vm.changelimit()">
+	     	</select> tulosta.
+	     </p>
+	    
+</div>
+
+

@@ -220,7 +220,7 @@
             	.update();
         };
         
-//    	set url parameters:
+        //    	set url parameters:
         var lc = $location.search();
         
         if (lc.limit) {

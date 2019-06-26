@@ -1,5 +1,38 @@
 <img class="loading-img" src="images/loading-lg.gif" ng-if="vm.isLoadingResults"></img>
 <div ng-if="!vm.isLoadingResults" >
-	<span>Otsikko</span>
-	<div class="sankeycontainer" ng-repeat="id in vm.chart_ids" ng-attr-id="{{ id }}"></div>
+	<br>
+	<div class="well well-sm" style="line-height: 0">
+	<table style="width: 100%; font-size: 18px" cellspacing="0">
+		<td>
+			<p style="margin: 0px">
+				<select ng-model="vm.property" 
+						ng-options="item.label for item in vm.PROPERTYOPTIONS"
+						ng-change="vm.changeproperty()">
+		     	</select>
+		     </p><br>
+		</td>
+		<td style="text-align:right">
+			<p style="margin: 0px">
+				{{ vm.head1 }}:
+				<select ng-model="vm.relation" 
+						ng-options="item.label for item in vm.RELATIONOPTIONS"
+						ng-change="vm.changerelation()">
+		     	</select>
+		     </p><br>
+		</td>
+    </table>
+    </div>
+    <!-- 
+    <div>
+	<table style="width: 100%" cellspacing="0">
+		<td style="padding-left: 10px">
+			<h3 style="margin-top: 0px">{{ vm.head1 }}</h3>
+		</td>
+		<td style="text-align:right; padding-right: 10px">
+			<h3 style="margin-top: 0px">{{ vm.head2 }}</h3>
+		</td>
+    </table>
+    </div>
+     -->    
+	<div class="sankeycontainer" ng-if="vm.hasdata" ng-repeat="id in vm.chart_ids" ng-attr-id="{{ id }}"></div>
 </div>
