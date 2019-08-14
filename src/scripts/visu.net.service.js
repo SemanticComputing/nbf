@@ -45,68 +45,33 @@
             'PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>  ' +
             'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' 
             ;
-        /*
-        //	http://yasgui.org/short/SNP9-nNJR
-        var queryParentProfessionsSimple = prefixes +
-    	'SELECT ?label_1 ?label_2 (COUNT(*) AS ?no) ' +
-		'WHERE { ' +
-		'  { <RESULT_SET> } ' +
-		'  ?id <PROPPATH> ?label_2 . ' +
-		'  VALUES ?rel0 { rels:Parent rels:Father rels:Mother } ' +
-		'    ?id bioc:has_family_relation [ a ?rel0 ; bioc:inheres_in/owl:sameAs* ?id0 ] . ' +
-		'    ?id0 <PROPPATH> ?label_1 . ' +
-		'} GROUP BY ?label_1 ?label_2 ORDER BY DESC(?no) LIMIT 100 ';
         
         
-        var queryParentProfessions = prefixes + 
-        'SELECT ?label_1 ?label_2 (COUNT(*) AS ?no) ' +
-    	'WHERE { ' +
-    	'  { <RESULT_SET> } ' +
-    	'  { ' +
-    	'    ?id <PROPPATH> ?label_2 ; ' +
-    	'        bioc:has_family_relation [ a ?rel ; bioc:inheres_in/owl:sameAs* ?id2 ] . ' +
-    	'    FILTER (?rel in (rels:Parent, rels:Father, rels:Mother)) ' +
-    	'    ?id2 <PROPPATH> ?label_1 . ' +
-    	'  } ' +
-    	'    UNION ' +
-    	'  { ' +
-    	'    ?id <PROPPATH> ?label_1 ; ' +
-    	'        bioc:has_family_relation [ a ?rel ; bioc:inheres_in/owl:sameAs* ?id2 ] . ' +
-    	'    FILTER (?rel in (rels:Child, rels:Son, rels:Daughter)) ' +
-    	'    ?id2 <PROPPATH> ?label_2 . ' +
-    	'  } ' +
-    	'} GROUP BY ?label_1 ?label_2 ORDER BY DESC(?no) LIMIT 100 ';
-        
-        
-        var queryReferenceProfessions = prefixes +
-    	'SELECT ?label_1 ?label_2 (COUNT(*) AS ?no) ' +
-		'WHERE { ' +
-		'  { <RESULT_SET> } ' +
-		'  ?id <PROPPATH> ?label_2 . ' +
-		'	?id ^(nbf:refers/nbf:target) ?id0 .' +
-		'    ?id0 <PROPPATH> ?label_1 . ' +
-		'} GROUP BY ?label_1 ?label_2 ORDER BY DESC(?no) LIMIT 100 ';
-        */
-        
-        //	http://yasgui.org/short/6JLNeXK9r
+        //	http://yasgui.org/short/fDWPN5GZy
         var queryRelativeProperties = 
-            'SELECT ?label_1 ?label_2 (COUNT(*) AS ?no) ' +
+            'SELECT DISTINCT ?label_1 ?label_2 (COUNT(DISTINCT ?url) AS ?no) (GROUP_CONCAT(DISTINCT ?url; separator=",") AS ?ids) ' +
         	'WHERE { ' +
         	'  { <RESULT_SET> }' +
-        	'  ?id <PROPPATH> ?label_1 ; ' +
+        	'  ?id owl:sameAs* ?id_x . FILTER NOT EXISTS { ?id_x owl:sameAs [] } ' +
+        	'  ?id_x <PROPPATH> ?label_1 ; ' +
         	'      bioc:has_family_relation [ a ?rel ; bioc:inheres_in/owl:sameAs* ?id2 ] . ' +
         	'  FILTER (?rel in <CLASSES>) ' +
+        	'  FILTER NOT EXISTS { ?id2 owl:sameAs [] } ' +
         	'  ?id2 <PROPPATH> ?label_2 . ' +
+        	'  BIND (CONCAT(replace(str(?id_x),"^.+/([^/]+)$","$1"),",",replace(str(?id2),"^.+/([^/]+)$","$1")) AS ?url) ' +
         	'} GROUP BY ?label_1 ?label_2 ORDER BY DESC(?no) LIMIT <LIMIT> ';
         	
         //	http://yasgui.org/short/6hlGFsloa
         var queryReferenceProperties = 
-            'SELECT ?label_1 ?label_2 (COUNT(*) AS ?no) ' +
+            'SELECT DISTINCT ?label_1 ?label_2 (COUNT(DISTINCT ?url) AS ?no) (GROUP_CONCAT(DISTINCT ?url; separator=",") AS ?ids) ' +
         	'WHERE { ' +
         	'  { <RESULT_SET> }' +
-        	'  ?id <PROPPATH> ?label_1 ; ' +
-        	'      nbf:refers/nbf:target ?id2 . ' +
+        	'  ?id owl:sameAs* ?id_x . FILTER NOT EXISTS { ?id_x owl:sameAs [] } ' +
+        	'  ?id_x <PROPPATH> ?label_1 ; ' +
+        	'      nbf:refers/nbf:target/owl:sameAs* ?id2 . ' +
+        	'  FILTER NOT EXISTS { ?id2 owl:sameAs [] } ' +
         	'  ?id2 <PROPPATH> ?label_2 . ' +
+        	'  BIND (CONCAT(replace(str(?id_x),"^.+/([^/]+)$","$1"),",",replace(str(?id2),"^.+/([^/]+)$","$1")) AS ?url) ' +
         	'} GROUP BY ?label_1 ?label_2 ORDER BY DESC(?no) LIMIT <LIMIT> ';
         	
         // The SPARQL endpoint URL
@@ -128,25 +93,14 @@
         function getReferenceProfessions(facetSelections, property) {
         	return getResults(facetSelections, queryRelativeProperties, property);
         }
-        /**
-        function getResults(facetSelections, query, property) {
-        	var cons = facetSelections.constraint.join(' '),
-            	q = query.replace(/<RESULT_SET>/g, cons).
-            		replace(/<PROPPATH>/g, 'foaf:focus/(^crm:P98_brought_into_life)/nbf:place/skos:prefLabel');
-        	//	'foaf:focus/bioc:has_profession/skos:prefLabel'
-        	//  foaf:focus/(^crm:P98_brought_into_life)/nbf:place/skos:prefLabel
-        	return endpoint.getObjectsNoGrouping(q) ;
-        }
-        */
+        
         function getResults(facetSelections, relation, property, limit) {
-        	console.log(relation);
         	let cons = facetSelections.constraint.join(' '),
         		q = (relation ? queryRelativeProperties : queryReferenceProperties).
         		replace(/<RESULT_SET>/g, cons).
         		replace(/<PROPPATH>/g, property).
         		replace(/<CLASSES>/g, relation).
         		replace(/<LIMIT>/g, limit);
-        	console.log(q);
         	return endpoint.getObjectsNoGrouping(prefixes + q) ;
         }
         function getFacetOptions() {

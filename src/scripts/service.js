@@ -45,15 +45,15 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>' +
-        ' PREFIX categories: <http://ldf.fi/nbf/categories/>' +
+        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
-        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
+        ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
         ' PREFIX schema: <http://schema.org/>' +
@@ -74,7 +74,7 @@
         '  OPTIONAL { ?plabel schema:familyName ?familyName . }' +
         '  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
         '' +
-        '  OPTIONAL { ?id nbf:blf ?blf . }' +
+        '  OPTIONAL { ?id nbf:blf ?blf . } ' +
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
@@ -126,7 +126,7 @@
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
             '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
-            '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+            '  OPTIONAL { ?id nbf:ulan ?ulan . } ' +
             '  OPTIONAL { ?id nbf:yo1853 ?yo1853 . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +

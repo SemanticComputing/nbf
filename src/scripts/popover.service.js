@@ -21,6 +21,8 @@
         this.getHrefPopover = getHrefPopover;
         this.getPopoverGroup = getPopoverGroup;
         this.getPlacePopover = getPlacePopover;
+        this.getPopoverPairs = getPopoverPairs;
+        
         /* Implementation */
 
         var prefixes =
@@ -105,6 +107,28 @@
     	'  BIND (CONCAT("(", COALESCE(STR(YEAR(?btime)), " "), "-" , COALESCE(STR(YEAR(?dtime)), " "), ")") AS ?lifespan) ' +
     	'} GROUP BY ?id ?label ?lifespan ORDER BY UCASE(?fname) ?gname ';
         
+        var queryForPopoverPairs =
+        	'SELECT DISTINCT ?id ?label ?lifespan (SAMPLE(?image_0) AS ?image) ?no ' +
+        	'WHERE { ' +
+        	' <RESULT_SET> ' +
+        	'  ?id2 owl:sameAs* ?id . ' +
+        	'  FILTER NOT EXISTS {?id owl:sameAs []} ' +
+        	'  ?id foaf:focus ?prs . ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image_1 ; dct:source ?s ] FILTER ISLITERAL(?s) } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image_2 ; dct:source sources:source10 ] } ' +
+        	'  OPTIONAL { ?prs nbf:image [ schema:image ?image_3 ; dct:source/skos:prefLabel ?s ]  } ' +
+        	'  BIND (COALESCE(?image_1, ?image_2, ?image_3) AS ?image_0) ' +
+        	' ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:familyName ?fname . } ' +
+        	'  OPTIONAL { ?id skosxl:prefLabel/schema:givenName ?gname . } ' +
+        	'  BIND (CONCAT(COALESCE(?gname, "")," ",COALESCE(?fname, "")) AS ?label) ' +
+        	' ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?btime } ' +
+        	'  OPTIONAL { ?id foaf:focus/^crm:P100_was_death_of/nbf:time/gvp:estStart ?dtime } ' +
+        	'  BIND (CONCAT("(", COALESCE(STR(0+xsd:integer(YEAR(?btime))), " "), "-", COALESCE(STR(0+xsd:integer(YEAR(?dtime))), " "), ")") AS ?lifespan) ' +
+        	' ' +
+        	'} GROUP BY ?id ?label ?lifespan ?no ORDER BY ?no ';
+        
     	var queryForPlacePopover =
     		'SELECT * WHERE { ' +
 	    	'  <RESULT_SET> ' +
@@ -158,17 +182,31 @@
         
         function getPopoverGroup(arr) {
         	var ids = arr.map(function(st) {
-        		if (st.match(/^p\d+$/)) {
-        			// 	st is identifier 'p1234'
+        		if (st.match(/^p[0-9_]+$/)) {
+        			// 	st is identifier 'p1234_5'
         			return 'nbf:'+st;
         		} 
-        		// st is full url 'http://ldf.fi/nbf/p1234'
+        		// st is full url 'http://ldf.fi/nbf/p1234_5'
         		return '<'+st+'>';
         	}).join(' ');
         	
-        	
             var constraint = 'VALUES ?id2 { ' + ids + ' } . ';
             var qry = prefixes + queryForPopoverGroup.replace('<RESULT_SET>', constraint);
+            
+            return endpoint.getObjectsNoGrouping(qry)
+            .then(function(result) {
+            	return result;
+            });
+        }
+        
+        function getPopoverPairs(arr) {
+        	var ids = arr.map(function(st, i) {
+        		st = st.match(/^p[0-9_]+$/) ? 'nbf:'+st : '<'+st+'>';
+        		return '('+st+' '+i+')';
+        	}).join(' ');
+        	
+        	var constraint = 'VALUES (?id2 ?no) { ' + ids + ' } . ';
+            var qry = prefixes + queryForPopoverPairs.replace('<RESULT_SET>', constraint);
             
             return endpoint.getObjectsNoGrouping(qry)
             .then(function(result) {

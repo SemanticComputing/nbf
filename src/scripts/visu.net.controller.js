@@ -32,16 +32,17 @@
         
         vm.RELATIONOPTIONS = [
         	{value:'parent', label:'Vanhemmat', classes:'(rels:Parent, rels:Father, rels:Mother)'},
-        	{value:'father', label:'  Isä', classes:'(rels:Father)'},
         	{value:'mother', label:'  Äiti', classes:'(rels:Mother)'},
+        	{value:'father', label:'  Isä', classes:'(rels:Father)'},
         	{value:'child', label:'Lapset', classes:'(rels:Child, rels:Son, rels:Daughter)'},
         	{value:'spouse', label:'Puoliso', classes:'(rels:Spouse, rels:Husband, rels:Wife)'},
+        	{value:'wife', label:'Vaimo', classes:'(rels:Wife)'},
+        	{value:'husband', label:'Aviomies', classes:'(rels:Husband)'},
         	{value:'reference', label:'Viittaus biografiatekstissä'}
         	];
         vm.relation = vm.RELATIONOPTIONS[0];
         
         vm.changerelation = function() {
-        	console.log('changerelation', vm.relation.value)
         	$location.search('relation', vm.relation.value);
         	fetchResults({ constraint: vm.previousSelections });
         };
@@ -104,19 +105,13 @@
         
         vm.showForm = function () {
             $uibModal.open({
-                templateUrl: 'views/popup.html',
+                templateUrl: 'views/popup2.html',
                 scope: $scope
             }).result.then(function(){}, function(res){});
         };
 
         vm.removeFacetSelections = removeFacetSelections;
-        /*
-        var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
-        	fetchResults(config);
-            initListener();
-        });
-        $scope.$on('sf-facet-constraints', fetchResults);
-        */
+        
         var initListener = $scope.$on('sf-initial-constraints', function(event, config) {
             updateResults(event, config);
             initListener();
@@ -163,7 +158,6 @@
             vm.previousSelections = _.clone(facetSelections.constraint);
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
             
-            //	getResults(facetSelections, relation, property)
             vm.messagecolor = 'blue';
             
             
@@ -197,13 +191,8 @@
 	        //	res = [Object { label_1: "Ruotsin jaarli", label_2: "Suomen herttua", no: "1" }]
 	        //
 	        var rows = res.map(function(ob) {return [ob.label_1, ob.label_2+' ', parseInt(ob.no)]});
-	        /*
-	        var rows = res.map(function(ob) {
-	        	return (ob.reverse=="true") ?
-	        			[ob.label_2, ob.label_1+' ', parseInt(ob.no)] :
-	        			[ob.label_1, ob.label_2+' ', parseInt(ob.no)] ;
-	        		});
-	        */
+	        vm.data = res.map(function(ob) {return ob.ids});
+	        
 	        data.addRows(rows);
 	        
 			// Sets chart options.
@@ -227,18 +216,14 @@
         	
         	google.visualization.events.addListener(chart, 'select', function(e) {
             	var pie;
-            	// console.log("click", chart);
             	try {
-            		var sel = chart.getSelection();
-            		console.log(sel);
-            		console.log(rows[sel[0].row]);
-            		/*
-            		let pie = sel[0].row;
-            		vm.people = vm.data[target][pie];
-                    vm.popuptitle = arr[pie][0]+ ': '+arr[pie][1]+ ' tulosta';
+            		let sel = chart.getSelection();
+            		let row = rows[sel[0].row]
+            		
+            		vm.people = vm.data[sel[0].row];
+                    vm.popuptitle = row[0]+' - '+row[1]+": "+row[2];
                     vm.showForm();
-                    */
-            	} 
+                } 
             	catch(err) {
             		console.log('Unhandled click');
             		return;
