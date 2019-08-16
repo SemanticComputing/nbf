@@ -45,13 +45,13 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
+        ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
-        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
+        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
@@ -82,8 +82,8 @@
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
-        '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
+        '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
         '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
@@ -96,15 +96,15 @@
         '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
         '  		OPTIONAL { ?prs schema:gender ?gender . }' +
         '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
-        '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
-        '  		   ?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation ' +
+        '  		OPTIONAL { ?prs bioc:has_profession ?occupation_id . ' +
+        '  		   ?occupation_id a nbf:Title ; skos:prefLabel ?occupation ' +
         '  		  OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
         '		}' +
         '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
         '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
         '  		  OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
         '  		}' +
-        ' }' +
+        '   }' +
         ' }';
 
         var detailQuery =
@@ -130,23 +130,7 @@
             '  OPTIONAL { ?id nbf:yo1853 ?yo1853 . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/schema:relatedLink ?kansallisbiografia . }' +
             '  OPTIONAL { ?idorg (owl:sameAs*|^owl:sameAs+)/dct:source/skos:prefLabel ?source . }' +
-            /*
-            '  OPTIONAL { { ?id bioc:has_family_relation [ ' +
-            '  		bioc:inheres_in ?rel ; ' +
-            '  		a/skos:prefLabel ?relative__type ] . } ' +
-            '		UNION { ?rel bioc:has_family_relation [ ' +
-            '  		bioc:inheres_in ?id ; ' +
-            '  		bioc:inverse_role/skos:prefLabel ?relative__type ] . } ' +
-            '		?rel owl:sameAs* ?relative__id . ' +
-            '		FILTER NOT EXISTS { ?relative__id owl:sameAs [] } ' +
-            '		' +
-            '  		FILTER (LANG(?relative__type)="fi") ' +
-            '  		?relative__id skosxl:prefLabel ?relative__label . ' +
-            '  		OPTIONAL { ?relative__label schema:familyName ?relative__familyName } ' +
-            '  		OPTIONAL { ?relative__label schema:givenName ?relative__givenName } ' +
-            '  		BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?relative__name)  ' + 
-            '  } ' +
-            */
+            ' ' +
             '  OPTIONAL { ?id foaf:focus ?prs . ' +
             '  	OPTIONAL { ?prs ^crm:P98_brought_into_life ?bir . ' +
             '  			OPTIONAL { ?bir nbf:place ?birth__id . ?birth__id skos:prefLabel ?birth__label } ' +
@@ -160,8 +144,8 @@
             '			OPTIONAL { ?is skos:prefLabel ?il } ' +
             '			BIND (COALESCE(?il, ?is) AS ?imagesources ) ' +
             '	    }' +
-            '  		OPTIONAL { ?prs ^bioc:inheres_in ?occupation_id . ' +
-            '  			?occupation_id a nbf:Occupation ; skos:prefLabel ?occupation }' +
+            '  		OPTIONAL { ?prs bioc:has_profession ?occupation_id . ' +
+            '  			?occupation_id a nbf:Title ; skos:prefLabel ?occupation }' +
             '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
             '  }' +
             ' }';
@@ -369,7 +353,7 @@
         	
             var constraint = 'VALUES ?idorg { <' + id + '> } . ?idorg owl:sameAs* ?id . FILTER NOT EXISTS { ?id owl:sameAs [] } ';
             var qry = prefixes + detailQuery.replace('<RESULT_SET>', constraint);
-            
+            console.log(qry);
             return endpoint.getObjects(qry)
             .then(function(person) {
 
