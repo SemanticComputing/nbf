@@ -67,7 +67,6 @@
         function getTitle(id) {
         	var cons = 'VALUES ?id { <' + id + '> } . ',
         		q = query.replace("<RESULT_SET>", cons);
-        	console.log(q);
         	return endpoint.getObjectsNoGrouping(q) ;
         }
         

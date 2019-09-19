@@ -20,11 +20,6 @@
 
         var vm = this;
         
-        /*
-        console.log(this);
-        console.log($state.current.name);
-        console.log($state.current);
-        */
         
         vm.people = [];
         vm.data = {};

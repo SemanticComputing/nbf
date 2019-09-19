@@ -49,14 +49,16 @@
           popover-append-to-body="true"
           popover-placement="auto top">Saavutukset</a>
       </div>
-      <a class="link" ng-if="::person.wikipedia" ng-href="{{ ::person.wikipedia }}">Wikipedia</a>
+      <a class="link" ng-if="::person.wikipedia[0]" ng-href="{{ ::person.wikipedia[0] }}">Wikipedia</a>
+      <a class="link" ng-if="::person.wikipedia[1]" ng-href="{{ ::person.wikipedia[1] }}">(2)</a>
       <a class="link" ng-if="::person.warsa" ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ ::person.warsa }}">Sotasampo</a>
       <a class="link" ng-if="::person.fennica[0]" ng-href="{{ ::person.fennica[0] }}">Fennica</a>
-      <a class="link" ng-if="::person.fennica[1]" ng-href="{{ ::person.fennica[1] }}">Fennica (2)</a>
+      <a class="link" ng-if="::person.fennica[1]" ng-href="{{ ::person.fennica[1] }}">(2)</a>
       <a class="link" ng-if="::person.kirjasampo" ng-href="{{ ::person.kirjasampo }}">Kirjasampo</a>
       <a class="link" ng-if="::person.kulttuurisampo" ng-href="{{ ::person.kulttuurisampo }}">Kulttuurisampo</a>
       <a class="link" ng-if="::person.blf" ng-href="{{ ::person.blf }}">BLF</a>
-      <a class="link" ng-if="::person.ulan" ng-href="{{ ::person.ulan }}">ULAN</a>
+      <a class="link" ng-if="::person.ulan[0]" ng-href="{{ ::person.ulan[0] }}">ULAN</a>
+      <a class="link" ng-if="::person.ulan[1]" ng-href="{{ ::person.ulan[1] }}">(2)</a>
       <a class="link" ng-if="::person.viaf" ng-href="{{ ::person.viaf }}">VIAF</a>
       <a class="link" ng-if="::person.norssi" ng-href="http://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F{{ ::person.norssi }}">Norssi</a>
       <a class="link" ng-if="::person.eduskunta" ng-href="{{ ::person.eduskunta }}">Eduskunta</a>

@@ -45,6 +45,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "angularjs-slider": "^6.5.1"
+    "angularjs-slider": "^6.5.1",
+    "bower": "^1.8.8"
   }
 }

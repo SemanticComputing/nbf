@@ -67,10 +67,10 @@
                  class="btn btn-default btn-sm">
                  Eduskunta</a>
                  
-			  <a ng-if="vm.person.fennica.length>1"
+			  <a ng-if="vm.person.fennica.length>0"
                 	ng-href="{{ vm.person.fennica[0] }}"
                 	class="btn btn-default btn-sm">
-                	Fennica 1
+                	Fennica
                </a> 
               
               <a ng-if="vm.person.fennica.length>1"
@@ -78,10 +78,6 @@
                 	2
                </a> 
               
-              <a ng-if="vm.person.fennica.length<2"
-               		ng-href="{{ vm.person.fennica[0] }}" class="btn btn-default btn-sm">
-               		Fennica
-              </a>
               <a ng-if="vm.person.genicom"
                 	ng-href="{{ vm.person.genicom }}"
                  class="btn btn-default btn-sm">
@@ -115,21 +111,32 @@
                  ng-href="http://www.sotasampo.fi/fi/persons/?uri={{ vm.person.warsampo }}"
                  class="btn btn-default btn-sm">
                  Sotasampo</a>
-                 
-              <a ng-if="vm.person.ulan"
-                 ng-href="{{ vm.person.ulan }}"
-                 class="btn btn-default btn-sm">
-                 ULAN</a>
-                 
+              
+              <a ng-if="vm.person.ulan.length>0"
+                	ng-href="{{ vm.person.ulan[0] }}"
+                	class="btn btn-default btn-sm">
+                	ULAN</a>
+              
+              <a ng-if="vm.person.ulan.length>1"
+                	ng-href="{{ vm.person.ulan[1] }}"
+                	class="btn btn-default btn-sm">
+                	2</a>
+              
               <a ng-if="vm.person.viaf"
                  ng-href="{{ vm.person.viaf }}"
                  class="btn btn-default btn-sm">
                  VIAF</a>
-                 
-              <a ng-if="vm.person.wikipedia" 
-			  	ng-href="{{ vm.person.wikipedia }}" 
+              
+              <a ng-if="vm.person.wikipedia.length>0" 
+			  	ng-href="{{ vm.person.wikipedia[0] }}" 
 			  	class="btn btn-default btn-sm">Wikipedia
 			  </a>
+			  
+			  <a ng-if="vm.person.wikipedia.length>1" 
+			  	ng-href="{{ vm.person.wikipedia[1] }}" 
+			  	class="btn btn-default btn-sm">2
+			  </a>
+			  
 			  <a ng-if="vm.person.wikidata" 
 			  	ng-href="{{ vm.person.wikidata }}" 
 			  	class="btn btn-default btn-sm">Wikidata

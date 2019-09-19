@@ -44,8 +44,11 @@
                     popover-append-to-body="true"
                     popover-placement="auto right">Saavutukset</a>
                 </div>
-                <div ng-if="::person.wikipedia" class="col-xs-6">
-                  <a ng-href="{{ ::person.wikipedia }}">Wikipedia</a>
+                <div ng-if="::person.wikipedia[0]" class="col-xs-6">
+                  <a ng-href="{{ ::person.wikipedia[0] }}">Wikipedia</a>
+                </div>
+                <div ng-if="::person.wikipedia[1]" class="col-xs-6">
+                  <a ng-href="{{ ::person.wikipedia[1] }}">Wikipedia (2)</a>
                 </div>
                 <div ng-if="::person.wikidata" class="col-xs-6">
                   <a ng-href="{{ ::person.wikidata }}">Wikidata</a>
@@ -68,8 +71,11 @@
                 <div ng-if="::person.blf" class="col-xs-6">
                   <a ng-href="{{ ::person.blf }}">BLF</a>
                 </div>
-                <div ng-if="::person.ulan" class="col-xs-6">
-                  <a ng-href="{{ ::person.ulan }}">ULAN</a>
+                <div ng-if="::person.ulan[0]" class="col-xs-6">
+                  <a ng-href="{{ ::person.ulan[0] }}">ULAN</a>
+                </div>
+                <div ng-if="::person.ulan[1]" class="col-xs-6">
+                  <a ng-href="{{ ::person.ulan[1] }}">ULAN (2)</a>
                 </div>
                 <div ng-if="::person.viaf" class="col-xs-6">
                   <a ng-href="{{ ::person.viaf }}">VIAF</a>

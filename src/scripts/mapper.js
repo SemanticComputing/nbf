@@ -30,18 +30,6 @@
             	person.birth = person.birth ? _.castArray(person.birth) : null;
             	person.death = person.death ? _.castArray(person.death) : null;
             	
-            	/**
-            	if (person.images) {
-            		
-            		person.images = _.castArray(person.images);
-            		person.images = person.images.map(function(st) {
-            		    return st.replace(/^https*:/,"");
-            		});
-            		console.log(person.images);
-            	
-            	} else {
-            		person.images = ['images/person_placeholder.svg'];
-            	} */
                 person.images = person.images ? 
                 		_.castArray(person.images) : 
                 			['images/person_placeholder.svg'];
@@ -60,17 +48,22 @@
                 	person.kirjasampo = person.kirjasampo.replace('http://','https://')
                 }
                 
+                // couples might have several ulan, fennica, or wikipedia links:
                 if (person.ulan) {
-                	//	http://vocab.getty.edu/ulan/500108094
-                	//	http://vocab.getty.edu/page/ulan/500108094
-                	person.ulan = person.ulan.replace('vocab.getty.edu/ulan/','vocab.getty.edu/page/ulan/')
+                	/**	convert format 
+                	 * http://vocab.getty.edu/ulan/500108094
+                	 * into
+                	 * http://vocab.getty.edu/page/ulan/500108094
+                	 */
+                	person.ulan = _.castArray(person.ulan).map(function(st) {return st.replace('vocab.getty.edu/ulan/','vocab.getty.edu/page/ulan/'); });
                 }
+                
+                person.wikipedia = person.wikipedia ? _.castArray(person.wikipedia) : null;
                 
                 if (person.fennica) {
                 	// couples might have several fennica links:
-                	if (person.fennica.constructor !== Array) {
-                		person.fennica = [person.fennica];
-                	}
+                	person.fennica = _.castArray(person.fennica);
+                	
                 	for (var i=0; i<person.fennica.length; i++) {
                 		/**	convert format 
                          * http://urn.fi/URN:NBN:fi:au:pn:000103310
