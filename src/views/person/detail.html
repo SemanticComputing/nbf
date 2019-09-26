@@ -167,6 +167,7 @@
             
       <div class="col-sm-6 col-md-12 text-left thumbnail"
            	ng-if="(vm.person.bios && vm.person.bios.length) || vm.person.externalLinks"
+           	style="font-size: 120%;"
            	>
             <ul class="nav nav-tabs">
 		       	<li ng-repeat="bio in vm.person.bios | castArray" ng-class="{ active: vm.isSet($index) }">
@@ -181,7 +182,9 @@
 		       	</li>
 	     	</ul>
 	     	
-	     	<nlp-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" url="{{bio.bio}}" active="{{vm.isSet($index)}}">
+	     	<nlp-biography ng-repeat="bio in vm.person.bios | castArray" ng-show="vm.isSet($index)" 
+	     		alive="{{bio.alive}}" url="{{bio.bio}}" skspage="{{bio.skspage}}" active="{{vm.isSet($index)}}"
+	     		>
          	</nlp-biography>
          	
 	        <nbf-iframe ng-repeat="link in vm.person.externalLinks | castArray" ng-show="vm.isSet(link.tab)" url="{{link.url}}" active="{{vm.isSet(link.tab)}}">

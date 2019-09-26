@@ -2,11 +2,13 @@
     <img class="loading-img" src="images/loading-lg.gif"></img>
 </div>
 <div class="col-sm-6 col-md-12 disclaimer" ng-if="has_annotations"> <h3> KONTEKSTUAALINEN LUKIJA </h3> <p> Alla olevasta tekstistä on tunnistettu <span class="person-disclaimer"><small><span class="glyphicon glyphicon-user"></span></small>&nbsp;henkilöt</span>, <span class="place-disclaimer"><small><span class="glyphicon glyphicon-globe"></span></small>&nbsp;paikat</span>, ja <span class="organization-disclaimer"><small><span class="glyphicon glyphicon-briefcase"></span></small>&nbsp;organisaatiot</span> automaattisin menetelmin. </p> </div>
-<div class="col-sm-6 col-md-12 nlp_content" ng-if="!!data">
+<div class="col-sm-6 col-md-12 nlp_content" ng-if="data">
     <p ng-repeat="parag in data track by $index" >
         <span ng-repeat="sentence in parag track by $index" >
 	    <span ng-repeat="x in sentence track by $index" class="nlp"><span ng-if="x.space"> </span><span ng-if="x.placelink" class="placelink" url="{{x.placelink}}">{{x.word}}</span><span ng-if="x.organizationlink" class="organizationlink" url="{{x.organizationlink}}">{{x.word}}</span><span ng-if="x.vocationlink" class="vocationlink" >{{x.word}}</span><span ng-if="x.personlink" class="personlink" url="{{x.personlink}}">{{x.word}}</span><span ng-if="!x.class">{{x.word}}</span></span>
 	</span>
 	<hr />
     </p>
+</div>
+<div ng_if="data && alive && data" class="col-sm-4 col-md-8 page-access-denied" ng-include="'views/biografiakeskus/LueKokoArtikkeli.html'">
 </div>

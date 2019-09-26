@@ -137,3 +137,20 @@
 }
 
 
+.page-access-denied {
+	font-size: 18px;
+	font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+	line-height: 1.5;
+}
+.page-access-denied a {
+    color: #840d0d;
+    text-decoration: none;
+}
+.page-access-denied a:hover, a:focus {
+    color: #3e0606;
+    text-decoration: underline;
+}
+.page-access-denied h3 {
+	font-weight: bold;
+	font-size: 22px;
+}

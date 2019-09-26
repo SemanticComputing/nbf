@@ -20,10 +20,10 @@
         /* Implementation */
 
         var prefixes =
-        	' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        	' PREFIX dct: <http://purl.org/dc/terms/> ' +
-        	' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
-        	' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
+    	' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
+    	' PREFIX dct: <http://purl.org/dc/terms/> ' +
+    	' PREFIX categories:	<http://ldf.fi/nbf/categories/> ' +
+    	' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
         ' PREFIX schema: <http://schema.org/> ' +
@@ -44,9 +44,9 @@
     	'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
     	'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
     	'PREFIX ufal: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> ' +
-    	// 'PREFIX nbfbiodata: <http://ldf.fi/nbf/biography/data#>  ' +
     	'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
     	'PREFIX biog: <http://ldf.fi/nbf/biography/> ';
+        
         
         // The query for the results.
         var query =
@@ -79,7 +79,8 @@
         	'  ?parag nif:isString ?parag_value ; ' +
         	'         bd:order ?parag_str . ' +
         	'  BIND (REGEX(?parag_value, "^(URA|TEOKSET|Elokuvat:|Televisiosarjat:|TUOTANTO|LÄHTEET JA KIRJALLISUUS.|MUUT LÄHTEET)") AS ?set_limit) ' +
-        	'  BIND (xsd:integer(xsd:decimal(?parag_str))-2 AS ?x) ' +
+        	'  BIND (xsd:integer(xsd:decimal(?parag_str))-2 AS ?x)' +
+        	'  <FILTERRESULT>' +
         	'  ?sent dct:isPartOf ?parag ; ' +
         	'        nif:order ?sent_str . ' +
         	'  BIND (xsd:integer(xsd:decimal(?sent_str))-1 AS ?y) ' +
@@ -131,10 +132,13 @@
         }
         
         function getNlpBio($scope) {
-        	
+        	// console.log("$scope.alive", $scope.alive);
         	var id = $scope.url.replace('nbf/bio','nbf/p');
         	var constraint = ' <' + id + '> ';
-            var qry = prefixesNLP + queryNLP.replace('<RESULT_SET>', constraint);
+        	//	show only the first paragraph of living people ($scope.alive=="true") 
+            var qry =  queryNLP.
+            	replace('<RESULT_SET>', constraint).
+            	replace('<FILTERRESULT>', $scope.alive ? "FILTER (?x=0)" : "");
             
             $scope.has_annotations = false;
             
@@ -154,7 +158,7 @@
 		            "MediaOrganization": false ,
 		            "CultureOrganization": false };
             
-            return endpoint2.getObjectsNoGrouping(qry)
+            return endpoint2.getObjectsNoGrouping(prefixesNLP + qry)
             .then(function(res) {
             	
             	var data = [],
@@ -219,7 +223,6 @@
             		// no space in case –1942 or –VII
             		if (prev=="–" && RegExp('^[0-9IVXLCDM]').test(ob.word)) { ob.space = false; }
             		
-            		//	TODO cases "Vaalikone poliittisena mediana // Politiikka 2/2004"
             		
             		// no space before . , : ; ! ? / ) ] } "
             		if (ob.word && RegExp('^[.,;:=!?/)}%]').test(ob.word)) { 

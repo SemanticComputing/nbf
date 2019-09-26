@@ -4,7 +4,7 @@
 	.directive('nlpBiography', function() {
 		return {
 			restrict: 	'AE',
-			scope: 		{ url: '@', active: '@' },
+			scope: 		{ url: '@', active: '@', alive:'@', skspage:'@' },
 			 
 			controller: ['$scope', 'biographyService', function($scope, biographyService){
 				

@@ -234,12 +234,35 @@
 			'  BIND (REPLACE(CONCAT( COALESCE(?relative__givenName,"") ," ", COALESCE(?relative__familyName,"")),"[(][^)]+[)]\\\\s*","") AS ?name2) ' +
 			'} GROUP BY ?order ?type ?relative__id ORDER BY ?order ';
         
+        //	http://yasgui.org/short/IpeDQBwyH
         var bioQuery =
+        	'SELECT DISTINCT ?id ?bio ?source ?database ?alive ?skspage WHERE {' +
+        	'  <RESULT_SET> ' +
+        	'  ?id owl:sameAs*|^owl:sameAs ?id2 .' +
+        	'  ?id2 foaf:focus ?prs .' +
+        	'  ?prs nbf:has_biography ?bio .' +
+        	'  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' +
+        	'  OPTIONAL {' +
+        	'    ?bir crm:P98_brought_into_life ?prs .' +
+        	'  	?bir nbf:time/gvp:estEnd ?btime . FILTER ("1905-01-01" < str(?btime))' +
+        	'  	OPTIONAL { ?dea crm:P100_was_death_of ?prs .' +
+        	'    	OPTIONAL { ?dea nbf:time/gvp:estStart ?dstart . }' +
+        	'  	}' +
+        	'    FILTER ( !BOUND(?dstart) )' +
+        	'    BIND (!BOUND(?dstart) AS ?alive )' +
+        	'  }' +
+        	'	OPTIONAL { ?id schema:relatedLink ?skspage } ' +
+        	'} ORDER BY str(?source)';
+        
+        var bioOld = 
             'SELECT DISTINCT * WHERE {' +
             ' { <RESULT_SET> }' +
             ' ?id owl:sameAs*|^owl:sameAs ?prs .' +
             ' ?prs foaf:focus/nbf:has_biography ?bio .' +
-            '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' + /* MOVED TO biography.service.js
+            '  OPTIONAL { ?bio dct:source ?source . ?source skos:prefLabel ?database }' + 
+            '} ORDER BY str(?source)'; 
+        
+        	/* MOVED TO biography.service.js
             '  OPTIONAL { ?bio nbf:authors ?author_text }' +
             '  OPTIONAL { ?bio schema:dateCreated ?created }' +
             '  OPTIONAL { ?bio schema:dateModified ?modified }' +
@@ -252,7 +275,6 @@
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "5"^^xsd:integer ; nbf:content ?child_paragraph  ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "6"^^xsd:integer ; nbf:content ?medal_paragraph  ] }' +
             '  OPTIONAL { ?bio nbf:has_paragraph [ nbf:id "7"^^xsd:integer ; nbf:content ?source_paragraph ] }' + */
-            '} ORDER BY str(?source)';
 
 
         //	http://yasgui.org/short/HyNJegbGQ
@@ -368,9 +390,10 @@
         	
         	var constraint = 'VALUES ?id { <' + id + '> } . ';
         	var qry = prefixes + bioQuery.replace('<RESULT_SET>', constraint);
-            
+        	
             return endpoint.getObjectsNoGrouping(qry)
             .then(function(result) {
+            	
                 return result;
             });
         }
