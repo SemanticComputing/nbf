@@ -100,9 +100,9 @@
                             label: 'Eduskunta'
                         },
                         {
-                            id: 'yo1853',
-                            pattern: '?id <http://ldf.fi/nbf/yo1853> [] .',
-                            label: 'Ylioppilasmatrikkeli 1853–1899'
+                            id: 'yoma',
+                            pattern: '?id <http://ldf.fi/nbf/yoma> [] .',
+                            label: 'Ylioppilasmatrikkeli 1640–1899'
                         }
                     ],
                     enabled: true,

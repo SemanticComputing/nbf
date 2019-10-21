@@ -138,10 +138,10 @@
         	
         	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia", tab:'wikipedia'});
         	
-        	if (p.yo1853) arr.push({
-        		url:'https://ylioppilasmatrikkeli.helsinki.fi/1853-1899/henkilo.php?id='+p.yo1853, 
-        		label:"Ylioppilasmatrikkeli 1853–1899", 
-        		tab:'yo1853'});
+        	if (p.yoma) arr.push({
+        		url:''+p.yoma, 
+        		label:"Ylioppilasmatrikkeli 1640–1899", 
+        		tab:'yoma'});
         	
         	arr = arr.map(function(ob) {
         		//	in case of multiple e.g. wikipedia links

@@ -285,7 +285,7 @@
         function getRelativeLinks(ids, limit) {
         	var q = prefixes + queryRelativeLinks.replace(/RESULT_SET/g, ids)
         		.replace("<LIMIT>", ''+(limit-1));
-        	console.log(q);
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         
@@ -306,7 +306,7 @@
         		q = prefixes + queryLinksOfRelatives
         			.replace(/<RESULT_SET>/g, cons)
         			.replace("<LIMIT>", limit);
-        	console.log(q);
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         
@@ -319,7 +319,7 @@
         			.replace(/<RESULT_SET2>/g, cons2)
         			.replace("<LIMIT>", limit)
         			.replace("<CLASSES>", classes);
-        	console.log(cons);
+        	
         	return endpoint.getObjectsNoGrouping(q);
         }
         
