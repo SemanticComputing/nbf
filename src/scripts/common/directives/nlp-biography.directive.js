@@ -12,8 +12,12 @@
 					if ($scope.active!='false') {
 						biographyService.getNlpBio( $scope ).then(function(data) {
 							$scope.data = data;
-				        });
-					}; 
+							let patt = /\d+/i;
+							let result = parseInt(($scope.url).match(patt));
+							$scope.number = result;
+						});
+					};
+					
 				};
 			}],
 			

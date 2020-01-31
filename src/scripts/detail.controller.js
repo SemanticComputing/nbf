@@ -129,7 +129,7 @@
         	if (p.genicom) arr.push({url:p.genicom, label:'Geni.com, kotisivu', tab:'genikotisivu'});
 
         	if (p.genitree) arr.push({url:p.genitree, label:'Geni.com, sukupuu', tab:'genisukupuu'});
-        	
+			
         	if (p.norssi) arr.push({url:'https://www.norssit.fi/semweb/#!/tiedot/http:~2F~2Fldf.fi~2Fnorssit~2F'+p.norssi, label:"Norssit", tab:'norssit'});
         	
         	if (p.kirjasampo) arr.push({url:p.kirjasampo, label:'Kirjasampo', tab:'kirjasampo'});
@@ -137,11 +137,6 @@
         	if (p.warsampo) arr.push({url:'https://www.sotasampo.fi/fi/persons/?uri='+p.warsampo, label:"Sotasampo", tab:'warsampo'});
         	
         	if (p.wikipedia) arr.push({url:p.wikipedia, label:"Wikipedia", tab:'wikipedia'});
-        	
-        	if (p.yoma) arr.push({
-        		url:''+p.yoma, 
-        		label:"Ylioppilasmatrikkeli 1640–1899", 
-        		tab:'yoma'});
         	
         	arr = arr.map(function(ob) {
         		//	in case of multiple e.g. wikipedia links

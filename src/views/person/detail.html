@@ -77,8 +77,8 @@
                 	ng-href="{{ vm.person.fennica[1] }}" class="btn btn-default btn-sm">
                 	2
                </a> 
-              
-              <a ng-if="vm.person.genicom"
+			  
+			  <a ng-if="vm.person.genicom"
                 	ng-href="{{ vm.person.genicom }}"
                  class="btn btn-default btn-sm">
                  Geni.com: Kotisivu</a>
@@ -86,7 +86,10 @@
                 	ng-href="{{ vm.person.genitree }}"
                  class="btn btn-default btn-sm">
                  Geni.com: Sukupuu</a>
-              
+			<a ng-if="vm.person.isni" 
+				 ng-href="{{ vm.person.isni }}"
+			  class="btn btn-default btn-sm">
+			  ISNI</a>
               <a ng-if="vm.person.kirjasampo"
                  ng-href="{{ vm.person.kirjasampo }}" 
                  class="btn btn-default btn-sm">

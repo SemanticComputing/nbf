@@ -55,8 +55,8 @@
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
-        ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
+        ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>' +
@@ -78,6 +78,7 @@
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
+        '  OPTIONAL { ?id nbf:isni ?isni . }' +
         '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
@@ -122,6 +123,7 @@
             '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
             '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
             '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
+            '  OPTIONAL { ?id nbf:isni ?isni . }' +
             '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
             '  OPTIONAL { ?id nbf:website ?website . }' +
             '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +

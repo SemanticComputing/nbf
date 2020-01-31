@@ -1,8 +1,8 @@
-<h3>Tekijänoikeudet ja artikkeleihin viittaaminen</h3>
+<h4>Tekijänoikeudet ja artikkeleihin viittaaminen:</h4>
 <ol>
-	<li><a href="https://kansallisbiografia.fi/kansallisbiografia/tekijanoikeudet">Kansallisbiografia</a></li>
-	<li><a href="https://kansallisbiografia.fi/talousvaikuttajat/tekijanoikeudet">Talousvaikuttajat</a></li>
-	<li><a href="https://kansallisbiografia.fi/kenraalit/tekijanoikeudet">Kenraalit ja amiraalit</a></li>
-	<li><a href="https://kansallisbiografia.fi/paimenmuisto/tekijanoikeudet">Turun hiippakunnan paimenmuisto</a></li>
-	<li><a href="https://kansallisbiografia.fi/papisto/tekijanoikeudet">Suomen papisto 1801–1920</a></li>
+	<li ng-if="(9999>number)"><a href="https://kansallisbiografia.fi/kansallisbiografia/tekijanoikeudet">Kansallisbiografia</a></li>
+	<li ng-if="(15000>number && number>9999)"><a href="https://kansallisbiografia.fi/talousvaikuttajat/tekijanoikeudet">Talousvaikuttajat</a></li>
+	<li ng-if="(24000>number && number>19999)"><a href="https://kansallisbiografia.fi/kenraalit/tekijanoikeudet">Kenraalit ja amiraalit</a></li>
+	<li ng-if="(28000>number && number>24999)"><a href="https://kansallisbiografia.fi/paimenmuisto/tekijanoikeudet">Turun hiippakunnan paimenmuisto</a></li>
+	<li ng-if="(33000>number && number>29999)"><a href="https://kansallisbiografia.fi/papisto/tekijanoikeudet">Suomen papisto 1801–1920</a></li>
 </ol>
