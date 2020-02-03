@@ -28,8 +28,11 @@
             	person.id = (person.id).replace(/^.+?(p[0-9_]+)$/, '$1');
             	
             	person.birth = person.birth ? _.castArray(person.birth) : null;
-            	person.death = person.death ? _.castArray(person.death) : null;
-            	
+                person.death = person.death ? _.castArray(person.death) : null;
+                
+                person.birthDate = person.birthDate ? _.castArray(person.birthDate)[0] : null;
+                person.deathDate = person.deathDate ? _.castArray(person.deathDate)[0] : null;
+
                 person.images = person.images ? 
                 		_.castArray(person.images) : 
                 			['images/person_placeholder.svg'];
