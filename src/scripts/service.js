@@ -49,14 +49,14 @@
         ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/>'  +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
-        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
+        ' PREFIX schema: <http://schema.org/> ' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
-        ' PREFIX schema: <http://schema.org/>' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>' +
