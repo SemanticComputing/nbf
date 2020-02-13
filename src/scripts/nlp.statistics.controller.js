@@ -51,18 +51,18 @@
 	function calculatePercentage(data) {
 	    var obj;
 	    var word;
-	    console.log(vm.lemmaCount.count);
+	    // console.log(vm.lemmaCount.count);
 	    for (obj in data) {
-		console.log(obj)
-		console.log(data[obj])
+		// console.log(obj)
+		// console.log(data[obj])
 		var class_sum = getPosTotal(obj); 
 		for (word in data[obj]) {
-		    console.log(data[obj][word].count);
+		    // console.log(data[obj][word].count);
 		    data[obj][word].percentage = ((data[obj][word].count/vm.lemmaCount.count)*100).toFixed(2);
 		    data[obj][word].class_percentage = ((data[obj][word].count/class_sum)*100).toFixed(2);
 		}
 	    }
-	    console.log(data);	
+	    // console.log(data);	
 	    return data;
 	}
 
@@ -76,7 +76,7 @@
 	    } else if (postag == "PROPN") {
 		return vm.lemmaCount.pnounCount;
 	    } else {
-		console.log("Unidentifiable pos-tag", postag);
+		// console.log("Unidentifiable pos-tag", postag);
 		return vm.lemmaCount.count;
 	    }
 	    
@@ -197,7 +197,7 @@
                     if (latestUpdate !== updateId) {
                         return;
                     }
-		console.log(results);
+		// console.log(results);
                 drawChartLen(results);
                 vm.isLoadingResults = false;
                 });

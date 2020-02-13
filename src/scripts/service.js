@@ -52,14 +52,14 @@
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
-        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
+        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/> ' +
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
+        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' + 
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
-        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
-        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>' +
-        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>' +
+        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
         // The query for the results.
@@ -78,8 +78,8 @@
         '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
         '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
         '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
-        '  OPTIONAL { ?id nbf:isni ?isni . }' +
         '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
+        '  OPTIONAL { ?id nbf:isni ?isni . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
         '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
