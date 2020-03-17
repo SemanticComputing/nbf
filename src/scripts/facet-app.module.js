@@ -22,7 +22,7 @@
     .constant('RESULTS_PER_PAGE', 25)
     .constant('PAGES_PER_QUERY', 1)
 
-    .value('SPARQL_ENDPOINT_URL', 'http://ldf.fi/nbf-protected/sparql')
+    .value('SPARQL_ENDPOINT_URL', '//ldf.fi/nbf-protected/sparql')
 
     .run(function(authStorage) {
         authStorage.init();

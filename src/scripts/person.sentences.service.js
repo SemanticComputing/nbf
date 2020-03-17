@@ -110,7 +110,7 @@
 	    '  BIND(xsd:decimal(STR(?sID)) as ?y)' +
 	    '  BIND(xsd:integer(?i) as ?z)' +
 	    '  BIND(REPLACE(STR(?target_link), "file:///tmp/data/nlp/", "") AS ?link)' +
-	    '  SERVICE <http://ldf.fi/nbf-protected/sparql> {' +
+	    '  SERVICE <https://ldf.fi/nbf-protected/sparql> {' +
 	    '    ?personUri nbf:formatted_link ?link .' +
 	    '    ?person <http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://www.w3.org/2004/02/skos/core#prefLabel> ?label_lang . '+
 	    '  }' +
@@ -135,7 +135,7 @@
 	    '  BIND(xsd:integer(?id) as ?x)' +
 	    '  BIND(xsd:decimal(STR(?sID)) as ?y)' +
 	    '  BIND(xsd:integer(?i) as ?z)' +
-	    '  SERVICE <http://ldf.fi/nbf-protected/sparql> {' +
+	    '  SERVICE <https://ldf.fi/nbf-protected/sparql> {' +
 	    '     ?personUri <http://www.w3.org/2008/05/skos-xl#prefLabel>/<http://www.w3.org/2004/02/skos/core#prefLabel> ?label_lang . '+
 	    '     BIND (str(?label_lang) AS ?label)' +
 	    '  }' +
@@ -148,7 +148,7 @@
 	    '  ?target  nif:isString ?target_string .' +
 	    '  ?source dct:hasPart/dct:references ?target .' +
 	    '  ?source <http://ldf.fi/nbf/biography/data#docRef> ?id .' +
-	    '  SERVICE <http://ldf.fi/nbf-protected/sparql> { ' +
+	    '  SERVICE <https://ldf.fi/nbf-protected/sparql> { ' +
 	    '    ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
   	    '  }' +
             '  BIND (FLOOR(YEAR(?birth)/10)*10 AS ?year) ' +
@@ -162,7 +162,7 @@
 	    '  ?target  nif:isString ?target_string .' +
 	    '  ?target <http://ldf.fi/nbf/biography/data#anchor_link> ?target_link .' +
 	    '  BIND(REPLACE(STR(?target_link), "file:///tmp/data/nlp/", "") AS ?link)' +
-	    '  SERVICE <http://ldf.fi/nbf-protected/sparql> { ' +
+	    '  SERVICE <https://ldf.fi/nbf-protected/sparql> { ' +
 	    '    ?id nbf:formatted_link ?link .' +
 	    '    ?id foaf:focus/^crm:P98_brought_into_life/nbf:time/gvp:estStart ?birth . ' +
   	    '  }' +
