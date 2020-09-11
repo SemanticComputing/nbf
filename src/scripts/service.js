@@ -45,13 +45,12 @@
 
         var prefixes =
         ' PREFIX bioc: <http://ldf.fi/schema/bioc/> ' +
-        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
+        ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/>'  +
+        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
-        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
-        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
@@ -59,6 +58,7 @@
         ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' + 
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
+        ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
         ' PREFIX xml: <http://www.w3.org/XML/1998/namespace> ';
 
@@ -67,10 +67,10 @@
         var query =
         ' SELECT DISTINCT * WHERE {' +
         '  { ' +
-        '  <RESULT_SET> ' +
+        '  <RESULT_SET>' +
         '  }' +
         '  FILTER not exists { ?id owl:sameAs [] }' +
-        '  ?id skosxl:prefLabel ?plabel . ' +
+        '  ?id skosxl:prefLabel ?plabel .' +
         '  OPTIONAL { ?plabel schema:familyName ?familyName . }' +
         '  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
         '' +
@@ -82,9 +82,9 @@
         '  OPTIONAL { ?id nbf:isni ?isni . }' +
         '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
         '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
-        '  OPTIONAL { ?id nbf:warsampo ?warsampo . }' +
-        '  OPTIONAL { ?id nbf:viaf ?viaf . }' +
-        '  OPTIONAL { ?id nbf:ulan ?ulan . }' +
+        '  OPTIONAL { ?id nbf:viaf ?viaf . }'+
+        '  OPTIONAL { ?id nbf:ulan ?ulan . }'+
+        '  OPTIONAL { ?id nbf:warsampo ?warsampo . }'+
         '  OPTIONAL { ?id nbf:website ?website . }' +
         '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
         '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
@@ -92,24 +92,25 @@
         '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
         '  OPTIONAL { ?id foaf:focus ?prs . ' +
         '  	 OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place/skos:prefLabel ?birthPlace } ' +
-        '  		OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
-        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
-        '  		OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
-        '  		OPTIONAL { ?prs schema:gender ?gender . }' +
-        '  		OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
-        '  		OPTIONAL { ?prs bioc:has_profession ?occupation_id . ' +
+        '  	OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
+        '  	OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
+        '  	OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
+        '  	OPTIONAL { ?prs schema:gender ?gender . } ' +
+        '  	OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
+        '  	OPTIONAL { ?prs bioc:has_profession ?occupation_id . ' +
         '  		   ?occupation_id a nbf:Title ; skos:prefLabel ?occupation ' +
         '  		  OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
-        '		}' +
-        '  		OPTIONAL { ?prs nbf:has_category ?category . }'  +
-        '  		OPTIONAL { ?prs nbf:has_biography ?bio . ' +
+        '	}' +
+        '  	OPTIONAL { ?prs nbf:has_category ?category . }'  +
+        '  	OPTIONAL { ?prs nbf:has_biography ?bio . ' +
         '  		  OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
-        '  		}' +
-        '   }' +
+        '  	}' +
+        '  }' +
         ' }';
 
         var detailQuery =
             ' SELECT DISTINCT * WHERE {' +
+
             '  { <RESULT_SET> } ' +
             '  ?id skosxl:prefLabel ?plabel . ' +
             '  	 OPTIONAL { ?plabel schema:familyName ?familyName . }' +
