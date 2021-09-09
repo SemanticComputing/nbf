@@ -152,7 +152,7 @@
             title: {
                 facetId: 'title',
                 //	nb do not remove /<http://www.w3.org/2004/02/skos/core#prefLabel> from the end of property path
-                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/schema/bioc/has_profession>/<http://www.w3.org/2004/02/skos/core#broader>/<http://www.w3.org/2004/02/skos/core#prefLabel>',
+                predicate: '<http://xmlns.com/foaf/0.1/focus>/<http://ldf.fi/schema/bioc/has_profession>/<http://www.w3.org/2004/02/skos/core#broader>?/<http://www.w3.org/2004/02/skos/core#prefLabel>',
                 name: 'Arvo, ammatti tai toiminta',
                 chart: true,
                 enabled: true

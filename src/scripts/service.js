@@ -48,15 +48,15 @@
         ' PREFIX categories: <http://ldf.fi/nbf/categories/> ' +
         ' PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/> ' +
         ' PREFIX dct: <http://purl.org/dc/terms/>'  +
-        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>' +
         ' PREFIX nbf: <http://ldf.fi/nbf/>' +
+        ' PREFIX owl: <http://www.w3.org/2002/07/owl#>' +
         ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>' +
         ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
         ' PREFIX rels: <http://ldf.fi/nbf/relations/> ' +
         ' PREFIX schema: <http://schema.org/> ' +
-        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' + 
+        ' PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#> ' +
         ' PREFIX sources: <http://ldf.fi/nbf/sources/>' +
         ' PREFIX gvp: <http://vocab.getty.edu/ontology#>' +
         ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> ' +
@@ -66,46 +66,46 @@
         // ?id is bound to the person URI.
         var query =
         ' SELECT DISTINCT * WHERE {' +
-        '  { ' +
-        '  <RESULT_SET>' +
-        '  }' +
-        '  FILTER not exists { ?id owl:sameAs [] }' +
-        '  ?id skosxl:prefLabel ?plabel .' +
-        '  OPTIONAL { ?plabel schema:familyName ?familyName . }' +
-        '  OPTIONAL { ?plabel schema:givenName ?givenName . }' +
-        '' +
-        '  OPTIONAL { ?id nbf:blf ?blf . } ' +
-        '  OPTIONAL { ?id nbf:eduskunta ?eduskunta . }' +
-        '  OPTIONAL { ?id nbf:fennica ?fennica . }' +
-        '  OPTIONAL { ?id nbf:genicom ?genicom . }' +
-        '  OPTIONAL { ?id nbf:kirjasampo ?kirjasampo . }' +
-        '  OPTIONAL { ?id nbf:isni ?isni . }' +
-        '  OPTIONAL { ?id nbf:norssi ?norssi . }' +
-        '  OPTIONAL { ?id nbf:genitree ?genitree . }' +
-        '  OPTIONAL { ?id nbf:viaf ?viaf . }'+
-        '  OPTIONAL { ?id nbf:ulan ?ulan . }'+
-        '  OPTIONAL { ?id nbf:warsampo ?warsampo . }'+
-        '  OPTIONAL { ?id nbf:website ?website . }' +
-        '  OPTIONAL { ?id nbf:wikidata ?wikidata . }' +
-        '  OPTIONAL { ?id nbf:wikipedia ?wikipedia . }' +
-        '  OPTIONAL { ?id nbf:yoma ?yoma . }' +
-        '  OPTIONAL { ?id schema:relatedLink ?kansallisbiografia . }' +
-        '  OPTIONAL { ?id foaf:focus ?prs . ' +
-        '  	 OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:place/skos:prefLabel ?birthPlace } ' +
-        '  	OPTIONAL { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
-        '  	OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
-        '  	OPTIONAL { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
-        '  	OPTIONAL { ?prs schema:gender ?gender . } ' +
-        '  	OPTIONAL { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
-        '  	OPTIONAL { ?prs bioc:has_profession ?occupation_id . ' +
-        '  		   ?occupation_id a nbf:Title ; skos:prefLabel ?occupation ' +
-        '  		  OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
-        '	}' +
-        '  	OPTIONAL { ?prs nbf:has_category ?category . }'  +
-        '  	OPTIONAL { ?prs nbf:has_biography ?bio . ' +
-        '  		  OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
-        '  	}' +
-        '  }' +
+        '   { <RESULT_SET> } ' +
+        '   FILTER not exists { ?id owl:sameAs [] }' +
+        '   ?id skosxl:prefLabel ?plabel ; foaf:focus ?prs .' +
+        '   ' +
+        '   { ?plabel schema:familyName ?familyName . }' +
+        '   UNION' +
+        '   { ?plabel schema:givenName ?givenName . }' +
+        ' ' +
+        '   { ?prs ^crm:P98_brought_into_life/nbf:place/skos:prefLabel ?birthPlace } ' +
+        '   UNION { ?prs ^crm:P98_brought_into_life/nbf:time/skos:prefLabel ?birthDate . }' +
+        '   UNION { ?prs ^crm:P100_was_death_of/nbf:place/skos:prefLabel ?deathPlace }' +
+        '   UNION { ?prs ^crm:P100_was_death_of/nbf:time/skos:prefLabel ?deathDate . }' +
+        '   UNION { ?prs schema:gender ?gender . }' +
+        '   UNION { ?prs nbf:image [ schema:image ?images ; dct:source ?imagesources ] }' +
+        '   UNION { ?prs bioc:has_profession ?occupation_id .' +
+        '     ?occupation_id a nbf:Title ; skos:prefLabel ?occupation ' +
+        '     OPTIONAL { ?occupation_id nbf:related_company ?company . }' +
+        '   }' +
+        '   ' +
+        '   { ?prs nbf:has_category ?category . }' +
+        '   UNION' +
+        '   { ?prs nbf:has_biography ?bio .' +
+        '     OPTIONAL { ?bio nbf:has_paragraph [ nbf:content ?lead_paragraph ; nbf:id "0"^^xsd:integer  ] }' +
+        '   }' +
+        '   { ?id nbf:blf ?blf . } ' +
+        '   UNION { ?id nbf:eduskunta ?eduskunta . }' +
+        '   UNION { ?id nbf:fennica ?fennica . }' +
+        '   UNION { ?id nbf:genicom ?genicom . }' +
+        '   UNION { ?id nbf:kirjasampo ?kirjasampo . }' +
+        '   UNION { ?id nbf:isni ?isni . }' +
+        '   UNION { ?id nbf:norssi ?norssi . }' +
+        '   UNION { ?id nbf:genitree ?genitree . }' +
+        '   UNION { ?id nbf:viaf ?viaf . }' +
+        '   UNION { ?id nbf:ulan ?ulan . }' +
+        '   UNION { ?id nbf:warsampo ?warsampo . }' +
+        '   UNION { ?id nbf:website ?website . }' +
+        '   UNION { ?id nbf:wikidata ?wikidata . }' +
+        '   UNION { ?id nbf:wikipedia ?wikipedia . }' +
+        '   UNION { ?id nbf:yoma ?yoma . }' +
+        '   UNION { ?id schema:relatedLink ?kansallisbiografia . }' +
         ' }';
 
         var detailQuery =
