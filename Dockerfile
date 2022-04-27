@@ -2,7 +2,7 @@
 
 FROM node:9
 
-RUN npm install -g bower grunt-cli serve
+RUN npm install -g bower@1.8.14 grunt-cli@1.4.3 serve@12.0.1
 
 WORKDIR /app
 
